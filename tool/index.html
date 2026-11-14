@@ -4494,6 +4494,15 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
 </script>
+<style id="hpmw-workspace-home-intro-only">
+#newAdminDashboard .dash-grid,
+#newAdminDashboard .hpmw-admin-shortcuts,
+#newAdminDashboard>.hpmw-view-quicknav{display:none!important}
+#newAdminDashboard .hpmw-admin-intro{display:block!important;margin:8px 0 24px!important}
+#newAdminDashboard .hpmw-admin-intro h2{display:none!important}
+#newAdminDashboard .hpmw-admin-intro .hpmw-welcome-copy{display:block!important}
+#newAdminDashboard .hpmw-admin-intro>p:not(.hpmw-welcome-copy){display:block!important}
+</style>
 </body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
