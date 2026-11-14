@@ -6180,104 +6180,145 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 <script id="hpmw-portal-admin-workspace-v1">
 (()=>{"use strict";
  const body=document.getElementById("hpmwManageBody"),layer=document.getElementById("hpmwManageLayer");
- if(!body||!layer)return;
- const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- let busy=false,activeTab="news",newsRows=[],translationRows=[];
+ if(!body||!layer||body.dataset.workspaceController==="v2")return;
+ body.dataset.workspaceController="v2";
  const access=()=>window.HpmwPortalAccess;
  const client=()=>access()?.client;
- const role=()=>access()?.role||"guest";
- const isAdmin=()=>role()==="administrator";
- const canNews=()=>["news_poster","news_poster_supervisor"].includes(role());
- const canDeleteNews=()=>role()==="news_poster_supervisor";
-
+ const realRole=()=>access()?.role||"guest";
+ const isAdmin=()=>!!access()?.session&&realRole()==="administrator";
+ const canNews=()=>!!access()?.session&&["news_poster","news_poster_supervisor","administrator"].includes(realRole());
+ const canDeleteNews=()=>["news_poster_supervisor","administrator"].includes(realRole());
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const language=()=>{const l=(document.documentElement.lang||"nl").toLowerCase().slice(0,2);return ["nl","en","pt"].includes(l)?l:"nl"};
+ const words={
+  nl:{news:"Nieuwsbeheer",translations:"Vertalingen",maintenance:"Onderhoud",decoration:"Decoratie",roles:"Rollen",newsDesc:"Nieuwsberichten maken, bewerken en publiceren.",transDesc:"Beheer de Nederlandse, Engelse en Portugese vertalingen.",maintDesc:"Beheer onderhoudsmodus en de aftelwidget.",decoDesc:"Beheer de visuele effecten van het portaal.",rolesDesc:"Beheer accounts, rollen, rechten en testweergaven.",new:"Nieuw bericht",refresh:"Vernieuwen",search:"Zoek op sleutel of tekst",save:"Opslaan",loading:"Laden…",error:"Er is iets misgegaan: ",empty:"Geen resultaten gevonden.",preview:"Test een andere rol",previewHint:"Alleen voorbeeldweergave. Echte accountrechten veranderen niet.",restore:"Herstel administrator",previewOn:"Testweergave actief als ",previewOff:"Je bekijkt je eigen administratorweergave.",readOnly:"Opslaan is uitgeschakeld tijdens de roltest.",published:"Gepubliceerd",draft:"Concept",edit:"Bewerken",remove:"Verwijderen",confirmDelete:"Dit nieuwsbericht verwijderen?",title:"Titel",message:"Bericht",author:"Auteur",source:"Bron / link",status:"Publicatie",pin:"Uitlichten bovenaan",cancel:"Annuleren",saveNews:"Nieuwsbericht opslaan",maintenanceOn:"Onderhoudsmodus inschakelen",countdownOn:"Aftelwidget tonen",target:"Doeldatum en tijd",year:"Jaar / label",snow:"Sneeuw",fireworks:"Vuurwerk",pumpkins:"Pompoenen",greeting:"Feestelijke begroeting",rights:"Rollen en toegangsrechten",noRole:"Je hebt geen toegang tot dit onderdeel."},
+  en:{news:"News management",translations:"Translations",maintenance:"Maintenance",decoration:"Decoration",roles:"Roles",newsDesc:"Create, edit and publish news posts.",transDesc:"Manage Dutch, English and Portuguese translations.",maintDesc:"Manage maintenance mode and the countdown widget.",decoDesc:"Manage the portal's visual effects.",rolesDesc:"Manage accounts, roles, permissions and preview modes.",new:"New post",refresh:"Refresh",search:"Search key or text",save:"Save",loading:"Loading…",error:"Something went wrong: ",empty:"No results found.",preview:"Preview another role",previewHint:"Preview only. Real account permissions are not changed.",restore:"Restore administrator",previewOn:"Previewing as ",previewOff:"You are viewing your administrator account.",readOnly:"Saving is disabled while previewing another role.",published:"Published",draft:"Draft",edit:"Edit",remove:"Delete",confirmDelete:"Delete this news post?",title:"Title",message:"Message",author:"Author",source:"Source / link",status:"Publication",pin:"Pin to top",cancel:"Cancel",saveNews:"Save news post",maintenanceOn:"Enable maintenance mode",countdownOn:"Show countdown widget",target:"Target date and time",year:"Year / label",snow:"Snow",fireworks:"Fireworks",pumpkins:"Pumpkins",greeting:"Seasonal greeting",rights:"Roles and permissions",noRole:"You do not have access to this section."},
+  pt:{news:"Gestão de notícias",translations:"Traduções",maintenance:"Manutenção",decoration:"Decoração",roles:"Funções",newsDesc:"Criar, editar e publicar notícias.",transDesc:"Gerir as traduções em neerlandês, inglês e português.",maintDesc:"Gerir o modo de manutenção e a contagem decrescente.",decoDesc:"Gerir os efeitos visuais do portal.",rolesDesc:"Gerir contas, funções, permissões e pré-visualizações.",new:"Nova publicação",refresh:"Atualizar",search:"Pesquisar chave ou texto",save:"Guardar",loading:"A carregar…",error:"Ocorreu um erro: ",empty:"Não foram encontrados resultados.",preview:"Testar outra função",previewHint:"Apenas pré-visualização. As permissões reais não são alteradas.",restore:"Restaurar administrador",previewOn:"A pré-visualizar como ",previewOff:"Está a visualizar a sua conta de administrador.",readOnly:"A gravação fica desativada durante o teste.",published:"Publicado",draft:"Rascunho",edit:"Editar",remove:"Eliminar",confirmDelete:"Eliminar esta notícia?",title:"Título",message:"Mensagem",author:"Autor",source:"Fonte / ligação",status:"Publicação",pin:"Destacar no topo",cancel:"Cancelar",saveNews:"Guardar notícia",maintenanceOn:"Ativar modo de manutenção",countdownOn:"Mostrar widget de contagem decrescente",target:"Data e hora de destino",year:"Ano / etiqueta",snow:"Neve",fireworks:"Fogo de artifício",pumpkins:"Abóboras",greeting:"Saudação festiva",rights:"Funções e permissões",noRole:"Não tem acesso a esta secção."}
+ };
+ const tr=k=>words[language()][k]||words.nl[k]||k;
+ let activeTab=null,newsRows=[],translationRows=[],legacyRolesHTML="",previewRole=null;
+ const effectiveRole=()=>previewRole||realRole();
+ const allowed=id=>id==="news"?["news_poster","news_poster_supervisor","administrator"].includes(effectiveRole()):effectiveRole()==="administrator";
  const status=(id,msg,bad=false)=>{const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.toggle("error",bad)}};
- function nav(){return '<nav class="hpmw-admin-tabs" aria-label="Portaalbeheer tabbladen">'+
- (canNews()?'<button class="hpmw-admin-tab" data-admin-tab="news" aria-selected="'+String(activeTab==="news")+'">▤ Nieuwsbeheer</button>':'')+
- (isAdmin()?'<button class="hpmw-admin-tab" data-admin-tab="translations" aria-selected="'+String(activeTab==="translations")+'">文 Vertalingen</button><button class="hpmw-admin-tab" data-admin-tab="maintenance" aria-selected="'+String(activeTab==="maintenance")+'">⚙ Onderhoud</button><button class="hpmw-admin-tab" data-admin-tab="decoration" aria-selected="'+String(activeTab==="decoration")+'">✨ Decoratie</button><button class="hpmw-admin-tab" data-admin-tab="roles" aria-selected="'+String(activeTab==="roles")+'">♙ Rollen</button>':'')+
- '</nav>'}
- function panel(id,title,desc,content){return '<section class="hpmw-admin-panel'+(activeTab===id?' active':'')+'" data-admin-panel="'+id+'"><div class="hpmw-admin-card"><h3>'+title+'</h3><p class="hpmw-admin-muted">'+desc+'</p></div>'+content+'</section>'}
- function wrap(){
-  if(busy||body.dataset.workspace==="1"||!body.innerHTML.trim())return;
-  const original=body.innerHTML;
-  if(original.includes("hpmwPortalLogin")||original.includes("hpmwManageRetry"))return;
-  if(!access()?.session||!role())return;
-  busy=true;body.dataset.workspace="1";
-  const rolesContent=`<div class="hpmw-admin-card"><h3>Rollen en toegangsrechten</h3><p class="hpmw-admin-muted">Beheer accounts, roltoewijzing en de toegangsrechtenmatrix.</p>${original}</div><div class="hpmw-admin-card"><h3>Test een andere rol</h3><p class="hpmw-admin-muted">Alleen voorbeeldweergave. Dit verandert geen echte rechten en geeft geen extra toegang.</p><div class="hpmw-admin-row"><select id="hpmwRolePreview"><option value="">Administrator (eigen rol)</option><option value="user">Gebruiker</option><option value="guest">Gast</option><option value="support_moderator">Support moderator</option><option value="supervisor_support_team">Supervisor supportteam</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter - super visor</option></select><button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">Herstel mijn rol</button></div><p id="hpmwRolePreviewStatus" class="hpmw-admin-status">Je test momenteel je eigen administratorweergave.</p></div>`;
-  body.innerHTML=nav()+
-   (canNews()?panel("news","Nieuwsbeheer","Alleen Nieuwsposter en Nieuwsposter - super visor.",`<div class="hpmw-admin-card"><div class="hpmw-admin-row"><button class="hpmw-manage-btn primary" id="hpmwWorkspaceNewsNew">＋ Nieuw bericht</button><button class="hpmw-manage-btn" id="hpmwWorkspaceNewsRefresh">Vernieuwen</button></div><div id="hpmwWorkspaceNewsList" class="hpmw-admin-muted">Nieuws wordt geladen…</div><div id="hpmwWorkspaceNewsEditor"></div><div id="hpmwWorkspaceNewsStatus" class="hpmw-admin-status"></div></div>`):"")+
-   (isAdmin()?panel("translations","Vertalingen","Alleen beschikbaar voor de rol Administrator.",`<div class="hpmw-admin-card"><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="Zoek vertaling of sleutel"><button class="hpmw-manage-btn" id="hpmwTranslationRefresh">Vernieuwen</button></div><div id="hpmwTranslationTable" class="hpmw-admin-muted">Vertalingen laden…</div><div id="hpmwTranslationStatus" class="hpmw-admin-status"></div></div>`):"")+
-   (isAdmin()?panel("maintenance","Onderhoud","Beheer onderhoudsmodus, onderhoudsteksten en de aftelwidget.",`<div id="hpmwWorkspaceMaintenance" class="hpmw-admin-muted">Instellingen laden…</div><div id="hpmwMaintenanceStatus" class="hpmw-admin-status"></div>`):"")+
-   (isAdmin()?panel("decoration","Decoratie","Beheer de visuele effecten van het portaal.",`<div id="hpmwWorkspaceDecoration" class="hpmw-admin-muted">Instellingen laden…</div><div id="hpmwDecorationStatus" class="hpmw-admin-status"></div>`):"")+
-   (isAdmin()?panel("roles","Rollen","Beheer portalrollen en toegangsrechten. Dit menu staat bewust als laatste.",rolesContent):"");
-  busy=false;
-  if(isAdmin()){loadMaintenance();loadDecoration();}
+ function tab(id,label){return '<button type="button" class="hpmw-admin-tab" role="tab" data-admin-tab="'+id+'" aria-selected="'+String(activeTab===id)+'">'+label+'</button>'}
+ function panel(id,title,desc,content){return '<section class="hpmw-admin-panel'+(activeTab===id?' active':'')+'" role="tabpanel" data-admin-panel="'+id+'" '+(allowed(id)?'':'hidden')+'><header class="hpmw-admin-section-head"><h3>'+title+'</h3><p class="hpmw-admin-muted">'+desc+'</p></header>'+content+'</section>'}
+ function build(original){
+  legacyRolesHTML=original;
+  const visibleTabs=(canNews()?tab("news",tr("news")):"")+(isAdmin()?tab("translations",tr("translations"))+tab("maintenance",tr("maintenance"))+tab("decoration",tr("decoration"))+tab("roles",tr("roles")):"");
+  body.innerHTML='<div class="hpmw-admin-workspace"><nav class="hpmw-admin-tabs" role="tablist" aria-label="Portal administration">'+visibleTabs+'</nav>'+
+   (canNews()?panel("news",tr("news"),tr("newsDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwWorkspaceNewsNew">＋ '+tr("new")+'</button><button type="button" class="hpmw-manage-btn" id="hpmwWorkspaceNewsRefresh">'+tr("refresh")+'</button></div><div id="hpmwWorkspaceNewsList" class="hpmw-admin-muted">'+tr("loading")+'</div><div id="hpmwWorkspaceNewsEditor"></div><p id="hpmwWorkspaceNewsStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
+   (isAdmin()?panel("translations",tr("translations"),tr("transDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="'+tr("search")+'"><button type="button" class="hpmw-manage-btn" id="hpmwTranslationRefresh">'+tr("refresh")+'</button></div><div id="hpmwTranslationTable">'+tr("loading")+'</div><p id="hpmwTranslationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
+   (isAdmin()?panel("maintenance",tr("maintenance"),tr("maintDesc"),'<div id="hpmwWorkspaceMaintenance">'+tr("loading")+'</div><p id="hpmwMaintenanceStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
+   (isAdmin()?panel("decoration",tr("decoration"),tr("decoDesc"),'<div id="hpmwWorkspaceDecoration">'+tr("loading")+'</div><p id="hpmwDecorationStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
+   (isAdmin()?panel("roles",tr("roles"),tr("rolesDesc"),'<div class="hpmw-admin-card"><h3>'+tr("rights")+'</h3>'+legacyRolesHTML+'</div><div class="hpmw-admin-card"><h3>'+tr("preview")+'</h3><p class="hpmw-admin-muted">'+tr("previewHint")+'</p><div class="hpmw-admin-row"><select id="hpmwRolePreview"><option value="">Administrator</option><option value="user">Gebruiker / User</option><option value="guest">Gast / Guest</option><option value="support_moderator">Support moderator</option><option value="supervisor_support_team">Supervisor supportteam</option><option value="news_poster">Nieuwsposter / News poster</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option></select><button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">'+tr("restore")+'</button></div><p id="hpmwRolePreviewStatus" class="hpmw-admin-status">'+tr("previewOff")+'</p></div>'):"")+
+  '</div>';
+  if(!activeTab||!allowed(activeTab))activeTab=canNews()?"news":"translations";
+  switchTab(activeTab);
+  if(isAdmin()){loadMaintenance();loadDecoration();loadTranslations()}
   if(canNews())loadNews();
-  if(isAdmin())loadTranslations();
  }
  function switchTab(id){
+  if(!allowed(id))return;
   activeTab=id;
   body.querySelectorAll("[data-admin-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.adminTab===id)));
   body.querySelectorAll("[data-admin-panel]").forEach(p=>p.classList.toggle("active",p.dataset.adminPanel===id));
  }
+ function wrap(){
+  if(body.dataset.workspace==="1"||!body.innerHTML.trim()||!access()?.session)return;
+  const original=body.innerHTML;
+  if(/hpmwPortalLogin|hpmwManageRetry/.test(original))return;
+  body.dataset.workspace="1";build(original);
+ }
  async function loadMaintenance(){
-  const c=client();if(!c)return;
-  const {data:w,error}=await c.from("portal_widgets").select("*").eq("id",1).maybeSingle();
-  const host=document.getElementById("hpmwWorkspaceMaintenance");if(!host)return;
-  if(error){host.textContent="Onderhoudsinstellingen niet toegankelijk: "+error.message;return}
-  const a=w||{};
-  host.innerHTML='<form id="hpmwWorkspaceMaintenanceForm"><div class="hpmw-admin-grid"><div class="hpmw-admin-card"><h3>Onderhoudsmodus</h3><label class="hpmw-admin-field"><span><input type="checkbox" name="maintenance_enabled" '+(a.maintenance_enabled?'checked':'')+'> Onderhoudsmodus inschakelen</span></label>'+['nl','en','pt'].map(l=>'<label class="hpmw-admin-field">Onderhoudstekst ('+l.toUpperCase()+')<textarea name="maintenance_text_'+l+'">'+esc(a['maintenance_text_'+l]||"")+'</textarea></label>').join("")+'</div><div class="hpmw-admin-card"><h3>Aftellen</h3><label class="hpmw-admin-field"><span><input type="checkbox" name="countdown_enabled" '+(a.countdown_enabled?'checked':'')+'> Aftelwidget tonen</span></label>'+['nl','en','pt'].map(l=>'<label class="hpmw-admin-field">Titel ('+l.toUpperCase()+')<input name="countdown_title_'+l+'" value="'+esc(a['countdown_title_'+l]||"")+'"></label>').join("")+'<label class="hpmw-admin-field">Doeldatum en tijd<input type="datetime-local" name="countdown_target" value="'+(a.countdown_target?new Date(a.countdown_target).toISOString().slice(0,16):"")+'"></label></div></div><button class="hpmw-manage-btn primary" type="submit">Onderhoud opslaan</button></form>';
+  const c=client(),host=document.getElementById("hpmwWorkspaceMaintenance");if(!c||!host)return;
+  const {data:a,error}=await c.from("portal_widgets").select("*").eq("id",1).maybeSingle();
+  if(error){host.textContent=tr("error")+error.message;return}
+  const w=a||{};
+  host.innerHTML='<form id="hpmwWorkspaceMaintenanceForm"><div class="hpmw-admin-grid"><div class="hpmw-admin-card"><h4>'+tr("maintenance")+'</h4><label class="hpmw-admin-field"><span><input type="checkbox" name="maintenance_enabled" '+(w.maintenance_enabled?'checked':'')+'> '+tr("maintenanceOn")+'</span></label>'+["nl","en","pt"].map(l=>'<label class="hpmw-admin-field">'+l.toUpperCase()+'<textarea name="maintenance_text_'+l+'">'+esc(w["maintenance_text_"+l]||"")+'</textarea></label>').join("")+'</div><div class="hpmw-admin-card"><h4>Aftellen / Countdown / Contagem decrescente</h4><label class="hpmw-admin-field"><span><input type="checkbox" name="countdown_enabled" '+(w.countdown_enabled?'checked':'')+'> '+tr("countdownOn")+'</span></label>'+["nl","en","pt"].map(l=>'<label class="hpmw-admin-field">'+l.toUpperCase()+'<input name="countdown_title_'+l+'" value="'+esc(w["countdown_title_"+l]||"")+'"></label>').join("")+'<label class="hpmw-admin-field">'+tr("target")+'<input type="datetime-local" name="countdown_target" value="'+(w.countdown_target&&!isNaN(Date.parse(w.countdown_target))?new Date(w.countdown_target).toISOString().slice(0,16):"")+'"></label></div></div><button class="hpmw-manage-btn primary" type="submit">'+tr("save")+'</button></form>';
  }
  async function loadDecoration(){
-  const c=client();if(!c)return;
-  const {data:fx,error}=await c.from("portal_effects_settings").select("*").eq("id",1).maybeSingle();
-  const host=document.getElementById("hpmwWorkspaceDecoration");if(!host)return;
-  if(error){host.textContent="Decoratie-instellingen niet toegankelijk: "+error.message;return}
-  const b=fx||{};
-  host.innerHTML='<form id="hpmwWorkspaceDecorationForm"><div class="hpmw-admin-card"><h3>Visuele effecten</h3>'+['snow','fireworks','pumpkins','greeting'].map(k=>'<label class="hpmw-admin-field"><span><input type="checkbox" name="effect_'+k+'" '+(b[k]?'checked':'')+'> '+({snow:"Sneeuw",fireworks:"Vuurwerk",pumpkins:"Pompoenen",greeting:"Feestelijke begroeting"}[k])+'</span></label>').join("")+'<label class="hpmw-admin-field">Jaar / label<input name="effect_year" value="'+esc(b.year||"")+'"></label></div><button class="hpmw-manage-btn primary" type="submit">Decoratie opslaan</button></form>';
+  const c=client(),host=document.getElementById("hpmwWorkspaceDecoration");if(!c||!host)return;
+  const {data:b,error}=await c.from("portal_effects_settings").select("*").eq("id",1).maybeSingle();
+  if(error){host.textContent=tr("error")+error.message;return}
+  const fx=b||{};
+  host.innerHTML='<form id="hpmwWorkspaceDecorationForm"><div class="hpmw-admin-card"><h4>'+tr("decoration")+'</h4>'+["snow","fireworks","pumpkins","greeting"].map(k=>'<label class="hpmw-admin-field"><span><input type="checkbox" name="effect_'+k+'" '+(fx[k]?'checked':'')+'> '+tr(k)+'</span></label>').join("")+'<label class="hpmw-admin-field">'+tr("year")+'<input name="effect_year" value="'+esc(fx.year||"")+'"></label></div><button class="hpmw-manage-btn primary" type="submit">'+tr("save")+'</button></form>';
  }
  async function loadTranslations(){
-  const host=document.getElementById("hpmwTranslationTable");if(!host)return;
-  const {data,error}=await client().from("translations").select("translation_key,nl,en,pt").order("translation_key").limit(500);
-  if(error){host.textContent="Vertalingen niet toegankelijk: "+error.message;return}
+  const host=document.getElementById("hpmwTranslationTable");if(!host||!client())return;
+  const {data,error}=await client().from("translations").select("translation_key,nl,en,pt").order("translation_key").limit(1000);
+  if(error){host.textContent=tr("error")+error.message;return}
   translationRows=data||[];renderTranslations();
  }
  function renderTranslations(){
   const host=document.getElementById("hpmwTranslationTable");if(!host)return;
   const q=(document.getElementById("hpmwTranslationSearch")?.value||"").toLowerCase();
   const rows=translationRows.filter(r=>[r.translation_key,r.nl,r.en,r.pt].some(v=>String(v||"").toLowerCase().includes(q)));
-  host.innerHTML='<div class="hpmw-admin-scroll"><table class="hpmw-admin-table"><thead><tr><th>Sleutel</th><th>Nederlands</th><th>English</th><th>Português</th><th></th></tr></thead><tbody>'+rows.map(r=>'<tr data-translation-row="'+esc(r.translation_key)+'"><td><code>'+esc(r.translation_key)+'</code></td>'+['nl','en','pt'].map(l=>'<td><input data-lang="'+l+'" value="'+esc(r[l]||"")+'"></td>').join("")+'<td><button class="hpmw-manage-btn" data-translation-save="'+esc(r.translation_key)+'">Opslaan</button></td></tr>').join("")+'</tbody></table></div><p class="hpmw-admin-muted">'+rows.length+' van '+translationRows.length+' vertalingen</p>';
+  host.innerHTML='<div class="hpmw-admin-scroll"><table class="hpmw-admin-table"><thead><tr><th>Sleutel</th><th>Nederlands (NL)</th><th>English (EN)</th><th>Português (PT)</th><th></th></tr></thead><tbody>'+rows.map(r=>'<tr data-translation-row="'+esc(r.translation_key)+'"><td><code>'+esc(r.translation_key)+'</code></td>'+["nl","en","pt"].map(l=>'<td><textarea data-lang="'+l+'" rows="2">'+esc(r[l]||"")+'</textarea></td>').join("")+'<td><button type="button" class="hpmw-manage-btn" data-translation-save="'+esc(r.translation_key)+'">'+tr("save")+'</button></td></tr>').join("")+'</tbody></table></div><p class="hpmw-admin-muted">'+rows.length+' / '+translationRows.length+'</p>';
  }
  async function loadNews(){
-  const host=document.getElementById("hpmwWorkspaceNewsList");if(!host)return;
+  const host=document.getElementById("hpmwWorkspaceNewsList");if(!host||!client())return;
   const {data,error}=await client().from("admin_content").select("id,title,body,author,source,published,is_pinned,created_at").eq("kind","news").order("created_at",{ascending:false}).limit(100);
-  if(error){host.textContent="Nieuws niet toegankelijk: "+error.message;return}
-  newsRows=data||[];host.innerHTML=newsRows.length?newsRows.map(n=>'<div class="hpmw-admin-news-item" data-news-row="'+n.id+'"><div><strong>'+esc(n.title)+'</strong><small>'+(n.published?'Gepubliceerd':'Concept')+(n.is_pinned?' · Uitgelicht':'')+'</small></div><div class="hpmw-admin-row"><button class="hpmw-manage-btn" data-news-edit="'+n.id+'">Bewerken</button>'+(canDeleteNews()?'<button class="hpmw-manage-btn" data-news-delete="'+n.id+'">Verwijderen</button>':'')+'</div></div>').join(""):'<p class="hpmw-admin-muted">Nog geen nieuwsberichten.</p>';
+  if(error){host.textContent=tr("error")+error.message;return}
+  newsRows=data||[];host.innerHTML=newsRows.length?newsRows.map(n=>'<article class="hpmw-admin-news-item"><div><strong>'+esc(n.title)+'</strong><small>'+(n.published?tr("published"):tr("draft"))+(n.is_pinned?' · ★':'')+'</small></div><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" data-news-edit="'+n.id+'">'+tr("edit")+'</button>'+(canDeleteNews()?'<button type="button" class="hpmw-manage-btn" data-news-delete="'+n.id+'">'+tr("remove")+'</button>':'')+'</div></article>').join(""):'<p class="hpmw-admin-muted">'+tr("empty")+'</p>';
  }
- function editNews(item){
+ function editNews(n={}){
   const host=document.getElementById("hpmwWorkspaceNewsEditor");if(!host)return;
-  const n=item||{};
-  host.innerHTML='<form id="hpmwWorkspaceNewsForm" class="hpmw-admin-card"><h3>'+(n.id?'Nieuwsbericht bewerken':'Nieuw nieuwsbericht')+'</h3><label class="hpmw-admin-field">Titel<input name="title" maxlength="180" required value="'+esc(n.title||"")+'"></label><label class="hpmw-admin-field">Bericht<textarea name="body" required>'+esc(n.body||"")+'</textarea></label><div class="hpmw-admin-grid"><label class="hpmw-admin-field">Auteur<input name="author" value="'+esc(n.author||"")+'"></label><label class="hpmw-admin-field">Bron / link<input name="source" value="'+esc(n.source||"")+'"></label></div><label class="hpmw-admin-field">Publicatie<select name="published"><option value="true" '+(n.published?'selected':'')+'>Gepubliceerd</option><option value="false" '+(!n.published?'selected':'')+'>Concept</option></select></label><label class="hpmw-admin-field"><span><input type="checkbox" name="is_pinned" '+(n.is_pinned?'checked':'')+'> Uitlichten bovenaan</span></label><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" id="hpmwWorkspaceNewsCancel">Annuleren</button><button class="hpmw-manage-btn primary" type="submit">Opslaan</button></div><input type="hidden" name="id" value="'+esc(n.id||"")+'"></form>';
+  host.innerHTML='<form id="hpmwWorkspaceNewsForm" class="hpmw-admin-card"><h4>'+(n.id?tr("edit"):tr("new"))+'</h4><label class="hpmw-admin-field">'+tr("title")+'<input name="title" maxlength="180" required value="'+esc(n.title||"")+'"></label><label class="hpmw-admin-field">'+tr("message")+'<textarea name="body" required>'+esc(n.body||"")+'</textarea></label><div class="hpmw-admin-grid"><label class="hpmw-admin-field">'+tr("author")+'<input name="author" value="'+esc(n.author||"")+'"></label><label class="hpmw-admin-field">'+tr("source")+'<input name="source" value="'+esc(n.source||"")+'"></label></div><label class="hpmw-admin-field">'+tr("status")+'<select name="published"><option value="true" '+(n.published?'selected':'')+'>'+tr("published")+'</option><option value="false" '+(!n.published?'selected':'')+'>'+tr("draft")+'</option></select></label><label class="hpmw-admin-field"><span><input type="checkbox" name="is_pinned" '+(n.is_pinned?'checked':'')+'> '+tr("pin")+'</span></label><input type="hidden" name="id" value="'+esc(n.id||"")+'"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" id="hpmwWorkspaceNewsCancel">'+tr("cancel")+'</button><button type="submit" class="hpmw-manage-btn primary">'+tr("saveNews")+'</button></div></form>';
+ }
+ function refreshPreview(){
+  const sel=document.getElementById("hpmwRolePreview"),banner=document.getElementById("hpmwRolePreviewStatus");
+  if(sel)sel.value=previewRole||"";
+  if(banner)banner.textContent=previewRole?tr("previewOn")+previewRole+". "+tr("readOnly"):tr("previewOff");
+  body.classList.toggle("hpmw-role-preview-active",!!previewRole);
+  body.querySelectorAll("[data-admin-tab],[data-admin-panel]").forEach(el=>{
+   const id=el.dataset.adminTab||el.dataset.adminPanel;
+   const show=previewRole? (id==="news"?["news_poster","news_poster_supervisor"].includes(previewRole):previewRole==="administrator"):allowed(id);
+   el.hidden=!show;
+  });
+  body.querySelectorAll("button[type=submit],input[type=submit],[data-translation-save],[data-news-edit],[data-news-delete],#hpmwWorkspaceNewsNew,#hpmwTranslationRefresh,#hpmwWorkspaceNewsRefresh").forEach(el=>{el.disabled=!!previewRole});
+  if(previewRole&&!allowed(activeTab)){const first=previewRole==="news_poster"||previewRole==="news_poster_supervisor"?"news":null;if(first){activeTab=first;switchTab(first)}}
  }
  body.addEventListener("click",async e=>{
   const tab=e.target.closest("[data-admin-tab]");if(tab){switchTab(tab.dataset.adminTab);return}
-  if(e.target.closest("#hpmwWorkspaceNewsNew")){editNews(null);return}
-  if(e.target.closest("#hpmwWorkspaceNewsRefresh")){await loadNews();return}
+  if(e.target.closest("#hpmwWorkspaceNewsNew")){if(!canNews()||previewRole)return;editNews();return}
+  if(e.target.closest("#hpmwWorkspaceNewsRefresh")){if(!previewRole)await loadNews();return}
   if(e.target.closest("#hpmwWorkspaceNewsCancel")){document.getElementById("hpmwWorkspaceNewsEditor").innerHTML="";return}
-  const ed=e.target.closest("[data-news-edit]");if(ed){editNews(newsRows.find(n=>String(n.id)===ed.dataset.newsEdit));return}
-  const del=e.target.closest("[data-news-delete]");if(del){if(!canDeleteNews())return;if(!confirm("Dit nieuwsbericht verwijderen?"))return;const {error}=await client().from("admin_content").delete().eq("id",del.dataset.newsDelete).eq("kind","news");status("hpmwWorkspaceNewsStatus",error?error.message:"Nieuwsbericht verwijderd.",!!error);if(!error)loadNews();return}
-  const ts=e.target.closest("[data-translation-save]");if(ts){const row=ts.closest("[data-translation-row]");const values={};row.querySelectorAll("[data-lang]").forEach(i=>values[i.dataset.lang]=i.value);const {error}=await client().from("translations").update({...values,updated_by:access().session.user.id,updated_at:new Date().toISOString()}).eq("translation_key",ts.dataset.translationSave);status("hpmwTranslationStatus",error?error.message:"Vertaling opgeslagen.",!!error);return}
-  if(e.target.closest("#hpmwTranslationRefresh")){loadTranslations();return}
+  const edit=e.target.closest("[data-news-edit]");if(edit&&!previewRole){editNews(newsRows.find(n=>String(n.id)===edit.dataset.newsEdit));return}
+  const del=e.target.closest("[data-news-delete]");if(del&&!previewRole){if(!canDeleteNews()||!confirm(tr("confirmDelete")))return;const {error}=await client().from("admin_content").delete().eq("id",del.dataset.newsDelete).eq("kind","news");status("hpmwWorkspaceNewsStatus",error?error.message:tr("remove")+" ✓",!!error);if(!error)loadNews();return}
+  const save=e.target.closest("[data-translation-save]");if(save&&!previewRole&&isAdmin()){const row=save.closest("[data-translation-row]"),values={};row.querySelectorAll("[data-lang]").forEach(i=>values[i.dataset.lang]=i.value);const {error}=await client().from("translations").update({...values,updated_by:access().session.user.id,updated_at:new Date().toISOString()}).eq("translation_key",save.dataset.translationSave);status("hpmwTranslationStatus",error?error.message:tr("save")+" ✓",!!error);return}
+  if(e.target.closest("#hpmwTranslationRefresh")&&!previewRole)loadTranslations();
+  if(e.target.closest("#hpmwRolePreviewRestore")){if(!isAdmin())return;previewRole=null;refreshPreview();switchTab("roles")}
  });
  body.addEventListener("input",e=>{if(e.target.id==="hpmwTranslationSearch")renderTranslations()});
+ body.addEventListener("change",e=>{if(e.target.id==="hpmwRolePreview"&&isAdmin()){previewRole=e.target.value||null;refreshPreview()}});
  body.addEventListener("submit",async e=>{
-  if(e.target.id==="hpmwWorkspaceMaintenanceForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(e.target),w={id:1,maintenance_enabled:fd.has("maintenance_enabled"),countdown_enabled:fd.has("countdown_enabled")};["nl","en","pt"].forEach(l=>{w["maintenance_text_"+l]=fd.get("maintenance_text_"+l)||"";w["countdown_title_"+l]=fd.get("countdown_title_"+l)||""});const target=fd.get("countdown_target");w.countdown_target=target?new Date(target).toISOString():null;const {error}=await client().from("portal_widgets").upsert(w,{onConflict:"id"});status("hpmwMaintenanceStatus",error?.message||"Onderhoudsinstellingen opgeslagen.",!!error);return}
-  if(e.target.id==="hpmwWorkspaceDecorationForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(e.target),fx={id:1};["snow","fireworks","pumpkins","greeting"].forEach(k=>fx[k]=fd.has("effect_"+k));fx.year=fd.get("effect_year")||"";const {error}=await client().from("portal_effects_settings").upsert(fx,{onConflict:"id"});status("hpmwDecorationStatus",error?.message||"Decoratie-instellingen opgeslagen.",!!error);return}
-  if(e.target.id==="hpmwWorkspaceNewsForm"){e.preventDefault();if(!canNews())return;const fd=new FormData(e.target),id=fd.get("id"),payload={kind:"news",title:fd.get("title"),body:fd.get("body"),author:fd.get("author"),source:fd.get("source"),published:fd.get("published")==="true",is_pinned:fd.has("is_pinned"),updated_by:access().session.user.id};let q=id?client().from("admin_content").update(payload).eq("id",id).eq("kind","news"):client().from("admin_content").insert({...payload,created_by:access().session.user.id});const {error}=await q;status("hpmwWorkspaceNewsStatus",error?error.message:"Nieuwsbericht opgeslagen.",!!error);if(!error){document.getElementById("hpmwWorkspaceNewsEditor").innerHTML="";loadNews()}return}
+  const form=e.target;if(previewRole){e.preventDefault();return}
+  if(form.id==="hpmwWorkspaceMaintenanceForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),w={id:1,maintenance_enabled:fd.has("maintenance_enabled"),countdown_enabled:fd.has("countdown_enabled")};["nl","en","pt"].forEach(l=>{w["maintenance_text_"+l]=fd.get("maintenance_text_"+l)||"";w["countdown_title_"+l]=fd.get("countdown_title_"+l)||""});const target=fd.get("countdown_target");w.countdown_target=target?new Date(target).toISOString():null;const {error}=await client().from("portal_widgets").upsert(w,{onConflict:"id"});status("hpmwMaintenanceStatus",error?error.message:tr("save")+" ✓",!!error);return}
+  if(form.id==="hpmwWorkspaceDecorationForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),fx={id:1};["snow","fireworks","pumpkins","greeting"].forEach(k=>fx[k]=fd.has("effect_"+k));fx.year=fd.get("effect_year")||"";const {error}=await client().from("portal_effects_settings").upsert(fx,{onConflict:"id"});status("hpmwDecorationStatus",error?error.message:tr("save")+" ✓",!!error);return}
+  if(form.id==="hpmwWorkspaceNewsForm"){e.preventDefault();if(!canNews())return;const fd=new FormData(form),id=fd.get("id"),payload={kind:"news",title:fd.get("title"),body:fd.get("body"),author:fd.get("author"),source:fd.get("source"),published:fd.get("published")==="true",is_pinned:fd.has("is_pinned"),updated_by:access().session.user.id};const q=id?client().from("admin_content").update(payload).eq("id",id).eq("kind","news"):client().from("admin_content").insert({...payload,created_by:access().session.user.id});const {error}=await q;status("hpmwWorkspaceNewsStatus",error?error.message:tr("save")+" ✓",!!error);if(!error){document.getElementById("hpmwWorkspaceNewsEditor").innerHTML="";loadNews()}return}
  });
- const observer=new MutationObserver(()=>{if(!layer.classList.contains("open"))return;if(body.dataset.workspace==="1")return;wrap()});
+ const observer=new MutationObserver(()=>{if(layer.classList.contains("open")&&body.dataset.workspace!=="1")wrap()});
  observer.observe(body,{childList:true,subtree:false});
- document.getElementById("portalManageLaunch")?.addEventListener("click",()=>{body.dataset.workspace="";setTimeout(wrap,120);setTimeout(wrap,450)});
- document.addEventListener("hpmw:portal-role",()=>{if(layer.classList.contains("open")){body.dataset.workspace="";setTimeout(wrap,100)}});
+ document.getElementById("portalManageLaunch")?.addEventListener("click",()=>{body.dataset.workspace="";previewRole=null;setTimeout(wrap,100);setTimeout(wrap,350)});
+ document.addEventListener("hpmw:portal-role",()=>{previewRole=null;if(layer.classList.contains("open")){body.dataset.workspace="";setTimeout(wrap,80)}});
+ const style=document.createElement("style");style.id="hpmw-admin-workspace-v2-css";style.textContent=`
+ #hpmwManageLayer .hpmw-manage-card{width:min(1180px,96vw)!important;max-width:96vw!important;height:min(88vh,900px)!important;max-height:88vh!important;display:flex!important;flex-direction:column!important}
+ #hpmwManageLayer .hpmw-manage-body{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;padding:24px!important}
+ .hpmw-admin-workspace{min-height:100%;color:#edf4fb}.hpmw-admin-tabs{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:0 0 22px;padding:0 0 15px;border-bottom:1px solid #344b67}
+ .hpmw-admin-tab{border:1px solid #344b67;border-radius:10px;background:#14243a;color:#cbd8e8;padding:11px 16px;font-weight:800;cursor:pointer}
+ .hpmw-admin-tab[aria-selected=true]{background:#294364;border-color:#86a9ce;color:white}
+ .hpmw-admin-panel{display:none}.hpmw-admin-panel.active{display:block}.hpmw-admin-panel[hidden],.hpmw-admin-tab[hidden]{display:none!important}
+ .hpmw-admin-section-head{margin:0 0 16px}.hpmw-admin-section-head h3{font-size:19px;margin:0 0 5px;color:#edf4fb}.hpmw-admin-section-head p{margin:0}
+ .hpmw-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.hpmw-admin-card{padding:17px;border:1px solid #344b67;border-radius:13px;background:#112239;margin:0 0 14px}.hpmw-admin-card h3,.hpmw-admin-card h4{margin:0 0 8px;color:#e7f0fb}
+ .hpmw-admin-muted{color:#aebed0;font-size:12px}.hpmw-admin-field{display:grid;gap:6px;margin:10px 0;color:#cbd8e8;font-size:12px;font-weight:700}
+ .hpmw-admin-field input,.hpmw-admin-field textarea,.hpmw-admin-field select,.hpmw-admin-row>input,.hpmw-admin-row>select{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #425a75;border-radius:8px;background:#091728;color:#f2f6fb}
+ .hpmw-admin-field textarea{min-height:82px;resize:vertical}.hpmw-admin-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.hpmw-admin-row>*{flex:1 1 160px}
+ .hpmw-admin-table{width:100%;border-collapse:collapse;min-width:800px;font-size:12px}.hpmw-admin-table th,.hpmw-admin-table td{padding:9px;border-bottom:1px solid #2b4058;text-align:left;vertical-align:top}.hpmw-admin-table th{color:#bcd2e9;background:#172b43;position:sticky;top:0}
+ .hpmw-admin-table textarea{width:100%;min-width:150px;box-sizing:border-box;padding:8px;border:1px solid #425a75;border-radius:7px;background:#091728;color:#fff}.hpmw-admin-scroll{overflow:auto;border:1px solid #344b67;border-radius:10px}
+ .hpmw-admin-status{margin:10px 0;color:#9de5c8;font-size:12px}.hpmw-admin-status.error{color:#ffb3bd}.hpmw-admin-news-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid #344b67;border-radius:10px;background:#14243a;margin:8px 0}.hpmw-admin-news-item strong{display:block}.hpmw-admin-news-item small{color:#aebed0}
+ .hpmw-role-preview-active [data-admin-panel] .hpmw-admin-card{opacity:.9}
+ @media(max-width:760px){#hpmwManageLayer .hpmw-manage-card{width:100%!important;max-width:100%!important;height:96vh!important;max-height:96vh!important}#hpmwManageLayer .hpmw-manage-body{padding:14px!important}.hpmw-admin-grid{grid-template-columns:1fr}.hpmw-admin-news-item{align-items:flex-start;flex-direction:column}}
+ `;document.head.appendChild(style);
 })();
 </script>
 
@@ -6333,114 +6374,26 @@ iframe[src*="doubleclick.net"],iframe[src*="googlesyndication.com"],iframe[src*=
 ins.adsbygoogle,[id^="google_ads"],[id^="div-gpt-ad"],.adsbygoogle,
 #pun-ads,#fa_ads,.forum-ad,.forum-ads,.advertisement,.ad-container{display:none!important;visibility:hidden!important}
 </style>
-<script id="hpmw-admin-role-preview">
-(()=>{"use strict";
- const readRole=()=>window.HpmwPortalAccess?.role||"guest";
- const isRealAdmin=()=>!!window.HpmwPortalAccess?.session&&readRole()==="administrator";
- let previewRole=null;
- const effectiveRole=()=>previewRole||readRole();
- const refresh=()=>{
-  const body=document.getElementById("hpmwManageBody");
-  if(!body)return;
-  const select=document.getElementById("hpmwRolePreview");
-  const status=document.getElementById("hpmwRolePreviewStatus");
-  if(!isRealAdmin()){previewRole=null;document.getElementById("hpmwRolePreviewBanner")?.remove();return}
-  if(select&&select.value!== (previewRole||""))select.value=previewRole||"";
-  if(status)status.textContent=previewRole?"Voorbeeldweergave als "+previewRole+". Wijzigingen en opslaan zijn uitgeschakeld.":"Je test momenteel je eigen administratorweergave.";
-  body.classList.toggle("hpmw-role-preview-active",!!previewRole);
-  let banner=document.getElementById("hpmwRolePreviewBanner");
-  if(previewRole&&!banner){banner=document.createElement("div");banner.id="hpmwRolePreviewBanner";banner.className="hpmw-admin-card";banner.innerHTML='<strong>Testweergave actief</strong> · '+previewRole+' <button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">Herstel administrator</button>';body.prepend(banner)}
-  if(!previewRole&&banner)banner.remove();
-  body.querySelectorAll("button[type=submit],input[type=submit]").forEach(b=>{if(previewRole)b.disabled=true});
- };
- document.addEventListener("change",e=>{
-  if(e.target?.id==="hpmwRolePreview"){
-   if(!isRealAdmin())return;
-   previewRole=e.target.value||null;
-   const body=document.getElementById("hpmwManageBody");
-   if(body){
-    body.querySelectorAll("[data-admin-panel]").forEach(p=>{
-     const id=p.dataset.adminPanel;
-     const visible=previewRole==="administrator"?true:
-      id==="news"?["news_poster","news_poster_supervisor"].includes(effectiveRole()):
-      id==="translations"||id==="maintenance"||id==="decoration"||id==="roles"?effectiveRole()==="administrator":false;
-     p.hidden=!visible;
-    });
-    body.querySelectorAll("[data-admin-tab]").forEach(t=>{
-     const id=t.dataset.adminTab;
-     const visible=id==="news"?["news_poster","news_poster_supervisor"].includes(effectiveRole()):
-      ["translations","maintenance","decoration","roles"].includes(id)?effectiveRole()==="administrator":false;
-     t.hidden=!visible;
-    });
-   }
-   refresh();
-  }
- });
- document.addEventListener("click",e=>{
-  if(e.target?.closest?.("#hpmwRolePreviewRestore")){
-   previewRole=null;
-   const body=document.getElementById("hpmwManageBody");
-   if(body){body.querySelectorAll("[data-admin-panel],[data-admin-tab]").forEach(el=>el.hidden=false);body.classList.remove("hpmw-role-preview-active");body.querySelectorAll("button[type=submit],input[type=submit]").forEach(b=>b.disabled=false)}
-   refresh();
-  }
-  if(previewRole&&e.target?.closest?.("button[type=submit],input[type=submit]")){e.preventDefault();e.stopImmediatePropagation()}
- },true);
- document.addEventListener("hpmw:portal-role",()=>{previewRole=null;refresh()});
- const obs=new MutationObserver(refresh);
- const start=()=>{const b=document.getElementById("hpmwManageBody");if(b)obs.observe(b,{childList:true,subtree:true});refresh()};
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
-})();
-</script>
+
 
 
 <style id="hpmw-global-ad-removal">
-/* Advertentie- en sponsorvlakken op de volledige portal verbergen voor alle bezoekers. */
-#pun-ads,#fa_ads,#forumotion-advert,#forumotion-ads,
-#google_ads,#google_ads_iframe,[id^="google_ads"],[id^="div-gpt-ad"],
-.adsbygoogle,ins.adsbygoogle,.adsbygoogle-noablate,
-.advertisement,.advertisements,.advertising,.ad-container,.ad-wrapper,
-.advert-container,.forum-ad,.forum-ads,.forum-advert,.forum-advertisement,
+/* Verberg uitsluitend bekende advertentie-elementen en advertentieruimtes. */
+#pun-ads,#fa_ads,#forumotion-advert,#forumotion-ads,#google_ads,#google_ads_iframe,
+[id^="google_ads"],[id^="div-gpt-ad"],[id^="aswift_"],.adsbygoogle,ins.adsbygoogle,
+.adsbygoogle-noablate,.forum-ad,.forum-ads,.forum-advert,.forum-advertisement,
 .fa-advert,.fa_ads,.pun-ads,.module-advert,.module-advertisement,
-iframe[src*="doubleclick"],iframe[src*="googlesyndication"],
-iframe[src*="googleadservices"],iframe[src*="adservice"],
-iframe[src*="banner"],iframe[name*="google_ads"],
-iframe[id*="google_ads"],iframe[class*="ad-"],
-div[id*="google_ads"],div[class*="advertisement"],div[class*="ad-container"]{
- display:none!important;visibility:hidden!important;opacity:0!important;
- width:0!important;height:0!important;min-height:0!important;max-height:0!important;
- margin:0!important;padding:0!important;border:0!important;overflow:hidden!important
+iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="googleadservices"],
+iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
+ display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;
+ min-height:0!important;max-height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important
 }
 </style>
 <script id="hpmw-global-ad-removal">
 (()=>{"use strict";
- const selectors=[
- "#pun-ads","#fa_ads","#forumotion-advert","#forumotion-ads",
- "#google_ads","#google_ads_iframe","[id^='google_ads']","[id^='div-gpt-ad']",
- ".adsbygoogle","ins.adsbygoogle",".adsbygoogle-noablate",
- ".advertisement",".advertisements",".advertising",".ad-container",".ad-wrapper",
- ".advert-container",".forum-ad",".forum-ads",".forum-advert",".forum-advertisement",
- ".fa-advert",".fa_ads",".pun-ads",".module-advert",".module-advertisement",
- "iframe[src*='doubleclick']","iframe[src*='googlesyndication']",
- "iframe[src*='googleadservices']","iframe[src*='adservice']",
- "iframe[name*='google_ads']","iframe[id*='google_ads']",
- "div[id*='google_ads']","div[class*='advertisement']","div[class*='ad-container']"
- ];
- const hide=root=>{
-  if(!root||root.nodeType!==1)return;
-  try{if(root.matches?.(selectors.join(",")))root.remove();}catch(_){}
-  try{root.querySelectorAll?.(selectors.join(",")).forEach(el=>el.remove())}catch(_){}
-  // Forumotion sometimes inserts ad wrappers without stable classes.
-  try{
-   root.querySelectorAll?.("iframe").forEach(frame=>{
-    const src=(frame.getAttribute("src")||"").toLowerCase();
-    const label=((frame.id||"")+" "+(frame.className||"")+" "+(frame.title||"")).toLowerCase();
-    if(/doubleclick|googlesyndication|googleadservices|adservice|advert|banner-ad/.test(src+" "+label)){
-     const box=frame.closest("[id],[class]")||frame;box.remove();
-    }
-   });
-  }catch(_){}
- };
- const start=()=>{hide(document.documentElement);const observer=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>hide(n))));observer.observe(document.documentElement,{childList:true,subtree:true});};
+ const sel='#pun-ads,#fa_ads,#forumotion-advert,#forumotion-ads,#google_ads,#google_ads_iframe,[id^="google_ads"],[id^="div-gpt-ad"],[id^="aswift_"],.adsbygoogle,ins.adsbygoogle,.adsbygoogle-noablate,.forum-ad,.forum-ads,.forum-advert,.forum-advertisement,.fa-advert,.fa_ads,.pun-ads,.module-advert,.module-advertisement,iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="googleadservices"],iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]';
+ const clean=root=>{if(!root||root.nodeType!==1)return;try{if(root.matches(sel))root.remove();root.querySelectorAll(sel).forEach(el=>el.remove())}catch(_){}};
+ const start=()=>{clean(document.documentElement);new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(clean))).observe(document.documentElement,{childList:true,subtree:true})};
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
