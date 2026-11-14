@@ -6287,20 +6287,25 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 </style>
 <script id="hpmw-admin-role-visibility-v2">
 (()=>{"use strict";
- const btn=document.getElementById("portalManageLaunch"),ticketAdmin=document.getElementById("adminLaunch");
+ const btn=document.getElementById("portalManageLaunch");
+ const ticketAdmin=document.getElementById("adminLaunch");
  if(!btn)return;
  const access=()=>window.HpmwPortalAccess;
- const permitted=()=>!!(access()?.session&&(access().role==="administrator"||access().canNews?.()||access().canSupport?.()));
+ const currentRole=()=>access()?.role||"guest";
+ const hasSession=()=>!!access()?.session;
+ const permitted=()=>hasSession()&&["administrator","news_poster","news_poster_supervisor"].includes(currentRole());
  const refresh=()=>{
   const ok=permitted();
   btn.hidden=!ok;
   btn.setAttribute("aria-hidden",String(!ok));
   btn.tabIndex=ok?0:-1;
+  btn.style.setProperty("display",ok?"inline-flex":"none","important");
   if(ticketAdmin){
-   const support=!!(access()?.session&&access()?.canSupport?.());
+   const support=hasSession()&&!!access()?.canSupport?.();
    ticketAdmin.hidden=!support;
    ticketAdmin.setAttribute("aria-hidden",String(!support));
    ticketAdmin.tabIndex=support?0:-1;
+   ticketAdmin.style.setProperty("display",support?"inline-flex":"none","important");
   }
   if(!ok){
    const layer=document.getElementById("hpmwManageLayer");
@@ -6310,31 +6315,14 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
    }
   }
  };
- btn.hidden=true;btn.setAttribute("aria-hidden","true");btn.tabIndex=-1;
- ticketAdmin?.setAttribute("hidden","");
+ const start=()=>{refresh();};
  document.addEventListener("hpmw:portal-role",refresh);
- document.addEventListener("click",e=>{
-  const target=e.target?.closest?.("#portalManageLaunch");
-  if(target&&!permitted()){e.preventDefault();e.stopImmediatePropagation();refresh()}
- },true);
- document.addEventListener("keydown",e=>{
-  if((e.key==="Enter"||e.key===" ")&&document.activeElement===btn&&!permitted()){e.preventDefault();e.stopImmediatePropagation();refresh()}
- },true);
- const start=async()=>{
-  try{
-   const a=access();if(a?.client){
-    const {data,error}=await a.client.auth.getSession();
-    if(!error&&data.session){
-     const {data:row,error:roleError}=await a.client.from("tool_access_roles").select("role").eq("user_id",data.session.user.id).maybeSingle();
-     if(!roleError){document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role:row?.role||"user"}}))}
-    }
-   }
-  }catch(_){}
-  refresh();
- };
+ document.addEventListener("visibilitychange",refresh);
+ window.addEventListener("pageshow",refresh);
+ btn.addEventListener("click",()=>{if(!permitted()){refresh();return}},{capture:true});
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
- const authCheck=setInterval(()=>{if(access()?.session){refresh();clearInterval(authCheck)}},400);
- setTimeout(()=>clearInterval(authCheck),15000);
+ let tries=0;
+ const timer=setInterval(()=>{refresh();tries++;if((hasSession()&&currentRole()!=="guest")||tries>=50)clearInterval(timer)},300);
 })();
 </script>
 
