@@ -4799,21 +4799,6 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
  function open(){layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()}
  function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Eenmalig inloggen</h3><p>Gebruik je bestaande portaalaccount. Deze sessie wordt ook gebruikt voor nieuwsbeheer en de beveiligde beheerfuncties.</p><form id="hpmwPortalLogin"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button><div class="hpmw-manage-status" id="hpmwManageStatus"></div></form></div>'}
- function renderRoleTiles(){return '<div class="hpmw-role-summary">'+ROLES.map(r=>'<div class="hpmw-role-tile"><strong>'+esc(r[1])+'</strong><span>'+esc(r[2])+'</span></div>').join("")+'</div>'}
- function renderPermissionMatrix(){
-  const rows=[
-   ["Portaal bekijken","✓","✓","✓","✓","✓","✓","✓"],
-   ["Ticketformulier invullen","✓","✓","✓","✓","✓","✓","✓"],
-   ["Eigen tickets bekijken","✓","✓","✓","✓","✓","✓","✓"],
-   ["Ticketbeheer openen","✓","✓","✓","—","—","—","—"],
-   ["Tickets lezen / beantwoorden / sluiten / verplaatsen","✓","✓","✓","—","—","—","—"],
-   ["Tickets verwijderen","✓","—","✓","—","—","—","—"],
-   ["Nieuws maken en bewerken","✓","—","—","✓","✓","—","—"],
-   ["Nieuws verwijderen","✓","—","—","—","✓","—","—"],
-   ["Rollen en portaalinstellingen beheren","✓","—","—","—","—","—","—"]
-  ];
-  return '<h3>Toegangsrechten per rol</h3><p>Dit overzicht toont welke onderdelen en acties elke rol mag gebruiken.</p><div class="hpmw-permission-wrap"><table class="hpmw-permission-table"><thead><tr><th>Onderdeel / actie</th>'+ROLES.map(r=>'<th>'+esc(r[1])+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((v,i)=>i===0?'<th>'+esc(v)+'</th>':'<td class="'+(v==="✓"?"allowed":"denied")+'">'+v+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>';
- }
  function buildPortalAdminTabs(){
  if(!body)return;
  const sections={overview:body.querySelector('[data-admin-section="overview"]'),users:body.querySelector('[data-admin-section="users"]'),permissions:body.querySelector('[data-admin-section="permissions"]'),faq:body.querySelector('[data-admin-section="faq"]')};
