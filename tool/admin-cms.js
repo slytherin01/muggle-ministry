@@ -74,7 +74,7 @@
   $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
 
   $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
-  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(":is(#adminCmsView,#newsManagementView) [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==b.dataset.mainTab);});
+  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("#adminCmsView [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==b.dataset.mainTab);});
   $("#roleSave").onclick=saveToolRole;
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
   const tabs=$("#cmsTabs");const newsKindButton=document.createElement("button");newsKindButton.textContent="Nieuwspagina";newsKindButton.dataset.kind="news";newsKindButton.onclick=()=>selectKind("news");tabs.append(newsKindButton);
@@ -83,7 +83,7 @@
   const tabButtons=[...document.querySelectorAll("#cmsMainTabs [data-main-tab]")];
   if(role==="support_moderator"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="ticketRights");document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
   else if(role==="news_poster"){document.querySelector('#newsMainTabs [data-news-tab="content"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
-else {selectKind("news");loadToolRoles();loadNewsModerators();}
+else {switchNewsTab("content");selectKind("news");loadToolRoles();loadNewsModerators();}
 
  }
  let kind="maintenance",editing=null;
@@ -282,5 +282,5 @@ async function addPermissionProfile(){
  window.hpmwInitAdminCms=init;
  window.hpmwOpenAdminCms=()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();go("adminCmsView");load();loadTicketModerators();};
  document.addEventListener("DOMContentLoaded",()=>{init();setTimeout(addTransferPanel,0)});if(document.readyState!=="loading"){init();setTimeout(addTransferPanel,0)};
- document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$(":is(#adminCmsView,#newsManagementView)"))init();syncFaqAdminTab(role);if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
+ document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$(":is(#adminCmsView,#newsManagementView)"))init();syncFaqAdminTab(role);if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#newsMainTabs [data-news-tab="content"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
 })();
