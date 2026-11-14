@@ -4023,7 +4023,7 @@ html body.supabase-authenticated main.shell{
  function show(id){document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const v=$("#"+id);if(v){v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important");window.scrollTo({top:0,behavior:"smooth"})}}
  function setup(){
   const nav=$(".top-actions");
-  const home=$("#newAdminDashboard");if(!home)return;
+  const home=$("#newAdminDashboard");if(!home||home.querySelector(".hpmw-admin-shortcuts"))return;
   /* Hergebruik de bestaande Admin-knop in plaats van een duplicaat toe te voegen. */
   const admin=[...(nav?.querySelectorAll("button")||[])].find(b=>b.textContent.trim()==="Admin");
   if(admin){admin.id="navAdminHome";admin.onclick=()=>show("newAdminDashboard");}
@@ -4053,7 +4053,9 @@ html body.supabase-authenticated main.shell{
   document.addEventListener("hpmw:supabase-role",e=>{const ok=["admin","administrator","support_moderator","supervisor_support_team"].includes(e.detail?.role);if(admin)admin.hidden=!ok;});
   const role=document.body.dataset.supabaseRole;if(admin)admin.hidden=!["admin","administrator","support_moderator","supervisor_support_team"].includes(role);
  }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
+ setup();
+ const observer=new MutationObserver(()=>setup());
+ observer.observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 
