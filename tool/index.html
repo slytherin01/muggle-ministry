@@ -1517,7 +1517,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 </div>
 <div class="panel">
 <div class="admin-layout">
-<aside class="admin-nav">
+<aside class="admin-nav"><button class="nav-btn" id="portalAdminOpen" type="button"><i class="fa-solid fa-user-shield"></i> Portal Admin</button>
 <button class="nav-btn" id="adminRefresh">
 <span class="fa-button-icon">
 <i class="fa-solid fa-rotate hm-fa">
@@ -1533,7 +1533,25 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <span class="hpmw-tool-label hpmw-tool-pt">Ferramenta de Tradução</span>
 </a>
 </aside>
-<div class="admin-main">
+<div class="admin-main"><section id="portalAdminPanel" hidden style="width:100%">
+ <div class="page-head"><div><div class="eyebrow">Beheer</div><h2>Portal Admin</h2><p class="subtitle">Gebruikers, rollen en toegangsrechten beheren.</p></div><button class="btn" id="portalAdminBack" type="button">Terug naar tickets</button></div>
+ <div class="panel" style="padding:20px">
+  <p id="portalAdminStatus" role="status" aria-live="polite">Beheerrechten controleren…</p>
+  <div id="portalAdminContent" hidden>
+   <h3>Gebruiker koppelen of rol wijzigen</h3>
+   <form id="portalAdminAddUser" class="admin-toolbar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+    <input name="user_id" placeholder="Supabase User UUID" required>
+    <input name="forumotion_user_id" type="number" min="1" placeholder="Forumotion gebruikers-ID" required>
+    <input name="forum_username" placeholder="Forumotion gebruikersnaam" required>
+    <select name="role"><option value="administrator">Administrator</option><option value="support_moderator">Support moderator</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option><option value="faq_editor">FAQ-medewerker</option><option value="faq_supervisor">FAQ-supervisor</option><option value="guest">Gast</option><option value="member">Lid</option></select>
+    <button class="btn primary" type="submit">Koppelen / opslaan</button>
+   </form>
+   <h3 style="margin-top:24px">Gebruikers en rollen</h3><div id="portalAdminUsers">Laden…</div>
+   <h3 style="margin-top:24px">Rechten per rol</h3><div id="portalAdminPermissions">Laden…</div>
+  </div>
+ </div>
+</section>
+
 <div id="adminListView">
 <div class="admin-toolbar">
 <div class="admin-search-box">
@@ -4328,7 +4346,40 @@ document.addEventListener("hpmw:supabase-role",start);
 #adminListView .status-pill{border-radius:20px}
 @media(max-width:600px){#adminListView .ticket-table tbody{grid-template-columns:1fr}#adminListView .admin-toolbar{display:block}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
-</body>
+<script id="hpmw-tool-portal-admin">
+(()=>{"use strict";
+ const client=()=>window.hpmwSupabase;
+ const roles=[["administrator","Administrator"],["support_moderator","Support moderator"],["news_poster","Nieuwsposter"],["news_poster_supervisor","Nieuwsposter-supervisor"],["faq_editor","FAQ-medewerker"],["faq_supervisor","FAQ-supervisor"],["guest","Gast"],["member","Lid"],["user","Gebruiker (legacy)"],["supervisor_support_team","Supervisor supportteam (legacy)"]];
+ const keys=["can_view_portal","can_use_tickets","can_manage_news","can_delete_news","can_approve_news","can_manage_faq","can_delete_faq","can_approve_faq","can_manage_settings","can_manage_roles"];
+ const labels=["Portaal lezen","Tickets","Nieuws beheren","Nieuws verwijderen","Nieuws goedkeuren","FAQ beheren","FAQ verwijderen","FAQ goedkeuren","Instellingen","Rollen"];
+ const $=id=>document.getElementById(id), panel=$("portalAdminPanel"), status=$("portalAdminStatus"), content=$("portalAdminContent");
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ async function open(){panel.hidden=false;$("adminListView").hidden=true;status.textContent="Beheerrechten controleren…";content.hidden=true;await load()}
+ async function load(){
+  try{
+   const c=client();if(!c)throw Error("De beveiligde Supabase-sessie is niet beschikbaar.");
+   const {data:sd,error:se}=await c.auth.getSession();if(se)throw se;if(!sd.session)throw Error("Log eerst in met je beheeraccount.");
+   const {data:ur,error:ue}=await c.from("tool_access_roles").select("role").eq("user_id",sd.session.user.id).maybeSingle();if(ue)throw ue;
+   if(ur?.role!=="administrator")throw Error("Geen toegang. Alleen Portal Administrators kunnen dit onderdeel openen.");
+   status.textContent="Ingelogd als "+(sd.session.user.email||"administrator");content.hidden=false;
+   const [{data:members,error:me},{data:links,error:le},{data:perms,error:pe}]=await Promise.all([
+    c.from("tool_access_roles").select("id,user_id,role,created_at").order("created_at"),
+    c.from("portal_forum_accounts").select("supabase_user_id,forumotion_user_id,forum_username"),
+    c.from("portal_role_permissions").select("*").order("role")
+   ]);
+   if(me)throw me;if(le)throw le;if(pe)throw pe;
+   const linkMap=Object.fromEntries((links||[]).map(x=>[x.supabase_user_id,x]));
+   $("portalAdminUsers").innerHTML=(members||[]).map(m=>{const f=linkMap[m.user_id]||{};return '<div class="ticket-card" style="display:grid;grid-template-columns:minmax(180px,1fr) minmax(160px,220px) auto;gap:10px;align-items:center;padding:12px;margin:8px 0"><span><strong>'+esc(f.forum_username||"Forumaccount niet gekoppeld")+'</strong><br><small>'+esc(m.user_id)+' · /u'+esc(f.forumotion_user_id||"—")+'</small></span><select data-pa-role="'+esc(m.user_id)+'">'+roles.map(r=>'<option value="'+r[0]+'" '+(m.role===r[0]?'selected':'')+'>'+r[1]+'</option>').join("")+'</select><button class="btn" data-pa-save="'+esc(m.user_id)+'" type="button">Opslaan</button></div>'}).join("")||"<p>Nog geen gebruikersrollen.</p>";
+   $("portalAdminPermissions").innerHTML='<div style="overflow:auto"><table class="ticket-table" style="min-width:900px"><thead><tr><th>Rol</th>'+labels.map(x=>'<th>'+x+'</th>').join("")+'</tr></thead><tbody>'+(perms||[]).map(r=>'<tr><th>'+esc((roles.find(x=>x[0]===r.role)||[r.role])[1])+'</th>'+keys.map(k=>'<td style="text-align:center"><input type="checkbox" data-pa-perm-role="'+esc(r.role)+'" data-pa-perm-key="'+k+'" '+(r[k]?'checked':'')+' '+(r.role==="administrator"?'disabled':'')+'></td>').join("")+'</tr>').join("")+'</tbody></table></div>';
+  }catch(e){status.textContent=e.message||String(e);content.hidden=true}
+ }
+ $("portalAdminOpen")?.addEventListener("click",open);
+ $("portalAdminBack")?.addEventListener("click",()=>{panel.hidden=true;$("adminListView").hidden=false});
+ $("portalAdminAddUser")?.addEventListener("submit",async e=>{e.preventDefault();const c=client(),fd=new FormData(e.target),user_id=String(fd.get("user_id")).trim(),forumotion_user_id=Number(fd.get("forumotion_user_id")),forum_username=String(fd.get("forum_username")).trim(),role=String(fd.get("role"));status.textContent="Opslaan…";try{const {data:sd}=await c.auth.getSession();const {error}=await c.from("tool_access_roles").upsert({user_id,role},{onConflict:"user_id"});if(error)throw error;const {error:le}=await c.from("portal_forum_accounts").upsert({supabase_user_id:user_id,forumotion_user_id,forum_username,updated_by:sd.session.user.id},{onConflict:"supabase_user_id"});if(le)throw le;e.target.reset();await load();status.textContent="Gebruiker en rol opgeslagen."}catch(err){status.textContent=err.message||String(err)}});
+ document.addEventListener("click",async e=>{const b=e.target.closest("[data-pa-save]");if(!b)return;const id=b.dataset.paSave,role=$("portalAdminUsers").querySelector('[data-pa-role="'+CSS.escape(id)+'"]').value;b.disabled=true;try{const {error}=await client().from("tool_access_roles").update({role}).eq("user_id",id);if(error)throw error;b.textContent="Opgeslagen"}catch(err){status.textContent=err.message||String(err)}finally{b.disabled=false}});
+ document.addEventListener("change",async e=>{const el=e.target.closest("[data-pa-perm-role]");if(!el)return;el.disabled=true;try{const {data:sd}=await client().auth.getSession();const payload={[el.dataset.paPermKey]:el.checked,updated_by:sd.session.user.id,updated_at:new Date().toISOString()};const {error}=await client().from("portal_role_permissions").update(payload).eq("role",el.dataset.paPermRole);if(error)throw error}catch(err){el.checked=!el.checked;status.textContent="Opslaan mislukt: "+err.message}finally{el.disabled=false}});
+})();
+</script></body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
 #newTranslationsView #translationEditor .form-grid > .field:has(#trPt){display:block!important;visibility:visible!important;grid-column:1/-1!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important}
