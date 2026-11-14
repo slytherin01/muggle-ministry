@@ -2,7 +2,7 @@
 (()=> {
  const $=(s,r=document)=>r.querySelector(s);
  const client=()=>window.hpmwSupabase;
- const kinds={news:"Nieuwspagina",faq:"Veelgestelde vragen"};
+ const kinds={page:"Portaalteksten",news:"Nieuwspagina",faq:"Veelgestelde vragen"};
  const perms=["view","edit","publish","delete"];
  const css=`
  #adminCmsView .cms-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0} #adminCmsView .cms-main-tabs{padding:8px;background:#0b1422;border:1px solid #26364c;border-radius:12px} #adminCmsView .cms-main-tabs button{flex:1;min-width:130px} #adminCmsView [data-main-panel][hidden]{display:none!important}
