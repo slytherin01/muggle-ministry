@@ -17,7 +17,7 @@
   function key(ticket) {
     const forumId = Number(ticket.openForumId || ticket.forumId);
     const topicId = String(ticket.id || "");
-    if (!Number.isInteger(forumId) || forumId <= 0 || !/^\\d+$/.test(topicId)) {
+    if (!Number.isInteger(forumId) || forumId <= 0 || !/^\d+$/.test(topicId)) {
       throw new Error("Ticket mist een geldig Forumotion-forum- of topicnummer.");
     }
     return forumId + ":" + topicId;
@@ -45,7 +45,7 @@
   async function sync(tickets) {
     if (!tickets || !tickets.length) return { synced: 0, created: 0 };
     const db = client();
-    const ids = Array.from(new Set(tickets.map(t => String(t.id)).filter(x => /^\\d+$/.test(x))));
+    const ids = Array.from(new Set(tickets.map(t => String(t.id)).filter(x => /^\d+$/.test(x))));
     if (!ids.length) return { synced: 0, created: 0 };
     const { data, error } = await db.from(TABLE)
       .select("ticket_key,forumotion_topic_id,forumotion_forum_id,ticket_number,subject,category,department,status,priority,assignee_forumotion_user_id,assignee_name,internal_note,created_by_forumotion_user_id,created_by_name,created_at,updated_at")
