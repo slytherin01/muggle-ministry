@@ -1954,18 +1954,18 @@ const doc=new DOMParser().parseFromString(html,"text/html");
 const add=(id,title,url,meta)=>{
 if(!id||seen.has(id))return;
 seen.add(id);
-const tm=String(title||"").match(/\\[\\s*ticket\\s*#?\\s*([0-9]+)\\s*\\]/i);
+const tm=String(title||"").match(/\[\s*ticket\s*#?\s*([0-9]+)\s*\]/i);
 const num=tm?tm[1]:id;
-const clean=String(title||"Topic #"+id).replace(/^\\s*\\[\\s*ticket\\s*#?\\s*[0-9]+\\s*\\]\\s*/i,"").trim();
+const clean=String(title||"Topic #"+id).replace(/^\s*\[\s*ticket\s*#?\s*[0-9]+\s*\]\s*/i,"").trim();
 found.push({id:String(id),num,title:clean||"Topic #"+id,cat:catObj.name,catKey:catObj.key,forumId:fid,openForumId:catObj.id,closedForumId:catObj.closed,closed:!!closed,url:new URL(url,current).href,user:"",meta:meta||""});
 };
 doc.querySelectorAll("a[href*='/t']").forEach(a=>{
-const href=a.getAttribute("href")||"",m=href.match(/\\/t(\\d+)(?:-|$)/i);
+const href=a.getAttribute("href")||"",m=href.match(/\/t(\d+)(?:-|$)/i);
 if(!m)return;
-const title=(a.textContent||"").replace(/\\s+/g," ").trim();
+const title=(a.textContent||"").replace(/\s+/g," ").trim();
 if(!title)return;
 const row=a.closest("tr,li,.topic-row,.row,.forumline")?.textContent||title;
-add(m[1],title,href,row.replace(/\\s+/g," ").trim());
+add(m[1],title,href,row.replace(/\s+/g," ").trim());
 });
 const pagination=doc.querySelectorAll('a[href*="start="],a[rel="next"],.pagination a[href],.pagination a.next[href]');
 pagination.forEach(a=>{
