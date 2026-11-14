@@ -1257,7 +1257,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <div class="hpmw-admin-intro"><div class="eyebrow">HPMAGICWORLD · BEHEERTOOL</div><h1>Welkom in de beheeromgeving</h1><p class="hpmw-welcome-copy">Vanuit deze omgeving beheer je de vertalingen van Hpmagicworld en behandel je binnenkomende supporttickets.</p><h2>Introductie</h2><p>Gebruik de navigatiebalk bovenaan om je portaalinstellingen en vertalingen te beheren. Deze beheeromgeving is alleen toegankelijk na het inloggen.</p></div>
 <div class="dash-grid">
 <article class="dash-card"><div class="dash-icon"><i class="fa-solid fa-language"></i></div><h2>Vertalingen</h2><p>Pas teksten aan in Nederlands, Engels en Portugees en publiceer ze naar de portal.</p><button class="btn primary" id="dashTranslations">Vertalingen beheren</button></article>
-<article class="dash-card"><div class="dash-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h2>Portaal-effecten</h2><p>Stel sneeuwval, vuurwerk en zwevende pompoenen in voor de portaalweergave.</p><button class="btn primary" id="dashSettings" type="button" onclick='document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});var v=document.getElementById("newSettingsView");v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important");window.scrollTo(0,0);return false;'>Weergave openen</button></article>
+<article class="dash-card"><div class="dash-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h2>Weergave</h2><p>Stel sneeuwval, vuurwerk en zwevende pompoenen in voor de portaalweergave.</p><button class="btn primary" id="dashSettings" type="button" onclick='document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});var v=document.getElementById("newSettingsView");v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important");window.scrollTo(0,0);return false;'>Weergave openen</button></article>
 
 </div></section>
 <section class="view" id="newSettingsView">
@@ -4105,7 +4105,7 @@ html body.supabase-authenticated main.shell{
    ["fa-sliders","Weergave","newSettingsView"],
    ["fa-language","Vertalingen","newTranslationsView"],
    ["fa-ticket","Ticketbeheer","adminView"],
-   ["fa-screwdriver-wrench","Beheer & rechten","adminCmsView"]
+   ["fa-screwdriver-wrench","Autorisaties","adminCmsView"]
   ];
   items.forEach(([ico,label,id])=>{
    const b=document.createElement("button");b.type="button";b.innerHTML='<i class="fa-solid '+ico+'"></i><span>'+label+'</span>';
