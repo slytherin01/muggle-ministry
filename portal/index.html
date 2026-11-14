@@ -6609,12 +6609,14 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  const fallback="https://i44.servimg.com/u/f44/11/48/74/42/normaa11.png";
  const apply=()=>{
   const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
-  /* Geen extra CSS-rand: de bannerafbeelding behoudt uitsluitend zijn eigen rand. */
-  bar.style.setProperty("border","0","important");
-  bar.style.setProperty("outline","0","important");
+  /* Zelfde nette omlijsting als de widgets: subtiele blauwgrijze rand en zachte schaduw. */
+  bar.style.setProperty("box-sizing","border-box","important");
+  bar.style.setProperty("border","1px solid #344b61","important");
+  bar.style.setProperty("outline","none","important");
   bar.style.setProperty("outline-offset","0","important");
-  bar.style.setProperty("box-shadow","none","important");
-  bar.style.setProperty("border-radius","0","important");
+  bar.style.setProperty("box-shadow","0 12px 28px rgba(0,0,0,.32)","important");
+  bar.style.setProperty("border-radius","13px","important");
+  bar.style.setProperty("background-color","#101c2b","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
   /* Toon de banner als img-laag; forceer display ook tegen de oudere algemene img-verbergregel in. */
@@ -6630,9 +6632,9 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   img.style.setProperty("visibility","visible","important");
   img.style.setProperty("opacity","1","important");
   img.style.setProperty("position","absolute","important");
-  img.style.setProperty("inset","0","important");
-  img.style.setProperty("width","100%","important");
-  img.style.setProperty("height","100%","important");
+  img.style.setProperty("inset","1px","important");
+  img.style.setProperty("width","calc(100% - 2px)","important");
+  img.style.setProperty("height","calc(100% - 2px)","important");
   img.style.setProperty("object-fit","fill","important");
   img.style.setProperty("z-index","2","important");
   if(img.src!==src)img.src=src;
