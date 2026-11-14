@@ -4027,6 +4027,12 @@ html body.supabase-authenticated main.shell{
   /* Hergebruik de bestaande Admin-knop in plaats van een duplicaat toe te voegen. */
   const admin=[...(nav?.querySelectorAll("button")||[])].find(b=>b.textContent.trim()==="Admin");
   if(admin){admin.id="navAdminHome";admin.onclick=()=>show("newAdminDashboard");}
+  const dashGrid=home.querySelector(".dash-grid");
+  if(dashGrid&&!document.getElementById("dashTicketManagement")){
+   const card=document.createElement("article");card.className="dash-card";card.id="dashTicketManagement";
+   card.innerHTML='<div class="dash-icon"><i class="fa-solid fa-ticket"></i></div><h2>Ticketbeheer</h2><p>Bekijk, behandel en sluit supporttickets en beheer reacties.</p><button class="btn primary" type="button">Ticketbeheer openen</button>';
+   card.querySelector("button").onclick=()=>show("adminView");dashGrid.append(card);
+  }
   const intro=home.querySelector(".hpmw-admin-intro");
   const shortcuts=document.createElement("div");shortcuts.className="hpmw-admin-shortcuts";
   const items=[
@@ -4222,7 +4228,7 @@ document.addEventListener("hpmw:supabase-role",start);
   const search=node("input");search.id="hpmwFaqSearch";search.type="search";search.placeholder="Zoek in vragen en antwoorden…";search.setAttribute("aria-label","Zoek in veelgestelde vragen");
   const category=node("select");category.id="hpmwFaqCategoryFilter";category.setAttribute("aria-label","Filter op categorie");
   category.append(node("option","", "Alle categorieën"));
-  const status=node("p","hpmw-faq-status","Veelgestelde vragen laden zodra je het venster opent.");
+  const status=node("p","hpmw-faq-status","Veelgestelde vragen laden zodra je het venster opent.");status.id="hpmwFaqStatus";
   tools.append(search,category);content.before(tools,status);
   search.addEventListener("input",render);category.addEventListener("change",render);
   const style=node("style");style.textContent="#hpmwFaqOverlay .hpmw-faq-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.45fr);gap:10px;margin:16px 0 12px}#hpmwFaqOverlay .hpmw-faq-tools input,#hpmwFaqOverlay .hpmw-faq-tools select{width:100%;min-width:0;padding:11px 12px;border:1px solid #40516b;border-radius:9px;background:#101c2c;color:#edf3fb}#hpmwFaqOverlay .hpmw-faq-status{margin:0 0 12px;color:#9aacc2;font-size:12px}#hpmwFaqOverlay .hpmw-faq-content details{padding:15px 17px;border:1px solid #34435a;border-radius:12px;background:rgba(255,255,255,.035)}#hpmwFaqOverlay .hpmw-faq-content summary{cursor:pointer;color:#d8c6ff;font-weight:750;line-height:1.45}#hpmwFaqOverlay .hpmw-faq-content details p{margin:10px 0 0;white-space:pre-wrap;line-height:1.6}#hpmwFaqOverlay .hpmw-faq-empty{padding:18px;border:1px dashed #40516b;border-radius:12px;color:#aab9ca}@media(max-width:650px){#hpmwFaqOverlay .hpmw-faq-tools{grid-template-columns:1fr}}";
