@@ -2042,7 +2042,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
    <button class="cat" type="button" data-faq-category="portal"><span class="round-icon"><i class="fa-solid fa-ticket"></i></span><span><strong>Portaal</strong><span>Veelgestelde vragen over het portaal en tickets</span></span></button>
    <button class="cat" type="button" data-faq-category="forum"><span class="round-icon"><i class="fa-solid fa-comments"></i></span><span><strong>Forum</strong><span>Veelgestelde vragen over het forum</span></span></button>
   </div>
-  <div class="hpmw-faq-category-content" id="hpmwFaqCategoryContent" aria-live="polite"><div class="empty">Selecteer een categorie om de artikelen te bekijken.</div></div>
+  <div class="hpmw-faq-category-content" id="hpmwFaqCategoryContent" aria-live="polite" hidden><div class="empty">Selecteer een categorie om de artikelen te bekijken.</div></div>
  </section>
 </section>
 <div class="quiz-backdrop" id="sortQuizBackdrop"><section class="quiz-dialog" role="dialog" aria-modal="true" aria-labelledby="sortQuizTitle"><div class="popup-head"><div><div class="quiz-kicker">DE AFDELINGSQUIZ</div><h2 id="sortQuizTitle">Welke afdeling past bij jou?</h2></div><button type="button" class="close-btn" id="sortQuizClose" aria-label="Quiz sluiten">×</button></div><div><p class="quiz-intro">Beantwoord vier korte vragen. Kies steeds het antwoord dat het beste bij jou past.</p><div id="sortQuizQuestion"></div><div class="quiz-progress" id="sortQuizProgress">Vraag 1 van 4</div></div></section></div>
@@ -5023,7 +5023,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   target.innerHTML=rows.length?rows.map(a=>'<article class="hpmw-cms-card"><h3 class="hpmw-cms-title">'+esc(a.title)+'</h3><p class="hpmw-cms-body">'+esc(a.body).replace(/\n/g,"<br>")+'</p></article>').join(""):'<div class="empty">In deze categorie staan nog geen gepubliceerde vragen.</div>';
   host()?.querySelectorAll("[data-faq-category]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.faqCategory===selected)));
  }
- document.addEventListener("click",e=>{if(e.target.closest("#hpmwFaqStart")){const intro=document.getElementById("hpmwFaqIntro"),picker=host();if(intro)intro.hidden=true;if(picker)picker.hidden=false;return}const b=e.target.closest("#hpmwFaqCategories [data-faq-category]");if(!b)return;selected=b.dataset.faqCategory;renderArticles()});
+ document.addEventListener("click",e=>{if(e.target.closest("#hpmwFaqStart")){const intro=document.getElementById("hpmwFaqIntro"),picker=host();if(intro)intro.hidden=true;if(picker)picker.hidden=false;const articles=out();if(articles)articles.hidden=false;return}const b=e.target.closest("#hpmwFaqCategories [data-faq-category]");if(!b)return;selected=b.dataset.faqCategory;const articles=out();if(articles)articles.hidden=false;renderArticles()});
  document.addEventListener("hpmw:portal-role",()=>{if(document.getElementById("faqView"))load()});
  const start=()=>{load();const back=document.getElementById("faqBack");back?.addEventListener("click",()=>window.hpmwShowPortalView?.("homeView"));};
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
