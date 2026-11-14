@@ -4855,7 +4855,7 @@ $("#portalManageLaunch")?.addEventListener("click",open);
   if(e.target.closest("#hpmwPortalLogout")){await client.auth.signOut();session=null;role="guest";await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
  });
  async function newsRequest(method,payload,id){
-  const h=await headers();const url=URL+"/rest/v1/admin_content"+(id?"?id=eq."+encodeURIComponent(id):"");
+  const h=await headers();const url=URL+(id?"?id=eq."+encodeURIComponent(id):"");
   const r=await fetch(url,{method,headers:h,body:payload?JSON.stringify(payload):undefined,cache:"no-store"});
   if(!r.ok){const t=await r.text();throw new Error(t||"Opslaan mislukt")}return r.status===204?null:r.json();
  }
@@ -5064,7 +5064,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 </script>
 
 
-</body></html>
+\n<style id="hpmw-home-nav-gap-fix-20261114">\n/* Trek de homepage-banner dichter tegen de vaste navigatiebalk aan. */\nbody:has(#introView.active) main.shell{margin-top:24px!important}\nbody:has(#introView.active) #homeView{margin-top:0!important}\n</style>\n</body></html>
 
 
 
