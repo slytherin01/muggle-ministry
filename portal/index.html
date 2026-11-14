@@ -6620,3 +6620,20 @@ header.topbar.luxury-nav-v2,header.topbar.luxury-nav-v2 nav.top-actions{position
 header.topbar.luxury-nav-v2 nav.top-actions>#portalManageLaunch{position:relative!important;z-index:2147483001!important;pointer-events:auto!important;cursor:pointer!important;touch-action: manipulation!important;}
 header.topbar.luxury-nav-v2 nav.top-actions>#portalManageLaunch *{pointer-events:none!important;}
 </style>
+
+<style id="hpmw-portal-nav-layout-final">
+/* Herstel de navigatie als één flexrij; geen overlappende order- en auto-marge-regels. */
+html body header.topbar.luxury-nav-v2{width:100%!important;min-height:58px!important;height:auto!important;padding:6px 16px!important;box-sizing:border-box!important;z-index:2147483000!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-wrap:nowrap!important;gap:8px!important;width:100%!important;max-width:none!important;margin:0!important;overflow-x:auto!important;overflow-y:hidden!important;pointer-events:auto!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>*{position:relative!important;flex:0 0 auto!important;margin-left:0!important;pointer-events:auto!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>:nth-child(1){order:1!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>:nth-child(2){order:2!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#faqLaunch{order:3!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#ticketSupportLaunch{order:4!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#myTicketsLaunch{order:5!important;margin-left:auto!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#portalManageLaunch{order:6!important;z-index:2147483001!important;pointer-events:auto!important;cursor:pointer!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#adminLaunch{order:7!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>.hpmw-language-wrap{order:8!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions>#accountLink{order:9!important}
+@media(max-width:760px){html body header.topbar.luxury-nav-v2{padding:6px 8px!important}html body header.topbar.luxury-nav-v2 nav.top-actions{gap:4px!important}}
+</style>
