@@ -1945,6 +1945,16 @@ html body #introView #hpmwHomeLayout .hpmw-sorting-hat-widget > button.hpmw-sort
   <div class="hpmw-vacancies-empty" id="hpmwVacancyList"><h2><i class="fa-solid fa-briefcase"></i> Vacatures</h2><p>Vacatures worden geladen...</p></div><article id="hpmwVacancyDetail" hidden></article>
  </section>
 </section>
+<section class="view" id="modteamView">
+ <section class="panel hpmw-modteam-page">
+  <div class="page-head hpmw-modteam-page-head">
+   <div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Het Modteam</h1><p class="subtitle">Maak kennis met de moderators en beheerders van Hpmagicworld.</p></div>
+   <button class="btn" id="modteamBack" type="button"><i class="fa-solid fa-arrow-left"></i> Terug naar portaal</button>
+  </div>
+  <div class="hpmw-modteam-intro"><div class="hpmw-modteam-emblem"><i class="fa-solid fa-shield-halved"></i></div><div><h2>Het team achter de community</h2><p>Hier vind je het actuele teamoverzicht. De leden en hun functies worden rechtstreeks uit de forumgroep geladen.</p></div></div>
+  <iframe id="hpmwForumModteamFrame" title="Het Modteam van Hpmagicworld" src="/groups" loading="lazy"></iframe>
+ </section>
+</section>
 <section class="view" id="awardsView">
  <section class="panel hpmw-awards-page">
   <div class="page-head hpmw-awards-page-head">
@@ -4012,7 +4022,7 @@ s.textContent += "#introView{height:auto!important;min-height:0!important;max-he
    if(!grid){
     grid=el("div","hpmw-home-layout");grid.id="hpmwHomeLayout";
     const left=el("aside","hpmw-home-side hpmw-home-left");
-    left.innerHTML='<section class="hpmw-side-card hpmw-side-note hpmw-my-department" id="hpmwMyDepartment" style="display:none"><div class="hpmw-side-heading"><i class="fa-solid fa-landmark"></i> Mijn Afdeling</div><div class="hpmw-department-content"></div></section><section class="hpmw-side-card hpmw-side-note hpmw-forum-widget" role="link" tabindex="0" aria-label="Open Het Forum"><div class="hpmw-side-heading"><i class="fa-solid fa-comments"></i> Het Forum</div><a class="hpmw-sorting-hat-link hpmw-forum-widget-link" href="https://testforumjoost.forumactie.com/forum" target="_blank" rel="noopener" aria-label="Open Het Forum"><img src="https://i44.servimg.com/u/f44/11/48/74/42/hetfor11.png" alt="Het Forum" loading="eager" decoding="async"></a></section><section class="hpmw-side-card hpmw-extra-widget"><div class="hpmw-side-heading"><i class="fa-solid fa-user-shield"></i> Modteam</div><div class="hpmw-extra-widget-body"><i class="fa-solid fa-shield-halved"></i><p>Maak kennis met het team dat de community helpt beheren.</p><a href="https://testforumjoost.forumactie.com/groups" target="_blank" rel="noopener">Bekijk het team</a></div></section>';
+    left.innerHTML='<section class="hpmw-side-card hpmw-side-note hpmw-my-department" id="hpmwMyDepartment" style="display:none"><div class="hpmw-side-heading"><i class="fa-solid fa-landmark"></i> Mijn Afdeling</div><div class="hpmw-department-content"></div></section><section class="hpmw-side-card hpmw-side-note hpmw-forum-widget" role="link" tabindex="0" aria-label="Open Het Forum"><div class="hpmw-side-heading"><i class="fa-solid fa-comments"></i> Het Forum</div><a class="hpmw-sorting-hat-link hpmw-forum-widget-link" href="https://testforumjoost.forumactie.com/forum" target="_blank" rel="noopener" aria-label="Open Het Forum"><img src="https://i44.servimg.com/u/f44/11/48/74/42/hetfor11.png" alt="Het Forum" loading="eager" decoding="async"></a></section><section class="hpmw-side-card hpmw-extra-widget"><div class="hpmw-side-heading"><i class="fa-solid fa-user-shield"></i> Modteam</div><button class="hpmw-extra-widget-body hpmw-modteam-open" type="button" data-open-modteam><i class="fa-solid fa-shield-halved"></i><p>Maak kennis met het team dat de community helpt beheren.</p><span>Bekijk het Modteam <i class="fa-solid fa-arrow-right"></i></span></button></section>';
     const center=el("div","hpmw-home-main");center.id="hpmwHomeMain";
     const right=el("aside","hpmw-home-side hpmw-home-right");
     right.innerHTML='<section class="hpmw-side-card hpmw-sorting-hat-widget"><div class="hpmw-side-heading"><i class="fa-solid fa-wand-magic-sparkles"></i> De Sorteerhoed</div><div class="hpmw-sorting-hat-link" role="button" tabindex="0" data-open-sorting-hat aria-label="Open De Sorteerhoed"><img src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/images/sorteerhoed.png" alt="De Sorteerhoed" loading="eager" decoding="async"></div></section><section class="hpmw-side-card hpmw-side-note hpmw-sorting-hat-widget"><div class="hpmw-side-heading"><i class="fa-solid fa-briefcase"></i> Vacatures</div><div class="hpmw-sorting-hat-link hpmw-vacancies-image" role="button" tabindex="0" data-open-vacancies aria-label="Open Vacatures"><img src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/images/vacatures.png" alt="Vacatures" loading="eager" decoding="async"></div></section><section class="hpmw-side-card hpmw-extra-widget"><div class="hpmw-side-heading"><i class="fa-solid fa-award"></i> Awards</div><button class="hpmw-extra-widget-body hpmw-awards-open" type="button" data-open-awards><i class="fa-solid fa-medal"></i><p>Bekijk alle onderscheidingen en awards van de community.</p><span>Bekijk awards <i class="fa-solid fa-arrow-right"></i></span></button></section>';
@@ -5625,6 +5635,33 @@ html body #introView #hpmwHomeLayout .hpmw-forum-widget:hover img{filter:none!im
   if(event.key!=="Enter"&&event.key!==" ")return;
   const target=event.target instanceof Element?event.target:null;
   if(target?.closest("#introView [data-open-awards]")){event.preventDefault();window.hpmwShowPortalView?.("awardsView");}
+ });
+})();
+</script>
+<style id="hpmw-internal-modteam-page-style-20261114">
+#introView .hpmw-modteam-open{width:100%;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
+#introView .hpmw-modteam-open>span{color:#e4c47f;font-size:12px;font-weight:800}
+#introView .hpmw-modteam-open:hover>span{color:#f4d99b}
+#modteamView .hpmw-modteam-page{max-width:1100px!important;margin:0 auto!important;padding:22px!important}
+#modteamView .hpmw-modteam-page-head{padding-bottom:15px;border-bottom:1px solid #344b67}
+#modteamView .hpmw-modteam-intro{display:flex;align-items:center;gap:15px;margin:18px 0;padding:17px;border:1px solid #344b67;border-radius:12px;background:linear-gradient(135deg,#17283d,#111d2d)}
+#modteamView .hpmw-modteam-emblem{width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border:1px solid #526b88;border-radius:13px;background:#203650;color:#d9e7f7;font-size:24px}
+#modteamView .hpmw-modteam-intro h2{margin:0 0 4px;font-size:16px;color:#edf3fa}
+#modteamView .hpmw-modteam-intro p{margin:0;color:#aebed0;font-size:12px;line-height:1.6}
+#modteamView #hpmwForumModteamFrame{display:block!important;width:100%!important;height:min(76vh,900px)!important;min-height:560px!important;border:1px solid #344b67!important;border-radius:12px!important;background:#101f33!important}
+@media(max-width:650px){#modteamView .hpmw-modteam-page{padding:13px!important}#modteamView .hpmw-modteam-page-head{gap:12px}#modteamView .hpmw-modteam-page-head>.btn{margin-left:auto}#modteamView .hpmw-modteam-intro{align-items:flex-start;padding:13px}#modteamView #hpmwForumModteamFrame{height:75vh!important;min-height:500px!important}}
+</style>
+<script id="hpmw-internal-modteam-navigation-20261114">
+(()=>{"use strict";
+ document.addEventListener("click",event=>{
+  const target=event.target instanceof Element?event.target:null;if(!target)return;
+  if(target.closest("#introView [data-open-modteam]")){event.preventDefault();event.stopImmediatePropagation();window.hpmwShowPortalView?.("modteamView");return;}
+  if(target.closest("#modteamBack")){event.preventDefault();window.hpmwShowPortalView?.("introView");}
+ },true);
+ document.addEventListener("keydown",event=>{
+  if(event.key!=="Enter"&&event.key!==" ")return;
+  const target=event.target instanceof Element?event.target:null;
+  if(target?.closest("#introView [data-open-modteam]")){event.preventDefault();window.hpmwShowPortalView?.("modteamView");}
  });
 })();
 </script>
