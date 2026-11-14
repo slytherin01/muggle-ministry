@@ -6391,3 +6391,56 @@ ins.adsbygoogle,[id^="google_ads"],[id^="div-gpt-ad"],.adsbygoogle,
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
+
+
+<style id="hpmw-global-ad-removal">
+/* Advertentie- en sponsorvlakken op de volledige portal verbergen voor alle bezoekers. */
+#pun-ads,#fa_ads,#forumotion-advert,#forumotion-ads,
+#google_ads,#google_ads_iframe,[id^="google_ads"],[id^="div-gpt-ad"],
+.adsbygoogle,ins.adsbygoogle,.adsbygoogle-noablate,
+.advertisement,.advertisements,.advertising,.ad-container,.ad-wrapper,
+.advert-container,.forum-ad,.forum-ads,.forum-advert,.forum-advertisement,
+.fa-advert,.fa_ads,.pun-ads,.module-advert,.module-advertisement,
+iframe[src*="doubleclick"],iframe[src*="googlesyndication"],
+iframe[src*="googleadservices"],iframe[src*="adservice"],
+iframe[src*="banner"],iframe[name*="google_ads"],
+iframe[id*="google_ads"],iframe[class*="ad-"],
+div[id*="google_ads"],div[class*="advertisement"],div[class*="ad-container"]{
+ display:none!important;visibility:hidden!important;opacity:0!important;
+ width:0!important;height:0!important;min-height:0!important;max-height:0!important;
+ margin:0!important;padding:0!important;border:0!important;overflow:hidden!important
+}
+</style>
+<script id="hpmw-global-ad-removal">
+(()=>{"use strict";
+ const selectors=[
+ "#pun-ads","#fa_ads","#forumotion-advert","#forumotion-ads",
+ "#google_ads","#google_ads_iframe","[id^='google_ads']","[id^='div-gpt-ad']",
+ ".adsbygoogle","ins.adsbygoogle",".adsbygoogle-noablate",
+ ".advertisement",".advertisements",".advertising",".ad-container",".ad-wrapper",
+ ".advert-container",".forum-ad",".forum-ads",".forum-advert",".forum-advertisement",
+ ".fa-advert",".fa_ads",".pun-ads",".module-advert",".module-advertisement",
+ "iframe[src*='doubleclick']","iframe[src*='googlesyndication']",
+ "iframe[src*='googleadservices']","iframe[src*='adservice']",
+ "iframe[name*='google_ads']","iframe[id*='google_ads']",
+ "div[id*='google_ads']","div[class*='advertisement']","div[class*='ad-container']"
+ ];
+ const hide=root=>{
+  if(!root||root.nodeType!==1)return;
+  try{if(root.matches?.(selectors.join(",")))root.remove();}catch(_){}
+  try{root.querySelectorAll?.(selectors.join(",")).forEach(el=>el.remove())}catch(_){}
+  // Forumotion sometimes inserts ad wrappers without stable classes.
+  try{
+   root.querySelectorAll?.("iframe").forEach(frame=>{
+    const src=(frame.getAttribute("src")||"").toLowerCase();
+    const label=((frame.id||"")+" "+(frame.className||"")+" "+(frame.title||"")).toLowerCase();
+    if(/doubleclick|googlesyndication|googleadservices|adservice|advert|banner-ad/.test(src+" "+label)){
+     const box=frame.closest("[id],[class]")||frame;box.remove();
+    }
+   });
+  }catch(_){}
+ };
+ const start=()=>{hide(document.documentElement);const observer=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>hide(n))));observer.observe(document.documentElement,{childList:true,subtree:true});};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
