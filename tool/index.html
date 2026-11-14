@@ -4256,7 +4256,7 @@ document.addEventListener("hpmw:supabase-role",start);
   data.forEach((category,index)=>{
    const card=node("section","hpmw-faq-category");
    card.append(node("h3","hpmw-faq-category-title",category.name));
-   const rows=category.items.length?category.items:[{title:index===0?examples[0].question:examples[1].question,body:index===0?examples[0].answer:examples[1].answer}];
+   const fallback=examples.find(x=>x.name.toLocaleLowerCase("nl-NL")===category.name.toLocaleLowerCase("nl-NL"))||examples[index%examples.length];const rows=category.items.length?category.items:[{title:fallback.question,body:fallback.answer}];
    rows.forEach(item=>{const qa=node("article","hpmw-faq-qa");qa.append(node("h4","",item.title),node("p","",item.body));card.append(qa)});
    content.append(card);
   });
