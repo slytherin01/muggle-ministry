@@ -5005,16 +5005,14 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 (()=>{"use strict";
  async function refresh(){
   const b=document.getElementById("portalManageLaunch");if(!b)return;
-  const access=window.HpmwPortalAccess;let forumId=Number(window._userdata?.user_id||0),forumName=String(window._userdata?.username||window._userdata?.username_clean||"").trim();
+  const access=window.HpmwPortalAccess;let role=null,forumId=Number(window._userdata?.user_id||0),forumName=String(window._userdata?.username||window._userdata?.username_clean||"").trim();
   try{const saved=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null");if(!forumId&&saved?.logged)forumId=Number(saved.id||0);if(!forumName&&saved?.logged)forumName=String(saved.name||"")}catch(e){}
-  let role=null;
   try{
    if(access?.ensureClient){await access.ensureClient();const c=access.client();const {data,error}=await c.auth.getSession();if(!error&&data.session){const {data:r}=await c.from("tool_access_roles").select("role").eq("user_id",data.session.user.id).maybeSingle();role=r?.role||null;
     if(role==="administrator"&&forumId>0&&forumName){await c.from("portal_forum_accounts").upsert({supabase_user_id:data.session.user.id,forumotion_user_id:forumId,forum_username:forumName,updated_by:data.session.user.id},{onConflict:"supabase_user_id"})}
    }}
   }catch(e){}
-  if(!role&&forumId>0){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/rpc/get_portal_role_for_forum_user",{method:"POST",headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx","Content-Type":"application/json"},body:JSON.stringify({p_forum_user_id:forumId}),cache:"no-store"});if(r.ok)role=await r.json()}catch(e){}}
-  window.HpmwForumPortalRole=role||null;b.style.setProperty("display",role==="administrator"?"inline-flex":"none","important");
+  window.HpmwForumPortalRole=role;b.style.setProperty("display",role==="administrator"?"inline-flex":"none","important");
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh,{once:true});else refresh();
  setInterval(refresh,30000);
