@@ -4803,6 +4803,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   }
   html+='<div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><button class="hpmw-manage-btn" id="hpmwPortalLogout">Uitloggen</button></div>';
   body.innerHTML=html;
+  document.dispatchEvent(new CustomEvent("hpmw:portal-admin-rendered"));
  }
  $("#portalManageLaunch")?.addEventListener("click",open);
  layer.addEventListener("click",e=>{if(e.target===layer||e.target.closest("[data-manage-close]"))close()});
@@ -6481,6 +6482,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  });
  const observer=new MutationObserver(()=>{if(layer.classList.contains("open")&&body.dataset.workspace!=="1")wrap()});
  observer.observe(body,{childList:true,subtree:false});
+ document.addEventListener("hpmw:portal-admin-rendered",()=>{if(layer.classList.contains("open"))wrap()});
  document.getElementById("portalManageLaunch")?.addEventListener("click",()=>{
   previewRole=null;body.dataset.workspace="";
   let attempts=0;
