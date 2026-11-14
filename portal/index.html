@@ -6567,24 +6567,31 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
 
 
 <style id="hpmw-matching-border-all-page-banners-20261114">
-/* Maak de omlijsting compacter: 5px binnen de banner, met een heel subtiele schaduw. */
+/* Dunne rand rondom; de onderrand staat iets hoger binnen de banner. */
 html body .hpmw-global-brandbar{
   box-sizing:border-box!important;
   border:0!important;
-  outline:1px solid rgba(205,166,95,.76)!important;
-  outline-offset:-5px!important;
+  outline:0!important;
   box-shadow:0 1px 3px rgba(0,0,0,.20)!important;
   border-radius:4px!important;
   margin-left:auto!important;
   margin-right:auto!important;
 }
+html body .hpmw-global-brandbar:after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:5px 5px 8px 5px!important;
+  border:1px solid rgba(205,166,95,.76)!important;
+  border-radius:4px!important;
+  box-sizing:border-box!important;
+  pointer-events:none!important;
+  background:none!important;
+  box-shadow:none!important;
+}
 @media(max-width:650px){
-  html body .hpmw-global-brandbar{
-    border:0!important;
-    outline:1px solid rgba(205,166,95,.76)!important;
-    outline-offset:-5px!important;
-    box-shadow:0 1px 3px rgba(0,0,0,.20)!important;
-    border-radius:4px!important;
+  html body .hpmw-global-brandbar:after{
+    inset:5px 5px 8px 5px!important;
   }
 }
 </style>
