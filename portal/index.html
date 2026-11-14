@@ -6482,7 +6482,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  });
  const observer=new MutationObserver(()=>{if(layer.classList.contains("open")&&body.dataset.workspace!=="1")wrap()});
  observer.observe(body,{childList:true,subtree:false});
- document.addEventListener("hpmw:portal-admin-rendered",()=>{if(layer.classList.contains("open"))wrap()});
+ document.addEventListener("hpmw:portal-admin-rendered",()=>{if(layer.classList.contains("open")){body.dataset.workspace="";previewRole=null;wrap()}});
  document.getElementById("portalManageLaunch")?.addEventListener("click",()=>{
   previewRole=null;body.dataset.workspace="";
   let attempts=0;
