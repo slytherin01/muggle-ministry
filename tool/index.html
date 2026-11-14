@@ -2450,7 +2450,7 @@ main.shell>.view#homeView .support-logo-wrap{display:none!important}
   const login=document.getElementById('hpmwOpenLogin');
   const faq=document.getElementById('faqLaunch');
   if(login)login.addEventListener('click',()=>{openModal('hpmwLoginOverlay');setTimeout(()=>document.getElementById('hpmw-modal-user')?.focus(),80)});
-  if(faq)faq.addEventListener('click',()=>{openModal('hpmwFaqOverlay');faq.setAttribute('aria-expanded','true')});
+  if(faq)faq.addEventListener('click',()=>{openModal('hpmwFaqOverlay');faq.setAttribute('aria-expanded','true');window.hpmwLoadPublicFaq?.()});
   document.querySelectorAll('.hpmw-modal-overlay').forEach(overlay=>{
    overlay.addEventListener('click',e=>{if(e.target===overlay){closeModal(overlay);if(faq)faq.setAttribute('aria-expanded','false')}});
    overlay.querySelectorAll('[data-hpmw-close]').forEach(btn=>btn.addEventListener('click',()=>{closeModal(overlay);if(faq)faq.setAttribute('aria-expanded','false')}));
@@ -4211,7 +4211,53 @@ document.addEventListener("hpmw:supabase-role",start);
  const start=()=>{enhance();const mo=new MutationObserver(enhance);mo.observe(document.documentElement,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),15000)};
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
-</script></body>
+</script><script id="hpmw-public-faq-database">
+(()=> {
+ const $=id=>document.getElementById(id);
+ let cached=null;
+ function node(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
+ function mount(){
+  const content=document.querySelector("#hpmwFaqOverlay .hpmw-faq-content");if(!content||$("hpmwFaqSearch"))return;
+  const tools=node("div","hpmw-faq-tools");
+  const search=node("input");search.id="hpmwFaqSearch";search.type="search";search.placeholder="Zoek in vragen en antwoorden…";search.setAttribute("aria-label","Zoek in veelgestelde vragen");
+  const category=node("select");category.id="hpmwFaqCategoryFilter";category.setAttribute("aria-label","Filter op categorie");
+  category.append(node("option","", "Alle categorieën"));
+  const status=node("p","hpmw-faq-status","Veelgestelde vragen laden zodra je het venster opent.");
+  tools.append(search,category);content.before(tools,status);
+  search.addEventListener("input",render);category.addEventListener("change",render);
+  const style=node("style");style.textContent="#hpmwFaqOverlay .hpmw-faq-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.45fr);gap:10px;margin:16px 0 12px}#hpmwFaqOverlay .hpmw-faq-tools input,#hpmwFaqOverlay .hpmw-faq-tools select{width:100%;min-width:0;padding:11px 12px;border:1px solid #40516b;border-radius:9px;background:#101c2c;color:#edf3fb}#hpmwFaqOverlay .hpmw-faq-status{margin:0 0 12px;color:#9aacc2;font-size:12px}#hpmwFaqOverlay .hpmw-faq-content details{padding:15px 17px;border:1px solid #34435a;border-radius:12px;background:rgba(255,255,255,.035)}#hpmwFaqOverlay .hpmw-faq-content summary{cursor:pointer;color:#d8c6ff;font-weight:750;line-height:1.45}#hpmwFaqOverlay .hpmw-faq-content details p{margin:10px 0 0;white-space:pre-wrap;line-height:1.6}#hpmwFaqOverlay .hpmw-faq-empty{padding:18px;border:1px dashed #40516b;border-radius:12px;color:#aab9ca}@media(max-width:650px){#hpmwFaqOverlay .hpmw-faq-tools{grid-template-columns:1fr}}";
+  document.head.append(style);
+ }
+ function render(){
+  const content=document.querySelector("#hpmwFaqOverlay .hpmw-faq-content");if(!content||!cached)return;
+  const q=($("hpmwFaqSearch")?.value||"").trim().toLocaleLowerCase("nl-NL"),cat=$("hpmwFaqCategoryFilter")?.value||"";
+  const rows=cached.items.filter(x=>(!cat||x.faq_category_id===cat)&&(!q||(x.title+" "+x.body).toLocaleLowerCase("nl-NL").includes(q)));
+  content.replaceChildren();
+  if(!rows.length){content.append(node("div","hpmw-faq-empty",q?"Geen vragen gevonden. Probeer een andere zoekterm.":"Er zijn nog geen gepubliceerde vragen in deze categorie."));return}
+  rows.forEach(item=>{const d=node("details");const summary=node("summary","",item.title);const answer=node("p","",item.body);d.append(summary,answer);content.append(d)});
+  $("hpmwFaqStatus").textContent=rows.length+" vraag/vraagstukken gevonden.";
+ }
+ async function load(){
+  mount();
+  const status=$("hpmwFaqStatus"),content=document.querySelector("#hpmwFaqOverlay .hpmw-faq-content");
+  if(cached){render();return}
+  const db=window.hpmwSupabase;
+  if(!db){if(status)status.textContent="De FAQ kon niet worden geladen. Vernieuw de pagina en probeer opnieuw.";return}
+  if(status)status.textContent="FAQ wordt geladen…";
+  const [items,cats]=await Promise.all([
+   db.from("admin_content").select("id,title,body,faq_category_id,sort_order").eq("kind","faq").eq("published",true).eq("approval_status","approved").order("sort_order").order("created_at"),
+   db.from("faq_categories").select("id,name").eq("is_active",true).order("sort_order").order("name")
+  ]);
+  if(items.error){if(status)status.textContent="FAQ laden mislukt: "+items.error.message;return}
+  cached={items:items.data||[],categories:cats.error?[]:(cats.data||[])};
+  const filter=$("hpmwFaqCategoryFilter");if(filter){filter.replaceChildren(node("option","","Alle categorieën"));cached.categories.forEach(c=>{const o=node("option","",c.name);o.value=c.id;filter.append(o)})}
+  if(!cached.items.length){if(status)status.textContent="Er zijn nog geen gepubliceerde FAQ-vragen.";content.replaceChildren(node("div","hpmw-faq-empty","De FAQ wordt nog aangevuld."));return}
+  render();
+ }
+ window.hpmwLoadPublicFaq=load;
+})();
+</script>
+</body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
 #newTranslationsView #translationEditor .form-grid > .field:has(#trPt){display:block!important;visibility:visible!important;grid-column:1/-1!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important}
