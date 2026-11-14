@@ -4055,6 +4055,14 @@ s.textContent += "#introView{height:auto!important;min-height:0!important;max-he
    }
   }
   
+  /* Forceer de twee afbeeldingswidgets na iedere render, ook wanneer het home-grid al bestaat. */
+  if(home){
+   const liveGrid=document.getElementById("hpmwHomeLayout");
+   const modCard=liveGrid?.querySelector(".hpmw-home-left .hpmw-extra-widget");
+   if(modCard)modCard.innerHTML='<div class="hpmw-side-heading"><i class="fa-solid fa-user-shield"></i> Modteam</div><div class="hpmw-image-only-widget hpmw-modteam-open" role="button" tabindex="0" data-open-modteam aria-label="Open Modteam"><img src="https://i44.servimg.com/u/f44/11/48/74/42/modtea10.png" alt="" loading="eager" decoding="async"></div>';
+   const awardsCard=liveGrid?.querySelector(".hpmw-home-right .hpmw-extra-widget");
+   if(awardsCard)awardsCard.innerHTML='<div class="hpmw-side-heading">Awards</div><div class="hpmw-image-only-widget hpmw-awards-open" role="button" tabindex="0" data-open-awards aria-label="Open Awards"><img class="hpmw-awards-widget-image" src="https://i44.servimg.com/u/f44/11/48/74/42/awards10.png" alt="" loading="eager" decoding="async"></div>';
+  }
   if(maintenance&&home){document.getElementById("hpmwCmsMaintenance")?.remove();if(maintenance.length){const n=el("section","hpmw-home-notice hpmw-home-maintenance");n.id="hpmwCmsMaintenance";n.append(el("div","hpmw-maintenance-head",maintenance[0].title),el("p","",maintenance[0].body),el("div","hpmw-maintenance-foot","Bericht van het beheerteam"));home.append(n)}}
   if(errors.length)status("Synchronisatieprobleem: "+errors.join(", ")+". Controleer de verbinding met Supabase.");else document.getElementById("hpmwCmsSyncStatus")?.remove();
  }
