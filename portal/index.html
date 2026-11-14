@@ -1951,7 +1951,7 @@ html body #introView #hpmwHomeLayout .hpmw-sorting-hat-widget > button.hpmw-sort
    <div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Het Modteam</h1><p class="subtitle">Maak kennis met de moderators en beheerders van Hpmagicworld.</p></div>
    <button class="btn" id="modteamBack" type="button"><i class="fa-solid fa-arrow-left"></i> Terug naar portaal</button>
   </div>
-  <div class="hpmw-modteam-supplied-team">
+  <div class="hpmw-modteam-supplied-team" style="display:block;width:100%;max-width:100%;overflow-x:auto;">
 <table style="width:100%;border-collapse:separate;border-spacing:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#2c3e50;background:#ffffff;border:1px solid #dce5ee;border-radius:8px;overflow:hidden;">
 <tbody>
 <tr><td style="padding:14px;background:#00aaff;color:#ffffff;"><div style="font-size:18px;font-weight:bold;">Loesoe Club Team</div><div style="margin-top:4px;font-size:10px;letter-spacing:1.5px;">TEAMOVERZICHT</div></td></tr>
@@ -5673,12 +5673,7 @@ html body #introView #hpmwHomeLayout .hpmw-forum-widget:hover img{filter:none!im
 #introView .hpmw-modteam-open:hover>span{color:#f4d99b}
 #modteamView .hpmw-modteam-page{max-width:1100px!important;margin:0 auto!important;padding:22px!important}
 #modteamView .hpmw-modteam-page-head{padding-bottom:15px;border-bottom:1px solid #344b67}
-#modteamView .hpmw-modteam-intro{display:flex;align-items:center;gap:15px;margin:18px 0;padding:17px;border:1px solid #344b67;border-radius:12px;background:linear-gradient(135deg,#17283d,#111d2d)}
-#modteamView .hpmw-modteam-emblem{width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border:1px solid #526b88;border-radius:13px;background:#203650;color:#d9e7f7;font-size:24px}
-#modteamView .hpmw-modteam-intro h2{margin:0 0 4px;font-size:16px;color:#edf3fa}
-#modteamView .hpmw-modteam-intro p{margin:0;color:#aebed0;font-size:12px;line-height:1.6}
-#modteamView #hpmwForumModteamFrame{display:block!important;width:100%!important;height:min(76vh,900px)!important;min-height:560px!important;border:1px solid #344b67!important;border-radius:12px!important;background:#101f33!important}
-@media(max-width:650px){#modteamView .hpmw-modteam-page{padding:13px!important}#modteamView .hpmw-modteam-page-head{gap:12px}#modteamView .hpmw-modteam-page-head>.btn{margin-left:auto}#modteamView .hpmw-modteam-intro{align-items:flex-start;padding:13px}#modteamView #hpmwForumModteamFrame{height:75vh!important;min-height:500px!important}}
+@media(max-width:650px){#modteamView .hpmw-modteam-page{padding:13px!important}#modteamView .hpmw-modteam-page-head{gap:12px}#modteamView .hpmw-modteam-page-head>.btn{margin-left:auto}}
 </style>
 <script id="hpmw-internal-modteam-navigation-20261114">
 (()=>{"use strict";
@@ -5697,20 +5692,22 @@ html body #introView #hpmwHomeLayout .hpmw-forum-widget:hover img{filter:none!im
 <style id="hpmw-awards-widget-image-20261114">#introView .hpmw-awards-open .hpmw-awards-widget-image{display:block;width:100%;max-width:190px;height:112px;object-fit:contain;margin:0 auto 4px}#introView .hpmw-awards-open{gap:7px!important}</style>
 
 <style id="hpmw-awards-neutral-no-icons-20261114">
-/* Match the portal's blue/navy palette while retaining the original golden award badges. */
+/* Strong, scoped blue palette overrides for the complete awards view. */
+html body #awardsView .hpmw-awards-page{background:#101f33!important;border:1px solid #344b67!important;color:#edf3fa!important}
+html body #awardsView .hpmw-awards-page-head{border-color:#344b67!important}
+html body #awardsView .hpmw-awards-page-head .eyebrow,
+html body #awardsView .hpmw-awards-page h1,
+html body #awardsView .hpmw-awards-section h2{color:#a9c9e8!important}
+html body #awardsView .hpmw-awards-page .subtitle{color:#b5c5d7!important}
+html body #awardsView .hpmw-awards-section{background:#12243a!important;border:1px solid #344b67!important}
+html body #awardsView .hpmw-award{background:#172a42!important;border:1px solid #3a526e!important;box-shadow:none!important}
+html body #awardsView .hpmw-award img{display:block;width:74px;height:74px;object-fit:contain;background:transparent!important;filter:none!important}
+html body #awardsView .hpmw-award p{color:#edf3fa!important}
+html body #awardsView .hpmw-award p span{color:#b5c5d7!important}
+html body #awardsView .hpmw-awards-footer{border-color:#344b67!important;color:#9fb2c7!important}
+html body #awardsView .hpmw-awards-page .btn{background:#1b2d45!important;border-color:#526984!important;color:#e3edf8!important}
+html body #awardsView .hpmw-awards-page .btn:hover{background:#263d59!important;border-color:#8ab4e8!important}
 #introView .hpmw-extra-widget:has(.hpmw-awards-open) .hpmw-side-heading{color:#dbe8f5!important}
 #introView .hpmw-awards-open>span{color:#a9c9e8!important}
 #introView .hpmw-awards-open:hover>span{color:#d5e8fb!important}
-#awardsView .hpmw-awards-page{background:linear-gradient(160deg,#14243a,#0d1725)!important;border-color:#344b67!important;color:#edf3fa!important}
-#awardsView .hpmw-awards-page-head{border-color:#344b67!important}
-#awardsView .hpmw-awards-page-head .eyebrow,#awardsView .hpmw-awards-page h1,#awardsView .hpmw-awards-section h2{color:#a9c9e8!important}
-#awardsView .hpmw-awards-page .subtitle{color:#aebed0!important}
-#awardsView .hpmw-awards-section{background:#101f33!important;border-color:#344b67!important}
-#awardsView .hpmw-award{background:#14243a!important;border-color:#344b67!important}
-#awardsView .hpmw-award img{display:block;width:74px;height:74px;object-fit:contain;background:transparent!important;filter:none!important}
-#awardsView .hpmw-award p{color:#edf3fa!important}
-#awardsView .hpmw-award p span{color:#b5c5d7!important}
-#awardsView .hpmw-awards-footer{border-color:#344b67!important;color:#91a8bf!important}
-#awardsView .hpmw-awards-page .btn{background:#1b2d45!important;border-color:#526984!important;color:#e3edf8!important}
-#awardsView .hpmw-awards-page .btn:hover{background:#263d59!important;border-color:#8ab4e8!important}
 </style>
