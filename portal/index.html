@@ -6572,8 +6572,8 @@ html body .hpmw-global-brandbar{
   box-sizing:border-box!important;
   border:0!important;
   outline:0!important;
-  box-shadow:0 1px 3px rgba(0,0,0,.20)!important;
-  border-radius:4px!important;
+  box-shadow:none!important;
+  border-radius:0!important;
   margin-left:auto!important;
   margin-right:auto!important;
 }
@@ -6598,15 +6598,15 @@ html body .hpmw-global-brandbar:after{
  const fallback="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
  const apply=()=>{
   const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
-  /* Subtiele goudkleurige omlijsting; de vaste bannerafmetingen blijven behouden. */
-  bar.style.setProperty("border","1px solid rgba(205,166,95,.78)","important");
+  /* Geen extra CSS-rand: de bannerafbeelding behoudt uitsluitend zijn eigen rand. */
+  bar.style.setProperty("border","0","important");
   bar.style.setProperty("outline","0","important");
   bar.style.setProperty("outline-offset","0","important");
-  bar.style.setProperty("box-shadow","0 2px 7px rgba(0,0,0,.28)","important");
-  bar.style.setProperty("border-radius","5px","important");
+  bar.style.setProperty("box-shadow","none","important");
+  bar.style.setProperty("border-radius","0","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
-  bar.style.setProperty("background-image",'url("'+src+'")',"important");
+  bar.style.setProperty("background-image","none","important");
   let img=bar.querySelector(".hpmw-active-banner-image");
   if(!img){img=document.createElement("img");img.className="hpmw-active-banner-image";img.alt="";img.setAttribute("aria-hidden","true");bar.appendChild(img)}
   ["border","outline","box-shadow","border-radius"].forEach(p=>img.style.setProperty(p,"none","important"));
