@@ -6555,23 +6555,23 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
 
 
 <style id="hpmw-matching-border-all-page-banners-20261114">
-/* Verwijder uitsluitend het extra kader achter de banner; de banner zelf blijft intact en gecentreerd. */
+/* Kleine, passende goudkleurige rand; afmetingen en centrering blijven gelijk op alle pagina's. */
 html body .hpmw-global-brandbar{
   box-sizing:border-box!important;
-  border:0!important;
+  border:1px solid rgba(205,166,95,.78)!important;
   outline:0!important;
   outline-offset:0!important;
-  box-shadow:none!important;
-  border-radius:0!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.28)!important;
+  border-radius:5px!important;
   margin-left:auto!important;
   margin-right:auto!important;
 }
 @media(max-width:650px){
   html body .hpmw-global-brandbar{
-    border:0!important;
+    border:1px solid rgba(205,166,95,.78)!important;
     outline:0!important;
-    box-shadow:none!important;
-    border-radius:0!important;
+    box-shadow:0 2px 7px rgba(0,0,0,.28)!important;
+    border-radius:5px!important;
   }
 }
 </style>
@@ -6591,9 +6591,12 @@ html body .hpmw-global-brandbar{
  const fallback="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
  const apply=()=>{
   const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
-  /* Verwijder eventuele door andere thema-CSS opgelegde buitenrand op de bannercontainer. */
-  ["border","outline","box-shadow","border-radius"].forEach(p=>bar.style.setProperty(p,"none","important"));
+  /* Subtiele goudkleurige omlijsting; de vaste bannerafmetingen blijven behouden. */
+  bar.style.setProperty("border","1px solid rgba(205,166,95,.78)","important");
+  bar.style.setProperty("outline","0","important");
   bar.style.setProperty("outline-offset","0","important");
+  bar.style.setProperty("box-shadow","0 2px 7px rgba(0,0,0,.28)","important");
+  bar.style.setProperty("border-radius","5px","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
   bar.style.setProperty("background-image",'url("'+src+'")',"important");
