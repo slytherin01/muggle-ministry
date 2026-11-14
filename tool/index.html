@@ -4031,7 +4031,7 @@ html body.supabase-authenticated main.shell{
   if(dashGrid&&!document.getElementById("dashTicketManagement")){
    const card=document.createElement("article");card.className="dash-card";card.id="dashTicketManagement";
    card.innerHTML='<div class="dash-icon"><i class="fa-solid fa-ticket"></i></div><h2>Ticketbeheer</h2><p>Bekijk, behandel en sluit supporttickets en beheer reacties.</p><button class="btn primary" type="button">Ticketbeheer openen</button>';
-   card.querySelector("button").onclick=()=>show("adminView");dashGrid.append(card);
+   card.querySelector("button").onclick=()=>{show("adminView");document.getElementById("adminRefresh")?.click()};dashGrid.append(card);
   }
   const intro=home.querySelector(".hpmw-admin-intro");
   const shortcuts=document.createElement("div");shortcuts.className="hpmw-admin-shortcuts";
