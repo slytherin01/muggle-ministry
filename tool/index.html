@@ -1563,36 +1563,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
  </div>
 </section>
 
-<section id="faqManagementPanel" hidden style="width:100%">
- <div class="page-head"><div><div class="eyebrow">Beheer · Alleen administrators</div><h2>FAQ-beheer</h2><p class="subtitle">Beheer categorieën, vragen, antwoorden en publicatiestatus. Gepubliceerde wijzigingen verschijnen automatisch in het portaal.</p></div><button class="btn" id="faqManagementBack" type="button">Terug naar tickets</button></div>
- <div class="panel" style="padding:18px;margin-bottom:18px">
-  <div class="page-head"><div><h3>Categorie beheren</h3><p class="subtitle">Maak categorieën aan of pas bestaande categorieën aan.</p></div></div>
-  <form id="faqCategoryForm" class="admin-toolbar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
-   <input type="hidden" name="id">
-   <input name="name" placeholder="Categorienaam" maxlength="100" required>
-   <input name="description" placeholder="Omschrijving" maxlength="240">
-   <input name="sort_order" type="number" min="0" step="1" value="0" placeholder="Volgorde">
-   <label style="display:flex;align-items:center;gap:8px"><input name="is_active" type="checkbox" checked> Actief in portaal</label>
-   <div style="display:flex;gap:8px"><button class="btn primary" type="submit">Categorie opslaan</button><button class="btn" id="faqCategoryReset" type="button">Wissen</button></div>
-  </form>
-  <div id="faqCategoryList" class="ticket-table-wrap" style="margin-top:14px">Categorieën laden…</div>
- </div>
- <div class="panel" style="padding:18px;margin-bottom:18px">
-  <div class="page-head"><div><h3>FAQ-vragen</h3><p class="subtitle">Sleep vragen om de volgorde te wijzigen. Verplaats vragen via Bewerken en sla de volgorde daarna op.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="faqOrderSave" type="button">Volgorde opslaan</button><button class="btn" id="faqArticleNew" type="button">Nieuwe vraag</button></div></div>
-  <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
-   <input type="hidden" name="id">
-   <label>Categorie<select name="faq_category_id" required></select></label>
-   <label>Vraag<input name="title" maxlength="240" required placeholder="Veelgestelde vraag"></label>
-   <label style="grid-column:1/-1">Antwoord<textarea name="body" rows="5" required placeholder="Schrijf hier het antwoord…"></textarea></label>
-   <label>Status<select name="approval_status"><option value="pending" selected>In afwachting</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select></label>
-   <label>Volgorde<input name="sort_order" type="number" min="0" step="1" value="0"></label>
-   <label style="display:flex;align-items:center;gap:8px"><input name="published" type="checkbox"> Publiceren in portaal</label>
-   <div style="display:flex;gap:8px;align-items:end"><button class="btn primary" type="submit">FAQ opslaan</button><button class="btn" id="faqArticleCancel" type="button">Annuleren</button></div>
-  </form>
-  <div id="faqArticleList" class="ticket-table-wrap" style="margin-top:14px">FAQ laden…</div>
- </div>
- <p id="faqManagementStatus" role="status" aria-live="polite"></p>
-</section>
+
 
 <div id="adminListView">
 <div class="admin-toolbar">
@@ -1821,6 +1792,36 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 </div>
 </div>
 </div>
+</section>
+<section class="view" id="faqManagementPanel" style="width:100%">
+ <div class="page-head"><div><div class="eyebrow">Beheer · Alleen administrators</div><h2>FAQ-beheer</h2><p class="subtitle">Beheer categorieën, vragen, antwoorden en publicatiestatus. Gepubliceerde wijzigingen verschijnen automatisch in het portaal.</p></div><button class="btn" id="faqManagementBack" type="button">Terug naar tickets</button></div>
+ <div class="panel" style="padding:18px;margin-bottom:18px">
+  <div class="page-head"><div><h3>Categorie beheren</h3><p class="subtitle">Maak categorieën aan of pas bestaande categorieën aan.</p></div></div>
+  <form id="faqCategoryForm" class="admin-toolbar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+   <input type="hidden" name="id">
+   <input name="name" placeholder="Categorienaam" maxlength="100" required>
+   <input name="description" placeholder="Omschrijving" maxlength="240">
+   <input name="sort_order" type="number" min="0" step="1" value="0" placeholder="Volgorde">
+   <label style="display:flex;align-items:center;gap:8px"><input name="is_active" type="checkbox" checked> Actief in portaal</label>
+   <div style="display:flex;gap:8px"><button class="btn primary" type="submit">Categorie opslaan</button><button class="btn" id="faqCategoryReset" type="button">Wissen</button></div>
+  </form>
+  <div id="faqCategoryList" class="ticket-table-wrap" style="margin-top:14px">Categorieën laden…</div>
+ </div>
+ <div class="panel" style="padding:18px;margin-bottom:18px">
+  <div class="page-head"><div><h3>FAQ-vragen</h3><p class="subtitle">Sleep vragen om de volgorde te wijzigen. Verplaats vragen via Bewerken en sla de volgorde daarna op.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="faqOrderSave" type="button">Volgorde opslaan</button><button class="btn" id="faqArticleNew" type="button">Nieuwe vraag</button></div></div>
+  <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+   <input type="hidden" name="id">
+   <label>Categorie<select name="faq_category_id" required></select></label>
+   <label>Vraag<input name="title" maxlength="240" required placeholder="Veelgestelde vraag"></label>
+   <label style="grid-column:1/-1">Antwoord<textarea name="body" rows="5" required placeholder="Schrijf hier het antwoord…"></textarea></label>
+   <label>Status<select name="approval_status"><option value="pending" selected>In afwachting</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select></label>
+   <label>Volgorde<input name="sort_order" type="number" min="0" step="1" value="0"></label>
+   <label style="display:flex;align-items:center;gap:8px"><input name="published" type="checkbox"> Publiceren in portaal</label>
+   <div style="display:flex;gap:8px;align-items:end"><button class="btn primary" type="submit">FAQ opslaan</button><button class="btn" id="faqArticleCancel" type="button">Annuleren</button></div>
+  </form>
+  <div id="faqArticleList" class="ticket-table-wrap" style="margin-top:14px">FAQ laden…</div>
+ </div>
+ <p id="faqManagementStatus" role="status" aria-live="polite"></p>
 </section>
 </main>
 <footer class="lux-footer">
@@ -4185,8 +4186,8 @@ main.shell>.view.active::-webkit-scrollbar-thumb{background:#344963;border-radiu
 }
 </style>
 <script id="hpmw-tool-rebuild-nav">
-(()=>{const $=s=>document.querySelector(s);const views=[["newAdminDashboard","Overzicht","fa-house"],["newSettingsView","Instellingen","fa-sliders"],["newTranslationsView","Vertalingen","fa-language"],["adminCmsView","Beheer","fa-shield-halved"]];function show(id){if(id==="adminCmsView"&&typeof window.hpmwOpenAdminCms==="function"){window.hpmwOpenAdminCms();}else if(id==="newTranslationsView"&&typeof window.hpmwLoadTranslations==="function"){window.hpmwLoadTranslations();}const reveal=()=>{const v=$("#"+id);if(!v)return false;document.querySelectorAll("main.shell>.view").forEach(x=>{x.classList.toggle("active",x===v);x.style.setProperty("display",x===v?"block":"none","important")});document.querySelectorAll(".hpmw-tool-sidebar button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="adminCmsView"){const first=$("#cmsTabs button");if(first&&!first.classList.contains("active"))first.click()}return true};if(!reveal()&&id==="adminCmsView"){setTimeout(()=>{if(!reveal())console.error("Beheerpagina kon niet worden geladen.")},250)}}
-function init(){if(!$("#adminTopbar")||$(".hpmw-tool-sidebar"))return;const side=document.createElement("aside");side.className="hpmw-tool-sidebar";side.innerHTML='<div class="side-caption">Werkruimte</div>';views.forEach(([id,label,icon])=>{const b=document.createElement("button");b.type="button";b.dataset.view=id;b.innerHTML='<i class="fa-solid '+icon+'"></i><span>'+label+'</span>';b.onclick=()=>show(id);side.append(b)});side.insertAdjacentHTML("beforeend",'<div class="side-spacer"></div><div class="side-caption">Hpmagicworld beheer</div>');document.body.append(side);document.querySelectorAll("#adminTopbar .top-actions button").forEach(b=>{if(/Admin|Vertalingen|HP Nieuws/i.test(b.textContent.trim()))b.hidden=true});const applyRole=role=>{const ok=["admin","administrator","support_moderator","news_poster"].includes(role);side.hidden=!ok;side.querySelectorAll("button").forEach(b=>{const id=b.dataset.view;b.hidden=(role==="support_moderator"&&id!=="adminCmsView")||(role==="news_poster"&&id!=="adminCmsView")||((role==="support_moderator"||role==="news_poster")&&id==="newAdminDashboard")||(role!=="admin"&&role!=="administrator"&&id==="newSettingsView")||(role!=="admin"&&role!=="administrator"&&id==="newTranslationsView")});};document.addEventListener("hpmw:supabase-role",e=>applyRole(e.detail?.role||"member"));applyRole(document.body.dataset.supabaseRole||"member");const adminButton=[...document.querySelectorAll("#adminTopbar button")].find(b=>b.textContent.trim()==="Admin");if(adminButton)adminButton.hidden=true;show("newAdminDashboard")}
+(()=>{const $=s=>document.querySelector(s);const views=[["newAdminDashboard","Overzicht","fa-house"],["newSettingsView","Instellingen","fa-sliders"],["newTranslationsView","Vertalingen","fa-language"],["faqManagementPanel","FAQ aanmaken","fa-circle-question"],["adminCmsView","Beheer","fa-shield-halved"]];function show(id){if(id==="adminCmsView"&&typeof window.hpmwOpenAdminCms==="function"){window.hpmwOpenAdminCms();}else if(id==="newTranslationsView"&&typeof window.hpmwLoadTranslations==="function"){window.hpmwLoadTranslations();}else if(id==="faqManagementPanel"&&typeof window.hpmwOpenFaqManagement==="function"){window.hpmwOpenFaqManagement();}const reveal=()=>{const v=$("#"+id);if(!v)return false;document.querySelectorAll("main.shell>.view").forEach(x=>{x.classList.toggle("active",x===v);x.style.setProperty("display",x===v?"block":"none","important")});document.querySelectorAll(".hpmw-tool-sidebar button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="adminCmsView"){const first=$("#cmsTabs button");if(first&&!first.classList.contains("active"))first.click()}return true};if(!reveal()&&id==="adminCmsView"){setTimeout(()=>{if(!reveal())console.error("Beheerpagina kon niet worden geladen.")},250)}}
+function init(){if(!$("#adminTopbar")||$(".hpmw-tool-sidebar"))return;const side=document.createElement("aside");side.className="hpmw-tool-sidebar";side.innerHTML='<div class="side-caption">Werkruimte</div>';views.forEach(([id,label,icon])=>{const b=document.createElement("button");b.type="button";b.dataset.view=id;b.innerHTML='<i class="fa-solid '+icon+'"></i><span>'+label+'</span>';b.onclick=()=>show(id);side.append(b)});side.insertAdjacentHTML("beforeend",'<div class="side-spacer"></div><div class="side-caption">Hpmagicworld beheer</div>');document.body.append(side);document.querySelectorAll("#adminTopbar .top-actions button").forEach(b=>{if(/Admin|Vertalingen|HP Nieuws/i.test(b.textContent.trim()))b.hidden=true});const applyRole=role=>{const ok=["admin","administrator","support_moderator","news_poster"].includes(role);side.hidden=!ok;side.querySelectorAll("button").forEach(b=>{const id=b.dataset.view;b.hidden=(id==="faqManagementPanel"&&role!=="administrator")||(role==="support_moderator"&&id!=="adminCmsView")||(role==="news_poster"&&id!=="adminCmsView")||((role==="support_moderator"||role==="news_poster")&&id==="newAdminDashboard")||(role!=="admin"&&role!=="administrator"&&id==="newSettingsView")||(role!=="admin"&&role!=="administrator"&&id==="newTranslationsView")});};document.addEventListener("hpmw:supabase-role",e=>applyRole(e.detail?.role||"member"));applyRole(document.body.dataset.supabaseRole||"member");const adminButton=[...document.querySelectorAll("#adminTopbar button")].find(b=>b.textContent.trim()==="Admin");if(adminButton)adminButton.hidden=true;show("newAdminDashboard")}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init()})();
 </script>
 <style id="hpmw-settings-tabs-css">.hpmw-section-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:8px;margin:0 0 16px;background:#0b1422;border:1px solid #26364c;border-radius:12px}.hpmw-section-tabs button{flex:1;min-width:130px;border:1px solid #34465d;background:#152238;color:#edf2fa;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700}.hpmw-section-tabs button.active{background:#7865ee;border-color:#7865ee}.hpmw-tab-panel[hidden]{display:none!important}</style>
@@ -4215,7 +4216,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function mount(){const main=document.querySelector("main.shell"),side=document.querySelector(".hpmw-tool-sidebar");if(!main||!side||document.getElementById("hpmwModteamAdmin"))return false;
 const view=document.createElement("section");view.className="view";view.id="hpmwModteamAdmin";view.innerHTML='<div class="page-head"><div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Modteam beheren</h1><p class="subtitle">Beheer medewerkers, afdelingen en teamrollen.</p></div><button class="btn" id="mtReload">Vernieuwen</button></div><div class="mt-editor"><h2 id="mtFormTitle">Medewerker toevoegen</h2><div class="mt-grid"><div class="mt-field"><label for="mtName">Naam</label><input id="mtName" maxlength="80" placeholder="Forumnaam"></div><div class="mt-field"><label for="mtUserId">Forumotion profiel-ID (voor persoonlijk schild)</label><input id="mtUserId" type="number" min="1" placeholder="Bijv. 123"></div><div class="mt-field"><label for="mtRole">Teamrol</label><select id="mtRole">'+R.map(x=>'<option>'+x+'</option>').join("")+'</select></div><div class="mt-field"><label for="mtOrder">Volgorde</label><input id="mtOrder" type="number" value="0"></div></div><div class="mt-actions"><button class="btn primary" id="mtSave">Opslaan</button><button class="btn" id="mtCancel" hidden>Annuleren</button></div><div class="mt-status" id="mtStatus" role="status"></div></div><div class="mt-toolbar"><h2>Medewerkers</h2><span id="mtCount" class="subtitle"></span></div><div class="mt-list" id="mtList">Laden…</div>';
-main.append(view);const b=document.createElement("button");b.type="button";b.innerHTML='<i class="fa-solid fa-users-gear"></i><span>Modteam</span>';b.dataset.view="hpmwModteamAdmin";const beheerButton=side.querySelector('button[data-view="adminCmsView"]');if(beheerButton)beheerButton.insertAdjacentElement("afterend",b);else side.append(b);const faqButton=document.getElementById("faqManagementOpen");if(faqButton){faqButton.className="tool-sidebar-button";faqButton.dataset.view="faqManagementPanel";faqButton.innerHTML='<i class="fa-solid fa-circle-question"></i><span>FAQ-beheer</span>';b.insertAdjacentElement("afterend",faqButton);}
+main.append(view);const b=document.createElement("button");b.type="button";b.innerHTML='<i class="fa-solid fa-users-gear"></i><span>Modteam</span>';b.dataset.view="hpmwModteamAdmin";const beheerButton=side.querySelector('button[data-view="adminCmsView"]');if(beheerButton)beheerButton.insertAdjacentElement("afterend",b);else side.append(b);
 const show=()=>{main.querySelectorAll(":scope > .view").forEach(v=>{v.classList.toggle("active",v===view);v.style.setProperty("display",v===view?"block":"none","important")});side.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));load();};
 b.addEventListener("click",show);document.getElementById("mtReload").onclick=load;document.getElementById("mtCancel").onclick=reset;
 document.getElementById("mtSave").onclick=save;return true}
@@ -4434,9 +4435,9 @@ document.addEventListener("hpmw:supabase-role",start);
  }
  function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;$("faqCategoryDelete").disabled=true;$("faqCategoryDelete").dataset.categoryId="";}
  function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.approval_status.value="pending";f.elements.sort_order.value="0";f.hidden=true;}
- async function openPanel(){$("adminListView").hidden=true;$("portalAdminPanel").hidden=true;const detail=$("adminDetail");if(detail)detail.hidden=true;$("faqManagementPanel").hidden=false;try{await loadAll()}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)))}}
- $("faqManagementOpen")?.addEventListener("click",()=>{document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const adminView=$("adminView");adminView.classList.add("active");adminView.style.setProperty("display","block","important");$("adminDetail").hidden=true;$("adminListView").hidden=true;$("portalAdminPanel").hidden=true;openPanel();window.scrollTo(0,0);});
- $("faqManagementBack")?.addEventListener("click",()=>{$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;});
+ async function openPanel(){document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.toggle("active",v.id==="faqManagementPanel");v.style.setProperty("display",v.id==="faqManagementPanel"?"block":"none","important")});$("faqManagementPanel").hidden=false;try{await loadAll()}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)))}}
+ window.hpmwOpenFaqManagement=openPanel;
+ $("faqManagementBack")?.addEventListener("click",()=>{document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.toggle("active",v.id==="newAdminDashboard");v.style.setProperty("display",v.id==="newAdminDashboard"?"block":"none","important")});});
  $("faqCategoryReset")?.addEventListener("click",resetCategory);
  $("faqArticleNew")?.addEventListener("click",()=>{resetArticle();$("faqArticleForm").hidden=false;});
  $("faqArticleCancel")?.addEventListener("click",resetArticle);
