@@ -4032,6 +4032,7 @@ html body.supabase-authenticated main.shell{
   const items=[
    ["fa-sliders","Instellingen","newSettingsView"],
    ["fa-language","Vertalingen","newTranslationsView"],
+   ["fa-ticket","Ticketbeheer","adminView"],
    ["fa-screwdriver-wrench","Beheer & rechten","adminCmsView"]
   ];
   items.forEach(([ico,label,id])=>{
@@ -4043,8 +4044,8 @@ html body.supabase-authenticated main.shell{
   const settingsBack=$("#settingsBack");if(settingsBack){settingsBack.textContent="← Admin";settingsBack.onclick=()=>show("newAdminDashboard")}
   const translationBack=$("#translationBack");if(translationBack){translationBack.textContent="← Admin";translationBack.onclick=()=>show("newAdminDashboard")}
   const adminBack=$("#adminBack");if(adminBack){adminBack.textContent="← Admin";adminBack.onclick=()=>show("newAdminDashboard")}
-  document.addEventListener("hpmw:supabase-role",e=>{const ok=e.detail?.role==="admin";if(admin)admin.hidden=!ok;});
-  const role=document.body.dataset.supabaseRole;if(admin)admin.hidden=role!=="admin";
+  document.addEventListener("hpmw:supabase-role",e=>{const ok=["admin","administrator","support_moderator","supervisor_support_team"].includes(e.detail?.role);if(admin)admin.hidden=!ok;});
+  const role=document.body.dataset.supabaseRole;if(admin)admin.hidden=!["admin","administrator","support_moderator","supervisor_support_team"].includes(role);
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
 })();
