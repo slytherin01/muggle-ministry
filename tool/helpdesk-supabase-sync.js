@@ -67,7 +67,7 @@
           subject: String(ticket.title || ""),
           category: String(ticket.cat || ""),
           department: String(ticket.department || ""),
-          status: "pending",
+          status: ticket.closed ? "done" : "pending",
           priority: "normal",
           created_by_forumotion_user_id: Number(ticket.userId) || null,
           created_by_name: String(ticket.user || "")
