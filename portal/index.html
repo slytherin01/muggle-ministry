@@ -5060,32 +5060,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 })();
 </script>
 
-<script id="hpmw-central-navigation-rbac">
-(()=>{"use strict";
- const ids=["portalManageLaunch","adminLaunch"];
- const getForumId=()=>{
-  const live=Number(window._userdata?.user_id||0);
-  if(live>0&&Number(window._userdata?.session_logged_in||0)>0)return live;
-  try{const saved=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null");if(saved?.logged&&Number(saved.id)>0)return Number(saved.id)}catch(e){}
-  const href=document.getElementById("accountLink")?.getAttribute("href")||"";
-  const m=href.match(/^\\/u(\\d+)(?:[/?#]|$)/i);return m?Number(m[1]):0;
- };
- const set=(el,show)=>{if(!el)return;el.hidden=!show;el.setAttribute("aria-hidden",String(!show));el.tabIndex=show?0:-1;el.style.setProperty("display",show?"inline-flex":"none","important")};
- const refresh=()=>{
-  const forumId=getForumId(),founder=[1,3].includes(forumId);
-  const role=window.HpmwForumPortalRole||window.HpmwPortalAccess?.role||"guest";
-  const portalAllowed=founder||role==="administrator";
-  const ticketAllowed=founder||!!window.HpmwPortalAccess?.canSupport?.();
-  set(document.getElementById("portalManageLaunch"),portalAllowed);
-  set(document.getElementById("adminLaunch"),ticketAllowed);
- };
- document.addEventListener("hpmw:portal-role",refresh);
- document.addEventListener("DOMContentLoaded",refresh);
- window.addEventListener("pageshow",refresh);
- document.addEventListener("visibilitychange",refresh);
- refresh();let n=0;const timer=setInterval(()=>{refresh();if(++n>=120)clearInterval(timer)},500);
-})();
-</script>
+
 </body></html>
 
 
