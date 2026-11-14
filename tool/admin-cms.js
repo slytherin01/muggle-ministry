@@ -69,7 +69,7 @@
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
   const tabs=$("#cmsTabs");Object.entries(kinds).forEach(([k,v])=>{const b=document.createElement("button");b.textContent=v;b.dataset.kind=k;b.onclick=()=>selectKind(k);tabs.append(b)});
   const role=document.body.dataset.supabaseRole||"member";
-  const faqTab=document.querySelector('#cmsMainTabs [data-main-tab="faq"]');if(faqTab)faqTab.hidden=!["admin","administrator"].includes(role);
+  syncFaqAdminTab(role);
   const tabButtons=[...document.querySelectorAll("#cmsMainTabs [data-main-tab]")];
   if(role==="support_moderator"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="ticketRights");document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
   else if(role==="news_poster"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="news");document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
@@ -77,6 +77,7 @@ else {selectKind("news");loadToolRoles();loadNewsModerators();}
 
  }
  let kind="maintenance",editing=null;
+ function syncFaqAdminTab(role=document.body.dataset.supabaseRole){const b=document.querySelector('#cmsMainTabs [data-main-tab="faq"]');if(b)b.hidden=!["admin","administrator"].includes(role);}
  function reset(){editing=null;$("#cmsForm").reset();$("#cmsOrder").value=0;$("#cmsPinned").checked=false;$("#cmsPinWrap").style.display=kind==="news"?"block":"none";$("#cmsSourceWrap").hidden=kind!=="news";$("#cmsAuthorWrap").hidden=kind!=="news";$("#cmsFaqCategoryWrap").hidden=kind!=="faq";$("#faqCategoryManager").hidden=kind!=="faq"||document.body.dataset.supabaseRole==="faq_editor";$("#cmsFormTitle").textContent=kind==="faq"?"Nieuwe FAQ-vraag":"Nieuw item";if(kind==="faq"){loadFaqCategories();loadFaqCategoryManager();}}
  function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];if(k==="faq"){$("#cmsTabs").hidden=true;$("#faqManager").hidden=false;$("#faqManager .cms-panel").hidden=true;load();return;}$("#cmsTabs").hidden=false;$("#faqManager").hidden=true;reset();load();}
 
@@ -271,5 +272,5 @@ async function addPermissionProfile(){
  window.hpmwInitAdminCms=init;
  window.hpmwOpenAdminCms=()=>{if(!$("#adminCmsView"))init();go("adminCmsView");load();loadTicketModerators();};
  document.addEventListener("DOMContentLoaded",()=>{init();setTimeout(addTransferPanel,0)});if(document.readyState!=="loading"){init();setTimeout(addTransferPanel,0)};
- document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$("#adminCmsView"))init();if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
+ document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$("#adminCmsView"))init();syncFaqAdminTab(role);if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
 })();
