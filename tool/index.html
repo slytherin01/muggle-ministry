@@ -4548,6 +4548,48 @@ document.addEventListener("hpmw:supabase-role",start);
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
+
+<script id="hpmw-auth-compact-choice-buttons">
+(()=>{"use strict";
+ function init(){
+  const auth=document.getElementById("adminCmsView");if(!auth||auth.dataset.compactChoices)return false;
+  auth.dataset.compactChoices="1";
+  const head=auth.querySelector(".page-head")||auth.firstElementChild;
+  const bar=document.createElement("div");bar.className="hpmw-auth-choicebar";
+  bar.innerHTML='<button type="button" data-choice="roles" class="active">Rollen & autorisaties</button><button type="button" data-choice="tickets">Ticketbeheerrechten</button><button type="button" data-choice="news">Nieuwspaginarechten</button>';
+  if(head)head.insertAdjacentElement("afterend",bar);else auth.prepend(bar);
+  const clickCms=label=>{const b=[...auth.querySelectorAll("button")].find(x=>x.textContent.trim().toLowerCase()===label.toLowerCase());if(b)b.click()};
+  const activate=(key)=>{
+   bar.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.choice===key));
+   if(key==="roles"){clickCms("Rollen & autorisaties");}
+   if(key==="tickets"){clickCms("Ticketbeheerrechten");}
+   if(key==="news"){
+    const view=document.getElementById("newsManagementView");
+    if(view){
+     document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.toggle("active",v===view);v.style.setProperty("display",v===view?"block":"none","important")});
+     const original=[...document.querySelectorAll("button")].find(b=>b.textContent.trim().toLowerCase()==="nieuwspaginarechten"&&!b.closest("#hpmw-auth-compact-choice-buttons"));
+     original?.click();
+    }
+   }
+  };
+  bar.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.choice)));
+  const oldGroup=document.getElementById("hpmw-auth-submenu");if(oldGroup)oldGroup.remove();
+  const oldToggle=document.querySelector(".hpmw-auth-expand");if(oldToggle)oldToggle.remove();
+  const oldStyle=document.getElementById("hpmw-auth-submenu-style");if(oldStyle)oldStyle.remove();
+  const side=document.querySelector(".hpmw-tool-sidebar");
+  const oldNews=side&&[...side.querySelectorAll("button")].find(b=>b.textContent.trim().toLowerCase()==="nieuwspaginarechten");
+  if(oldNews)oldNews.remove();
+  return true;
+ }
+ const css=document.createElement("style");css.textContent=
+ '#adminCmsView .hpmw-auth-choicebar{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px;padding:7px;background:#0e1928;border:1px solid #2b3e56;border-radius:11px}'+
+ '#adminCmsView .hpmw-auth-choicebar button{flex:1 1 auto;min-width:0;padding:8px 12px;border:1px solid #34465d;border-radius:8px;background:#152238;color:#dce5f4;font-size:12px;font-weight:700;cursor:pointer}'+
+ '#adminCmsView .hpmw-auth-choicebar button.active{background:#7865ee;border-color:#7865ee;color:white}';
+ document.head.append(css);
+ const start=()=>{init();const mo=new MutationObserver(()=>init());mo.observe(document.body,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),12000)};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
 </body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
