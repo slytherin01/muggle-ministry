@@ -4896,34 +4896,26 @@ html body header.topbar.luxury-nav-v2 nav.top-actions > #accountLink{order:8!imp
 
 
 <style id="hpmw-uniform-banner-frame-height-20261114">
-/* Herstel het oorspronkelijke brede bannerformaat op alle pagina's: 3,2:1 en maximaal 1180px. */
+/* Herstel de eerder gebruikte vaste bannerhoogte op alle pagina's. */
 html body .hpmw-global-brandbar{
-  display:block!important;
   box-sizing:border-box!important;
-  width:100%!important;
+  width:min(1180px,calc(100% - 36px))!important;
   max-width:1180px!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  aspect-ratio:3.2/1!important;
+  height:clamp(110px,16.1vw,190px)!important;
+  min-height:clamp(110px,16.1vw,190px)!important;
+  max-height:190px!important;
+  aspect-ratio:auto!important;
   padding:0!important;
   overflow:hidden!important;
-  margin:12px auto 18px!important;
 }
 html body .hpmw-global-brandbar .hpmw-active-banner-image{
-  position:absolute!important;inset:0!important;
-  width:100%!important;height:100%!important;
-  object-fit:fill!important;object-position:center!important;
+  inset:0!important;width:100%!important;height:100%!important;
+  object-fit:fill!important;
 }
 @media(max-width:650px){
   html body .hpmw-global-brandbar{
-    width:100%!important;
-    max-width:100%!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    aspect-ratio:3.2/1!important;
-    margin:8px auto 12px!important;
+    width:calc(100% - 20px)!important;
+    height:110px!important;min-height:110px!important;max-height:110px!important;
   }
 }
 </style>
