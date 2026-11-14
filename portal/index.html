@@ -1863,7 +1863,8 @@ html body #introView #hpmwHomeLayout .hpmw-sorting-hat-widget > button.hpmw-sort
  #sortingHatView #sortingRequestForm #sortSubmit{width:100%!important}
 }
 </style></head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
-<button class="lux-nav-item" id="adminLaunch" type="button" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-shield-halved"></i></span><span class="lux-nav-label">Ticketbeheer</span></button><label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
+<button class="lux-nav-item" id="adminLaunch" type="button" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-shield-halved"></i></span><span class="lux-nav-label">Ticketbeheer</span></button>
+<button class="lux-nav-item" id="portalManageLaunch" type="button" aria-haspopup="dialog"><span class="lux-nav-icon"><i class="fa-solid fa-sliders"></i></span><span class="lux-nav-label">Beheer</span></button><label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
 <a href="LINK_URL_HIER"><img src="IMAGE_URL_HIER" alt="Beschrijving afbeelding" style="max-width:100%;height:auto;display:block;margin:0 auto;"></a>
 -->
@@ -4618,6 +4619,143 @@ document.addEventListener("DOMContentLoaded",load);document.addEventListener("hp
 html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget{display:flex!important;box-sizing:border-box!important;flex:1 1 auto!important;align-items:center!important;justify-content:center!important;width:100%!important;height:170px!important;min-height:170px!important;max-height:170px!important;margin:0!important;padding:8px!important;overflow:hidden!important;border:0!important;border-radius:0 0 13px 13px!important;background:transparent!important;box-shadow:none!important;opacity:1!important;visibility:visible!important;cursor:pointer!important}
 html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>img{display:block!important;visibility:visible!important;opacity:1!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:154px!important;object-fit:contain!important;margin:auto!important;filter:none!important}
 </style>
+
+<style id="hpmw-unified-portal-rbac-css">
+#portalManageLaunch .lux-nav-icon{background:#20334a;color:#a9c9e8}
+#portalManageLaunch{border-color:#314b67!important}
+#hpmwManageLayer,#hpmwNewsEditorLayer{position:fixed;inset:0;z-index:100500;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(3,8,15,.78);backdrop-filter:blur(9px)}
+#hpmwManageLayer.open,#hpmwNewsEditorLayer.open{display:flex}
+.hpmw-manage-card,.hpmw-news-editor{width:min(760px,100%);max-height:min(88vh,900px);overflow:auto;border:1px solid #3b5674;border-radius:20px;background:linear-gradient(150deg,#14243a,#0b1524);color:#edf4fb;box-shadow:0 28px 90px #000b}
+.hpmw-manage-head,.hpmw-news-editor-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px 24px;border-bottom:1px solid #31475f}
+.hpmw-manage-head h2,.hpmw-news-editor-head h2{margin:3px 0;color:#f3f7fc;font-size:22px}
+.hpmw-manage-kicker{color:#a9c9e8;font-size:10px;font-weight:850;letter-spacing:.18em;text-transform:uppercase}
+.hpmw-manage-close{width:38px;height:38px;border:1px solid #3d5670;border-radius:11px;background:#1a2c43;color:#e5eff9;font-size:18px;cursor:pointer}
+.hpmw-manage-body,.hpmw-news-editor-body{padding:22px 24px}
+.hpmw-manage-login{max-width:440px;margin:8px auto}
+.hpmw-manage-field{display:grid;gap:7px;margin:12px 0}
+.hpmw-manage-field label{color:#b9cce0;font-size:12px;font-weight:750}
+.hpmw-manage-field input,.hpmw-manage-field select,.hpmw-manage-field textarea{width:100%;padding:12px 13px;border:1px solid #354e68;border-radius:10px;background:#091523;color:#f1f5fb;font:inherit}
+.hpmw-manage-field textarea{min-height:170px;resize:vertical}
+.hpmw-manage-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:39px;padding:9px 14px;border:1px solid #476483;border-radius:10px;background:#1b3049;color:#edf5ff;font-weight:750;cursor:pointer}
+.hpmw-manage-btn.primary{background:linear-gradient(135deg,#456f99,#315777);border-color:#6d9ac2}
+.hpmw-manage-btn.danger{background:#3b2029;border-color:#824a59;color:#ffd5db}
+.hpmw-manage-status{min-height:22px;margin:12px 0;color:#e5c98c;font-size:12px}
+.hpmw-role-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 20px}
+.hpmw-role-tile{padding:13px 14px;border:1px solid #304760;border-radius:12px;background:#102137}
+.hpmw-role-tile strong{display:block;color:#e8f2fc;font-size:13px}
+.hpmw-role-tile span{display:block;margin-top:4px;color:#a8bbd0;font-size:11px;line-height:1.45}
+.hpmw-role-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,220px) auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #263b52}
+.hpmw-role-row code{overflow-wrap:anywhere;color:#a9c9e8;font-size:11px}
+.hpmw-cms-manage{display:flex;gap:6px;margin-left:auto}
+.hpmw-cms-icon-btn{display:inline-grid;place-items:center;width:32px;height:32px;border:1px solid #405873;border-radius:9px;background:#1b2d43;color:#dcecff;cursor:pointer}
+.hpmw-cms-icon-btn.delete{border-color:#754654;background:#351e29;color:#ffc5ce}
+.hpmw-cms-create{display:flex;align-items:center;gap:9px;margin:0 0 16px;padding:11px 14px;border:1px solid #526d8a;border-radius:11px;background:#172b42;color:#e8f3ff;font-weight:800;cursor:pointer}
+.hpmw-cms-create:hover,.hpmw-cms-icon-btn:hover{filter:brightness(1.2)}
+@media(max-width:650px){.hpmw-manage-head,.hpmw-news-editor-head{padding:17px}.hpmw-manage-body,.hpmw-news-editor-body{padding:16px}.hpmw-role-summary{grid-template-columns:1fr}.hpmw-role-row{grid-template-columns:1fr;gap:7px}.hpmw-cms-manage{margin-left:0}}
+</style>
+<div id="hpmwManageLayer" role="dialog" aria-modal="true" aria-labelledby="hpmwManageTitle">
+ <section class="hpmw-manage-card">
+  <header class="hpmw-manage-head"><div><div class="hpmw-manage-kicker">Ministerie · Beheercentrum</div><h2 id="hpmwManageTitle">Portaalbeheer</h2></div><button class="hpmw-manage-close" type="button" data-manage-close aria-label="Sluiten">×</button></header>
+  <div class="hpmw-manage-body" id="hpmwManageBody"></div>
+ </section>
+</div>
+<div id="hpmwNewsEditorLayer" role="dialog" aria-modal="true" aria-labelledby="hpmwNewsEditorTitle">
+ <section class="hpmw-news-editor">
+  <header class="hpmw-news-editor-head"><div><div class="hpmw-manage-kicker">Nieuwsredactie</div><h2 id="hpmwNewsEditorTitle">Nieuwsbericht</h2></div><button class="hpmw-manage-close" type="button" data-news-close aria-label="Sluiten">×</button></header>
+  <form class="hpmw-news-editor-body" id="hpmwNewsEditorForm">
+   <label class="hpmw-manage-field">Titel<input name="title" required maxlength="180"></label>
+   <label class="hpmw-manage-field">Bericht<textarea name="body" required></textarea></label>
+   <label class="hpmw-manage-field">Auteur<input name="author" maxlength="100"></label>
+   <label class="hpmw-manage-field">Bron / link<input name="source" maxlength="500"></label>
+   <label class="hpmw-manage-field">Weergave<select name="published"><option value="true">Publiceren</option><option value="false">Concept bewaren</option></select></label>
+   <label class="hpmw-manage-field"><span><input type="checkbox" name="is_pinned" style="width:auto"> Uitlichten bovenaan</span></label>
+   <div style="display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap"><button type="button" class="hpmw-manage-btn" data-news-close>Annuleren</button><button type="submit" class="hpmw-manage-btn primary"><i class="fa-solid fa-floppy-disk"></i> Opslaan</button></div>
+   <div class="hpmw-manage-status" id="hpmwNewsEditorStatus" aria-live="polite"></div>
+  </form>
+ </section>
+</div>
+<script id="hpmw-unified-portal-rbac">
+(()=>{"use strict";
+ const URL="https://vuaajsjjluwgqmneinds.supabase.co";
+ const KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
+ const ROLES=[
+  ["administrator","Administrator","Volledige toegang tot alle portaalonderdelen en instellingen."],
+  ["support_moderator","Support moderator","Portaal bekijken en tickets lezen, beantwoorden, sluiten en verplaatsen."],
+  ["supervisor_support_team","Super visor support team","Supportrechten inclusief tickets verwijderen."],
+  ["news_poster","Nieuwsposter","Portaal bekijken en nieuwsberichten maken en bewerken."],
+  ["news_poster_supervisor","Nieuwsposter - super visor","Nieuws maken, bewerken en verwijderen."],
+  ["guest","Gast","Alleen lezen, supportformulier invullen en eigen tickets bekijken."],
+  ["user","Gebruiker","Alleen lezen, supportformulier invullen en eigen tickets bekijken."]
+ ];
+ const roleNames=Object.fromEntries(ROLES.map(r=>[r[0],r[1]]));
+ const client=window.supabase?.createClient?window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+ let session=null,role="guest",editingNewsId=null;
+ const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
+ const canNews=()=>["administrator","news_poster","news_poster_supervisor"].includes(role);
+ const canDeleteNews=()=>["administrator","news_poster_supervisor"].includes(role);
+ const canSupport=()=>["administrator","support_moderator","supervisor_support_team"].includes(role);
+ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ async function getRole(){if(!session?.user){role="guest";return role}const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";return role}
+ async function headers(){const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canSupport,client,headers};
+ const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
+ function open(){layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()}
+ function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Eenmalig inloggen</h3><p>Gebruik je bestaande portaalaccount. Deze sessie wordt ook gebruikt voor nieuwsbeheer en de beveiligde beheerfuncties.</p><form id="hpmwPortalLogin"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button><div class="hpmw-manage-status" id="hpmwManageStatus"></div></form></div>'}
+ function renderRoleTiles(){return '<div class="hpmw-role-summary">'+ROLES.map(r=>'<div class="hpmw-role-tile"><strong>'+esc(r[1])+'</strong><span>'+esc(r[2])+'</span></div>').join("")+'</div>'}
+ async function renderManage(){
+  if(!client){body.innerHTML="<p>De beveiligde verbinding met Supabase kon niet worden gestart.</p>";return}
+  const {data}=await client.auth.getSession();session=data.session;
+  if(!session){role="guest";body.innerHTML=loginMarkup();return}
+  try{await getRole()}catch(e){body.innerHTML='<p class="hpmw-manage-status">'+esc(e.message)+'</p>';return}
+  let html='<p>Ingelogd als <strong>'+esc(session.user.email)+'</strong> · rol: <strong>'+esc(roleNames[role]||role)+'</strong></p>';
+  if(role==="administrator"){
+   const {data:members,error}=await client.from("tool_access_roles").select("id,user_id,role,created_at").order("created_at");
+   if(error)html+='<p class="hpmw-manage-status">'+esc(error.message)+'</p>';
+   else{
+    html+=renderRoleTiles()+'<h3>Rollen beheren</h3><p>Voeg een Supabase-gebruiker toe met diens User ID, of wijzig de rol van een bestaand account.</p><form id="hpmwRoleAdd"><label class="hpmw-manage-field">Supabase User ID<input name="user_id" required placeholder="UUID van het account"></label><label class="hpmw-manage-field">Rol<select name="role">'+ROLES.map(r=>'<option value="'+r[0]+'">'+esc(r[1])+'</option>').join("")+'</select></label><button class="hpmw-manage-btn primary" type="submit">Gebruiker toevoegen / rol wijzigen</button><div class="hpmw-manage-status" id="hpmwRoleStatus"></div></form><h3>Huidige accounts</h3>';
+    html+=members.map(m=>'<div class="hpmw-role-row"><code>'+esc(m.user_id)+'</code><select data-role-user="'+esc(m.user_id)+'">'+ROLES.map(r=>'<option value="'+r[0]+'" '+(m.role===r[0]?'selected':'')+'>'+esc(r[1])+'</option>').join("")+'</select><button class="hpmw-manage-btn" data-role-save="'+esc(m.user_id)+'">Opslaan</button></div>').join("");
+   }
+  }else{
+   html+=renderRoleTiles()+'<p>Je account heeft toegang tot de onderdelen die bij de rol <strong>'+esc(roleNames[role]||role)+'</strong> horen.</p>';
+  }
+  html+='<div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><button class="hpmw-manage-btn" id="hpmwPortalLogout">Uitloggen</button></div>';
+  body.innerHTML=html;
+ }
+ $("#portalManageLaunch")?.addEventListener("click",open);
+ layer.addEventListener("click",e=>{if(e.target===layer||e.target.closest("[data-manage-close]"))close()});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"){close();editor.classList.remove("open")}});
+ body.addEventListener("submit",async e=>{
+  if(e.target.id==="hpmwPortalLogin"){e.preventDefault();const fd=new FormData(e.target),status=$("#hpmwManageStatus");status.textContent="Bezig met inloggen…";const {data,error}=await client.auth.signInWithPassword({email:String(fd.get("email")).trim(),password:String(fd.get("password"))});if(error){status.textContent=error.message;return}session=data.session;await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
+  if(e.target.id==="hpmwRoleAdd"){e.preventDefault();const fd=new FormData(e.target),status=$("#hpmwRoleStatus");const user_id=String(fd.get("user_id")).trim(),newRole=String(fd.get("role"));const {error}=await client.from("tool_access_roles").upsert({user_id,role:newRole},{onConflict:"user_id"});status.textContent=error?error.message:"Rol opgeslagen.";if(!error)await renderManage()}
+ });
+ body.addEventListener("click",async e=>{
+  const save=e.target.closest("[data-role-save]");if(save){const id=save.dataset.roleSave,select=body.querySelector('[data-role-user="'+CSS.escape(id)+'"]');const {error}=await client.from("tool_access_roles").update({role:select.value}).eq("user_id",id);if(error)alert(error.message);else save.textContent="Opgeslagen";return}
+  if(e.target.closest("#hpmwPortalLogout")){await client.auth.signOut();session=null;role="guest";await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
+ });
+ async function newsRequest(method,payload,id){
+  const h=await headers();const url=URL+"/rest/v1/admin_content"+(id?"?id=eq."+encodeURIComponent(id):"");
+  const r=await fetch(url,{method,headers:h,body:payload?JSON.stringify(payload):undefined,cache:"no-store"});
+  if(!r.ok){const t=await r.text();throw new Error(t||"Opslaan mislukt")}return r.status===204?null:r.json();
+ }
+ function openEditor(item){if(!canNews()){alert("Je hebt geen rechten om nieuws te beheren.");return}editingNewsId=item?.id||null;form.reset();$("#hpmwNewsEditorTitle").textContent=editingNewsId?"Nieuwsbericht bewerken":"Nieuwsbericht maken";if(item){form.elements.title.value=item.title||"";form.elements.body.value=item.body||"";form.elements.author.value=item.author||"";form.elements.source.value=item.source||"";form.elements.published.value=String(!!item.published);form.elements.is_pinned.checked=!!item.is_pinned}$("#hpmwNewsEditorStatus").textContent="";editor.classList.add("open")}
+ document.addEventListener("click",async e=>{
+  const create=e.target.closest("[data-hpmw-news-create]");if(create){openEditor();return}
+  const edit=e.target.closest("[data-hpmw-news-edit]");if(edit){const card=edit.closest(".hpmw-cms-card");openEditor(card?JSON.parse(card.dataset.item||"{}"):null);return}
+  const del=e.target.closest("[data-hpmw-news-delete]");if(del){if(!canDeleteNews()){alert("Alleen de nieuwsposter-supervisor of administrator mag nieuws verwijderen.");return}const card=del.closest(".hpmw-cms-card");const id=card?.dataset.id;if(!id||!confirm("Dit nieuwsbericht definitief verwijderen?"))return;try{await newsRequest("DELETE",null,id);card.remove()}catch(err){alert(err.message)}}
+ },true);
+ document.querySelectorAll("[data-news-close]").forEach(b=>b.addEventListener("click",()=>editor.classList.remove("open")));
+ form.addEventListener("submit",async e=>{e.preventDefault();const status=$("#hpmwNewsEditorStatus");status.textContent="Opslaan…";const payload={kind:"news",title:form.elements.title.value.trim(),body:form.elements.body.value.trim(),author:form.elements.author.value.trim(),source:form.elements.source.value.trim(),published:form.elements.published.value==="true",is_pinned:form.elements.is_pinned.checked,updated_at:new Date().toISOString(),updated_by:session?.user?.id};try{if(editingNewsId)await newsRequest("PATCH",payload,editingNewsId);else{payload.created_by=session.user.id;await newsRequest("POST",payload)}status.textContent="Opgeslagen. De nieuwsfeed wordt vernieuwd.";setTimeout(()=>location.reload(),450)}catch(err){status.textContent=err.message}});
+ const decorateNews=()=>{
+  const section=$("#hpmwHomeNews");if(!section||!canNews())return;
+  if(!section.querySelector("[data-hpmw-news-create]")){const b=document.createElement("button");b.className="hpmw-cms-create";b.dataset.hpmwNewsCreate="1";b.innerHTML='<i class="fa-solid fa-plus"></i> Nieuw nieuwsbericht';section.insertBefore(b,section.children[1]||null)}
+  section.querySelectorAll(".hpmw-cms-card").forEach(card=>{if(card.querySelector(".hpmw-cms-manage"))return;const title=card.querySelector(".hpmw-cms-title")?.textContent||"";const text=card.querySelector(".hpmw-cms-body")?.textContent||"";const meta=card.querySelector(".hpmw-cms-meta")?.textContent||"";card.dataset.item=JSON.stringify({id:card.dataset.id,title,body:text,author:meta.split("•")[0]?.trim()||"",source:"",published:true});const actions=document.createElement("div");actions.className="hpmw-cms-manage";actions.innerHTML='<button class="hpmw-cms-icon-btn" type="button" data-hpmw-news-edit title="Bewerken" aria-label="Bewerken"><i class="fa-solid fa-pencil"></i></button>'+(canDeleteNews()?'<button class="hpmw-cms-icon-btn delete" type="button" data-hpmw-news-delete title="Verwijderen" aria-label="Verwijderen"><i class="fa-solid fa-trash"></i></button>':"");card.querySelector(".hpmw-cms-card-top")?.append(actions)});
+ };
+ const observer=new MutationObserver(decorateNews);observer.observe(document.body,{childList:true,subtree:true});
+ client?.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()});
+ (async()=>{if(client){const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}})();
+})();
+</script>
+
 </body></html>
 
 
