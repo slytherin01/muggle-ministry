@@ -6588,6 +6588,17 @@ html body .hpmw-global-brandbar:after{
 .hpmw-global-brandbar{position:relative!important;overflow:hidden!important}
 .hpmw-global-brandbar .hpmw-active-banner-image{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;object-fit:fill!important;object-position:center!important;pointer-events:none!important}
 </style>
+<style id="hpmw-crop-banner-edge-lines-all-pages">
+/* Behoud de bestaande bannerbestanden; zoom alleen iets in zodat de dubbele rand buiten beeld valt. */
+html body .hpmw-global-brandbar{overflow:hidden!important}
+html body .hpmw-global-brandbar .hpmw-active-banner-image{
+  inset:-2%!important;
+  width:104%!important;
+  height:104%!important;
+  object-fit:fill!important;
+  object-position:center!important;
+}
+</style>
 <script id="hpmw-ticket-support-banner-force-20261114">
 (()=>{"use strict";
  const images={
