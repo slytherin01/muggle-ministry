@@ -6683,4 +6683,17 @@ html body{padding-top:70px!important}
 
 
 
+
+<script id="hpmw-remove-faq-admin-nav-guard">
+(()=>{
+ const removeFaqAdminNav=()=>{
+  document.querySelectorAll('header.topbar nav.top-actions a,header.topbar nav.top-actions button').forEach(el=>{
+   const label=(el.innerText||el.textContent||'').replace(/\\s+/g,' ').trim().toLocaleLowerCase('nl-NL');
+   if(el.id==='faqAdminLaunch'||label==='faq - admin'||label==='faq admin')el.remove();
+  });
+ };
+ removeFaqAdminNav();
+ new MutationObserver(removeFaqAdminNav).observe(document.querySelector('header.topbar nav.top-actions')||document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
