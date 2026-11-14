@@ -47,11 +47,15 @@
     const db = client();
     const ids = Array.from(new Set(tickets.map(t => String(t.id)).filter(x => /^\d+$/.test(x))));
     if (!ids.length) return { synced: 0, created: 0 };
-    const { data, error } = await db.from(TABLE)
-      .select("ticket_key,forumotion_topic_id,forumotion_forum_id,ticket_number,subject,category,department,status,priority,assignee_forumotion_user_id,assignee_name,internal_note,created_by_forumotion_user_id,created_by_name,created_at,updated_at")
-      .in("forumotion_topic_id", ids);
-    if (error) throw error;
-    const existing = new Map((data || []).map(row => [String(row.forumotion_topic_id), row]));
+    const data = [];
+    for (let offset = 0; offset < ids.length; offset += 100) {
+      const { data: batch, error } = await db.from(TABLE)
+        .select("ticket_key,forumotion_topic_id,forumotion_forum_id,ticket_number,subject,category,department,status,priority,assignee_forumotion_user_id,assignee_name,internal_note,created_by_forumotion_user_id,created_by_name,created_at,updated_at")
+        .in("forumotion_topic_id", ids.slice(offset, offset + 100));
+      if (error) throw error;
+      data.push(...(batch || []));
+    }
+    const existing = new Map(data.map(row => [String(row.forumotion_topic_id), row]));
     const local = readLocal();
     const missing = [];
     for (const ticket of tickets) {
@@ -82,18 +86,22 @@
     }
     writeLocal(local);
     if (missing.length) {
-      const { error: insertError } = await db.from(TABLE).upsert(missing, { onConflict: "forumotion_topic_id", ignoreDuplicates: true });
-      if (insertError) throw insertError;
-      const { data: inserted, error: reloadError } = await db.from(TABLE)
-        .select("forumotion_topic_id,status,priority,assignee_forumotion_user_id,assignee_name,department,internal_note,created_at")
-        .in("forumotion_topic_id", missing.map(row => row.forumotion_topic_id));
-      if (reloadError) throw reloadError;
-      for (const row of inserted || []) local[row.forumotion_topic_id] = Object.assign({}, local[row.forumotion_topic_id] || {}, toInternal(row));
+      for (let offset = 0; offset < missing.length; offset += 100) {
+        const batch = missing.slice(offset, offset + 100);
+        const { error: insertError } = await db.from(TABLE).upsert(batch, { onConflict: "forumotion_topic_id", ignoreDuplicates: true });
+        if (insertError) throw insertError;
+        const { data: inserted, error: reloadError } = await db.from(TABLE)
+          .select("forumotion_topic_id,status,priority,assignee_forumotion_user_id,assignee_name,department,internal_note,created_at")
+          .in("forumotion_topic_id", batch.map(row => row.forumotion_topic_id));
+        if (reloadError) throw reloadError;
+        for (const row of inserted || []) local[row.forumotion_topic_id] = Object.assign({}, local[row.forumotion_topic_id] || {}, toInternal(row));
+      }
       writeLocal(local);
       for (const row of missing) {
         const { data: insertedRow } = await db.from(TABLE).select("ticket_key").eq("forumotion_topic_id", row.forumotion_topic_id).maybeSingle();
         if (insertedRow) {
-          await db.from(EVENTS).insert({ ticket_key: insertedRow.ticket_key, event_type: "created", event_data: { source: "forumotion_ticket_sync" } });
+          const { error: eventError } = await db.from(EVENTS).insert({ ticket_key: insertedRow.ticket_key, event_type: "created", event_data: { source: "forumotion_ticket_sync" } });
+          if (eventError) console.warn("Ticket aanmaaklog kon niet worden opgeslagen:", eventError.message);
         }
       }
     }
