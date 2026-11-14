@@ -15,7 +15,25 @@
  #adminCmsView .cms-item{padding:12px;border:1px solid #26364c;border-radius:10px;margin:8px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
  #adminCmsView .cms-item small{display:block;color:#91a0b5} #adminCmsView .cms-pin{color:#e5d88c;font-size:11px;font-weight:800}
  #adminCmsView .cms-perm{display:grid;grid-template-columns:1fr repeat(4,70px);gap:8px;align-items:center;padding:9px;border-bottom:1px solid #26364c}
- #adminCmsView .cms-status{color:#91a0b5;min-height:24px}\n #adminCmsView .cms-help{color:#9eacbd;font-size:12px;line-height:1.5}\n #adminCmsView .cms-category-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #26364c}\n #adminCmsView .cms-category-row strong{flex:1;min-width:120px}\n #adminCmsView [hidden]{display:none!important}\n #adminCmsView .cms-panel h2,#adminCmsView .cms-panel h3{letter-spacing:-.01em}
+ #adminCmsView .cms-status{color:#91a0b5;min-height:24px}\n #adminCmsView .cms-help{color:#9eacbd;font-size:12px;line-height:1.5}\n #adminCmsView .cms-category-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #26364c}
+ #adminCmsView .faq-manager{margin:12px 0 20px}
+ #adminCmsView .faq-manager-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+ #adminCmsView .faq-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+ #adminCmsView .faq-category-card{position:relative;min-height:94px;padding:18px;border:1px solid #34465d;border-radius:13px;background:#142033;color:#f3f5fa;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+ #adminCmsView .faq-category-card:hover{border-color:#9a85f5;background:#1b2a42}
+ #adminCmsView .faq-category-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+ #adminCmsView .faq-category-card:hover .faq-category-actions,#adminCmsView .faq-category-card:focus-within .faq-category-actions{opacity:1}
+ #adminCmsView .faq-icon-btn{width:30px;height:30px;border:1px solid #50617a;border-radius:8px;background:#0d1726;color:#edf2fa;cursor:pointer}
+ #adminCmsView .faq-icon-btn:hover{background:#7865ee}
+ #adminCmsView .faq-manager-back{margin-bottom:12px}
+ #adminCmsView .faq-question-row{padding:14px;border:1px solid #2e4058;border-radius:11px;margin:9px 0;background:#121d2d}
+ #adminCmsView .faq-question-row h3{margin:0 0 8px}
+ #adminCmsView .faq-question-row p{white-space:pre-wrap;color:#b8c7d9;margin:0 0 10px}
+ #adminCmsView .faq-question-actions{display:flex;gap:7px;flex-wrap:wrap}
+ #adminCmsView .faq-manager .cms-panel{margin-top:14px}
+ #adminCmsView .faq-manager [hidden]{display:none!important}
+ @media(max-width:700px){#adminCmsView .faq-category-actions{opacity:1}}
+\n #adminCmsView .cms-category-row strong{flex:1;min-width:120px}\n #adminCmsView [hidden]{display:none!important}\n #adminCmsView .cms-panel h2,#adminCmsView .cms-panel h3{letter-spacing:-.01em}
  @media(max-width:760px){#adminCmsView .cms-grid{grid-template-columns:1fr}#adminCmsView .cms-perm{grid-template-columns:1fr repeat(4,42px);font-size:11px}}
  `;
  function go(id){document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const v=$("#"+id);if(v){v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important")}window.scrollTo(0,0)}
@@ -32,6 +50,17 @@
     <div class="cms-panel"><h2 id="cmsFormTitle">Nieuw item</h2><form id="cmsForm"><label>Titel<input id="cmsTitle" required maxlength="180"></label><label>Tekst / antwoord / omschrijving<textarea id="cmsBody" rows="7"></textarea></label><label id="cmsSourceWrap">Bron (voor nieuws)<input id="cmsSource"></label><label id="cmsAuthorWrap">Auteur (voor nieuws)<input id="cmsAuthor"></label><label id="cmsFaqCategoryWrap" hidden>Categorie<select id="cmsFaqCategory"><option value="">Geen categorie</option></select></label><label>Volgorde<input id="cmsOrder" type="number" value="0"></label><label id="cmsPinWrap"><input id="cmsPinned" type="checkbox" style="width:auto"> Vastpinnen bovenaan HP Nieuws</label><label><input id="cmsPublished" type="checkbox" style="width:auto"> Direct publiceren</label><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="cms-btn primary" type="submit">Opslaan</button><button class="cms-btn" type="button" id="cmsNew">Nieuw / wissen</button></div><p class="cms-status" id="cmsStatus" role="status"></p></form><div id="faqCategoryManager" hidden style="margin-top:16px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><strong>Categorieën</strong><button class="cms-btn primary" id="faqCategoryAdd" type="button">+ Toevoegen</button></div><div id="faqCategoryList"></div><p class="cms-status" id="faqCategoryStatus" role="status"></p></div></div>
    </div></div><div data-main-panel="ticketRights" hidden><div class="cms-panel" id="ticketModeratorsPanel"><h2>Portaalrechten · Ticketbeheer</h2><p>Stel per Forumotion-gebruiker afzonderlijk in of die Ticketbeheer mag zien, tickets mag modereren of tickets mag verwijderen. Gebruik het Forumotion-gebruikersnummer.</p><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(160px,1fr) auto;gap:8px;align-items:end"><label>Forumotion gebruikersnummer<input id="ticketModId" type="number" min="1" step="1" placeholder="bijv. 3"></label><label>Naam / herkenning<input id="ticketModName" maxlength="80" placeholder="bijv. /u3"></label><button class="cms-btn primary" type="button" id="ticketModAdd">Gebruiker toevoegen</button></div><div id="ticketModList" style="margin-top:12px"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="cms-btn primary" type="button" id="saveTicketRights">Rechten opslaan</button><button class="cms-btn" type="button" id="syncPortal">Sync naar portaal</button></div><p class="cms-status" id="ticketModStatus" role="status"></p></div></div><div data-main-panel="newsRights" hidden><div class="cms-panel" id="newsModeratorsPanel"><h2>Portaalrechten · Nieuwspagina</h2><p>Gebruik het Forumotion-gebruikersnummer, net als bij Ticketbeheer. Stel per gebruiker afzonderlijk de nieuwsrechten in.</p><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(160px,1fr) auto;gap:8px;align-items:end"><label>Forumotion gebruikersnummer<input id="newsModId" type="number" min="1" step="1" placeholder="bijv. 3"></label><label>Naam / herkenning<input id="newsModName" maxlength="80" placeholder="bijv. /u3"></label><button class="cms-btn primary" type="button" id="newsModAdd">Gebruiker toevoegen</button></div><div id="newsModList" style="margin-top:12px"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="cms-btn primary" type="button" id="saveNewsRights">Rechten opslaan</button><button class="cms-btn" type="button" id="syncNewsRights">Sync naar portaal</button></div><p class="cms-status" id="newsModStatus" role="status"></p></div></div>`;
   $("main.shell")?.append(section);
+  const faqPanel=section.querySelector('[data-main-panel="news"]');
+  const faqGrid=faqPanel?.querySelector(".cms-grid");
+  const faqEditorPanel=faqGrid?.lastElementChild;
+  const faqManager=document.createElement("div");faqManager.className="faq-manager";faqManager.id="faqManager";
+  faqManager.innerHTML='<div class="faq-manager-head"><button class="btn" type="button" id="faqBackPortal">← Terug naar portaal</button><button class="cms-btn primary" type="button" id="faqAddCategory">+ Nieuwe categorie toevoegen</button></div><div id="faqCategoryGrid" class="faq-category-grid"></div><div id="faqQuestionView" hidden><button class="btn faq-manager-back" type="button" id="faqBackCategories">← Terug naar categorieën</button><div class="faq-manager-head"><h2 id="faqSelectedTitle"></h2><button class="cms-btn primary" type="button" id="faqAddQuestion">+ Vraag toevoegen</button></div><div id="faqQuestions"></div></div>';
+  if(faqPanel&&faqGrid){faqPanel.insertBefore(faqManager,faqGrid);faqGrid.hidden=true;faqManager.append(faqEditorPanel);}
+  $("#faqBackPortal").onclick=()=>go("homeView");
+  $("#faqBackCategories").onclick=()=>{selectedFaqCategory=null;$("#faqQuestionView").hidden=true;$("#faqCategoryGrid").hidden=false;faqManager.querySelector(".cms-panel").hidden=true;renderFaqCategories();};
+  $("#faqAddCategory").onclick=addFaqCategory;
+  $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
+
   $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
   $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("#adminCmsView [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==(b.dataset.mainTab==="faq"?"news":b.dataset.mainTab));if(b.dataset.mainTab==="faq")selectKind("faq");});
   $("#roleSave").onclick=saveToolRole;
@@ -46,7 +75,7 @@
  }
  let kind="maintenance",editing=null;
  function reset(){editing=null;$("#cmsForm").reset();$("#cmsOrder").value=0;$("#cmsPinned").checked=false;$("#cmsPinWrap").style.display=kind==="news"?"block":"none";$("#cmsSourceWrap").hidden=kind!=="news";$("#cmsAuthorWrap").hidden=kind!=="news";$("#cmsFaqCategoryWrap").hidden=kind!=="faq";$("#faqCategoryManager").hidden=kind!=="faq"||document.body.dataset.supabaseRole==="faq_editor";$("#cmsFormTitle").textContent=kind==="faq"?"Nieuwe FAQ-vraag":"Nieuw item";if(kind==="faq"){loadFaqCategories();loadFaqCategoryManager();}}
- function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];reset();load();}
+ function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];if(k==="faq"){$("#cmsTabs").hidden=true;$("#faqManager").hidden=false;$("#faqManager .cms-panel").hidden=true;load();return;}$("#cmsTabs").hidden=false;$("#faqManager").hidden=true;reset();load();}
 
  async function loadToolRoles(){
   const db=client(),box=$("#roleList");if(!db||!box)return;
