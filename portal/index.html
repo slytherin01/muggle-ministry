@@ -6526,32 +6526,33 @@ html body .hpmw-global-brandbar{
 </style>
 
 
+<style id="hpmw-ticket-support-banner-image-layer">
+.hpmw-global-brandbar{position:relative!important;overflow:hidden!important}
+.hpmw-global-brandbar .hpmw-active-banner-image{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;object-fit:fill!important;object-position:center!important;pointer-events:none!important}
+</style>
 <script id="hpmw-ticket-support-banner-force-20261114">
 (()=>{"use strict";
- const supportImage="https://i44.servimg.com/u/f44/11/48/74/42/ticket13.png";
- const ticketsImage="https://i44.servimg.com/u/f44/11/48/74/42/mijnti10.png";
- const adminImage="https://i44.servimg.com/u/f44/11/48/74/42/ticket12.png";
- const defaultImage="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
+ const images={
+  homeView:"https://i44.servimg.com/u/f44/11/48/74/42/ticket13.png",
+  myTicketsView:"https://i44.servimg.com/u/f44/11/48/74/42/mijnti10.png",
+  adminView:"https://i44.servimg.com/u/f44/11/48/74/42/ticket12.png"
+ };
+ const fallback="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
  const apply=()=>{
-  const bar=document.querySelector(".hpmw-global-brandbar");
-  if(!bar)return;
+  const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
   const active=document.querySelector("main.shell>.view.active");
-  const image=active?.id==="homeView"?supportImage:
-    active?.id==="myTicketsView"?ticketsImage:
-    active?.id==="adminView"?adminImage:defaultImage;
-  bar.style.setProperty("background-image",'url("'+image+'")',"important");
+  const src=images[active?.id]||fallback;
+  bar.style.setProperty("background-image",'url("'+src+'")',"important");
+  let img=bar.querySelector(".hpmw-active-banner-image");
+  if(!img){img=document.createElement("img");img.className="hpmw-active-banner-image";img.alt="";img.setAttribute("aria-hidden","true");bar.appendChild(img)}
+  if(img.src!==src)img.src=src;
  };
  const start=()=>{
   apply();
-  new MutationObserver(apply).observe(document.querySelector("main.shell")||document.body,{
-   subtree:true,attributes:true,attributeFilter:["class"]
-  });
-  document.addEventListener("click",e=>{
-   if(e.target?.closest?.("#ticketSupportLaunch"))requestAnimationFrame(apply);
-  },true);
+  new MutationObserver(apply).observe(document.querySelector("main.shell")||document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
+  document.addEventListener("click",()=>requestAnimationFrame(apply),true);
   window.addEventListener("pageshow",apply);
  };
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
- else start();
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
