@@ -6416,7 +6416,14 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  const access=()=>window.HpmwPortalAccess;
  const currentRole=()=>access()?.role||"guest";
  const hasSession=()=>!!access()?.session;
- const permitted=()=>hasSession()&&["administrator","news_poster","news_poster_supervisor"].includes(currentRole());
+ // De twee oprichters (/u1 en /u3) mogen de beheerknoppen altijd zien.
+ // Portal Admin vraagt bij openen nog steeds om de beveiligde Supabase-beheerderssessie.
+ const founderForumotion=()=>{
+  const id=Number(window._userdata?.user_id||0);
+  const href=document.getElementById("accountLink")?.getAttribute("href")||"";
+  return [1,3].includes(id)||/^\\/u[13](?:[/?#]|$)/i.test(href);
+ };
+ const permitted=()=>founderForumotion()||(hasSession()&&["administrator","news_poster","news_poster_supervisor"].includes(currentRole()));
  const refresh=()=>{
   const ok=permitted();
   btn.hidden=!ok;
@@ -6424,7 +6431,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
   btn.tabIndex=ok?0:-1;
   btn.style.setProperty("display",ok?"inline-flex":"none","important");
   if(ticketAdmin){
-   const support=hasSession()&&!!access()?.canSupport?.();
+   const support=founderForumotion()||(hasSession()&&!!access()?.canSupport?.());
    ticketAdmin.hidden=!support;
    ticketAdmin.setAttribute("aria-hidden",String(!support));
    ticketAdmin.tabIndex=support?0:-1;
