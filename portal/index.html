@@ -4896,11 +4896,12 @@ html body header.topbar.luxury-nav-v2 nav.top-actions > #accountLink{order:8!imp
 
 
 <style id="hpmw-uniform-banner-frame-height-20261114">
-/* Alle banners krijgen dezelfde brede verhouding; afbeeldingen worden nooit uitgerekt. */
+/* Herstel de oorspronkelijke bannermaat en beeldverhouding; alle pagina-afbeeldingen blijven onvervormd. */
 html body .hpmw-global-brandbar{
   display:block!important;
+  position:relative!important;
   box-sizing:border-box!important;
-  width:min(1180px,calc(100% - 36px))!important;
+  width:100%!important;
   max-width:1180px!important;
   height:auto!important;
   min-height:0!important;
@@ -4908,6 +4909,7 @@ html body .hpmw-global-brandbar{
   aspect-ratio:3.2/1!important;
   padding:0!important;
   overflow:hidden!important;
+  margin:12px auto 18px!important;
 }
 html body .hpmw-global-brandbar .hpmw-active-banner-image{
   position:absolute!important;
@@ -4919,11 +4921,13 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 }
 @media(max-width:650px){
   html body .hpmw-global-brandbar{
-    width:calc(100% - 20px)!important;
+    width:100%!important;
+    max-width:100%!important;
     height:auto!important;
     min-height:0!important;
     max-height:none!important;
     aspect-ratio:3.2/1!important;
+    margin:8px auto 12px!important;
   }
 }
 </style>
