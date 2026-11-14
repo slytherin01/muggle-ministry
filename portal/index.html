@@ -2023,8 +2023,12 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 </section>
 <section class="view" id="faqView">
  <section class="panel hpmw-internal-faq">
-  <div class="page-head"><div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Veelgestelde vragen</h1><p class="subtitle">Kies een categorie in het overzicht om direct naar het juiste antwoord te gaan.</p></div><button class="btn" id="faqBack" type="button"><i class="fa-solid fa-arrow-left"></i> Terug naar portaal</button></div>
-  <iframe id="hpmwForumFaqFrame" title="Veelgestelde vragen van het forum" src="/faq" loading="lazy"></iframe>
+  <div class="page-head"><div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Veelgestelde vragen</h1><p class="subtitle">Kies hieronder een categorie.</p></div><button class="btn" id="faqBack" type="button"><i class="fa-solid fa-arrow-left"></i> Terug naar portaal</button></div>
+  <div class="categories hpmw-faq-categories" id="hpmwFaqCategories">
+   <button class="cat" type="button" data-faq-category="portal"><span class="round-icon"><i class="fa-solid fa-ticket"></i></span><span><strong>Portaal</strong><span>Veelgestelde vragen over het portaal en tickets</span></span></button>
+   <button class="cat" type="button" data-faq-category="forum"><span class="round-icon"><i class="fa-solid fa-comments"></i></span><span><strong>Forum</strong><span>Veelgestelde vragen over het forum</span></span></button>
+  </div>
+  <div class="hpmw-faq-category-content" id="hpmwFaqCategoryContent" aria-live="polite"><div class="empty">Selecteer een categorie om de artikelen te bekijken.</div></div>
  </section>
 </section>
 <div class="quiz-backdrop" id="sortQuizBackdrop"><section class="quiz-dialog" role="dialog" aria-modal="true" aria-labelledby="sortQuizTitle"><div class="popup-head"><div><div class="quiz-kicker">DE AFDELINGSQUIZ</div><h2 id="sortQuizTitle">Welke afdeling past bij jou?</h2></div><button type="button" class="close-btn" id="sortQuizClose" aria-label="Quiz sluiten">×</button></div><div><p class="quiz-intro">Beantwoord vier korte vragen. Kies steeds het antwoord dat het beste bij jou past.</p><div id="sortQuizQuestion"></div><div class="quiz-progress" id="sortQuizProgress">Vraag 1 van 4</div></div></section></div>
@@ -6069,8 +6073,10 @@ html body #introView #hpmwHomeLayout .hpmw-forum-widget:hover img{filter:none!im
 </script>
 <style id="hpmw-internal-faq-style-20261114">
 #faqView .hpmw-internal-faq{max-width:1100px!important;margin:0 auto!important;padding:22px!important}
-#faqView #hpmwForumFaqFrame{display:block!important;width:100%!important;height:min(76vh,900px)!important;min-height:560px!important;border:1px solid #344b67!important;border-radius:12px!important;background:#101f33!important}
-@media(max-width:650px){#faqView .hpmw-internal-faq{padding:13px!important}#faqView .page-head{gap:12px!important}#faqView #hpmwForumFaqFrame{height:75vh!important;min-height:500px!important}}
+#faqView .hpmw-faq-categories{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:14px 0!important}
+#faqView .hpmw-faq-category-content{min-height:110px;padding:16px;border:1px solid #344b67;border-radius:12px;background:#101f33;color:#dce7f5}
+#faqView .hpmw-faq-categories .cat[aria-pressed=true]{border-color:#86a9ce;background:linear-gradient(145deg,#243d5b,#14243a)}
+@media(max-width:650px){#faqView .hpmw-internal-faq{padding:13px!important}#faqView .page-head{gap:12px!important}#faqView .hpmw-faq-categories{grid-template-columns:1fr!important}}
 </style>
 <style id="hpmw-internal-awards-page-style-20261114">
 #introView .hpmw-awards-open{width:100%;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
@@ -6658,3 +6664,27 @@ html body main.shell>.view>.hpmw-section-title h1{margin:0!important;color:#f3f6
 html body main.shell>.view>.hpmw-section-title .eyebrow{margin:0 0 4px!important;color:#c5a363!important;font-size:10px!important;font-weight:850!important;letter-spacing:.12em!important;text-transform:uppercase!important}
 html body main.shell>.view>.hpmw-section-title .subtitle{margin:4px 0 0!important;color:#aab8c8!important}
 </style>
+<style id="hpmw-blue-banner-page-titles-20261114">
+/* Pagetitels staan leesbaar in de blauwe banner, niet los erboven. */
+.hpmw-global-brandbar{display:flex!important;align-items:center!important;justify-content:flex-start!important;padding:18px 28px!important}
+.hpmw-global-brandbar .hpmw-banner-page-title{position:relative!important;z-index:4!important;margin:0!important;color:#f4f8ff!important;font-size:clamp(22px,3vw,34px)!important;font-weight:900!important;letter-spacing:-.025em!important;text-shadow:0 2px 8px #071426!important;pointer-events:none!important}
+#homeView>.hpmw-section-title,#myTicketsView>.hpmw-section-title,#adminView>.hpmw-section-title{display:none!important}
+@media(max-width:600px){.hpmw-global-brandbar{padding:12px 16px!important}.hpmw-global-brandbar .hpmw-banner-page-title{font-size:clamp(18px,5vw,25px)!important}}
+</style>
+<script id="hpmw-blue-banner-page-titles-20261114">
+(()=>{"use strict";
+ const labels={homeView:"Ticket Support",myTicketsView:"Mijn Tickets",adminView:"Ticket-admin"};
+ const apply=()=>{
+  const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
+  const view=document.querySelector("main.shell>.view.active");
+  const label=labels[view?.id]||"";
+  let title=bar.querySelector(".hpmw-banner-page-title");
+  if(!label){title?.remove();return}
+  if(!title){title=document.createElement("div");title.className="hpmw-banner-page-title";bar.appendChild(title)}
+  title.textContent=label;
+ };
+ const start=()=>{apply();new MutationObserver(apply).observe(document.querySelector("main.shell")||document.body,{subtree:true,attributes:true,attributeFilter:["class"]});document.addEventListener("click",()=>requestAnimationFrame(apply),true);window.addEventListener("pageshow",apply)};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+ document.addEventListener("click",e=>{const b=e.target.closest("[data-faq-category]");if(!b)return;const key=b.dataset.faqCategory;document.querySelectorAll("[data-faq-category]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));const out=document.getElementById("hpmwFaqCategoryContent");if(out)out.innerHTML='<div class="empty">De FAQ-artikelen voor deze categorie worden hier geplaatst zodra de oorspronkelijke forumteksten zijn aangeleverd.</div>';});
+})();
+</script>
