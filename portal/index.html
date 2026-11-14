@@ -6617,13 +6617,25 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   bar.style.setProperty("border-radius","0","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
-  /* Gebruik de banner als achtergrond op de container; zo kan een algemene img-regel hem niet verbergen. */
-  bar.style.setProperty("background-image",'url("'+src+'")',"important");
-  bar.style.setProperty("background-repeat","no-repeat","important");
-  bar.style.setProperty("background-position","center center","important");
-  bar.style.setProperty("background-size","100% 100%","important");
-  const img=bar.querySelector(".hpmw-active-banner-image");
-  if(img)img.style.setProperty("display","none","important");
+  /* Toon de banner als img-laag; forceer display ook tegen de oudere algemene img-verbergregel in. */
+  bar.style.setProperty("background-image","none","important");
+  let img=bar.querySelector(".hpmw-active-banner-image");
+  if(!img){
+    img=document.createElement("img");
+    img.className="hpmw-active-banner-image";
+    img.alt="Muggle Ministry";
+    bar.appendChild(img);
+  }
+  img.style.setProperty("display","block","important");
+  img.style.setProperty("visibility","visible","important");
+  img.style.setProperty("opacity","1","important");
+  img.style.setProperty("position","absolute","important");
+  img.style.setProperty("inset","0","important");
+  img.style.setProperty("width","100%","important");
+  img.style.setProperty("height","100%","important");
+  img.style.setProperty("object-fit","fill","important");
+  img.style.setProperty("z-index","2","important");
+  if(img.src!==src)img.src=src;
  };
  const start=()=>{
   apply();
