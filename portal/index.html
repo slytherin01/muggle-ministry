@@ -6567,12 +6567,12 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
 
 
 <style id="hpmw-matching-border-all-page-banners-20261114">
-/* Kleine, passende goudkleurige rand; afmetingen en centrering blijven gelijk op alle pagina's. */
+/* Plaats de subtiele goudrand 2px naar binnen, dichter tegen de bannerafbeelding aan. */
 html body .hpmw-global-brandbar{
   box-sizing:border-box!important;
-  border:1px solid rgba(205,166,95,.78)!important;
-  outline:0!important;
-  outline-offset:0!important;
+  border:0!important;
+  outline:1px solid rgba(205,166,95,.82)!important;
+  outline-offset:-2px!important;
   box-shadow:0 2px 7px rgba(0,0,0,.28)!important;
   border-radius:5px!important;
   margin-left:auto!important;
@@ -6580,8 +6580,9 @@ html body .hpmw-global-brandbar{
 }
 @media(max-width:650px){
   html body .hpmw-global-brandbar{
-    border:1px solid rgba(205,166,95,.78)!important;
-    outline:0!important;
+    border:0!important;
+    outline:1px solid rgba(205,166,95,.82)!important;
+    outline-offset:-2px!important;
     box-shadow:0 2px 7px rgba(0,0,0,.28)!important;
     border-radius:5px!important;
   }
