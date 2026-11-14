@@ -2,61 +2,71 @@
 (()=> {
  const $=(s,r=document)=>r.querySelector(s);
  const client=()=>window.hpmwSupabase;
- const kinds={page:"Portaalteksten",news:"Nieuwspagina",faq:"Veelgestelde vragen"};
+ const kinds={news:"Nieuwspagina"};
  const perms=["view","edit","publish","delete"];
  const css=`
- #adminCmsView .cms-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0} #adminCmsView .cms-main-tabs{padding:8px;background:#0b1422;border:1px solid #26364c;border-radius:12px} #adminCmsView .cms-main-tabs button{flex:1;min-width:130px} #adminCmsView [data-main-panel][hidden]{display:none!important}
- #adminCmsView .cms-tabs button,#adminCmsView .cms-btn{border:1px solid #34465d;background:#152238;color:#edf2fa;border-radius:9px;padding:9px 13px;cursor:pointer}
- #adminCmsView .cms-tabs button.active,#adminCmsView .cms-btn.primary{background:#7865ee;border-color:#7865ee}
- #adminCmsView .cms-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.8fr);gap:16px}
- #adminCmsView .cms-panel{background:#101827;border:1px solid #26364c;border-radius:14px;padding:18px;min-width:0}
- #adminCmsView input,#adminCmsView textarea,#adminCmsView select{width:100%;padding:10px;border:1px solid #35465b;border-radius:8px;background:#080e19;color:#edf2fa;margin:5px 0 12px}
- #adminCmsView label{display:block;color:#c9d8ed;font-size:12px;font-weight:700}
- #adminCmsView .cms-item{padding:12px;border:1px solid #26364c;border-radius:10px;margin:8px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
- #adminCmsView .cms-item small{display:block;color:#91a0b5} #adminCmsView .cms-pin{color:#e5d88c;font-size:11px;font-weight:800}
- #adminCmsView .cms-perm{display:grid;grid-template-columns:1fr repeat(4,70px);gap:8px;align-items:center;padding:9px;border-bottom:1px solid #26364c}
- #adminCmsView .cms-status{color:#91a0b5;min-height:24px}\n #adminCmsView .cms-help{color:#9eacbd;font-size:12px;line-height:1.5}\n #adminCmsView .cms-category-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #26364c}
- #adminCmsView .faq-manager{margin:12px 0 20px}
- #adminCmsView .faq-manager-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
- #adminCmsView .faq-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
- #adminCmsView .faq-category-card{position:relative;min-height:94px;padding:18px;border:1px solid #34465d;border-radius:13px;background:#142033;color:#f3f5fa;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
- #adminCmsView .faq-category-card:hover{border-color:#9a85f5;background:#1b2a42}
- #adminCmsView .faq-category-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
- #adminCmsView .faq-category-card:hover .faq-category-actions,#adminCmsView .faq-category-card:focus-within .faq-category-actions{opacity:1}
- #adminCmsView .faq-icon-btn{width:30px;height:30px;border:1px solid #50617a;border-radius:8px;background:#0d1726;color:#edf2fa;cursor:pointer}
- #adminCmsView .faq-icon-btn:hover{background:#7865ee}
- #adminCmsView .faq-manager-back{margin-bottom:12px}
- #adminCmsView .faq-question-row{padding:14px;border:1px solid #2e4058;border-radius:11px;margin:9px 0;background:#121d2d}
- #adminCmsView .faq-question-row h3{margin:0 0 8px}
- #adminCmsView .faq-question-row p{white-space:pre-wrap;color:#b8c7d9;margin:0 0 10px}
- #adminCmsView .faq-question-actions{display:flex;gap:7px;flex-wrap:wrap}
- #adminCmsView .faq-manager .cms-panel{margin-top:14px}
- #adminCmsView .faq-manager [hidden]{display:none!important}
- @media(max-width:700px){#adminCmsView .faq-category-actions{opacity:1}}
-\n #adminCmsView .cms-category-row strong{flex:1;min-width:120px}\n #adminCmsView [hidden]{display:none!important}\n #adminCmsView .cms-panel h2,#adminCmsView .cms-panel h3{letter-spacing:-.01em}
- @media(max-width:760px){#adminCmsView .cms-grid{grid-template-columns:1fr}#adminCmsView .cms-perm{grid-template-columns:1fr repeat(4,42px);font-size:11px}}
+ :is(#adminCmsView,#newsManagementView) .cms-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0} :is(#adminCmsView,#newsManagementView) .cms-main-tabs{padding:8px;background:#0b1422;border:1px solid #26364c;border-radius:12px} :is(#adminCmsView,#newsManagementView) .cms-main-tabs button{flex:1;min-width:130px} :is(#adminCmsView,#newsManagementView) [data-main-panel][hidden]{display:none!important}
+ :is(#adminCmsView,#newsManagementView) .cms-tabs button,:is(#adminCmsView,#newsManagementView) .cms-btn{border:1px solid #34465d;background:#152238;color:#edf2fa;border-radius:9px;padding:9px 13px;cursor:pointer}
+ :is(#adminCmsView,#newsManagementView) .cms-tabs button.active,:is(#adminCmsView,#newsManagementView) .cms-btn.primary{background:#7865ee;border-color:#7865ee}
+ :is(#adminCmsView,#newsManagementView) .cms-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.8fr);gap:16px}
+ :is(#adminCmsView,#newsManagementView) .cms-panel{background:#101827;border:1px solid #26364c;border-radius:14px;padding:18px;min-width:0}
+ :is(#adminCmsView,#newsManagementView) input,:is(#adminCmsView,#newsManagementView) textarea,:is(#adminCmsView,#newsManagementView) select{width:100%;padding:10px;border:1px solid #35465b;border-radius:8px;background:#080e19;color:#edf2fa;margin:5px 0 12px}
+ :is(#adminCmsView,#newsManagementView) label{display:block;color:#c9d8ed;font-size:12px;font-weight:700}
+ :is(#adminCmsView,#newsManagementView) .cms-item{padding:12px;border:1px solid #26364c;border-radius:10px;margin:8px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
+ :is(#adminCmsView,#newsManagementView) .cms-item small{display:block;color:#91a0b5} :is(#adminCmsView,#newsManagementView) .cms-pin{color:#e5d88c;font-size:11px;font-weight:800}
+ :is(#adminCmsView,#newsManagementView) .cms-perm{display:grid;grid-template-columns:1fr repeat(4,70px);gap:8px;align-items:center;padding:9px;border-bottom:1px solid #26364c}
+ :is(#adminCmsView,#newsManagementView) .cms-status{color:#91a0b5;min-height:24px}\n :is(#adminCmsView,#newsManagementView) .cms-help{color:#9eacbd;font-size:12px;line-height:1.5}\n :is(#adminCmsView,#newsManagementView) .cms-category-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #26364c}
+ :is(#adminCmsView,#newsManagementView) .faq-manager{margin:12px 0 20px}
+ :is(#adminCmsView,#newsManagementView) .faq-manager-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+ :is(#adminCmsView,#newsManagementView) .faq-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+ :is(#adminCmsView,#newsManagementView) .faq-category-card{position:relative;min-height:94px;padding:18px;border:1px solid #34465d;border-radius:13px;background:#142033;color:#f3f5fa;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+ :is(#adminCmsView,#newsManagementView) .faq-category-card:hover{border-color:#9a85f5;background:#1b2a42}
+ :is(#adminCmsView,#newsManagementView) .faq-category-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+ :is(#adminCmsView,#newsManagementView) .faq-category-card:hover .faq-category-actions,:is(#adminCmsView,#newsManagementView) .faq-category-card:focus-within .faq-category-actions{opacity:1}
+ :is(#adminCmsView,#newsManagementView) .faq-icon-btn{width:30px;height:30px;border:1px solid #50617a;border-radius:8px;background:#0d1726;color:#edf2fa;cursor:pointer}
+ :is(#adminCmsView,#newsManagementView) .faq-icon-btn:hover{background:#7865ee}
+ :is(#adminCmsView,#newsManagementView) .faq-manager-back{margin-bottom:12px}
+ :is(#adminCmsView,#newsManagementView) .faq-question-row{padding:14px;border:1px solid #2e4058;border-radius:11px;margin:9px 0;background:#121d2d}
+ :is(#adminCmsView,#newsManagementView) .faq-question-row h3{margin:0 0 8px}
+ :is(#adminCmsView,#newsManagementView) .faq-question-row p{white-space:pre-wrap;color:#b8c7d9;margin:0 0 10px}
+ :is(#adminCmsView,#newsManagementView) .faq-question-actions{display:flex;gap:7px;flex-wrap:wrap}
+ :is(#adminCmsView,#newsManagementView) .faq-manager .cms-panel{margin-top:14px}
+ :is(#adminCmsView,#newsManagementView) .faq-manager [hidden]{display:none!important}
+ @media(max-width:700px){:is(#adminCmsView,#newsManagementView) .faq-category-actions{opacity:1}}
+\n :is(#adminCmsView,#newsManagementView) .cms-category-row strong{flex:1;min-width:120px}\n :is(#adminCmsView,#newsManagementView) [hidden]{display:none!important}\n :is(#adminCmsView,#newsManagementView) .cms-panel h2,:is(#adminCmsView,#newsManagementView) .cms-panel h3{letter-spacing:-.01em}
+ @media(max-width:760px){:is(#adminCmsView,#newsManagementView) .cms-grid{grid-template-columns:1fr}:is(#adminCmsView,#newsManagementView) .cms-perm{grid-template-columns:1fr repeat(4,42px);font-size:11px}}
  `;
  function go(id){document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const v=$("#"+id);if(v){v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important")}window.scrollTo(0,0)}
  function init(){
-  if($("#adminCmsView"))return;
+  if($(":is(#adminCmsView,#newsManagementView)"))return;
   const style=document.createElement("style");style.textContent=css;document.head.append(style);
-  const grid=$(".dash-grid");if(grid){const card=document.createElement("article");card.className="dash-card";card.hidden=true;card.innerHTML='<div class="dash-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div><h2>Beheer</h2><p>Beheer rollen en toegang tot onderdelen van de tool.</p><button class="btn primary" id="openAdminCms">Beheer openen</button>';grid.append(card);$("#openAdminCms").onclick=()=>{go("adminCmsView");load()};}
+  const grid=$(".dash-grid");if(grid){const card=document.createElement("article");card.className="dash-card";card.hidden=true;card.innerHTML='<div class="dash-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div><h2>Autorisaties</h2><p>Beheer rollen en toegang tot onderdelen van de tool.</p><button class="btn primary" id="openAdminCms">Autorisaties openen</button>';grid.append(card);$("#openAdminCms").onclick=()=>{go("adminCmsView");load()};}
   /* CMS-onderdelen zijn uitsluitend bereikbaar via de aparte pagina Beheer. */
   const section=document.createElement("section");section.className="view";section.id="adminCmsView";
   section.innerHTML=`
-   <div class="page-head translation-bluebar"><div class="translation-bluebar-copy"><div class="eyebrow">ROLLEN & TOEGANG</div><h1>Autorisaties</h1><p class="subtitle">Beheer portaalinhoud en toegangsrechten.</p></div><div class="translation-bluebar-actions"><button class="btn" id="cmsBack">← Dashboard</button></div></div>
-   <div class="cms-tabs cms-main-tabs" id="cmsMainTabs"><button type="button" class="active" data-main-tab="roles">Rollen & autorisaties</button><button type="button" data-main-tab="ticketRights">Ticketbeheerrechten</button><button type="button" data-main-tab="newsRights">Nieuwspaginarechten</button><button type="button" data-main-tab="news">Nieuwspagina</button><button type="button" data-main-tab="faq" hidden>FAQ-beheer</button></div><div data-main-panel="roles"><div class="cms-panel"><h2>Gebruikersrollen</h2><p>Koppel een Supabase-gebruiker aan één rol. Gebruik het UUID van het account.</p><label>Supabase gebruikers-ID (UUID)<input id="roleUserId" type="text" placeholder="00000000-0000-0000-0000-000000000000"></label><label>Rol<select id="roleValue"><option value="administrator">Administrator — alles</option><option value="support_moderator">Support Moderator — ticketbeheer</option><option value="supervisor_support_team">Support Supervisor — ticketbeheer beheren</option><option value="news_poster">Nieuwsposter — nieuwsconcepten</option><option value="news_poster_supervisor">Nieuwsbeheerder — nieuws goedkeuren</option></select></label><button class="cms-btn primary" type="button" id="roleSave">Rol toewijzen</button><div id="roleList"></div><p class="cms-status" id="roleStatus" role="status"></p></div></div><div data-main-panel="news" hidden><div class="cms-tabs" id="cmsTabs"></div><div class="cms-grid">
+   <div class="page-head translation-bluebar"><div class="translation-bluebar-copy"><div class="eyebrow">TOEGANGSBEHEER</div><h1>Autorisaties</h1><p class="subtitle">Beheer gebruikersrollen en rechten voor Ticketbeheer.</p></div><div class="translation-bluebar-actions"><button class="btn" id="cmsBack">← Dashboard</button></div></div>
+   <div class="cms-tabs cms-main-tabs" id="cmsMainTabs"><button type="button" class="active" data-main-tab="roles">Rollen & autorisaties</button><button type="button" data-main-tab="ticketRights">Ticketbeheerrechten</button></div><div data-main-panel="roles"><div class="cms-panel"><h2>Gebruikersrollen</h2><p>Koppel een Supabase-gebruiker aan één rol. Gebruik het UUID van het account.</p><label>Supabase gebruikers-ID (UUID)<input id="roleUserId" type="text" placeholder="00000000-0000-0000-0000-000000000000"></label><label>Rol<select id="roleValue"><option value="administrator">Administrator — alles</option><option value="support_moderator">Support Moderator — ticketbeheer</option><option value="supervisor_support_team">Support Supervisor — ticketbeheer beheren</option><option value="news_poster">Nieuwsposter — nieuwsconcepten</option><option value="news_poster_supervisor">Nieuwsbeheerder — nieuws goedkeuren</option></select></label><button class="cms-btn primary" type="button" id="roleSave">Rol toewijzen</button><div id="roleList"></div><p class="cms-status" id="roleStatus" role="status"></p></div></div><div data-main-panel="news" hidden><div class="cms-tabs" id="cmsTabs"></div><div class="cms-grid">
     <div class="cms-panel"><h2 id="cmsListTitle">Inhoud</h2><div id="cmsList"></div></div>
     <div class="cms-panel"><h2 id="cmsFormTitle">Nieuw item</h2><form id="cmsForm"><label>Titel<input id="cmsTitle" required maxlength="180"></label><label>Tekst / antwoord / omschrijving<textarea id="cmsBody" rows="7"></textarea></label><label id="cmsSourceWrap">Bron (voor nieuws)<input id="cmsSource"></label><label id="cmsAuthorWrap">Auteur (voor nieuws)<input id="cmsAuthor"></label><label id="cmsFaqCategoryWrap" hidden>Categorie<select id="cmsFaqCategory"><option value="">Geen categorie</option></select></label><label>Volgorde<input id="cmsOrder" type="number" value="0"></label><label id="cmsPinWrap"><input id="cmsPinned" type="checkbox" style="width:auto"> Vastpinnen bovenaan HP Nieuws</label><label><input id="cmsPublished" type="checkbox" style="width:auto"> Direct publiceren</label><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="cms-btn primary" type="submit">Opslaan</button><button class="cms-btn" type="button" id="cmsNew">Nieuw / wissen</button></div><p class="cms-status" id="cmsStatus" role="status"></p></form><div id="faqCategoryManager" hidden style="margin-top:16px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><strong>Categorieën</strong><button class="cms-btn primary" id="faqCategoryAdd" type="button">+ Toevoegen</button></div><div id="faqCategoryList"></div><p class="cms-status" id="faqCategoryStatus" role="status"></p></div></div>
    </div></div><div data-main-panel="ticketRights" hidden><div class="cms-panel" id="ticketModeratorsPanel"><h2>Portaalrechten · Ticketbeheer</h2><p>Stel per Forumotion-gebruiker afzonderlijk in of die Ticketbeheer mag zien, tickets mag modereren of tickets mag verwijderen. Gebruik het Forumotion-gebruikersnummer.</p><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(160px,1fr) auto;gap:8px;align-items:end"><label>Forumotion gebruikersnummer<input id="ticketModId" type="number" min="1" step="1" placeholder="bijv. 3"></label><label>Naam / herkenning<input id="ticketModName" maxlength="80" placeholder="bijv. /u3"></label><button class="cms-btn primary" type="button" id="ticketModAdd">Gebruiker toevoegen</button></div><div id="ticketModList" style="margin-top:12px"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="cms-btn primary" type="button" id="saveTicketRights">Rechten opslaan</button><button class="cms-btn" type="button" id="syncPortal">Sync naar portaal</button></div><p class="cms-status" id="ticketModStatus" role="status"></p></div></div><div data-main-panel="newsRights" hidden><div class="cms-panel" id="newsModeratorsPanel"><h2>Portaalrechten · Nieuwspagina</h2><p>Gebruik het Forumotion-gebruikersnummer, net als bij Ticketbeheer. Stel per gebruiker afzonderlijk de nieuwsrechten in.</p><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(160px,1fr) auto;gap:8px;align-items:end"><label>Forumotion gebruikersnummer<input id="newsModId" type="number" min="1" step="1" placeholder="bijv. 3"></label><label>Naam / herkenning<input id="newsModName" maxlength="80" placeholder="bijv. /u3"></label><button class="cms-btn primary" type="button" id="newsModAdd">Gebruiker toevoegen</button></div><div id="newsModList" style="margin-top:12px"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="cms-btn primary" type="button" id="saveNewsRights">Rechten opslaan</button><button class="cms-btn" type="button" id="syncNewsRights">Sync naar portaal</button></div><p class="cms-status" id="newsModStatus" role="status"></p></div></div>`;
   $("main.shell")?.append(section);
+  const newsView=document.createElement("section");newsView.className="view";newsView.id="newsManagementView";
+  newsView.innerHTML='<div class="page-head translation-bluebar"><div class="translation-bluebar-copy"><div class="eyebrow">CONTENTBEHEER</div><h1>Nieuwspagina</h1><p class="subtitle">Maak nieuwsberichten, bewerk ze en beheer publicatie en toegangsrechten.</p></div><div class="translation-bluebar-actions"><button class="btn" id="newsPageBack">← Werkruimte</button></div></div><div class="cms-tabs cms-main-tabs" id="newsMainTabs"><button type="button" class="active" data-news-tab="content">Berichten beheren</button><button type="button" data-news-tab="rights">Nieuwspaginarechten</button></div>';
+  const newsContent=section.querySelector('[data-main-panel="news"]'),newsRights=section.querySelector('[data-main-panel="newsRights"]');
+  if(newsContent){newsContent.dataset.newsPanel="content";newsView.append(newsContent);}
+  if(newsRights){newsRights.dataset.newsPanel="rights";newsView.append(newsRights);}
+  $("main.shell")?.append(newsView);
+  const switchNewsTab=tab=>{newsView.querySelectorAll("[data-news-panel]").forEach(p=>p.hidden=p.dataset.newsPanel!==tab);newsView.querySelectorAll("[data-news-tab]").forEach(b=>b.classList.toggle("active",b.dataset.newsTab===tab));if(tab==="content"){selectKind("news");}else loadNewsModerators();};
+  newsView.querySelectorAll("[data-news-tab]").forEach(b=>b.onclick=()=>switchNewsTab(b.dataset.newsTab));
+  $("#newsPageBack").onclick=()=>go("newAdminDashboard");
+
   const faqPanel=section.querySelector('[data-main-panel="news"]');
   const faqGrid=faqPanel?.querySelector(".cms-grid");
   const faqEditorPanel=faqGrid?.lastElementChild;
   const faqManager=document.createElement("div");faqManager.className="faq-manager";faqManager.id="faqManager";
   faqManager.innerHTML='<div class="faq-manager-head"><button class="btn" type="button" id="faqBackPortal">← Terug naar portaal</button><button class="cms-btn primary" type="button" id="faqAddCategory">+ Nieuwe categorie toevoegen</button></div><div id="faqCategoryGrid" class="faq-category-grid"></div><div id="faqQuestionView" hidden><button class="btn faq-manager-back" type="button" id="faqBackCategories">← Terug naar categorieën</button><div class="faq-manager-head"><h2 id="faqSelectedTitle"></h2><button class="cms-btn primary" type="button" id="faqAddQuestion">+ Vraag toevoegen</button></div><div id="faqQuestions"></div></div>';
   if(faqPanel&&faqGrid){faqPanel.insertBefore(faqManager,faqGrid);faqGrid.hidden=true;faqManager.append(faqEditorPanel);}
-  function hideFaqManagementHeading(){document.querySelectorAll("#adminCmsView h1,#adminCmsView h2,#adminCmsView h3").forEach(h=>{if(h.textContent.trim().replace(/\\s+/g," ").toLocaleLowerCase("nl-NL")==="vragen beheren")h.hidden=true;});}
+  function hideFaqManagementHeading(){document.querySelectorAll(":is(#adminCmsView,#newsManagementView) h1,:is(#adminCmsView,#newsManagementView) h2,:is(#adminCmsView,#newsManagementView) h3").forEach(h=>{if(h.textContent.trim().replace(/\\s+/g," ").toLocaleLowerCase("nl-NL")==="vragen beheren")h.hidden=true;});}
   hideFaqManagementHeading();
   $("#faqBackPortal").onclick=()=>go("homeView");
   $("#faqBackCategories").onclick=()=>{selectedFaqCategory=null;$("#faqQuestionView").hidden=true;$("#faqCategoryGrid").hidden=false;faqManager.querySelector(".cms-panel").hidden=true;renderFaqCategories();};
@@ -64,15 +74,15 @@
   $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
 
   $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
-  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("#adminCmsView [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==(b.dataset.mainTab==="faq"?"news":b.dataset.mainTab));if(b.dataset.mainTab==="faq"){if(!["admin","administrator"].includes(document.body.dataset.supabaseRole)){b.hidden=true;return;}selectKind("faq");}});
+  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(":is(#adminCmsView,#newsManagementView) [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==b.dataset.mainTab);});
   $("#roleSave").onclick=saveToolRole;
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
-  const tabs=$("#cmsTabs");Object.entries(kinds).forEach(([k,v])=>{const b=document.createElement("button");b.textContent=v;b.dataset.kind=k;b.onclick=()=>selectKind(k);tabs.append(b)});
+  const tabs=$("#cmsTabs");const newsKindButton=document.createElement("button");newsKindButton.textContent="Nieuwspagina";newsKindButton.dataset.kind="news";newsKindButton.onclick=()=>selectKind("news");tabs.append(newsKindButton);
   const role=document.body.dataset.supabaseRole||"member";
   syncFaqAdminTab(role);
   const tabButtons=[...document.querySelectorAll("#cmsMainTabs [data-main-tab]")];
   if(role==="support_moderator"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="ticketRights");document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
-  else if(role==="news_poster"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="news");document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
+  else if(role==="news_poster"){document.querySelector('#newsMainTabs [data-news-tab="content"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
 else {selectKind("news");loadToolRoles();loadNewsModerators();}
 
  }
@@ -246,7 +256,7 @@ async function addPermissionProfile(){
   if($("#cmsTransfer"))return;
   const panel=document.createElement("div");panel.className="cms-panel";panel.id="cmsTransfer";panel.style.marginTop="16px";
   panel.innerHTML='<h2>Portaal importeren en exporteren</h2><p>Startpakket met de bestaande welkomstteksten en FAQ. Exporteer je inhoud als JSON-back-up of importeer een eerder opgeslagen JSON-bestand.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="cms-btn primary" type="button" id="cmsImportStarter">Bestaande portaalinhoud importeren</button><button class="cms-btn" type="button" id="cmsExportAll">Alles exporteren (JSON)</button><label class="cms-btn" for="cmsImportFile">JSON-bestand importeren<input id="cmsImportFile" type="file" accept=".json,application/json" style="display:none"></label></div><p class="cms-status" id="cmsTransferStatus" role="status">Importeren voegt items toe; bestaande inhoud wordt niet verwijderd.</p>';
-  $("#adminCmsView")?.append(panel);
+  $(":is(#adminCmsView,#newsManagementView)")?.append(panel);
   $("#cmsImportStarter").onclick=()=>importItems(starter);
   $("#cmsExportAll").onclick=exportAll;
   $("#cmsImportFile").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const parsed=JSON.parse(await f.text());await importItems(Array.isArray(parsed)?parsed:parsed.items)}catch(err){$("#cmsTransferStatus").textContent="Import mislukt: "+err.message}e.target.value=""};
@@ -270,7 +280,7 @@ async function addPermissionProfile(){
  }
 
  window.hpmwInitAdminCms=init;
- window.hpmwOpenAdminCms=()=>{if(!$("#adminCmsView"))init();go("adminCmsView");load();loadTicketModerators();};
+ window.hpmwOpenAdminCms=()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();go("adminCmsView");load();loadTicketModerators();};
  document.addEventListener("DOMContentLoaded",()=>{init();setTimeout(addTransferPanel,0)});if(document.readyState!=="loading"){init();setTimeout(addTransferPanel,0)};
- document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$("#adminCmsView"))init();syncFaqAdminTab(role);if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
+ document.addEventListener("hpmw:supabase-role",e=>{const role=e.detail?.role||"member";if(!$(":is(#adminCmsView,#newsManagementView)"))init();syncFaqAdminTab(role);if(["support_moderator","news_poster"].includes(role)){go("adminCmsView");if(role==="support_moderator")document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();else if(role==="news_poster")document.querySelector('#cmsMainTabs [data-main-tab="news"]')?.click();}else if(role==="admin"||role==="administrator"){loadToolRoles();loadNewsModerators();load()}});
 })();
