@@ -6676,7 +6676,7 @@ html body{padding-top:70px!important}
 
 <script id="hpmw-faq-role-cms-20261114">
 (()=>{"use strict";
- const mount=document.getElementById("hpmwFaqAdminMount");if(!mount)return;
+ const mount=document.getElementById("hpmwFaqAdminMount");if(!mount)return;const faqModal=document.getElementById("hpmwFaqOverlay"),faqContent=faqModal?.querySelector(".hpmw-faq-content");if(faqModal&&faqContent)faqModal.insertBefore(mount,faqContent);
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  let db=null,user=null,role="guest",items=[],cats=[],editing=null,rights={};
  const canEdit=()=>!!rights.can_manage_faq,canApprove=()=>!!rights.can_approve_faq,canDelete=()=>!!rights.can_delete_faq;
