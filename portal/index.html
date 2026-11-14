@@ -6591,11 +6591,15 @@ html body .hpmw-global-brandbar{
  const fallback="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
  const apply=()=>{
   const bar=document.querySelector(".hpmw-global-brandbar");if(!bar)return;
+  /* Verwijder eventuele door andere thema-CSS opgelegde buitenrand op de bannercontainer. */
+  ["border","outline","box-shadow","border-radius"].forEach(p=>bar.style.setProperty(p,"none","important"));
+  bar.style.setProperty("outline-offset","0","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
   bar.style.setProperty("background-image",'url("'+src+'")',"important");
   let img=bar.querySelector(".hpmw-active-banner-image");
   if(!img){img=document.createElement("img");img.className="hpmw-active-banner-image";img.alt="";img.setAttribute("aria-hidden","true");bar.appendChild(img)}
+  ["border","outline","box-shadow","border-radius"].forEach(p=>img.style.setProperty(p,"none","important"));
   if(img.src!==src)img.src=src;
  };
  const start=()=>{
