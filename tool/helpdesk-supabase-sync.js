@@ -59,6 +59,8 @@
       if (row) {
         local[ticket.id] = Object.assign({}, local[ticket.id] || {}, toInternal(row));
       } else {
+        const prior = local[ticket.id] || {};
+        const assigneeId = prior.assignee ? Number(prior.assignee) : null;
         missing.push({
           ticket_key: key(ticket),
           forumotion_topic_id: String(ticket.id),
@@ -66,9 +68,12 @@
           ticket_number: String(ticket.num || ""),
           subject: String(ticket.title || ""),
           category: String(ticket.cat || ""),
-          department: String(ticket.department || ""),
-          status: ticket.closed ? "done" : "pending",
-          priority: "normal",
+          department: String(prior.department || ticket.department || ""),
+          status: prior.status || (ticket.closed ? "done" : "pending"),
+          priority: prior.priority || "normal",
+          assignee_forumotion_user_id: assigneeId,
+          assignee_name: prior.assigneeName || (assigneeId === 1 ? "Joost" : assigneeId === 3 ? "Test Account 2" : null),
+          internal_note: String(prior.internalNote || prior.refusedReason || ""),
           created_by_forumotion_user_id: Number(ticket.userId) || null,
           created_by_name: String(ticket.user || "")
         });
