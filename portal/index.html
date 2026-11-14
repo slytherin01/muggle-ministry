@@ -6392,7 +6392,25 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
 <script id="hpmw-global-ad-removal">
 (()=>{"use strict";
  const sel='#pun-ads,#fa_ads,#forumotion-advert,#forumotion-ads,#google_ads,#google_ads_iframe,[id^="google_ads"],[id^="div-gpt-ad"],[id^="aswift_"],.adsbygoogle,ins.adsbygoogle,.adsbygoogle-noablate,.forum-ad,.forum-ads,.forum-advert,.forum-advertisement,.fa-advert,.fa_ads,.pun-ads,.module-advert,.module-advertisement,iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="googleadservices"],iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]';
- const clean=root=>{if(!root||root.nodeType!==1)return;try{if(root.matches(sel))root.remove();root.querySelectorAll(sel).forEach(el=>el.remove())}catch(_){}};
+ const clean=root=>{
+  if(!root||root.nodeType!==1)return;
+  try{if(root.matches(sel))root.remove();root.querySelectorAll(sel).forEach(el=>el.remove())}catch(_){}
+  // Forumotion kan een lege advertentie-placeholder injecteren zonder herkenbare class of iframe.
+  const candidates=[root,...(root.querySelectorAll?.("div,aside,section,iframe")||[])];
+  candidates.forEach(el=>{
+   if(!el.isConnected||el.id==="hpmwForumFaqFrame"||el.closest?.("#hpmwManageLayer,#hpmwNewsEditorLayer"))return;
+   const tag=el.tagName.toLowerCase(),cl=((el.id||"")+" "+(typeof el.className==="string"?el.className:"")).toLowerCase();
+   if(/faq|login|ticket|portal|footer|header|nav|menu/.test(cl))return;
+   const r=el.getBoundingClientRect(),cs=getComputedStyle(el);
+   const pos=cs.position;
+   const nearLowerLeft=r.width>=150&&r.width<=420&&r.height>=55&&r.height<=320&&r.left>=0&&r.left<100&&r.bottom>innerHeight-360&&r.bottom<innerHeight+80;
+   const blankFrame=tag==="iframe"&&(!el.getAttribute("src")||/^about:blank$/i.test(el.getAttribute("src")));
+   const emptyBox=(tag==="div"||tag==="aside"||tag==="section")&&!el.textContent.trim()&&!el.querySelector("img,video,canvas,button,input,form");
+   const namedAd=/advert|adslot|ad-slot|banner-ad|google_ads|gpt-ad|sponsor/.test(cl);
+   if(blankFrame&&(nearLowerLeft||namedAd)){el.remove();return}
+   if(emptyBox&&nearLowerLeft&&(pos==="fixed"||pos==="absolute")&&(namedAd||/^(rgb\(255, 255, 255\)|rgb\(248, 248, 248\)|rgb\(240, 240, 240\))$/.test(cs.backgroundColor)))el.remove();
+  });
+ };
  const start=()=>{clean(document.documentElement);new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(clean))).observe(document.documentElement,{childList:true,subtree:true})};
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
