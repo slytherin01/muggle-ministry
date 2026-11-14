@@ -2470,19 +2470,13 @@ finally{btn.disabled=false;}
 window.addEventListener('hpmw:open-ticket-admin',async function(){
  try{
   await resolveUser();
-  /* Ticketbeheer gebruikt de bestaande Forumotion-login. Supabase-metadata is optioneel
-     en mag het openen van het beheerscherm nooit blokkeren of om een tweede login vragen. */
-  if(window.HPMW_HELPDESK_BOOT){try{await window.HPMW_HELPDESK_BOOT;}catch(bootError){console.warn('[Hpmw] Optionele Supabase-sync niet beschikbaar',bootError);}}
-  const moderatorResponse=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/ticket_moderators?select=forumotion_user_id,enabled,can_view_tickets,can_moderate_tickets,can_delete_tickets",{headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx"},cache:"no-store"});
-  if(!moderatorResponse.ok)throw Error("Ticketbeheerrechten konden niet worden opgehaald (HTTP "+moderatorResponse.status+").");
-  const moderatorRows=await moderatorResponse.json();
-  ADMINS.splice(0,ADMINS.length,...moderatorRows.filter(x=>x.enabled&&(x.can_view_tickets||x.can_moderate_tickets||x.can_delete_tickets)).map(x=>Number(x.forumotion_user_id)).filter(x=>Number.isInteger(x)&&x>0));
+  ADMINS.splice(0,ADMINS.length,...loadTicketAdminIds());
   if(!isAdmin()){alert('Je Forumotion-account heeft geen Ticketbeheerrechten.');return;}
   show('adminView');
   await loadTickets();
  }catch(error){console.error('[Hpmw] Ticketbeheer openen mislukt',error);alert('Ticketbeheer kon niet worden geopend: '+(error&&error.message?error.message:'onbekende fout'));}
 });
-resolveUser().then(async()=>{loadMyDepartment();if(new URLSearchParams(location.search).get("adminEmbed")==="1"){const target=location.origin+location.pathname+"?adminEmbed=1";const redirectField=$("#hpmwCodepenLoginForm input[name=redirect]");if(redirectField)redirectField.value=target;if(!user.logged){show("introView");const loginButton=$("#hpmwOpenLogin");if(loginButton)loginButton.click();return;}if(!isAdmin()){show("introView");alert("Dit Forumotion-account heeft geen supportmoderatorrechten. Gebruik een geautoriseerd supportmoderatoraccount (#1, #2 of #3).");return;}if(!window.HpmwHelpdeskAuth||!await window.HpmwHelpdeskAuth.ensure())return;show("adminView");loadTickets();}});})();</script><style id="hpmw-home-footer-clear">#homeView{padding-bottom:100px!important}.support-categories-panel{margin-bottom:12px}</style>
+resolveUser().then(async()=>{loadMyDepartment();if(new URLSearchParams(location.search).get("adminEmbed")==="1"){const target=location.origin+location.pathname+"?adminEmbed=1";const redirectField=$("#hpmwCodepenLoginForm input[name=redirect]");if(redirectField)redirectField.value=target;if(!user.logged){show("introView");const loginButton=$("#hpmwOpenLogin");if(loginButton)loginButton.click();return;}if(!isAdmin()){show("introView");alert("Dit Forumotion-account heeft geen Ticketbeheerrechten. Voeg het Forumotion-ID toe in Portal Admin.");return;}show("adminView");loadTickets();}});})();</script><style id="hpmw-home-footer-clear">#homeView{padding-bottom:100px!important}.support-categories-panel{margin-bottom:12px}</style>
 <style id="hpmw-full-page-background">
 /* De afbeelding staat één keer op de volledige pagina, ook achter navigatie en footer. */
 html,body{min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
