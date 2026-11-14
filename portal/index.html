@@ -2258,9 +2258,7 @@ if(user.avatar)avatarSlot.innerHTML='<img src="'+esc(user.avatar)+'" alt="" styl
 else avatarSlot.innerHTML='<i class="fa-solid fa-user-astronaut" aria-hidden="true"></i>';
 }
 const adminButton=$("#adminLaunch"),portalButton=$("#portalManageLaunch"),myButton=$("#myTicketsLaunch");
-const founderAdmin=user.logged&&[1,3].includes(Number(user.id));
-if(adminButton){if(user.logged&&(founderAdmin||isAdmin()))adminButton.style.setProperty("display","inline-flex","important");else adminButton.style.setProperty("display","none","important");}
-if(portalButton){if(founderAdmin)portalButton.style.setProperty("display","inline-flex","important");else portalButton.style.setProperty("display","none","important");}
+// Beheerknoppen worden uitsluitend beheerd door hpmw-central-navigation-rbac.
 if(myButton){if(user.logged&&Number(user.id)>0)myButton.style.setProperty("display","inline-flex","important");else myButton.style.setProperty("display","none","important");}
 const loginButton=$("#loginLaunch"),registerButton=$("#registerLaunch");
 [loginButton,registerButton].forEach(btn=>{if(btn)btn.style.setProperty("display",user.logged&&Number(user.id)>0?"none":"inline-flex","important");});
@@ -4913,7 +4911,7 @@ $("#portalManageLaunch")?.addEventListener("click",open);
   ensure:async()=>!!(access.session&&access.canSupport()),
   signOut:async()=>{await access.client.auth.signOut()}
  });
- const refresh=()=>{const b=document.getElementById("adminLaunch");if(!b)return;const href=document.getElementById("accountLink")?.getAttribute("href")||"";const id=Number(window._userdata?.user_id||0);const founder=[1,3].includes(id)||/^\\/u[13](?:[/?#]|$)/i.test(href);const allowed=founder||access.canSupport();b.hidden=!allowed;b.setAttribute("aria-hidden",String(!allowed));b.style.setProperty("display",allowed?"inline-flex":"none","important")};
+ const refresh=()=>{};
  document.addEventListener("hpmw:portal-role",refresh);refresh();
 })();
 </script>
@@ -5029,30 +5027,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
-<script id="hpmw-portal-admin-role-visibility">
-(()=>{"use strict";
- async function refresh(){
-  const b=document.getElementById("portalManageLaunch");if(!b)return;
-  const access=window.HpmwPortalAccess;let forumId=Number(window._userdata?.user_id||0),forumName=String(window._userdata?.username||window._userdata?.username_clean||"").trim();
-  try{const saved=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null");if(!forumId&&saved?.logged)forumId=Number(saved.id||0);if(!forumName&&saved?.logged)forumName=String(saved.name||"")}catch(e){}
-  let role=null;
-  try{
-   if(access?.ensureClient){await access.ensureClient();const c=access.client();const {data,error}=await c.auth.getSession();if(!error&&data.session){const {data:r}=await c.from("tool_access_roles").select("role").eq("user_id",data.session.user.id).maybeSingle();role=r?.role||null;
-    if(role==="administrator"&&forumId>0&&forumName){await c.from("portal_forum_accounts").upsert({supabase_user_id:data.session.user.id,forumotion_user_id:forumId,forum_username:forumName,updated_by:data.session.user.id},{onConflict:"supabase_user_id"})}
-   }}
-  }catch(e){}
-  if(!role&&forumId>0){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/rpc/get_portal_role_for_forum_user",{method:"POST",headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx","Content-Type":"application/json"},body:JSON.stringify({p_forum_user_id:forumId}),cache:"no-store"});if(r.ok)role=await r.json()}catch(e){}}
-  window.HpmwForumPortalRole=role||null;
-  const accountHref=document.getElementById("accountLink")?.getAttribute("href")||"";
-  const founder=[1,3].includes(forumId)||/^\\/u[13](?:[/?#]|$)/i.test(accountHref);
-  b.hidden=!(founder||role==="administrator");
-  b.setAttribute("aria-hidden",String(b.hidden));
-  b.style.setProperty("display",b.hidden?"none":"inline-flex","important");
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh,{once:true});else refresh();
- setInterval(refresh,30000);
-})();
-</script><script id="hpmw-portal-role-permission-ui">
+<script id="hpmw-portal-admin-role-visibility">/* Vervangen door de centrale navigatierechtencontrole. */</script><script id="hpmw-portal-role-permission-ui">
 (()=>{"use strict";
  const keys=["can_view_portal","can_use_tickets","can_manage_news","can_delete_news","can_approve_news","can_manage_faq","can_delete_faq","can_approve_faq","can_manage_settings","can_manage_roles"];
  const labels=["Portaal lezen","Ticket Support","Nieuws indienen/bewerken","Nieuws verwijderen","Nieuws goedkeuren","FAQ indienen/bewerken","FAQ verwijderen","FAQ goedkeuren","Instellingen beheren","Rollen beheren"];
@@ -5082,6 +5057,33 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  document.addEventListener("hpmw:portal-role",load);
  document.addEventListener("click",e=>{if(e.target.closest("#faqLaunch"))setTimeout(load,180)});
  const start=()=>load();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
+
+<script id="hpmw-central-navigation-rbac">
+(()=>{"use strict";
+ const ids=["portalManageLaunch","adminLaunch"];
+ const getForumId=()=>{
+  const live=Number(window._userdata?.user_id||0);
+  if(live>0&&Number(window._userdata?.session_logged_in||0)>0)return live;
+  try{const saved=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null");if(saved?.logged&&Number(saved.id)>0)return Number(saved.id)}catch(e){}
+  const href=document.getElementById("accountLink")?.getAttribute("href")||"";
+  const m=href.match(/^\\/u(\\d+)(?:[/?#]|$)/i);return m?Number(m[1]):0;
+ };
+ const set=(el,show)=>{if(!el)return;el.hidden=!show;el.setAttribute("aria-hidden",String(!show));el.tabIndex=show?0:-1;el.style.setProperty("display",show?"inline-flex":"none","important")};
+ const refresh=()=>{
+  const forumId=getForumId(),founder=[1,3].includes(forumId);
+  const role=window.HpmwForumPortalRole||window.HpmwPortalAccess?.role||"guest";
+  const portalAllowed=founder||role==="administrator";
+  const ticketAllowed=founder||!!window.HpmwPortalAccess?.canSupport?.();
+  set(document.getElementById("portalManageLaunch"),portalAllowed);
+  set(document.getElementById("adminLaunch"),ticketAllowed);
+ };
+ document.addEventListener("hpmw:portal-role",refresh);
+ document.addEventListener("DOMContentLoaded",refresh);
+ window.addEventListener("pageshow",refresh);
+ document.addEventListener("visibilitychange",refresh);
+ refresh();let n=0;const timer=setInterval(()=>{refresh();if(++n>=120)clearInterval(timer)},500);
 })();
 </script>
 </body></html>
@@ -6413,53 +6415,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 <style id="hpmw-admin-role-visibility-v2">
 #portalManageLaunch[hidden],#adminLaunch[hidden]{display:none!important}
 </style>
-<script id="hpmw-admin-role-visibility-v2">
-(()=>{"use strict";
- const btn=document.getElementById("portalManageLaunch");
- const ticketAdmin=document.getElementById("adminLaunch");
- if(!btn)return;
- const access=()=>window.HpmwPortalAccess;
- const currentRole=()=>access()?.role||"guest";
- const hasSession=()=>!!access()?.session;
- // De twee oprichters (/u1 en /u3) mogen de beheerknoppen altijd zien.
- // Portal Admin vraagt bij openen nog steeds om de beveiligde Supabase-beheerderssessie.
- const founderForumotion=()=>{
-  const id=Number(window._userdata?.user_id||0);
-  const href=document.getElementById("accountLink")?.getAttribute("href")||"";
-  return [1,3].includes(id)||/^\\/u[13](?:[/?#]|$)/i.test(href);
- };
- const permitted=()=>founderForumotion()||(hasSession()&&["administrator","news_poster","news_poster_supervisor"].includes(currentRole()));
- const refresh=()=>{
-  const ok=permitted();
-  btn.hidden=!ok;
-  btn.setAttribute("aria-hidden",String(!ok));
-  btn.tabIndex=ok?0:-1;
-  btn.style.setProperty("display",ok?"inline-flex":"none","important");
-  if(ticketAdmin){
-   const support=founderForumotion()||(hasSession()&&!!access()?.canSupport?.());
-   ticketAdmin.hidden=!support;
-   ticketAdmin.setAttribute("aria-hidden",String(!support));
-   ticketAdmin.tabIndex=support?0:-1;
-   ticketAdmin.style.setProperty("display",support?"inline-flex":"none","important");
-  }
-  if(!ok){
-   const layer=document.getElementById("hpmwManageLayer");
-   if(layer?.classList.contains("open")){
-    layer.classList.remove("open");
-    layer.setAttribute("aria-hidden","true");
-   }
-  }
- };
- const start=()=>{refresh();};
- document.addEventListener("hpmw:portal-role",refresh);
- document.addEventListener("visibilitychange",refresh);
- window.addEventListener("pageshow",refresh);
- btn.addEventListener("click",()=>{if(!permitted()){refresh();return}},{capture:true});
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
- let tries=0;
- const timer=setInterval(()=>{refresh();tries++;if((hasSession()&&currentRole()!=="guest")||tries>=50)clearInterval(timer)},300);
-})();
-</script>
+<script id="hpmw-admin-role-visibility-v2">/* Vervangen door de centrale navigatierechtencontrole. */</script>
 
 
 <style id="hpmw-hide-empty-ad-blocks">
