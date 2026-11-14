@@ -2441,8 +2441,8 @@ main.shell>.view#homeView .support-logo-wrap{display:none!important}
 <i class="fa-solid fa-circle-question">
 </i>
 </div>
-<h2 id="hpmwFaqTitle">Veelgestelde vragen – FAQ</h2>
-<p class="hpmw-faq-intro">Hier vind je antwoorden op veelgestelde vragen over Ticket Support.</p>
+<h2 id="hpmwFaqTitle">Waar ben je naar op zoek?</h2>
+<p class="hpmw-faq-intro">Welkom bij de veelgestelde vragen. Kies een categorie om de vragen en antwoorden te bekijken.</p>
 <div class="hpmw-faq-content" aria-live="polite"></div>
 </section>
 </div>
@@ -4254,9 +4254,18 @@ document.addEventListener("hpmw:supabase-role",start);
   const data=(categories||[]).length?(categories||[]).map(c=>({id:c.id,name:c.name,items:(items||[]).filter(x=>x.faq_category_id===c.id)})):examples.map((c,i)=>({id:"example-"+i,name:c.name,items:[{title:c.question,body:c.answer}]}));
   function showCategories(){
    content.replaceChildren();
+   const intro=node("div","hpmw-faq-intro-page");
+   intro.append(node("h3","hpmw-faq-category-title","Kies een categorie"),node("p","","Selecteer hieronder het onderwerp waar je meer over wilt weten."));
    const grid=node("div","hpmw-faq-category-grid");
    data.forEach(category=>{const button=node("button","hpmw-faq-category-button");button.type="button";button.append(node("strong","",category.name),node("span","","Bekijk vragen →"));button.onclick=()=>showQuestions(category);grid.append(button)});
-   content.append(grid);
+   intro.append(grid);content.append(intro);
+  }
+  function showIntro(){
+   content.replaceChildren();
+   const page=node("div","hpmw-faq-welcome");
+   page.append(node("h3","hpmw-faq-category-title","Welkom bij de FAQ"),node("p","","Heb je een vraag? Kies eerst het onderwerp dat bij jouw vraag past. Je ziet daarna alle beschikbare vragen en antwoorden binnen die categorie."));
+   const start=node("button","hpmw-faq-start","Bekijk categorieën");start.type="button";start.onclick=showCategories;
+   page.append(start);content.append(page);
   }
   function showQuestions(category){
    content.replaceChildren();
@@ -4265,11 +4274,11 @@ document.addEventListener("hpmw:supabase-role",start);
    if(!category.items.length){content.append(node("p","hpmw-faq-empty","Er staan nog geen vragen in deze categorie."));return}
    category.items.forEach(item=>{const qa=node("article","hpmw-faq-qa");qa.append(node("h4","",item.title),node("p","",item.body));content.append(qa)});
   }
-  showCategories();
+  showIntro();
  }
  async function load(){
   const content=document.querySelector("#hpmwFaqOverlay .hpmw-faq-content");
-  const style=node("style");style.textContent="#hpmwFaqOverlay .hpmw-faq-content{display:block}#hpmwFaqOverlay .hpmw-faq-category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}#hpmwFaqOverlay .hpmw-faq-category-button{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:90px;padding:17px;border:1px solid #34435a;border-radius:13px;background:rgba(255,255,255,.035);color:#eef3fb;text-align:left;cursor:pointer}#hpmwFaqOverlay .hpmw-faq-category-button:hover{border-color:#9b8cff;background:#202a40}#hpmwFaqOverlay .hpmw-faq-category-button span{color:#b8aaff;font-size:12px}#hpmwFaqOverlay .hpmw-faq-back{margin:0 0 16px;padding:8px 12px;border:1px solid #40516b;border-radius:8px;background:#172438;color:#eef3fb;cursor:pointer}#hpmwFaqOverlay .hpmw-faq-category{padding:17px 18px;border:1px solid #34435a;border-radius:13px;background:rgba(255,255,255,.035);min-width:0}#hpmwFaqOverlay .hpmw-faq-category-title{margin:0 0 13px;color:#d8c6ff;font-size:17px}#hpmwFaqOverlay .hpmw-faq-qa{padding-top:12px;border-top:1px solid #34435a}#hpmwFaqOverlay .hpmw-faq-qa h4{margin:0 0 7px;color:#f2f4fb;font-size:14px}#hpmwFaqOverlay .hpmw-faq-qa p{margin:0;font-size:13px;line-height:1.6;white-space:pre-wrap}";
+  const style=node("style");style.textContent="#hpmwFaqOverlay .hpmw-faq-content{display:block}#hpmwFaqOverlay .hpmw-faq-welcome,#hpmwFaqOverlay .hpmw-faq-intro-page{padding:22px;border:1px solid #34435a;border-radius:14px;background:rgba(255,255,255,.035)}#hpmwFaqOverlay .hpmw-faq-welcome p,#hpmwFaqOverlay .hpmw-faq-intro-page p{margin:0 0 18px;line-height:1.6}#hpmwFaqOverlay .hpmw-faq-start{padding:11px 17px;border:1px solid #7465b8;border-radius:9px;background:#51418b;color:#fff;font-weight:700;cursor:pointer}#hpmwFaqOverlay .hpmw-faq-category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}#hpmwFaqOverlay .hpmw-faq-category-button{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:90px;padding:17px;border:1px solid #34435a;border-radius:13px;background:rgba(255,255,255,.035);color:#eef3fb;text-align:left;cursor:pointer}#hpmwFaqOverlay .hpmw-faq-category-button:hover{border-color:#9b8cff;background:#202a40}#hpmwFaqOverlay .hpmw-faq-category-button span{color:#b8aaff;font-size:12px}#hpmwFaqOverlay .hpmw-faq-back{margin:0 0 16px;padding:8px 12px;border:1px solid #40516b;border-radius:8px;background:#172438;color:#eef3fb;cursor:pointer}#hpmwFaqOverlay .hpmw-faq-category{padding:17px 18px;border:1px solid #34435a;border-radius:13px;background:rgba(255,255,255,.035);min-width:0}#hpmwFaqOverlay .hpmw-faq-category-title{margin:0 0 13px;color:#d8c6ff;font-size:17px}#hpmwFaqOverlay .hpmw-faq-qa{padding-top:12px;border-top:1px solid #34435a}#hpmwFaqOverlay .hpmw-faq-qa h4{margin:0 0 7px;color:#f2f4fb;font-size:14px}#hpmwFaqOverlay .hpmw-faq-qa p{margin:0;font-size:13px;line-height:1.6;white-space:pre-wrap}";
   if(!document.getElementById("hpmw-faq-category-style")){style.id="hpmw-faq-category-style";document.head.append(style)}
   const db=window.hpmwSupabase;
   if(!db){render([],[]);return}
