@@ -6356,10 +6356,13 @@ ins.adsbygoogle,[id^="google_ads"],[id^="div-gpt-ad"],.adsbygoogle,
   if(!body)return;
   const select=document.getElementById("hpmwRolePreview");
   const status=document.getElementById("hpmwRolePreviewStatus");
-  if(!isRealAdmin()){previewRole=null;return}
+  if(!isRealAdmin()){previewRole=null;document.getElementById("hpmwRolePreviewBanner")?.remove();return}
   if(select&&select.value!== (previewRole||""))select.value=previewRole||"";
   if(status)status.textContent=previewRole?"Voorbeeldweergave als "+previewRole+". Wijzigingen en opslaan zijn uitgeschakeld.":"Je test momenteel je eigen administratorweergave.";
   body.classList.toggle("hpmw-role-preview-active",!!previewRole);
+  let banner=document.getElementById("hpmwRolePreviewBanner");
+  if(previewRole&&!banner){banner=document.createElement("div");banner.id="hpmwRolePreviewBanner";banner.className="hpmw-admin-card";banner.innerHTML='<strong>Testweergave actief</strong> · '+previewRole+' <button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">Herstel administrator</button>';body.prepend(banner)}
+  if(!previewRole&&banner)banner.remove();
   body.querySelectorAll("button[type=submit],input[type=submit]").forEach(b=>{if(previewRole)b.disabled=true});
  };
  document.addEventListener("change",e=>{
