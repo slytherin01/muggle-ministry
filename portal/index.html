@@ -2021,9 +2021,10 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
   <div class="hpmw-awards-footer">© 2026 Hpmagicworld.com - Alle rechten voorbehouden <span>·</span> Laatst bijgewerkt: 21-09-2026</div>
  </section>
 </section>
-<section class="view" id="faqView">
+<style id="hpmw-faq-admin-page-style">#hpmwFaqAdminMount{margin:0 0 18px}#hpmwFaqAdminMount .hpmw-admin-card{padding:17px;border:1px solid #344b67;border-radius:13px;background:#112239;color:#edf4fb}#hpmwFaqAdminMount h3,#hpmwFaqAdminMount h4{margin:10px 0;color:#edf4fb}#hpmwFaqAdminMount .hpmw-admin-field{display:grid;gap:6px;margin:10px 0;color:#cbd8e8;font-size:12px}#hpmwFaqAdminMount input,#hpmwFaqAdminMount textarea,#hpmwFaqAdminMount select{box-sizing:border-box;width:100%;padding:10px;border:1px solid #425a75;border-radius:8px;background:#091728;color:#f2f6fb}#hpmwFaqAdminMount .hpmw-admin-row{display:flex;gap:9px;flex-wrap:wrap}#hpmwFaqAdminMount .hpmw-admin-news-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid #344b67;border-radius:10px;background:#14243a;margin:8px 0}#hpmwFaqAdminMount .hpmw-admin-news-item small{display:block;color:#aebed0}</style><section class="view" id="faqView">
  <section class="panel hpmw-internal-faq">
   <div class="page-head"><div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Veelgestelde vragen</h1><p class="subtitle">Kies hieronder een categorie.</p></div><button class="btn" id="faqBack" type="button"><i class="fa-solid fa-arrow-left"></i> Terug naar portaal</button></div>
+  <div id="hpmwFaqAdminMount" hidden></div>
   <div class="categories hpmw-faq-categories" id="hpmwFaqCategories">
    <button class="cat" type="button" data-faq-category="portal"><span class="round-icon"><i class="fa-solid fa-ticket"></i></span><span><strong>Portaal</strong><span>Veelgestelde vragen over het portaal en tickets</span></span></button>
    <button class="cat" type="button" data-faq-category="forum"><span class="round-icon"><i class="fa-solid fa-comments"></i></span><span><strong>Forum</strong><span>Veelgestelde vragen over het forum</span></span></button>
@@ -4993,7 +4994,56 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
-
+<script id="hpmw-faq-admin-on-faq-page">
+(()=>{"use strict";
+ const client=()=>window.HpmwPortalAccess?.client?.();
+ const isAdmin=()=>!!window.HpmwPortalAccess?.session&&window.HpmwPortalAccess?.role==="administrator";
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ let cats=[],rows=[];
+ const mount=()=>document.getElementById("hpmwFaqAdminMount");
+ const status=(m,bad=false)=>{const e=document.getElementById("hpmwFaqAdminStatus");if(e){e.textContent=m;e.classList.toggle("error",bad)}};
+ async function load(){
+  const host=mount();if(!host)return;
+  host.hidden=!isAdmin();if(!isAdmin()){host.innerHTML="";return}
+  const c=client();if(!c){host.innerHTML="<p>Log in met je administratoraccount om FAQ's te beheren.</p>";return}
+  host.innerHTML='<section class="hpmw-admin-card"><h3>FAQ-beheer</h3><p class="hpmw-admin-muted">Alleen zichtbaar voor administrators. Beheer hier de categorieën en vragen van deze FAQ.</p><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqAdminAddCat">＋ Categorie toevoegen</button><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqAdminAddArticle">＋ Vraag toevoegen</button><button type="button" class="hpmw-manage-btn" id="hpmwFaqAdminRefresh">Vernieuwen</button></div><div id="hpmwFaqAdminEditor"></div><h4>Categorieën</h4><div id="hpmwFaqAdminCats">Laden…</div><h4>Artikelen</h4><div id="hpmwFaqAdminRows">Laden…</div><p id="hpmwFaqAdminStatus" class="hpmw-admin-status" aria-live="polite"></p></section>';
+  const [a,b]=await Promise.all([c.from("faq_categories").select("id,name,description,sort_order,is_active").order("sort_order").order("name"),c.from("admin_content").select("id,title,body,faq_category_id,published,sort_order").eq("kind","faq").order("sort_order").order("created_at",{ascending:false})]);
+  if(a.error||b.error){status("Laden mislukt: "+(a.error||b.error).message,true);return}
+  cats=a.data||[];rows=b.data||[];render();
+ }
+ function render(){
+  const ch=document.getElementById("hpmwFaqAdminCats"),rh=document.getElementById("hpmwFaqAdminRows");if(!ch||!rh)return;
+  ch.innerHTML=cats.map(x=>'<article class="hpmw-admin-news-item"><div><strong>'+esc(x.name)+'</strong><small>'+(x.is_active?"Actief":"Verborgen")+' · '+esc(x.description||"")+'</small></div><div class="hpmw-admin-row"><button class="hpmw-manage-btn" data-faq-admin-cat-edit="'+x.id+'">Bewerken</button><button class="hpmw-manage-btn" data-faq-admin-cat-del="'+x.id+'">Verwijderen</button></div></article>').join("")||"<p>Geen categorieën.</p>";
+  rh.innerHTML=rows.map(x=>'<article class="hpmw-admin-news-item"><div><strong>'+esc(x.title)+'</strong><small>'+esc(cats.find(c=>c.id===x.faq_category_id)?.name||"Geen categorie")+' · '+(x.published?"Gepubliceerd":"Concept")+'</small></div><div class="hpmw-admin-row"><button class="hpmw-manage-btn" data-faq-admin-row-edit="'+x.id+'">Bewerken</button><button class="hpmw-manage-btn" data-faq-admin-row-del="'+x.id+'">Verwijderen</button></div></article>').join("")||"<p>Geen artikelen.</p>";
+ }
+ function editCat(x={}){
+  const h=document.getElementById("hpmwFaqAdminEditor");if(!h)return;
+  h.innerHTML='<form id="hpmwFaqAdminCatForm" class="hpmw-admin-card"><h4>'+(x.id?"Categorie bewerken":"Nieuwe categorie")+'</h4><label class="hpmw-admin-field">Naam<input name="name" required maxlength="100" value="'+esc(x.name||"")+'"></label><label class="hpmw-admin-field">Beschrijving<textarea name="description">'+esc(x.description||"")+'</textarea></label><label class="hpmw-admin-field">Volgorde<input type="number" name="sort_order" value="'+Number(x.sort_order||0)+'"></label><label class="hpmw-admin-field"><span><input type="checkbox" name="is_active" '+(x.is_active!==false?"checked":"")+'> Actief tonen</span></label><input type="hidden" name="id" value="'+esc(x.id||"")+'"><button class="hpmw-manage-btn primary">Opslaan</button></form>';
+ }
+ function editRow(x={}){
+  const h=document.getElementById("hpmwFaqAdminEditor");if(!h)return;
+  h.innerHTML='<form id="hpmwFaqAdminRowForm" class="hpmw-admin-card"><h4>'+(x.id?"Vraag bewerken":"Nieuwe vraag")+'</h4><label class="hpmw-admin-field">Categorie<select name="faq_category_id" required><option value="">Kies categorie</option>'+cats.map(c=>'<option value="'+c.id+'" '+(c.id===x.faq_category_id?"selected":"")+'>'+esc(c.name)+'</option>').join("")+'</select></label><label class="hpmw-admin-field">Vraag<input name="title" required maxlength="180" value="'+esc(x.title||"")+'"></label><label class="hpmw-admin-field">Antwoord<textarea name="body" required>'+esc(x.body||"")+'</textarea></label><label class="hpmw-admin-field">Status<select name="published"><option value="false" '+(!x.published?"selected":"")+'>Concept</option><option value="true" '+(x.published?"selected":"")+'>Gepubliceerd</option></select></label><input type="hidden" name="id" value="'+esc(x.id||"")+'"><button class="hpmw-manage-btn primary">Opslaan</button></form>';
+ }
+ document.addEventListener("click",async e=>{
+  const h=mount();if(!h||!h.contains(e.target)||!isAdmin())return;const c=client();
+  if(e.target.closest("#hpmwFaqAdminAddCat")){editCat();return}
+  if(e.target.closest("#hpmwFaqAdminAddArticle")){editRow();return}
+  if(e.target.closest("#hpmwFaqAdminRefresh")){load();return}
+  const ce=e.target.closest("[data-faq-admin-cat-edit]");if(ce){editCat(cats.find(x=>x.id===ce.dataset.faqAdminCatEdit));return}
+  const cd=e.target.closest("[data-faq-admin-cat-del]");if(cd){const x=cats.find(v=>v.id===cd.dataset.faqAdminCatDel);if(!confirm('Categorie "'+(x?.name||"")+'" verwijderen?'))return;const {error}=await c.from("faq_categories").delete().eq("id",cd.dataset.faqAdminCatDel);status(error?.message||"Categorie verwijderd.",!!error);if(!error)load();return}
+  const re=e.target.closest("[data-faq-admin-row-edit]");if(re){editRow(rows.find(x=>x.id===re.dataset.faqAdminRowEdit));return}
+  const rd=e.target.closest("[data-faq-admin-row-del]");if(rd){if(!confirm("Deze FAQ-vraag verwijderen?"))return;const {error}=await c.from("admin_content").delete().eq("id",rd.dataset.faqAdminRowDel).eq("kind","faq");status(error?.message||"Vraag verwijderd.",!!error);if(!error)load();return}
+ });
+ document.addEventListener("submit",async e=>{
+  if(!mount()?.contains(e.target)||!isAdmin())return;const f=e.target,c=client(),fd=new FormData(f),id=fd.get("id");
+  if(f.id==="hpmwFaqAdminCatForm"){e.preventDefault();const payload={name:String(fd.get("name")||"").trim(),description:fd.get("description")||"",sort_order:Number(fd.get("sort_order")||0),is_active:fd.has("is_active"),updated_by:window.HpmwPortalAccess.session.user.id};const q=id?c.from("faq_categories").update(payload).eq("id",id):c.from("faq_categories").insert({...payload,created_by:window.HpmwPortalAccess.session.user.id});const {error}=await q;status(error?.message||"Categorie opgeslagen.",!!error);if(!error)load();return}
+  if(f.id==="hpmwFaqAdminRowForm"){e.preventDefault();const payload={kind:"faq",title:String(fd.get("title")||"").trim(),body:fd.get("body")||"",faq_category_id:fd.get("faq_category_id"),published:fd.get("published")==="true",updated_by:window.HpmwPortalAccess.session.user.id};const q=id?c.from("admin_content").update(payload).eq("id",id).eq("kind","faq"):c.from("admin_content").insert({...payload,created_by:window.HpmwPortalAccess.session.user.id});const {error}=await q;status(error?.message||"Vraag opgeslagen.",!!error);if(!error)load();return}
+ });
+ document.addEventListener("hpmw:portal-role",load);
+ const start=()=>{load();};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
 </body></html>
 
 
@@ -6344,20 +6394,23 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  function panel(id,title,desc,content){return '<section class="hpmw-admin-panel'+(activeTab===id?' active':'')+'" role="tabpanel" data-admin-panel="'+id+'" '+(allowed(id)?'':'hidden')+'><header class="hpmw-admin-section-head"><h3>'+title+'</h3><p class="hpmw-admin-muted">'+desc+'</p></header>'+content+'</section>'}
  function build(original){
   legacyRolesHTML=original;
-  const visibleTabs=(canNews()?tab("news",tr("news")):"")+(isAdmin()?tab("faq","FAQ-beheer")+tab("translations",tr("translations"))+tab("maintenance",tr("maintenance"))+tab("decoration",tr("decoration"))+tab("roles",tr("roles")):"");
+  const visibleTabs=(canNews()&&!isAdmin()?tab("news",tr("news")):"")+(isAdmin()?tab("roles",tr("roles")):"");
   body.scrollTop=0;
   body.innerHTML='<div class="hpmw-admin-workspace"><nav class="hpmw-admin-tabs" role="tablist" aria-label="Portal administration">'+
    (canNews()?panel("news",tr("news"),tr("newsDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwWorkspaceNewsNew">＋ '+tr("new")+'</button><button type="button" class="hpmw-manage-btn" id="hpmwWorkspaceNewsRefresh">'+tr("refresh")+'</button></div><div id="hpmwWorkspaceNewsList" class="hpmw-admin-muted">'+tr("loading")+'</div><div id="hpmwWorkspaceNewsEditor"></div><p id="hpmwWorkspaceNewsStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
    (isAdmin()?panel("faq","Manage FAQ","Beheer de categorieën en artikelen van de portaal-FAQ en forum-FAQ.",'<div class="hpmw-admin-card"><h4>FAQ-categorieën</h4><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqNewCategory">＋ Categorie toevoegen</button><button type="button" class="hpmw-manage-btn" id="hpmwFaqRefresh">Vernieuwen</button></div><div id="hpmwFaqCategoryAdmin" class="hpmw-admin-muted">Laden…</div><div id="hpmwFaqCategoryEditor"></div><hr style="border-color:#344b67;margin:20px 0"><h4>FAQ-artikelen</h4><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqNewArticle">＋ Vraag toevoegen</button><select id="hpmwFaqFilterCategory"><option value="">Alle categorieën</option></select><select id="hpmwFaqFilterStatus"><option value="all">Alle statussen</option><option value="published">Gepubliceerd</option><option value="draft">Concept</option></select></div><div id="hpmwFaqArticleList" class="hpmw-admin-muted">Laden…</div><div id="hpmwFaqArticleEditor"></div><p id="hpmwFaqStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+ 
-   (isAdmin()?panel("translations",tr("translations"),tr("transDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="'+tr("search")+'"><button type="button" class="hpmw-manage-btn" id="hpmwTranslationRefresh">'+tr("refresh")+'</button></div><div id="hpmwTranslationTable">'+tr("loading")+'</div><p id="hpmwTranslationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
-   (isAdmin()?panel("maintenance",tr("maintenance"),tr("maintDesc"),'<div id="hpmwWorkspaceMaintenance">'+tr("loading")+'</div><p id="hpmwMaintenanceStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
-   (isAdmin()?panel("decoration",tr("decoration"),tr("decoDesc"),'<div id="hpmwWorkspaceDecoration">'+tr("loading")+'</div><p id="hpmwDecorationStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
-   (isAdmin()?panel("roles",tr("roles"),tr("rolesDesc"),'<div class="hpmw-admin-card"><h3>'+tr("rights")+'</h3>'+legacyRolesHTML+'</div><div class="hpmw-admin-card"><h3>'+tr("preview")+'</h3><p class="hpmw-admin-muted">'+tr("previewHint")+'</p><div class="hpmw-admin-row"><select id="hpmwRolePreview"><option value="">Administrator</option><option value="user">Gebruiker / User</option><option value="guest">Gast / Guest</option><option value="support_moderator">Support moderator</option><option value="supervisor_support_team">Supervisor supportteam</option><option value="news_poster">Nieuwsposter / News poster</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option></select><button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">'+tr("restore")+'</button></div><p id="hpmwRolePreviewStatus" class="hpmw-admin-status">'+tr("previewOff")+'</p></div>'):"")+
+   (isAdmin()?panel("roles",tr("roles"),tr("rolesDesc"),
+    '<div class="hpmw-admin-card"><h3>'+tr("rights")+'</h3>'+legacyRolesHTML+'</div>'+
+    '<div class="hpmw-admin-card"><h3>'+tr("translations")+'</h3><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="'+tr("search")+'"><button type="button" class="hpmw-manage-btn" id="hpmwTranslationRefresh">'+tr("refresh")+'</button></div><div id="hpmwTranslationTable">'+tr("loading")+'</div><p id="hpmwTranslationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'+
+    '<div class="hpmw-admin-card"><h3>'+tr("maintenance")+'</h3><div id="hpmwWorkspaceMaintenance">'+tr("loading")+'</div><p id="hpmwMaintenanceStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'+
+    '<div class="hpmw-admin-card"><h3>'+tr("decoration")+'</h3><div id="hpmwWorkspaceDecoration">'+tr("loading")+'</div><p id="hpmwDecorationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'+
+    '<div class="hpmw-admin-card"><h3>'+tr("preview")+'</h3><p class="hpmw-admin-muted">'+tr("previewHint")+'</p><div class="hpmw-admin-row"><select id="hpmwRolePreview"><option value="">Administrator</option><option value="user">Gebruiker / User</option><option value="guest">Gast / Guest</option><option value="support_moderator">Support moderator</option><option value="supervisor_support_team">Supervisor supportteam</option><option value="news_poster">Nieuwsposter / News poster</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option></select><button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">'+tr("restore")+'</button></div><p id="hpmwRolePreviewStatus" class="hpmw-admin-status">'+tr("previewOff")+'</p></div>'
+   ):"")+
   '</div>';
-  if(!activeTab||!allowed(activeTab))activeTab=isAdmin()?"faq":canNews()?"news":"translations";
+  if(!activeTab||!allowed(activeTab))activeTab=isAdmin()?"roles":canNews()?"news":null;
   switchTab(activeTab);
   body.scrollTop=0;
-  if(isAdmin()){loadMaintenance();loadDecoration();loadTranslations();loadFaqAdmin()}
+  if(isAdmin()){loadMaintenance();loadDecoration();loadTranslations()}
   if(canNews())loadNews();
  }
  function switchTab(id){
