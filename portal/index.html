@@ -2054,7 +2054,8 @@ function paintCachedDepartmentEarly(){
 async function loadMyDepartment(){
  const card=document.querySelector("#hpmwMyDepartment"),box=card?.querySelector(".hpmw-department-content");
  if(!card||!box)return;
- if(!user.logged||!user.id){card.style.display="none";return;}
+ const showSortingHat=()=>{card.style.display="";const heading=card.querySelector(".hpmw-side-heading");if(heading)heading.innerHTML='<i class="fa-solid fa-wand-magic-sparkles"></i> De Sorteerhoed';box.innerHTML='<a class="hpmw-department-link hpmw-guest-sorting-hat" href="#" role="button" aria-label="Open De Sorteerhoed"><img class="hpmw-department-animal-image" src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/images/sorteerhoed.png" alt="De Sorteerhoed" loading="eager" decoding="async"></a>';const link=box.querySelector("a");link?.addEventListener("click",e=>{e.preventDefault();window.hpmwShowPortalView?.("sortingHatView")});};
+ if(!user.logged||!user.id){showSortingHat();return;}
  const cacheKey="hpmw_department_"+Number(user.id);
  let cached=null;
  try{cached=JSON.parse(localStorage.getItem(cacheKey)||"null");}catch(e){}
@@ -2070,10 +2071,10 @@ async function loadMyDepartment(){
   const imageName=src.toLocaleLowerCase("nl").split(/[?#]/)[0].split("/").pop()||"";
   const aliases={"griffoendor":"Griffoendor","zwadderich":"Zwadderich","huffelpuf":"Huffelpuf","ravenklauw":"Ravenklauw","ongesorteerd":"Ongesorteerd"};
   const department=(imageName==="ongeso10.png"||imageName.includes("ongeso"))?"Ongesorteerd":(aliases[normalized]||Object.keys(DEPARTMENT_INFO).find(name=>normalized.includes(name.toLocaleLowerCase("nl").normalize("NFD").replace(/[^a-z]/g,""))));
-  if(!department){if(!cached)box.innerHTML='<span class="hpmw-department-status">Afdeling nog niet ingesteld.</span>';return;}
+  if(!department){showSortingHat();return;}
   card.style.display="";paintDepartment(box,department);
   try{localStorage.setItem(cacheKey,JSON.stringify({department,savedAt:Date.now()}));}catch(e){}
- }catch(e){if(!cached)box.innerHTML='<span class="hpmw-department-status">Je afdeling kon niet worden opgehaald.</span>';console.warn("[Hpmw] Afdeling ophalen mislukt:",e);}
+ }catch(e){if(!cached)showSortingHat();console.warn("[Hpmw] Afdeling ophalen mislukt:",e);}
 }
 async function readLiveForumotionUser(){
 return await new Promise(resolve=>{
@@ -5491,3 +5492,50 @@ html body #sortingHatView .hpmw-sorting-ticket-panel #sortSubmit:disabled{opacit
  width:100%!important;min-width:0!important;
 }
 </style>
+
+
+<style id="hpmw-sorting-hat-heading-single-blue-block-20261114">
+#sortingHatView .hpmw-sorting-ticket-shell{display:flex!important;flex-direction:column!important;gap:0!important}
+#sortingHatView .hpmw-sorting-header-blue{
+ display:block!important;width:100%!important;box-sizing:border-box!important;
+ margin:0 0 14px!important;padding:18px 22px!important;
+ background:#101f33!important;border:1px solid #344b67!important;border-radius:14px!important;
+ box-shadow:0 12px 30px rgba(0,0,0,.24)!important;
+}
+#sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-ticket-head{
+ display:flex!important;align-items:center!important;gap:13px!important;
+ margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+}
+#sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-ticket-head .eyebrow{margin:0!important;line-height:1.2!important}
+#sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-ticket-head h1{margin:2px 0!important;line-height:1.12!important}
+#sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-ticket-head .subtitle{margin:0!important;line-height:1.35!important}
+#sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-quiz-strip{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:12px!important;margin:9px 0 0!important;padding:0!important;
+ border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+#sortingHatView .hpmw-sorting-ticket-panel{margin:0!important}
+#sortingHatView .hpmw-sorting-header-blue .new-ticket-icon{flex:0 0 48px}
+#introView #hpmwMyDepartment .hpmw-guest-sorting-hat{min-height:130px!important}
+#introView #hpmwMyDepartment .hpmw-guest-sorting-hat img{max-width:100%!important;max-height:150px!important;object-fit:contain!important}
+#introView #hpmwMyDepartment .hpmw-department-animal-image{display:block!important;max-width:100%!important;max-height:170px!important;object-fit:contain!important}
+@media(max-width:650px){
+ #sortingHatView .hpmw-sorting-header-blue{padding:14px!important}
+ #sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-ticket-head{align-items:flex-start!important}
+ #sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-quiz-strip{align-items:flex-start!important;flex-direction:column!important}
+ #sortingHatView .hpmw-sorting-header-blue .hpmw-sorting-quiz-strip #sortingHatQuizOpen{width:100%!important}
+}
+</style>
+<script id="hpmw-sorting-hat-heading-single-blue-block-logic-20261114">
+(()=>{"use strict";
+ const init=()=>{
+  const shell=document.querySelector("#sortingHatView .hpmw-sorting-ticket-shell");
+  const head=shell?.querySelector(".hpmw-sorting-ticket-head");
+  const quiz=shell?.querySelector(".hpmw-sorting-quiz-strip");
+  if(!shell||!head||!quiz||shell.querySelector(".hpmw-sorting-header-blue"))return;
+  const group=document.createElement("div");group.className="hpmw-sorting-header-blue";
+  shell.insertBefore(group,head);group.append(head,quiz);
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script>
