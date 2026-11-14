@@ -4461,7 +4461,7 @@ document.addEventListener("hpmw:supabase-role",start);
   const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"draft");
   const {data:sd}=await client().auth.getSession();
   const payload={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
-  if(!payload.title||!payload.body||!payload.faq_category_id){status("Vul vraag, antwoord en categorie in.");return;}
+  if(!payload.title||!payload.body||!payload.faq_category_id){status("Vul vraag, antwoord en categorie in.");return;}if(!id&&approval==="rejected"){status("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");return;}
   if(!id){payload.created_by=sd.session.user.id;payload.submitted_by=sd.session.user.id;}
   const result=id?await client().from("admin_content").update(payload).eq("id",id).eq("kind","faq"):await client().from("admin_content").insert(payload);
   if(result.error){status("FAQ opslaan mislukt: "+result.error.message);return;}
