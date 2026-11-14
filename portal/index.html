@@ -4838,7 +4838,7 @@ async function renderManage(){
  '<div class="hpmw-admin-footer"><button class="hpmw-manage-btn" id="hpmwPortalLogout">Uitloggen</button></div>';
  buildPortalAdminTabs();renderTicketRoleRows();document.dispatchEvent(new CustomEvent("hpmw:portal-admin-rendered"));
 }
-$("#portalManageLaunch")?.addEventListener("click",open);
+document.addEventListener("click",function(event){const button=event.target?.closest?.("#portalManageLaunch");if(!button)return;event.preventDefault();event.stopPropagation();if(typeof window.HpmwOpenPortalAdmin==="function")window.HpmwOpenPortalAdmin();},{capture:true});
  layer.addEventListener("click",e=>{if(e.target===layer||e.target.closest("[data-manage-close]"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"){close();editor.classList.remove("open")}});
  body.addEventListener("submit",async e=>{
@@ -5068,7 +5068,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 <style id="hpmw-home-nav-gap-fix-20261114">
 /* Trek de homepage-banner dichter tegen de vaste navigatiebalk aan. */\nbody:has(#introView.active) main.shell{margin-top:24px!important}\nbody:has(#introView.active) #homeView{margin-top:0!important}\n</style>\n
 <style id="hpmw-admin-controls-visibility-fix-20261114">
-/* Portal Admin is an entry point; actual access remains protected by the Supabase role check. */\nhtml.member-login-ready #portalManageLaunch{display:inline-flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}\nhtml.member-login-ready #portalManageLaunch[hidden]{display:inline-flex!important}\n.hpmw-cms-manage{display:flex!important;visibility:visible!important;opacity:1!important;gap:6px!important}\n#hpmwFaqAdminMount:not([hidden]){display:block!important;visibility:visible!important}\n</style>\n
+/* Portal Admin is an entry point; actual access remains protected by the Supabase role check. */\nhtml.member-login-ready #portalManageLaunch{display:inline-flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}\nhtml.member-login-ready #portalManageLaunch[hidden]{display:none!important}\n.hpmw-cms-manage{display:flex!important;visibility:visible!important;opacity:1!important;gap:6px!important}\n#hpmwFaqAdminMount:not([hidden]){display:block!important;visibility:visible!important}\n</style>\n
 
 
 
@@ -6691,7 +6691,7 @@ html body{padding-top:70px!important}
   const founder=[1,3].includes(forumId);
   const role=window.HpmwPortalAccess?.role||"guest";
   const ticketAllowed=founder;
-  const portalAllowed=forumId>0||founder||role==="administrator";
+  const portalAllowed=true;
   const set=(id,show)=>{const el=document.getElementById(id);if(!el)return;el.hidden=!show;el.setAttribute("aria-hidden",String(!show));el.style.setProperty("display",show?"inline-flex":"none","important");el.style.setProperty("pointer-events","auto","important")};
   set("adminLaunch",ticketAllowed);
   set("portalManageLaunch",portalAllowed);
