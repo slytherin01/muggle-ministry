@@ -6326,7 +6326,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
     const {data,error}=await a.client.auth.getSession();
     if(!error&&data.session){
      const {data:row,error:roleError}=await a.client.from("tool_access_roles").select("role").eq("user_id",data.session.user.id).maybeSingle();
-     if(!roleError){document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role:row?.role||"user"}})}
+     if(!roleError){document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role:row?.role||"user"}}))}
     }
    }
   }catch(_){}
