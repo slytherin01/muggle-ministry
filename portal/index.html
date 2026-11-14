@@ -4894,6 +4894,32 @@ html body header.topbar.luxury-nav-v2 nav.top-actions > #accountLink{order:8!imp
 #homeView>.support-hero{display:none!important}
 </style>
 
+
+<style id="hpmw-uniform-banner-frame-height-20261114">
+/* Geef iedere pagina-banner exact dezelfde kaderhoogte en laat de afbeelding het kader vullen. */
+html body .hpmw-global-brandbar{
+  box-sizing:border-box!important;
+  width:min(1180px,calc(100% - 36px))!important;
+  max-width:1180px!important;
+  height:clamp(110px,16.1vw,190px)!important;
+  min-height:clamp(110px,16.1vw,190px)!important;
+  max-height:190px!important;
+  aspect-ratio:auto!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+html body .hpmw-global-brandbar .hpmw-active-banner-image{
+  inset:0!important;width:100%!important;height:100%!important;
+  object-fit:fill!important;
+}
+@media(max-width:650px){
+  html body .hpmw-global-brandbar{
+    width:calc(100% - 20px)!important;
+    height:110px!important;min-height:110px!important;max-height:110px!important;
+  }
+}
+</style>
+
 </body></html>
 
 
