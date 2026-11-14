@@ -1872,14 +1872,32 @@ header.topbar.luxury-nav-v2 nav.top-actions #accountLink{order:13!important}
 header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!important}
 </style>
 <style id="hpmw-my-tickets-banner">
-/* Gebruik de Mijn Tickets-afbeelding als de bestaande grote masthead op deze view. */
-body:has(#myTicketsView.active) .hpmw-global-brandbar{
- background-image:url("https://i44.servimg.com/u/f44/11/48/74/42/mijnti10.png")!important;
- background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important
-}
+/* De afbeelding wordt in de bestaande grote masthead getoond, niet als extra banner in de inhoud. */
 #myTicketsView .hpmw-my-tickets-page-head{display:flex!important;justify-content:flex-end!important;position:relative!important;width:100%!important;margin:0 0 12px!important;padding:0!important;min-height:0!important}
 #myTicketsView #myTicketsBack{position:static!important;z-index:2!important}
 </style>
+<script id="hpmw-my-tickets-masthead-switch">
+(()=>{"use strict";
+ const url="https://i44.servimg.com/u/f44/11/48/74/42/mijnti10.png";
+ const original="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
+ const bar=()=>document.querySelector(".hpmw-global-brandbar");
+ const update=()=>{
+  const el=bar();if(!el)return;
+  const tickets=document.querySelector("#myTicketsView.active");
+  el.style.setProperty("background-image",tickets?'url("'+url+'")':'url("'+original+'")',"important");
+  el.style.setProperty("background-size","100% 100%","important");
+  el.style.setProperty("background-position","center center","important");
+  el.style.setProperty("background-repeat","no-repeat","important");
+ };
+ const start=()=>{
+  update();
+  const root=document.querySelector("main.shell")||document.body;
+  new MutationObserver(update).observe(root,{subtree:true,attributes:true,attributeFilter:["class"]});
+  document.addEventListener("click",()=>requestAnimationFrame(update),true);
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
 </head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <button class="lux-nav-item" id="adminLaunch" type="button" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Ticket - Admin</span></button>
 <button class="lux-nav-item" id="portalManageLaunch" type="button" aria-haspopup="dialog"><span class="lux-nav-icon"><i class="fa-solid fa-user-shield"></i></span><span class="lux-nav-label">Portal - Admin</span></button><label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
