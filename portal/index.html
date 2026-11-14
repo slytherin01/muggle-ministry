@@ -6615,7 +6615,8 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   bar.style.setProperty("outline","none","important");
   bar.style.setProperty("outline-offset","0","important");
   bar.style.setProperty("box-shadow","0 12px 28px rgba(0,0,0,.32)","important");
-  bar.style.setProperty("border-radius","13px","important");
+  bar.style.setProperty("border-radius","15px","important");
+  bar.style.setProperty("overflow","hidden","important");
   bar.style.setProperty("background-color","#101c2b","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
@@ -6635,7 +6636,8 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   img.style.setProperty("inset","1px","important");
   img.style.setProperty("width","calc(100% - 2px)","important");
   img.style.setProperty("height","calc(100% - 2px)","important");
-  img.style.setProperty("border-radius","12px","important");
+  img.style.setProperty("border-radius","14px","important");
+  img.style.setProperty("clip-path","inset(0 round 14px)","important");
   img.style.setProperty("object-fit","fill","important");
   img.style.setProperty("object-position","center","important");
   img.style.setProperty("z-index","2","important");
