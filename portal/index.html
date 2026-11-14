@@ -6555,20 +6555,23 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
 
 
 <style id="hpmw-matching-border-all-page-banners-20261114">
-/* Eén passende omlijsting voor de wisselende masthead-banner op alle portaalpagina's. */
+/* Verwijder uitsluitend het extra kader achter de banner; de banner zelf blijft intact en gecentreerd. */
 html body .hpmw-global-brandbar{
   box-sizing:border-box!important;
-  border:2px solid #527da8!important;
-  border-radius:13px!important;
-  outline:1px solid rgba(197,161,95,.72)!important;
-  outline-offset:2px!important;
-  box-shadow:0 9px 26px rgba(0,0,0,.34),inset 0 0 0 1px rgba(229,211,169,.38)!important;
+  border:0!important;
+  outline:0!important;
+  outline-offset:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
 }
 @media(max-width:650px){
   html body .hpmw-global-brandbar{
-    border:2px solid #527da8!important;
-    border-radius:10px!important;
-    outline-offset:1px!important;
+    border:0!important;
+    outline:0!important;
+    box-shadow:none!important;
+    border-radius:0!important;
   }
 }
 </style>
