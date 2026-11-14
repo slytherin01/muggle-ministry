@@ -6617,11 +6617,13 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   bar.style.setProperty("border-radius","0","important");
   const active=document.querySelector("main.shell>.view.active");
   const src=images[active?.id]||fallback;
-  bar.style.setProperty("background-image","none","important");
-  let img=bar.querySelector(".hpmw-active-banner-image");
-  if(!img){img=document.createElement("img");img.className="hpmw-active-banner-image";img.alt="";img.setAttribute("aria-hidden","true");bar.appendChild(img)}
-  ["border","outline","box-shadow","border-radius"].forEach(p=>img.style.setProperty(p,"none","important"));
-  if(img.src!==src)img.src=src;
+  /* Gebruik de banner als achtergrond op de container; zo kan een algemene img-regel hem niet verbergen. */
+  bar.style.setProperty("background-image",'url("'+src+'")',"important");
+  bar.style.setProperty("background-repeat","no-repeat","important");
+  bar.style.setProperty("background-position","center center","important");
+  bar.style.setProperty("background-size","100% 100%","important");
+  const img=bar.querySelector(".hpmw-active-banner-image");
+  if(img)img.style.setProperty("display","none","important");
  };
  const start=()=>{
   apply();
