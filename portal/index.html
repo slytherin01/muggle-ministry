@@ -4677,37 +4677,70 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   </form>
  </section>
 </div>
-<script id="hpmw-unified-portal-rbac">
+<style id="hpmw-role-matrix-style">
+.hpmw-permission-wrap{overflow:auto;margin:12px 0 22px;border:1px solid #344b67;border-radius:12px}
+.hpmw-permission-table{width:100%;min-width:760px;border-collapse:collapse;font-size:11px;color:#dce7f4}
+.hpmw-permission-table th,.hpmw-permission-table td{padding:10px 9px;border-bottom:1px solid #293d56;text-align:center}
+.hpmw-permission-table thead th{background:#192d45;color:#c9dcf1;font-size:10px}
+.hpmw-permission-table tbody th{text-align:left;font-weight:650;color:#e3eaf4}
+.hpmw-permission-table .allowed{color:#9ce0b2;font-weight:900}.hpmw-permission-table .denied{color:#8796a9}
+</style>\n<script id="hpmw-unified-portal-rbac">
 (()=>{"use strict";
  const URL="https://vuaajsjjluwgqmneinds.supabase.co";
  const KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
  const ROLES=[
   ["administrator","Administrator","Volledige toegang tot alle portaalonderdelen en instellingen."],
   ["support_moderator","Support moderator","Portaal bekijken en tickets lezen, beantwoorden, sluiten en verplaatsen."],
-  ["supervisor_support_team","Super visor support team","Supportrechten inclusief tickets verwijderen."],
+  ["supervisor_support_team","Supervisor supportteam","Supportrechten inclusief tickets verwijderen."],
   ["news_poster","Nieuwsposter","Portaal bekijken en nieuwsberichten maken en bewerken."],
   ["news_poster_supervisor","Nieuwsposter - super visor","Nieuws maken, bewerken en verwijderen."],
   ["guest","Gast","Alleen lezen, supportformulier invullen en eigen tickets bekijken."],
   ["user","Gebruiker","Alleen lezen, supportformulier invullen en eigen tickets bekijken."]
  ];
  const roleNames=Object.fromEntries(ROLES.map(r=>[r[0],r[1]]));
- const client=window.supabase?.createClient?window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+ let client=null,clientPromise=null;
+ async function ensureClient(){
+  if(client)return client;
+  if(clientPromise)return clientPromise;
+  clientPromise=(async()=>{
+   if(window.HPMW_HELPDESK_BOOT)await window.HPMW_HELPDESK_BOOT;
+   if(!window.supabase?.createClient)throw new Error("Supabase JS kon niet worden geladen. Vernieuw de pagina en probeer opnieuw.");
+   client=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+   window.HpmwPortalAccess.client=client;
+   return client;
+  })();
+  try{return await clientPromise}catch(error){clientPromise=null;throw error}
+ }
  let session=null,role="guest",editingNewsId=null;
  const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
  const canNews=()=>["administrator","news_poster","news_poster_supervisor"].includes(role);
  const canDeleteNews=()=>["administrator","news_poster_supervisor"].includes(role);
  const canSupport=()=>["administrator","support_moderator","supervisor_support_team"].includes(role);
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- async function getRole(){if(!session?.user){role="guest";return role}const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";return role}
- async function headers(){const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
+ async function getRole(){if(!session?.user){role="guest";return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";return role}
+ async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
  window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canSupport,client,headers};
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
  function open(){layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()}
  function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Eenmalig inloggen</h3><p>Gebruik je bestaande portaalaccount. Deze sessie wordt ook gebruikt voor nieuwsbeheer en de beveiligde beheerfuncties.</p><form id="hpmwPortalLogin"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button><div class="hpmw-manage-status" id="hpmwManageStatus"></div></form></div>'}
  function renderRoleTiles(){return '<div class="hpmw-role-summary">'+ROLES.map(r=>'<div class="hpmw-role-tile"><strong>'+esc(r[1])+'</strong><span>'+esc(r[2])+'</span></div>').join("")+'</div>'}
+ function renderPermissionMatrix(){
+  const rows=[
+   ["Portaal bekijken","✓","✓","✓","✓","✓","✓","✓"],
+   ["Ticketformulier invullen","✓","✓","✓","✓","✓","✓","✓"],
+   ["Eigen tickets bekijken","✓","✓","✓","✓","✓","✓","✓"],
+   ["Ticketbeheer openen","✓","✓","✓","—","—","—","—"],
+   ["Tickets lezen / beantwoorden / sluiten / verplaatsen","✓","✓","✓","—","—","—","—"],
+   ["Tickets verwijderen","✓","—","✓","—","—","—","—"],
+   ["Nieuws maken en bewerken","✓","—","—","✓","✓","—","—"],
+   ["Nieuws verwijderen","✓","—","—","—","✓","—","—"],
+   ["Rollen en portaalinstellingen beheren","✓","—","—","—","—","—","—"]
+  ];
+  return '<h3>Toegangsrechten per rol</h3><p>Dit overzicht toont welke onderdelen en acties elke rol mag gebruiken.</p><div class="hpmw-permission-wrap"><table class="hpmw-permission-table"><thead><tr><th>Onderdeel / actie</th>'+ROLES.map(r=>'<th>'+esc(r[1])+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((v,i)=>i===0?'<th>'+esc(v)+'</th>':'<td class="'+(v==="✓"?"allowed":"denied")+'">'+v+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>';
+ }
  async function renderManage(){
-  if(!client){body.innerHTML="<p>De beveiligde verbinding met Supabase kon niet worden gestart.</p>";return}
-  const {data}=await client.auth.getSession();session=data.session;
+  try{await ensureClient()}catch(error){body.innerHTML='<div class="hpmw-manage-status">'+esc(error.message)+'</div><button class="hpmw-manage-btn" id="hpmwManageRetry">Opnieuw proberen</button>';return}
+  const {data,error:sessionError}=await client.auth.getSession();if(sessionError){body.innerHTML='<p class="hpmw-manage-status">'+esc(sessionError.message)+'</p>';return}session=data.session;
   if(!session){role="guest";body.innerHTML=loginMarkup();return}
   try{await getRole()}catch(e){body.innerHTML='<p class="hpmw-manage-status">'+esc(e.message)+'</p>';return}
   let html='<p>Ingelogd als <strong>'+esc(session.user.email)+'</strong> · rol: <strong>'+esc(roleNames[role]||role)+'</strong></p>';
@@ -4715,7 +4748,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
    const {data:members,error}=await client.from("tool_access_roles").select("id,user_id,role,created_at").order("created_at");
    if(error)html+='<p class="hpmw-manage-status">'+esc(error.message)+'</p>';
    else{
-    html+=renderRoleTiles()+'<h3>Rollen beheren</h3><p>Voeg een Supabase-gebruiker toe met diens User ID, of wijzig de rol van een bestaand account.</p><form id="hpmwRoleAdd"><label class="hpmw-manage-field">Supabase User ID<input name="user_id" required placeholder="UUID van het account"></label><label class="hpmw-manage-field">Rol<select name="role">'+ROLES.map(r=>'<option value="'+r[0]+'">'+esc(r[1])+'</option>').join("")+'</select></label><button class="hpmw-manage-btn primary" type="submit">Gebruiker toevoegen / rol wijzigen</button><div class="hpmw-manage-status" id="hpmwRoleStatus"></div></form><h3>Huidige accounts</h3>';
+    html+=renderRoleTiles()+renderPermissionMatrix()+'<h3>Rollen beheren</h3><p>Voeg een Supabase-gebruiker toe met diens User ID, of wijzig de rol van een bestaand account.</p><form id="hpmwRoleAdd"><label class="hpmw-manage-field">Supabase User ID<input name="user_id" required placeholder="UUID van het account"></label><label class="hpmw-manage-field">Rol<select name="role">'+ROLES.map(r=>'<option value="'+r[0]+'">'+esc(r[1])+'</option>').join("")+'</select></label><button class="hpmw-manage-btn primary" type="submit">Gebruiker toevoegen / rol wijzigen</button><div class="hpmw-manage-status" id="hpmwRoleStatus"></div></form><h3>Huidige accounts</h3>';
     html+=members.map(m=>'<div class="hpmw-role-row"><code>'+esc(m.user_id)+'</code><select data-role-user="'+esc(m.user_id)+'">'+ROLES.map(r=>'<option value="'+r[0]+'" '+(m.role===r[0]?'selected':'')+'>'+esc(r[1])+'</option>').join("")+'</select><button class="hpmw-manage-btn" data-role-save="'+esc(m.user_id)+'">Opslaan</button></div>').join("");
    }
   }else{
@@ -4728,10 +4761,11 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  layer.addEventListener("click",e=>{if(e.target===layer||e.target.closest("[data-manage-close]"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"){close();editor.classList.remove("open")}});
  body.addEventListener("submit",async e=>{
-  if(e.target.id==="hpmwPortalLogin"){e.preventDefault();const fd=new FormData(e.target),status=$("#hpmwManageStatus");status.textContent="Bezig met inloggen…";const {data,error}=await client.auth.signInWithPassword({email:String(fd.get("email")).trim(),password:String(fd.get("password"))});if(error){status.textContent=error.message;return}session=data.session;await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
-  if(e.target.id==="hpmwRoleAdd"){e.preventDefault();const fd=new FormData(e.target),status=$("#hpmwRoleStatus");const user_id=String(fd.get("user_id")).trim(),newRole=String(fd.get("role"));const {error}=await client.from("tool_access_roles").upsert({user_id,role:newRole},{onConflict:"user_id"});status.textContent=error?error.message:"Rol opgeslagen.";if(!error)await renderManage()}
+  if(e.target.id==="hpmwPortalLogin"){e.preventDefault();await ensureClient();const fd=new FormData(e.target),status=$("#hpmwManageStatus");status.textContent="Bezig met inloggen…";const {data,error}=await client.auth.signInWithPassword({email:String(fd.get("email")).trim(),password:String(fd.get("password"))});if(error){status.textContent=error.message;return}session=data.session;await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
+  if(e.target.id==="hpmwRoleAdd"){e.preventDefault();await ensureClient();const fd=new FormData(e.target),status=$("#hpmwRoleStatus");const user_id=String(fd.get("user_id")).trim(),newRole=String(fd.get("role"));const {error}=await client.from("tool_access_roles").upsert({user_id,role:newRole},{onConflict:"user_id"});status.textContent=error?error.message:"Rol opgeslagen.";if(!error)await renderManage()}
  });
  body.addEventListener("click",async e=>{
+  if(e.target.closest("#hpmwManageRetry")){renderManage();return}
   const save=e.target.closest("[data-role-save]");if(save){const id=save.dataset.roleSave,select=body.querySelector('[data-role-user="'+CSS.escape(id)+'"]');const {error}=await client.from("tool_access_roles").update({role:select.value}).eq("user_id",id);if(error)alert(error.message);else save.textContent="Opgeslagen";return}
   if(e.target.closest("#hpmwPortalLogout")){await client.auth.signOut();session=null;role="guest";await renderManage();document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))}
  });
@@ -4754,13 +4788,24 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   section.querySelectorAll(".hpmw-cms-card").forEach(card=>{if(card.querySelector(".hpmw-cms-manage"))return;const title=card.querySelector(".hpmw-cms-title")?.textContent||"";const text=card.querySelector(".hpmw-cms-body")?.textContent||"";const meta=card.querySelector(".hpmw-cms-meta")?.textContent||"";let original={};try{original=JSON.parse(card.dataset.item||"{}")}catch(_){}card.dataset.item=JSON.stringify({...original,id:card.dataset.id,title,body:text,author:original.author||meta.split("•")[0]?.trim()||"",published:original.published!==false});const actions=document.createElement("div");actions.className="hpmw-cms-manage";actions.innerHTML='<button class="hpmw-cms-icon-btn" type="button" data-hpmw-news-edit title="Bewerken" aria-label="Bewerken"><i class="fa-solid fa-pencil"></i></button>'+(canDeleteNews()?'<button class="hpmw-cms-icon-btn delete" type="button" data-hpmw-news-delete title="Verwijderen" aria-label="Verwijderen"><i class="fa-solid fa-trash"></i></button>':"");card.querySelector(".hpmw-cms-card-top")?.append(actions)});
  };
  const observer=new MutationObserver(decorateNews);observer.observe(document.body,{childList:true,subtree:true});
- client?.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()});
- (async()=>{if(client){const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}})();
+ ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()})).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
+ (async()=>{try{await ensureClient();const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}})();
 })();
 </script>
 
 
-<script id="hpmw-unified-helpdesk-session-bridge">
+<script id="hpmw-manage-translations">
+(()=>{"use strict";
+ const translations={
+  nl:{manage:"Portaalbeheer",login:"Eenmalig inloggen",email:"E-mailadres",password:"Wachtwoord",signIn:"Inloggen",logout:"Uitloggen",roles:"Rollen beheren",accounts:"Huidige accounts",save:"Opslaan",create:"Gebruiker toevoegen / rol wijzigen",role:"Rol",userId:"Supabase User ID",permissions:"Toegangsrechten per rol"},
+  en:{manage:"Portal administration",login:"Sign in once",email:"Email address",password:"Password",signIn:"Sign in",logout:"Sign out",roles:"Manage roles",accounts:"Current accounts",save:"Save",create:"Add user / change role",role:"Role",userId:"Supabase User ID",permissions:"Access rights per role"},
+  pt:{manage:"Administração do portal",login:"Iniciar sessão",email:"Endereço de e-mail",password:"Palavra-passe",signIn:"Entrar",logout:"Sair",roles:"Gerir funções",accounts:"Contas atuais",save:"Guardar",create:"Adicionar utilizador / alterar função",role:"Função",userId:"ID de utilizador Supabase",permissions:"Permissões de acesso por função"}
+ };
+ const langSelect=document.getElementById("hpmwLanguage");
+ window.hpmwManageTranslations=()=>translations[langSelect?.value]||translations.nl;
+ langSelect?.addEventListener("change",()=>{const b=document.getElementById("hpmwManageBody");if(b?.closest("#hpmwManageLayer")?.classList.contains("open"))document.getElementById("portalManageLaunch")?.click()});
+})();
+</script>\n<script id="hpmw-unified-helpdesk-session-bridge">
 (()=>{"use strict";
  const access=window.HpmwPortalAccess;
  if(!access)return;
