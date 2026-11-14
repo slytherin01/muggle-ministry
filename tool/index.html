@@ -4158,7 +4158,59 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 document.addEventListener("hpmw:supabase-role",start);
 })();
 </script>
-</body>
+
+<style id="hpmw-modteam-avatar-sync-style">
+#hpmwModteamAdmin .mt-avatar-preview{display:flex;align-items:center;gap:9px;min-height:48px;margin-top:8px;color:#9aacc2;font-size:11px}
+#hpmwModteamAdmin .mt-avatar-preview img,#hpmwModteamAdmin .mt-row-avatar{width:42px;height:42px;flex:0 0 42px;object-fit:cover;border:1px solid #596b87;border-radius:50%;background:#17263a}
+#hpmwModteamAdmin .mt-row-avatar{width:48px;height:48px;flex-basis:48px}
+#hpmwModteamAdmin .mt-avatar-empty{display:grid;place-items:center;color:#9aacc2}
+</style>
+<script id="hpmw-modteam-avatar-sync">
+(()=> {
+ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ async function avatar(id){
+  if(!id)return "";
+  try{
+   const r=await fetch("/u"+encodeURIComponent(id),{credentials:"include",cache:"no-store"});
+   if(!r.ok)return "";
+   const d=new DOMParser().parseFromString(await r.text(),"text/html");
+   const img=d.querySelector(".profile-avatar img,#profile-advanced-right .profile-avatar img,.module .box-content .avatar img,.avatar img,img[alt*=avatar i],img[alt*=profielfoto i]");
+   const og=d.querySelector('meta[property="og:image"]');
+   const src=img?.getAttribute("src")||img?.getAttribute("data-src")||og?.content||"";
+   return src?new URL(src,location.origin).href:"";
+  }catch(e){return ""}
+ }
+ async function preview(){
+  const id=document.getElementById("mtUserId"),box=document.getElementById("mtAvatarPreview");
+  if(!id||!box)return;
+  if(!id.value){box.textContent="Vul een profiel-ID in om de avatar automatisch te synchroniseren.";return}
+  box.textContent="Forumprofiel ophalen…";
+  const src=await avatar(id.value);
+  box.innerHTML=src?'<img src="'+esc(src)+'" alt="Forumavatar"><span>Avatar automatisch gevonden</span>':"Geen avatar gevonden; controleer het profiel-ID.";
+ }
+ function enhance(){
+  const input=document.getElementById("mtUserId");
+  if(input&&!input.dataset.avatarSync){input.dataset.avatarSync="1";input.insertAdjacentHTML("afterend",'<div class="mt-avatar-preview" id="mtAvatarPreview">Vul een profiel-ID in om de avatar automatisch te synchroniseren.</div>');input.addEventListener("change",preview);input.addEventListener("blur",preview)}
+  const list=document.getElementById("mtList");
+  if(list&&!list.dataset.avatarSync){
+   list.dataset.avatarSync="1";
+   const mo=new MutationObserver(async()=>{
+    for(const row of list.querySelectorAll(".mt-row")){
+     if(row.dataset.avatarSync)continue;
+     const match=row.querySelector("small")?.textContent.match(/profiel #(\d+)/);
+     if(!match)continue;
+     row.dataset.avatarSync="1";
+     const src=await avatar(match[1]);
+     if(src)row.insertAdjacentHTML("afterbegin",'<img class="mt-row-avatar" src="'+esc(src)+'" alt="">');
+    }
+   });
+   mo.observe(list,{childList:true,subtree:true});
+  }
+ }
+ const start=()=>{enhance();const mo=new MutationObserver(enhance);mo.observe(document.documentElement,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),15000)};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script></body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
 #newTranslationsView #translationEditor .form-grid > .field:has(#trPt){display:block!important;visibility:visible!important;grid-column:1/-1!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important}
