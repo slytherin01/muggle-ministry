@@ -6769,13 +6769,13 @@ html body main.shell>.view>.hpmw-section-title .subtitle{margin:4px 0 0!importan
  };
  const start=()=>{apply();new MutationObserver(apply).observe(document.querySelector("main.shell")||document.body,{subtree:true,attributes:true,attributeFilter:["class"]});document.addEventListener("click",()=>requestAnimationFrame(apply),true);window.addEventListener("pageshow",apply)};
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
- document.addEventListener("click",e=>{const b=e.target.closest("[data-faq-category]");if(!b)return;const key=b.dataset.faqCategory;document.querySelectorAll("[data-faq-category]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));const out=document.getElementById("hpmwFaqCategoryContent");if(out)out.innerHTML='<div class="empty">De FAQ-artikelen voor deze categorie worden hier geplaatst zodra de oorspronkelijke forumteksten zijn aangeleverd.</div>';});
+
 })();
 </script>
 <style id="hpmw-faq-category-buttons-only-20261114">
 #faqView .hpmw-internal-faq{max-width:1100px!important;margin:0 auto!important;padding:22px!important}
 #faqView .hpmw-faq-categories{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;padding:14px 0!important}
-#faqView .hpmw-faq-category-content{display:none!important}
+#faqView .hpmw-faq-category-content{display:block!important}
 #faqView .hpmw-faq-categories .cat{min-height:110px!important}
 @media(max-width:650px){#faqView .hpmw-internal-faq{padding:13px!important}#faqView .hpmw-faq-categories{grid-template-columns:1fr!important}}
 </style>
