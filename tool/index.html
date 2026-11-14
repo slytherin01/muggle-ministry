@@ -1189,7 +1189,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 #faqManagementPanel form input[type=checkbox]{width:auto}
 #faqManagementPanel .faq-row-actions{display:flex;gap:6px;flex-wrap:wrap}
 #faqManagementPanel .faq-state{display:inline-flex;padding:4px 8px;border-radius:20px;background:#24364b;color:#d9e7f8;font-size:10px}
-#faqManagementPanel [hidden]{display:none!important}
+#faqManagementPanel [hidden]{display:none!important}\n#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
 </style>
 </head>
 <body>
@@ -1518,6 +1518,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <h1>Ticketbeheer</h1>
 <p class="subtitle">Beheer actieve en gesloten supporttickets.</p>
 </div>
+<button class="btn primary" id="faqManagementOpen" type="button" style="display:none"><i class="fa-solid fa-circle-question"></i> FAQ-beheer</button>
 <button class="btn" id="adminBack">
 <span class="fa-button-icon">
 <i class="fa-solid fa-arrow-left hm-fa">
@@ -1527,7 +1528,6 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <div class="panel">
 <div class="admin-layout">
 <aside class="admin-nav"><button class="nav-btn" id="portalAdminOpen" type="button"><i class="fa-solid fa-user-shield"></i> Portal Admin</button>
-<button class="nav-btn" id="faqManagementOpen" type="button" style="display:none"><i class="fa-solid fa-circle-question"></i> FAQ-beheer</button>
 <button class="nav-btn" id="adminRefresh">
 <span class="fa-button-icon">
 <i class="fa-solid fa-rotate hm-fa">
@@ -1577,7 +1577,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
   <div id="faqCategoryList" class="ticket-table-wrap" style="margin-top:14px">Categorieën laden…</div>
  </div>
  <div class="panel" style="padding:18px;margin-bottom:18px">
-  <div class="page-head"><div><h3>FAQ-artikel</h3><p class="subtitle">Schrijf een vraag en antwoord en bepaal of het artikel gepubliceerd wordt.</p></div><button class="btn" id="faqArticleNew" type="button">Nieuwe vraag</button></div>
+  <div class="page-head"><div><h3>FAQ-vragen</h3><p class="subtitle">Sleep vragen om de volgorde te wijzigen. Verplaats vragen via Bewerken en sla de volgorde daarna op.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="faqOrderSave" type="button">Volgorde opslaan</button><button class="btn" id="faqArticleNew" type="button">Nieuwe vraag</button></div></div>
   <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
    <input type="hidden" name="id">
    <label>Categorie<select name="faq_category_id" required></select></label>
@@ -4399,48 +4399,40 @@ document.addEventListener("hpmw:supabase-role",start);
 (()=>{"use strict";
  const $=id=>document.getElementById(id),client=()=>window.hpmwSupabase;
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- let categories=[],articles=[],allowed=false;
- const status=(m)=>{const el=$("faqManagementStatus");if(el)el.textContent=m||""};
+ let categories=[],articles=[],allowed=false,orderDirty=false;
+ const status=m=>{const el=$("faqManagementStatus");if(el)el.textContent=m||""};
  async function isAdministrator(){
   const c=client();if(!c)return false;
-  const {data:sessionData,error:sessionError}=await c.auth.getSession();
-  if(sessionError||!sessionData.session)return false;
-  const {data,error}=await c.from("tool_access_roles").select("role").eq("user_id",sessionData.session.user.id).maybeSingle();
-  return !error&&data?.role==="administrator";
+  const {data:s,error:se}=await c.auth.getSession();if(se||!s.session)return false;
+  const {data:r,error}=await c.from("tool_access_roles").select("role").eq("user_id",s.session.user.id).maybeSingle();
+  return !error&&r?.role==="administrator";
  }
- function setNav(){
-  const b=$("faqManagementOpen");
-  if(b)b.style.display=allowed?"flex":"none";
- }
+ function setNav(){const b=$("faqManagementOpen");if(b)b.style.display=allowed?"inline-flex":"none";}
  async function loadAll(){
   if(!await isAdministrator()){allowed=false;setNav();status("Geen toegang. Alleen administrators kunnen FAQ-beheer openen.");return false;}
   allowed=true;setNav();status("FAQ-gegevens laden…");
-  const c=client();
-  const [cr,ar]=await Promise.all([
+  const c=client(),[cr,ar]=await Promise.all([
    c.from("faq_categories").select("id,name,description,sort_order,is_active").order("sort_order").order("name"),
-   c.from("admin_content").select("id,title,body,published,approval_status,faq_category_id,sort_order,updated_at").eq("kind","faq").order("sort_order").order("updated_at",{ascending:false})
+   c.from("admin_content").select("id,title,body,published,approval_status,faq_category_id,sort_order,updated_at").eq("kind","faq").order("sort_order").order("created_at")
   ]);
   if(cr.error)throw cr.error;if(ar.error)throw ar.error;
-  categories=cr.data||[];articles=ar.data||[];
-  renderCategories();renderArticles();status("Beheer geladen. Gepubliceerde FAQ-artikelen worden rechtstreeks in het portaal getoond.");
-  return true;
+  categories=cr.data||[];articles=ar.data||[];orderDirty=false;
+  renderCategories();renderArticles();status("Beheer geladen. Wijzigingen worden direct gedeeld met het portaal na opslaan.");return true;
  }
  function renderCategories(){
   const list=$("faqCategoryList");
-  list.innerHTML=categories.length?'<table class="ticket-table"><thead><tr><th>Categorie</th><th>Status</th><th>Volgorde</th><th>Acties</th></tr></thead><tbody>'+categories.map(c=>'<tr><td><strong>'+esc(c.name)+'</strong><br><small>'+esc(c.description)+'</small></td><td>'+ (c.is_active?"Actief":"Verborgen")+'</td><td>'+Number(c.sort_order||0)+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-category-edit="'+c.id+'">Bewerken</button><button class="btn" type="button" data-faq-category-toggle="'+c.id+'">'+(c.is_active?"Verbergen":"Activeren")+'</button></div></td></tr>').join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-categorieën.</p>';
+  list.innerHTML=categories.length?'<table class="ticket-table"><thead><tr><th>Categorie</th><th>Status</th><th>Volgorde</th><th>Acties</th></tr></thead><tbody>'+categories.map(c=>'<tr><td><strong>'+esc(c.name)+'</strong><br><small>'+esc(c.description)+'</small></td><td>'+(c.is_active?"Actief":"Verborgen")+'</td><td>'+Number(c.sort_order||0)+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-category-edit="'+c.id+'">Bewerken</button><button class="btn" type="button" data-faq-category-toggle="'+c.id+'">'+(c.is_active?"Verbergen":"Activeren")+'</button><button class="btn danger" type="button" data-faq-category-delete="'+c.id+'">Verwijderen</button></div></td></tr>').join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-categorieën.</p>';
   const select=$("faqArticleForm").elements.faq_category_id;
   select.innerHTML='<option value="">Kies een categorie</option>'+categories.map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.is_active?"":" (verborgen)")+'</option>').join("");
  }
  function renderArticles(){
   const list=$("faqArticleList");
-  list.innerHTML=articles.length?'<table class="ticket-table"><thead><tr><th>Vraag</th><th>Categorie</th><th>Status</th><th>Publicatie</th><th>Acties</th></tr></thead><tbody>'+articles.map(a=>{const cat=categories.find(c=>c.id===a.faq_category_id);return '<tr><td><strong>'+esc(a.title)+'</strong><br><small>'+esc(a.body).slice(0,150)+'</small></td><td>'+esc(cat?.name||"Geen categorie")+'</td><td><span class="faq-state">'+esc(a.approval_status)+'</span></td><td>'+(a.published?"Gepubliceerd":"Niet gepubliceerd")+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-article-edit="'+a.id+'">Bewerken</button><button class="btn danger" type="button" data-faq-article-delete="'+a.id+'">Verwijderen</button></div></td></tr>';}).join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-artikelen.</p>';
+  list.innerHTML=articles.length?'<table class="ticket-table"><thead><tr><th>Volgorde</th><th>Vraag</th><th>Categorie</th><th>Status</th><th>Publicatie</th><th>Acties</th></tr></thead><tbody>'+articles.map(a=>{const cat=categories.find(c=>c.id===a.faq_category_id);return '<tr draggable="true" data-faq-id="'+a.id+'" data-faq-category="'+(a.faq_category_id||"")+'"><td><span class="faq-drag-handle" title="Sleep om te sorteren">⠿</span>'+Number(a.sort_order||0)+'</td><td><strong>'+esc(a.title)+'</strong><br><small>'+esc(a.body).slice(0,150)+'</small></td><td>'+esc(cat?.name||"Geen categorie")+'</td><td><span class="faq-state">'+esc(a.approval_status)+'</span></td><td>'+(a.published?"Gepubliceerd":"Niet gepubliceerd")+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-article-edit="'+a.id+'">Bewerken / verplaatsen</button><button class="btn danger" type="button" data-faq-article-delete="'+a.id+'">Verwijderen</button></div></td></tr>';}).join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-artikelen.</p>';
+  $("faqOrderSave").disabled=true;
  }
- function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;}
+ function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;$("faqCategoryDelete").disabled=true;$("faqCategoryDelete").dataset.categoryId="";}
  function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.approval_status.value="pending";f.elements.sort_order.value="0";f.hidden=true;}
- async function openPanel(){
-  $("adminListView").hidden=true;$("portalAdminPanel").hidden=true;$("faqManagementPanel").hidden=false;
-  try{await loadAll();}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)));}
- }
+ async function openPanel(){$("adminListView").hidden=true;$("portalAdminPanel").hidden=true;$("faqManagementPanel").hidden=false;try{await loadAll()}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)))}}
  $("faqManagementOpen")?.addEventListener("click",openPanel);
  $("faqManagementBack")?.addEventListener("click",()=>{$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;});
  $("faqCategoryReset")?.addEventListener("click",resetCategory);
@@ -4449,10 +4441,10 @@ document.addEventListener("hpmw:supabase-role",start);
  $("faqCategoryForm")?.addEventListener("submit",async e=>{
   e.preventDefault();if(!await isAdministrator()){status("Geen toegang.");return;}
   const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||"");
-  const payload={name:String(d.get("name")||"").trim(),description:String(d.get("description")||"").trim(),sort_order:Number(d.get("sort_order")||0),is_active:f.elements.is_active.checked};
-  if(!payload.name){status("Vul een categorienaam in.");return;}
-  const {data:sd}=await client().auth.getSession();payload.updated_by=sd.session.user.id;if(!id)payload.created_by=sd.session.user.id;
-  const result=id?await client().from("faq_categories").update(payload).eq("id",id):await client().from("faq_categories").insert(payload);
+  const p={name:String(d.get("name")||"").trim(),description:String(d.get("description")||"").trim(),sort_order:Number(d.get("sort_order")||0),is_active:f.elements.is_active.checked};
+  if(!p.name){status("Vul een categorienaam in.");return;}
+  const {data:sd}=await client().auth.getSession();p.updated_by=sd.session.user.id;if(!id)p.created_by=sd.session.user.id;
+  const result=id?await client().from("faq_categories").update(p).eq("id",id):await client().from("faq_categories").insert(p);
   if(result.error){status("Categorie opslaan mislukt: "+result.error.message);return;}
   resetCategory();await loadAll();
  });
@@ -4460,20 +4452,41 @@ document.addEventListener("hpmw:supabase-role",start);
   e.preventDefault();if(!await isAdministrator()){status("Geen toegang.");return;}
   const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"draft");
   const {data:sd}=await client().auth.getSession();
-  const payload={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
-  if(!payload.title||!payload.body||!payload.faq_category_id){status("Vul vraag, antwoord en categorie in.");return;}if(!id&&approval==="rejected"){status("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");return;}
-  if(!id){payload.created_by=sd.session.user.id;payload.submitted_by=sd.session.user.id;}
-  const result=id?await client().from("admin_content").update(payload).eq("id",id).eq("kind","faq"):await client().from("admin_content").insert(payload);
+  const p={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
+  if(!p.title||!p.body||!p.faq_category_id){status("Vul vraag, antwoord en categorie in.");return;}if(!id&&approval==="rejected"){status("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");return;}
+  if(!id){p.created_by=sd.session.user.id;p.submitted_by=sd.session.user.id;}
+  const result=id?await client().from("admin_content").update(p).eq("id",id).eq("kind","faq"):await client().from("admin_content").insert(p);
   if(result.error){status("FAQ opslaan mislukt: "+result.error.message);return;}
-  resetArticle();await loadAll();
+  resetArticle();await loadAll();status("FAQ opgeslagen en direct gesynchroniseerd met het portaal.");
+ });
+ $("faqOrderSave")?.addEventListener("click",async()=>{
+  if(!await isAdministrator()){status("Geen toegang.");return;}
+  const rows=[...$("faqArticleList").querySelectorAll("tbody tr[data-faq-id]")];
+  const grouped=new Map();for(const row of rows){const cat=row.dataset.faqCategory;if(!grouped.has(cat))grouped.set(cat,[]);grouped.get(cat).push(row.dataset.faqId);}
+  const c=client();let n=0;
+  for(const ids of grouped.values())for(let i=0;i<ids.length;i++){const {error}=await c.from("admin_content").update({sort_order:(i+1)*10}).eq("id",ids[i]).eq("kind","faq");if(error){status("Volgorde opslaan mislukt: "+error.message);return;}n++;}
+  await loadAll();status(n+" vragen opnieuw gerangschikt en gesynchroniseerd met het portaal.");
+ });
+ $("faqCategoryDelete")?.addEventListener("click",async()=>{
+  const id=$("faqCategoryDelete").dataset.categoryId;if(!id||!await isAdministrator())return;
+  if(articles.some(a=>a.faq_category_id===id)){status("Deze categorie bevat nog FAQ-vragen. Verplaats of verwijder eerst alle vragen uit deze categorie.");return;}
+  if(!confirm("Deze lege categorie definitief verwijderen?"))return;
+  const {error}=await client().from("faq_categories").delete().eq("id",id);if(error){status("Categorie verwijderen mislukt: "+error.message);return;}resetCategory();await loadAll();
  });
  document.addEventListener("click",async e=>{
   const t=e.target instanceof Element?e.target:null;if(!t)return;
-  const ce=t.closest("[data-faq-category-edit]");if(ce){if(!await isAdministrator()){status("Geen toegang.");return;}const c=categories.find(x=>x.id===ce.dataset.faqCategoryEdit);if(!c)return;const f=$("faqCategoryForm");f.elements.id.value=c.id;f.elements.name.value=c.name;f.elements.description.value=c.description||"";f.elements.sort_order.value=c.sort_order||0;f.elements.is_active.checked=!!c.is_active;return;}
-  const ct=t.closest("[data-faq-category-toggle]");if(ct){if(!await isAdministrator()){status("Geen toegang.");return;}const c=categories.find(x=>x.id===ct.dataset.faqCategoryToggle);if(!c)return;const {error}=await client().from("faq_categories").update({is_active:!c.is_active}).eq("id",c.id);if(error){status("Categorie wijzigen mislukt: "+error.message);return;}await loadAll();return;}
-  const ae=t.closest("[data-faq-article-edit]");if(ae){if(!await isAdministrator()){status("Geen toegang.");return;}const a=articles.find(x=>x.id===ae.dataset.faqArticleEdit);if(!a)return;const f=$("faqArticleForm");f.hidden=false;f.elements.id.value=a.id;f.elements.faq_category_id.value=a.faq_category_id||"";f.elements.title.value=a.title;f.elements.body.value=a.body;f.elements.approval_status.value=a.approval_status;f.elements.sort_order.value=a.sort_order||0;f.elements.published.checked=!!a.published;f.scrollIntoView({behavior:"smooth",block:"start"});return;}
-  const ad=t.closest("[data-faq-article-delete]");if(ad){if(!await isAdministrator()){status("Geen toegang.");return;}if(!confirm("Deze FAQ definitief verwijderen?"))return;const {error}=await client().from("admin_content").delete().eq("id",ad.dataset.faqArticleDelete).eq("kind","faq");if(error){status("Verwijderen mislukt: "+error.message);return;}await loadAll();}
+  const ce=t.closest("[data-faq-category-edit]");if(ce){if(!await isAdministrator())return;const c=categories.find(x=>x.id===ce.dataset.faqCategoryEdit);if(!c)return;const f=$("faqCategoryForm");f.elements.id.value=c.id;f.elements.name.value=c.name;f.elements.description.value=c.description||"";f.elements.sort_order.value=c.sort_order||0;f.elements.is_active.checked=!!c.is_active;$("faqCategoryDelete").disabled=false;$("faqCategoryDelete").dataset.categoryId=c.id;f.scrollIntoView({behavior:"smooth",block:"center"});return;}
+  const ct=t.closest("[data-faq-category-toggle]");if(ct){if(!await isAdministrator())return;const c=categories.find(x=>x.id===ct.dataset.faqCategoryToggle);if(!c)return;const {error}=await client().from("faq_categories").update({is_active:!c.is_active}).eq("id",c.id);if(error){status("Categorie wijzigen mislukt: "+error.message);return;}await loadAll();return;}
+  const cd=t.closest("[data-faq-category-delete]");if(cd){const id=cd.dataset.faqCategoryDelete;if(!await isAdministrator())return;if(articles.some(a=>a.faq_category_id===id)){status("Verplaats of verwijder eerst alle vragen uit deze categorie.");return;}if(!confirm("Deze lege categorie definitief verwijderen?"))return;const {error}=await client().from("faq_categories").delete().eq("id",id);if(error){status("Categorie verwijderen mislukt: "+error.message);return;}await loadAll();return;}
+  const ae=t.closest("[data-faq-article-edit]");if(ae){if(!await isAdministrator())return;const a=articles.find(x=>x.id===ae.dataset.faqArticleEdit);if(!a)return;const f=$("faqArticleForm");f.hidden=false;f.elements.id.value=a.id;f.elements.faq_category_id.value=a.faq_category_id||"";f.elements.title.value=a.title;f.elements.body.value=a.body;f.elements.approval_status.value=a.approval_status;f.elements.sort_order.value=a.sort_order||0;f.elements.published.checked=!!a.published;f.scrollIntoView({behavior:"smooth",block:"start"});return;}
+  const ad=t.closest("[data-faq-article-delete]");if(ad){if(!await isAdministrator())return;if(!confirm("Deze FAQ definitief verwijderen?"))return;const {error}=await client().from("admin_content").delete().eq("id",ad.dataset.faqArticleDelete).eq("kind","faq");if(error){status("Verwijderen mislukt: "+error.message);return;}await loadAll();}
  });
+ let dragged=null;
+ document.addEventListener("dragstart",e=>{const row=e.target.closest?.("#faqArticleList tr[data-faq-id]");if(!row)return;dragged=row;row.classList.add("faq-dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",row.dataset.faqId);});
+ document.addEventListener("dragover",e=>{const row=e.target.closest?.("#faqArticleList tr[data-faq-id]");if(!row||!dragged||row===dragged||row.dataset.faqCategory!==dragged.dataset.faqCategory)return;e.preventDefault();row.classList.add("faq-drop-target");});
+ document.addEventListener("dragleave",e=>{const row=e.target.closest?.("#faqArticleList tr[data-faq-id]");row?.classList.remove("faq-drop-target");});
+ document.addEventListener("drop",e=>{const row=e.target.closest?.("#faqArticleList tr[data-faq-id]");if(!row||!dragged||row===dragged||row.dataset.faqCategory!==dragged.dataset.faqCategory)return;e.preventDefault();const body=row.parentElement;const rect=row.getBoundingClientRect();body.insertBefore(dragged,e.clientY<rect.top+rect.height/2?row:row.nextSibling);row.classList.remove("faq-drop-target");orderDirty=true;$("faqOrderSave").disabled=false;status("Volgorde aangepast. Klik op ‘Volgorde opslaan’ om te synchroniseren.");});
+ document.addEventListener("dragend",()=>{dragged?.classList.remove("faq-dragging");document.querySelectorAll("#faqArticleList .faq-drop-target").forEach(x=>x.classList.remove("faq-drop-target"));dragged=null;});
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
