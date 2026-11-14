@@ -6440,3 +6440,31 @@ iframe[src*="adservice"],iframe[name*="google_ads"],iframe[id*="google_ads"]{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
+
+
+<style id="hpmw-ticketbeheer-banner-image-20261114">
+/* Vervang de bestaande Ticketbeheer-kopbanner door de aangeleverde afbeelding. */
+#adminView>.page-head{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  min-height:clamp(110px,18vw,190px)!important;
+  height:clamp(110px,18vw,190px)!important;
+  padding:10px 14px!important;
+  border:0!important;
+  border-radius:13px!important;
+  background-color:transparent!important;
+  background-image:url("https://i44.servimg.com/u/f44/11/48/74/42/ticket12.png")!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+  box-shadow:none!important;
+}
+#adminView>.page-head>div{display:none!important}
+#adminView>.page-head>button{position:absolute!important;right:12px!important;bottom:12px!important}
+@media(max-width:600px){
+  #adminView>.page-head{min-height:100px!important;height:100px!important;padding:6px!important}
+  #adminView>.page-head>button{right:8px!important;bottom:8px!important}
+}
+</style>
