@@ -57,9 +57,14 @@
   }
 
   async function audit(key, eventType, eventData) {
+    const cfg = config();
+    const token = await window.hpmwGetSupabaseAccessToken();
+    const userResponse = await fetch(cfg.url + "/auth/v1/user", { headers: { apikey: cfg.anonKey, Authorization: "Bearer " + token }, cache: "no-store" });
+    if (!userResponse.ok) throw new Error("Supabase-gebruiker kon niet worden gecontroleerd.");
+    const authUser = await userResponse.json();
     await request(EVENTS, {
       method: "POST",
-      body: { ticket_key: key, event_type: eventType, event_data: eventData || {} }
+      body: { ticket_key: key, event_type: eventType, event_data: eventData || {}, actor_user_id: authUser.id }
     });
   }
 
