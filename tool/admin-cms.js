@@ -15,7 +15,7 @@
  #adminCmsView .cms-item{padding:12px;border:1px solid #26364c;border-radius:10px;margin:8px 0;display:flex;gap:10px;align-items:center;justify-content:space-between}
  #adminCmsView .cms-item small{display:block;color:#91a0b5} #adminCmsView .cms-pin{color:#e5d88c;font-size:11px;font-weight:800}
  #adminCmsView .cms-perm{display:grid;grid-template-columns:1fr repeat(4,70px);gap:8px;align-items:center;padding:9px;border-bottom:1px solid #26364c}
- #adminCmsView .cms-status{color:#91a0b5;min-height:24px}
+ #adminCmsView .cms-status{color:#91a0b5;min-height:24px}\n #adminCmsView .cms-help{color:#9eacbd;font-size:12px;line-height:1.5}\n #adminCmsView .cms-category-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #26364c}\n #adminCmsView .cms-category-row strong{flex:1;min-width:120px}\n #adminCmsView [hidden]{display:none!important}\n #adminCmsView .cms-panel h2,#adminCmsView .cms-panel h3{letter-spacing:-.01em}
  @media(max-width:760px){#adminCmsView .cms-grid{grid-template-columns:1fr}#adminCmsView .cms-perm{grid-template-columns:1fr repeat(4,42px);font-size:11px}}
  `;
  function go(id){document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const v=$("#"+id);if(v){v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important")}window.scrollTo(0,0)}
