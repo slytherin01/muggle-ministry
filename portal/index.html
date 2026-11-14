@@ -4952,6 +4952,47 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 }
 </style>
 
+
+<script id="hpmw-faq-supabase-live">
+(()=>{"use strict";
+ const API="https://vuaajsjjluwgqmneinds.supabase.co/rest/v1",KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
+ const headers={apikey:KEY,Authorization:"Bearer "+KEY};
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const host=()=>document.getElementById("hpmwFaqCategories"),out=()=>document.getElementById("hpmwFaqCategoryContent");
+ let categories=[],articles=[],selected=null;
+ async function load(){
+  const target=host();if(!target)return;
+  target.innerHTML='<div class="loading">FAQ-categorieën laden…</div>';
+  try{
+   const [cr,ar]=await Promise.all([
+    fetch(API+"/faq_categories?select=id,name,description,sort_order&is_active=eq.true&order=sort_order.asc,name.asc",{headers,cache:"no-store"}),
+    fetch(API+"/admin_content?select=id,title,body,faq_category_id,sort_order,updated_at&kind=eq.faq&published=eq.true&order=sort_order.asc,updated_at.desc",{headers,cache:"no-store"})
+   ]);
+   if(!cr.ok||!ar.ok)throw new Error("De FAQ kon niet worden opgehaald.");
+   categories=await cr.json();articles=await ar.json();renderCategories();
+  }catch(err){target.innerHTML='<div class="empty">'+esc(err.message||"FAQ laden mislukt.")+'</div>'}
+ }
+ function renderCategories(){
+  const target=host();if(!target)return;
+  target.innerHTML=categories.length?categories.map(c=>'<button class="cat" type="button" data-faq-category="'+c.id+'" aria-pressed="'+(selected===c.id)+'"><span class="round-icon"><i class="fa-solid fa-circle-question"></i></span><span><strong>'+esc(c.name)+'</strong><span>'+esc(c.description||"Bekijk de veelgestelde vragen in deze categorie")+'</span></span></button>').join(""):'<div class="empty">Er zijn nog geen FAQ-categorieën gepubliceerd.</div>';
+  if(selected&&!categories.some(c=>c.id===selected))selected=null;
+  if(!selected&&categories.length)selected=categories[0].id;
+  if(selected)renderArticles();else if(out())out().innerHTML='<div class="empty">Selecteer een categorie om de artikelen te bekijken.</div>';
+ }
+ function renderArticles(){
+  const target=out();if(!target)return;
+  const rows=articles.filter(a=>a.faq_category_id===selected);
+  target.style.display="block";
+  target.innerHTML=rows.length?rows.map(a=>'<article class="hpmw-cms-card"><h3 class="hpmw-cms-title">'+esc(a.title)+'</h3><p class="hpmw-cms-body">'+esc(a.body).replace(/\n/g,"<br>")+'</p></article>').join(""):'<div class="empty">In deze categorie staan nog geen gepubliceerde vragen.</div>';
+  host()?.querySelectorAll("[data-faq-category]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.faqCategory===selected)));
+ }
+ document.addEventListener("click",e=>{const b=e.target.closest("#hpmwFaqCategories [data-faq-category]");if(!b)return;selected=b.dataset.faqCategory;renderArticles()});
+ document.addEventListener("hpmw:portal-role",()=>{if(document.getElementById("faqView"))load()});
+ const start=()=>{load();const back=document.getElementById("faqBack");back?.addEventListener("click",()=>window.hpmwShowPortalView?.("homeView"));};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
+
 </body></html>
 
 
@@ -6305,14 +6346,14 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
   const visibleTabs=(canNews()?tab("news",tr("news")):"")+(isAdmin()?tab("faq","Manage FAQ")+tab("translations",tr("translations"))+tab("maintenance",tr("maintenance"))+tab("decoration",tr("decoration"))+tab("roles",tr("roles")):"");
   body.innerHTML='<div class="hpmw-admin-workspace"><nav class="hpmw-admin-tabs" role="tablist" aria-label="Portal administration">'+visibleTabs+'</nav>'+
    (canNews()?panel("news",tr("news"),tr("newsDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwWorkspaceNewsNew">＋ '+tr("new")+'</button><button type="button" class="hpmw-manage-btn" id="hpmwWorkspaceNewsRefresh">'+tr("refresh")+'</button></div><div id="hpmwWorkspaceNewsList" class="hpmw-admin-muted">'+tr("loading")+'</div><div id="hpmwWorkspaceNewsEditor"></div><p id="hpmwWorkspaceNewsStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
-   (isAdmin()?panel("faq","Manage FAQ","Beheer de categorieën en artikelen van de portaal-FAQ en forum-FAQ.",'<div class="hpmw-admin-card"><h4>FAQ-categorieën</h4><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" disabled>＋ Categorie toevoegen</button><button type="button" class="hpmw-manage-btn" disabled>↕ Volgorde aanpassen</button></div><p class="hpmw-admin-muted">De FAQ-pagina toont alleen de categorieknoppen Portaal en Forum. De artikelen en beheeracties worden beschikbaar zodra de FAQ-tabellen en bestaande FAQ-rechten aan dit menu zijn gekoppeld.</p></div>'):"")+\n   (isAdmin()?panel("translations",tr("translations"),tr("transDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="'+tr("search")+'"><button type="button" class="hpmw-manage-btn" id="hpmwTranslationRefresh">'+tr("refresh")+'</button></div><div id="hpmwTranslationTable">'+tr("loading")+'</div><p id="hpmwTranslationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
+   (isAdmin()?panel("faq","Manage FAQ","Beheer de categorieën en artikelen van de portaal-FAQ en forum-FAQ.",'<div class="hpmw-admin-card"><h4>FAQ-categorieën</h4><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqNewCategory">＋ Categorie toevoegen</button><button type="button" class="hpmw-manage-btn" id="hpmwFaqRefresh">Vernieuwen</button></div><div id="hpmwFaqCategoryAdmin" class="hpmw-admin-muted">Laden…</div><div id="hpmwFaqCategoryEditor"></div><hr style="border-color:#344b67;margin:20px 0"><h4>FAQ-artikelen</h4><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn primary" id="hpmwFaqNewArticle">＋ Vraag toevoegen</button><select id="hpmwFaqFilterCategory"><option value="">Alle categorieën</option></select><select id="hpmwFaqFilterStatus"><option value="all">Alle statussen</option><option value="published">Gepubliceerd</option><option value="draft">Concept</option></select></div><div id="hpmwFaqArticleList" class="hpmw-admin-muted">Laden…</div><div id="hpmwFaqArticleEditor"></div><p id="hpmwFaqStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+\n   (isAdmin()?panel("translations",tr("translations"),tr("transDesc"),'<div class="hpmw-admin-card"><div class="hpmw-admin-row"><input id="hpmwTranslationSearch" placeholder="'+tr("search")+'"><button type="button" class="hpmw-manage-btn" id="hpmwTranslationRefresh">'+tr("refresh")+'</button></div><div id="hpmwTranslationTable">'+tr("loading")+'</div><p id="hpmwTranslationStatus" class="hpmw-admin-status" aria-live="polite"></p></div>'):"")+
    (isAdmin()?panel("maintenance",tr("maintenance"),tr("maintDesc"),'<div id="hpmwWorkspaceMaintenance">'+tr("loading")+'</div><p id="hpmwMaintenanceStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
    (isAdmin()?panel("decoration",tr("decoration"),tr("decoDesc"),'<div id="hpmwWorkspaceDecoration">'+tr("loading")+'</div><p id="hpmwDecorationStatus" class="hpmw-admin-status" aria-live="polite"></p>'):"")+
    (isAdmin()?panel("roles",tr("roles"),tr("rolesDesc"),'<div class="hpmw-admin-card"><h3>'+tr("rights")+'</h3>'+legacyRolesHTML+'</div><div class="hpmw-admin-card"><h3>'+tr("preview")+'</h3><p class="hpmw-admin-muted">'+tr("previewHint")+'</p><div class="hpmw-admin-row"><select id="hpmwRolePreview"><option value="">Administrator</option><option value="user">Gebruiker / User</option><option value="guest">Gast / Guest</option><option value="support_moderator">Support moderator</option><option value="supervisor_support_team">Supervisor supportteam</option><option value="news_poster">Nieuwsposter / News poster</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option></select><button type="button" class="hpmw-manage-btn" id="hpmwRolePreviewRestore">'+tr("restore")+'</button></div><p id="hpmwRolePreviewStatus" class="hpmw-admin-status">'+tr("previewOff")+'</p></div>'):"")+
   '</div>';
   if(!activeTab||!allowed(activeTab))activeTab=canNews()?"news":"translations";
   switchTab(activeTab);
-  if(isAdmin()){loadMaintenance();loadDecoration();loadTranslations()}
+  if(isAdmin()){loadMaintenance();loadDecoration();loadTranslations();loadFaqAdmin()}
   if(canNews())loadNews();
  }
  function switchTab(id){
@@ -6353,6 +6394,36 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
   const rows=translationRows.filter(r=>[r.translation_key,r.nl,r.en,r.pt].some(v=>String(v||"").toLowerCase().includes(q)));
   host.innerHTML='<div class="hpmw-admin-scroll"><table class="hpmw-admin-table"><thead><tr><th>Sleutel</th><th>Nederlands (NL)</th><th>English (EN)</th><th>Português (PT)</th><th></th></tr></thead><tbody>'+rows.map(r=>'<tr data-translation-row="'+esc(r.translation_key)+'"><td><code>'+esc(r.translation_key)+'</code></td>'+["nl","en","pt"].map(l=>'<td><textarea data-lang="'+l+'" rows="2">'+esc(r[l]||"")+'</textarea></td>').join("")+'<td><button type="button" class="hpmw-manage-btn" data-translation-save="'+esc(r.translation_key)+'">'+tr("save")+'</button></td></tr>').join("")+'</tbody></table></div><p class="hpmw-admin-muted">'+rows.length+' / '+translationRows.length+'</p>';
  }
+
+ let faqCategories=[],faqArticles=[];
+ const faqStatus=(msg,bad=false)=>{const n=document.getElementById("hpmwFaqStatus");if(n){n.textContent=msg;n.classList.toggle("error",bad)}};
+ async function loadFaqAdmin(){
+  if(!isAdmin()||!client())return;
+  const [cats,articles]=await Promise.all([
+   client().from("faq_categories").select("id,name,description,sort_order,is_active").order("sort_order").order("name"),
+   client().from("admin_content").select("id,title,body,faq_category_id,published,sort_order,updated_at").eq("kind","faq").order("sort_order").order("created_at",{ascending:false})
+  ]);
+  if(cats.error||articles.error){faqStatus("FAQ laden mislukt: "+(cats.error||articles.error).message,true);return}
+  faqCategories=cats.data||[];faqArticles=articles.data||[];renderFaqAdmin();
+ }
+ function renderFaqAdmin(){
+  const catHost=document.getElementById("hpmwFaqCategoryAdmin"),list=document.getElementById("hpmwFaqArticleList"),filter=document.getElementById("hpmwFaqFilterCategory");
+  if(!catHost||!list)return;
+  const selected=filter?.value||"";
+  catHost.innerHTML=faqCategories.length?faqCategories.map(c=>'<article class="hpmw-admin-news-item"><div><strong>'+esc(c.name)+'</strong><small>'+(c.is_active?"Actief":"Verborgen")+' · volgorde '+Number(c.sort_order||0)+'</small><small>'+esc(c.description||"")+'</small></div><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" data-faq-category-edit="'+c.id+'">Bewerken</button><button type="button" class="hpmw-manage-btn" data-faq-category-delete="'+c.id+'">Verwijderen</button></div></article>').join(""):'<p class="hpmw-admin-muted">Nog geen categorieën. Voeg bijvoorbeeld Portaal en Forum toe.</p>';
+  if(filter){filter.innerHTML='<option value="">Alle categorieën</option>'+faqCategories.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");filter.value=selected}
+  const statusFilter=document.getElementById("hpmwFaqFilterStatus")?.value||"all";
+  const visible=faqArticles.filter(a=>(!selected||a.faq_category_id===selected)&&(statusFilter==="all"||(statusFilter==="published"?a.published:!a.published)));
+  list.innerHTML=visible.length?visible.map(a=>'<article class="hpmw-admin-news-item"><div><strong>'+esc(a.title)+'</strong><small>'+esc(faqCategories.find(c=>c.id===a.faq_category_id)?.name||"Geen categorie")+' · '+(a.published?"Gepubliceerd":"Concept")+'</small></div><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" data-faq-article-edit="'+a.id+'">Bewerken</button><button type="button" class="hpmw-manage-btn" data-faq-article-delete="'+a.id+'">Verwijderen</button></div></article>').join(""):'<p class="hpmw-admin-muted">Geen FAQ-artikelen in deze selectie.</p>';
+ }
+ function editFaqCategory(c={}){
+  const host=document.getElementById("hpmwFaqCategoryEditor");if(!host)return;
+  host.innerHTML='<form id="hpmwFaqCategoryForm" class="hpmw-admin-card"><h4>'+(c.id?"Categorie bewerken":"Nieuwe categorie")+'</h4><label class="hpmw-admin-field">Naam<input name="name" maxlength="100" required value="'+esc(c.name||"")+'"></label><label class="hpmw-admin-field">Beschrijving<textarea name="description">'+esc(c.description||"")+'</textarea></label><div class="hpmw-admin-grid"><label class="hpmw-admin-field">Volgorde<input name="sort_order" type="number" value="'+Number(c.sort_order||0)+'"></label><label class="hpmw-admin-field"><span><input name="is_active" type="checkbox" '+(c.is_active!==false?"checked":"")+'> Actief tonen</span></label></div><input type="hidden" name="id" value="'+esc(c.id||"")+'"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" id="hpmwFaqCategoryCancel">Annuleren</button><button type="submit" class="hpmw-manage-btn primary">Categorie opslaan</button></div></form>';
+ }
+ function editFaqArticle(a={}){
+  const host=document.getElementById("hpmwFaqArticleEditor");if(!host)return;
+  host.innerHTML='<form id="hpmwFaqArticleForm" class="hpmw-admin-card"><h4>'+(a.id?"FAQ bewerken":"Nieuwe FAQ-vraag")+'</h4><label class="hpmw-admin-field">Categorie<select name="faq_category_id" required><option value="">Kies een categorie</option>'+faqCategories.map(c=>'<option value="'+c.id+'" '+(a.faq_category_id===c.id?"selected":"")+'>'+esc(c.name)+'</option>').join("")+'</select></label><label class="hpmw-admin-field">Vraag / titel<input name="title" maxlength="180" required value="'+esc(a.title||"")+'"></label><label class="hpmw-admin-field">Antwoord<textarea name="body" required>'+esc(a.body||"")+'</textarea></label><label class="hpmw-admin-field">Publicatie<select name="published"><option value="false" '+(!a.published?"selected":"")+'>Concept</option><option value="true" '+(a.published?"selected":"")+'>Gepubliceerd</option></select></label><input type="hidden" name="id" value="'+esc(a.id||"")+'"><div class="hpmw-admin-row"><button type="button" class="hpmw-manage-btn" id="hpmwFaqArticleCancel">Annuleren</button><button type="submit" class="hpmw-manage-btn primary">FAQ opslaan</button></div></form>';
+ }
  async function loadNews(){
   const host=document.getElementById("hpmwWorkspaceNewsList");if(!host||!client())return;
   const {data,error}=await client().from("admin_content").select("id,title,body,author,source,published,is_pinned,created_at").eq("kind","news").order("created_at",{ascending:false}).limit(100);
@@ -6378,6 +6449,16 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  }
  body.addEventListener("click",async e=>{
   const tab=e.target.closest("[data-admin-tab]");if(tab){switchTab(tab.dataset.adminTab);return}
+
+  if(e.target.closest("#hpmwFaqNewCategory")){if(isAdmin()&&!previewRole)editFaqCategory();return}
+  if(e.target.closest("#hpmwFaqNewArticle")){if(isAdmin()&&!previewRole)editFaqArticle();return}
+  if(e.target.closest("#hpmwFaqRefresh")){if(isAdmin()&&!previewRole)await loadFaqAdmin();return}
+  if(e.target.closest("#hpmwFaqCategoryCancel")){document.getElementById("hpmwFaqCategoryEditor").innerHTML="";return}
+  if(e.target.closest("#hpmwFaqArticleCancel")){document.getElementById("hpmwFaqArticleEditor").innerHTML="";return}
+  const ce=e.target.closest("[data-faq-category-edit]");if(ce&&!previewRole){editFaqCategory(faqCategories.find(c=>c.id===ce.dataset.faqCategoryEdit));return}
+  const cd=e.target.closest("[data-faq-category-delete]");if(cd&&!previewRole){const c=faqCategories.find(x=>x.id===cd.dataset.faqCategoryDelete);if(!confirm('Categorie "'+(c?.name||"")+'" verwijderen? FAQ-artikelen blijven bestaan zonder categorie.'))return;const {error}=await client().from("faq_categories").delete().eq("id",cd.dataset.faqCategoryDelete);faqStatus(error?error.message:"Categorie verwijderd.");if(!error)await loadFaqAdmin();return}
+  const ae=e.target.closest("[data-faq-article-edit]");if(ae&&!previewRole){editFaqArticle(faqArticles.find(a=>String(a.id)===ae.dataset.faqArticleEdit));return}
+  const ad=e.target.closest("[data-faq-article-delete]");if(ad&&!previewRole){if(!confirm("Deze FAQ-vraag verwijderen?"))return;const {error}=await client().from("admin_content").delete().eq("id",ad.dataset.faqArticleDelete).eq("kind","faq");faqStatus(error?error.message:"FAQ verwijderd.");if(!error)await loadFaqAdmin();return}
   if(e.target.closest("#hpmwWorkspaceNewsNew")){if(!canNews()||previewRole)return;editNews();return}
   if(e.target.closest("#hpmwWorkspaceNewsRefresh")){if(!previewRole)await loadNews();return}
   if(e.target.closest("#hpmwWorkspaceNewsCancel")){document.getElementById("hpmwWorkspaceNewsEditor").innerHTML="";return}
@@ -6388,9 +6469,12 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
   if(e.target.closest("#hpmwRolePreviewRestore")){if(!isAdmin())return;previewRole=null;refreshPreview();switchTab("roles")}
  });
  body.addEventListener("input",e=>{if(e.target.id==="hpmwTranslationSearch")renderTranslations()});
- body.addEventListener("change",e=>{if(e.target.id==="hpmwRolePreview"&&isAdmin()){previewRole=e.target.value||null;refreshPreview()}});
+ body.addEventListener("change",e=>{if(e.target.id==="hpmwFaqFilterCategory"||e.target.id==="hpmwFaqFilterStatus")renderFaqAdmin();if(e.target.id==="hpmwRolePreview"&&isAdmin()){previewRole=e.target.value||null;refreshPreview()}});
  body.addEventListener("submit",async e=>{
   const form=e.target;if(previewRole){e.preventDefault();return}
+
+  if(form.id==="hpmwFaqCategoryForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),id=fd.get("id"),payload={name:String(fd.get("name")||"").trim(),description:fd.get("description")||"",sort_order:Number(fd.get("sort_order")||0),is_active:fd.has("is_active"),updated_by:access().session.user.id};const q=id?client().from("faq_categories").update(payload).eq("id",id):client().from("faq_categories").insert({...payload,created_by:access().session.user.id});const {error}=await q;faqStatus(error?error.message:"Categorie opgeslagen.",!!error);if(!error){document.getElementById("hpmwFaqCategoryEditor").innerHTML="";await loadFaqAdmin()}return}
+  if(form.id==="hpmwFaqArticleForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),id=fd.get("id"),payload={kind:"faq",title:String(fd.get("title")||"").trim(),body:fd.get("body")||"",faq_category_id:fd.get("faq_category_id"),published:fd.get("published")==="true",updated_by:access().session.user.id};const q=id?client().from("admin_content").update(payload).eq("id",id).eq("kind","faq"):client().from("admin_content").insert({...payload,created_by:access().session.user.id});const {error}=await q;faqStatus(error?error.message:"FAQ opgeslagen.",!!error);if(!error){document.getElementById("hpmwFaqArticleEditor").innerHTML="";await loadFaqAdmin()}return}
   if(form.id==="hpmwWorkspaceMaintenanceForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),w={id:1,maintenance_enabled:fd.has("maintenance_enabled"),countdown_enabled:fd.has("countdown_enabled")};["nl","en","pt"].forEach(l=>{w["maintenance_text_"+l]=fd.get("maintenance_text_"+l)||"";w["countdown_title_"+l]=fd.get("countdown_title_"+l)||""});const target=fd.get("countdown_target");w.countdown_target=target?new Date(target).toISOString():null;const {error}=await client().from("portal_widgets").upsert(w,{onConflict:"id"});status("hpmwMaintenanceStatus",error?error.message:tr("save")+" ✓",!!error);return}
   if(form.id==="hpmwWorkspaceDecorationForm"){e.preventDefault();if(!isAdmin())return;const fd=new FormData(form),fx={id:1};["snow","fireworks","pumpkins","greeting"].forEach(k=>fx[k]=fd.has("effect_"+k));fx.year=fd.get("effect_year")||"";const {error}=await client().from("portal_effects_settings").upsert(fx,{onConflict:"id"});status("hpmwDecorationStatus",error?error.message:tr("save")+" ✓",!!error);return}
   if(form.id==="hpmwWorkspaceNewsForm"){e.preventDefault();if(!canNews())return;const fd=new FormData(form),id=fd.get("id"),payload={kind:"news",title:fd.get("title"),body:fd.get("body"),author:fd.get("author"),source:fd.get("source"),published:fd.get("published")==="true",is_pinned:fd.has("is_pinned"),updated_by:access().session.user.id};const q=id?client().from("admin_content").update(payload).eq("id",id).eq("kind","news"):client().from("admin_content").insert({...payload,created_by:access().session.user.id});const {error}=await q;status("hpmwWorkspaceNewsStatus",error?error.message:tr("save")+" ✓",!!error);if(!error){document.getElementById("hpmwWorkspaceNewsEditor").innerHTML="";loadNews()}return}
