@@ -1553,7 +1553,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
     <input name="user_id" placeholder="Supabase User UUID" required>
     <input name="forumotion_user_id" type="number" min="1" placeholder="Forumotion gebruikers-ID" required>
     <input name="forum_username" placeholder="Forumotion gebruikersnaam" required>
-    <select name="role"><option value="administrator">Administrator</option><option value="support_moderator">Support moderator</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option><option value="faq_moderator">FAQ-moderator</option><option value="guest">Gast</option><option value="member">Lid</option></select>
+    <select name="role"><option value="administrator">Administrator</option><option value="support_moderator">Support moderator</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option><option value="guest">Gast</option><option value="member">Lid</option></select>
     <button class="btn primary" type="submit">Koppelen / opslaan</button>
    </form>
    <h3 style="margin-top:24px">Gebruikers en rollen</h3><div id="portalAdminUsers">Laden…</div>
@@ -1583,7 +1583,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
    <label>Categorie<select name="faq_category_id" required></select></label>
    <label>Vraag<input name="title" maxlength="240" required placeholder="Veelgestelde vraag"></label>
    <label style="grid-column:1/-1">Antwoord<textarea name="body" rows="5" required placeholder="Schrijf hier het antwoord…"></textarea></label>
-   <label>Status<select name="approval_status"><option value="draft">Concept</option><option value="pending">In afwachting</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select></label>
+   <label>Status<select name="approval_status"><option value="pending" selected>In afwachting</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select></label>
    <label>Volgorde<input name="sort_order" type="number" min="0" step="1" value="0"></label>
    <label style="display:flex;align-items:center;gap:8px"><input name="published" type="checkbox"> Publiceren in portaal</label>
    <div style="display:flex;gap:8px;align-items:end"><button class="btn primary" type="submit">FAQ opslaan</button><button class="btn" id="faqArticleCancel" type="button">Annuleren</button></div>
@@ -4436,7 +4436,7 @@ document.addEventListener("hpmw:supabase-role",start);
   list.innerHTML=articles.length?'<table class="ticket-table"><thead><tr><th>Vraag</th><th>Categorie</th><th>Status</th><th>Publicatie</th><th>Acties</th></tr></thead><tbody>'+articles.map(a=>{const cat=categories.find(c=>c.id===a.faq_category_id);return '<tr><td><strong>'+esc(a.title)+'</strong><br><small>'+esc(a.body).slice(0,150)+'</small></td><td>'+esc(cat?.name||"Geen categorie")+'</td><td><span class="faq-state">'+esc(a.approval_status)+'</span></td><td>'+(a.published?"Gepubliceerd":"Niet gepubliceerd")+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-article-edit="'+a.id+'">Bewerken</button><button class="btn danger" type="button" data-faq-article-delete="'+a.id+'">Verwijderen</button></div></td></tr>';}).join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-artikelen.</p>';
  }
  function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;}
- function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.sort_order.value="0";f.hidden=true;}
+ function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.approval_status.value="pending";f.elements.sort_order.value="0";f.hidden=true;}
  async function openPanel(){
   $("adminListView").hidden=true;$("portalAdminPanel").hidden=true;$("faqManagementPanel").hidden=false;
   try{await loadAll();}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)));}
