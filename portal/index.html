@@ -1918,7 +1918,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 @media(max-width:700px){#hpmwManageLayer .hpmw-manage-card{width:98vw!important;max-width:98vw!important;height:94vh!important;max-height:94vh!important}#hpmwManageLayer .hpmw-manage-body{padding:14px!important}.hpmw-admin-overview-grid{grid-template-columns:1fr}#hpmwManageBody .hpmw-role-row{grid-template-columns:1fr}.hpmw-admin-tab{flex:1 1 auto}}
 </style></head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <button class="lux-nav-item" id="adminLaunch" type="button" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Ticket - Admin</span></button>
-<button class="lux-nav-item" id="portalManageLaunch" type="button" aria-haspopup="dialog" onclick="if(window.HpmwOpenPortalAdmin){window.HpmwOpenPortalAdmin();}else{var p=document.getElementById('hpmwManageLayer');if(p){p.classList.add('open');p.setAttribute('aria-hidden','false');var b=document.getElementById('hpmwManageBody');if(b)b.innerHTML='<div class=&quot;hpmw-manage-status&quot;>Beheerfunctie wordt geladen. Vernieuw de pagina en probeer opnieuw.</div>';}}"><span class="lux-nav-icon"><i class="fa-solid fa-user-shield"></i></span><span class="lux-nav-label">Portal - Admin</span></button><label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
+<button class="lux-nav-item" id="portalManageLaunch" type="button" aria-haspopup="dialog"><span class="lux-nav-icon"><i class="fa-solid fa-user-shield"></i></span><span class="lux-nav-label">Portal - Admin</span></button><label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
 <a href="LINK_URL_HIER"><img src="IMAGE_URL_HIER" alt="Beschrijving afbeelding" style="max-width:100%;height:auto;display:block;margin:0 auto;"></a>
 -->
@@ -6391,15 +6391,9 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 .hpmw-admin-news-item strong{display:block}.hpmw-admin-news-item small{color:#aebed0}
 @media(max-width:760px){#hpmwManageLayer .hpmw-manage-card{width:100%!important;max-width:100%!important;height:96vh!important;max-height:96vh!important}#hpmwManageLayer .hpmw-manage-body{padding:14px!important}.hpmw-admin-grid{grid-template-columns:1fr}.hpmw-admin-news-item{align-items:flex-start;flex-direction:column}}
 </style>
-<script id="hpmw-portal-admin-workspace-v1-disabled">/* Uitgeschakeld; Portal Admin wordt uitsluitend opgebouwd door hpmw-unified-portal-rbac. */</script>
-
-
 <style id="hpmw-admin-role-visibility-v2">
 #portalManageLaunch[hidden],#adminLaunch[hidden]{display:none!important}
 </style>
-<script id="hpmw-admin-role-visibility-v2">/* Vervangen door de centrale navigatierechtencontrole. */</script>
-
-
 <style id="hpmw-hide-empty-ad-blocks">
 /* Verberg lege advertentievakken die als witte vlakken op de portal verschijnen. */
 iframe[src*="doubleclick.net"],iframe[src*="googlesyndication.com"],iframe[src*="googleadservices.com"],
@@ -6620,30 +6614,6 @@ html body main.shell>.view>.hpmw-section-title .subtitle{margin:4px 0 0!importan
 #faqView .hpmw-faq-categories .cat{min-height:110px!important}
 @media(max-width:650px){#faqView .hpmw-internal-faq{padding:13px!important}#faqView .hpmw-faq-categories{grid-template-columns:1fr!important}}
 </style>
-<script id="hpmw-navigation-recovery-final-js">
-(()=>{"use strict";
- function bind(){
-  const p=document.getElementById("portalManageLaunch");
-  if(p&&typeof window.HpmwOpenPortalAdmin==="function"&&!p.dataset.directPortalAdmin){
-   p.dataset.directPortalAdmin="1";
-   p.addEventListener("click",e=>{e.preventDefault();window.HpmwOpenPortalAdmin()});
-  }
-  const t=document.getElementById("adminLaunch");
-  const account=document.getElementById("accountLink");
-  const href=account?.getAttribute("href")||"";
-  const isLogged=/^\/u\d+/.test(href);
-  if(t&&isLogged){
-   t.hidden=false;t.removeAttribute("aria-hidden");
-   t.style.setProperty("display","inline-flex","important");
-   t.style.setProperty("pointer-events","auto","important");
-  }
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind);else bind();
- window.addEventListener("pageshow",bind);
- let n=0;const timer=setInterval(()=>{bind();if(++n>60)clearInterval(timer)},500);
-})();
-</script>
-
 <style id="hpmw-navigation-single-source-final">
 html body header.topbar.luxury-nav-v2{
  position:fixed!important;inset:0 0 auto 0!important;display:flex!important;
