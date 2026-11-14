@@ -1543,7 +1543,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
     <input name="user_id" placeholder="Supabase User UUID" required>
     <input name="forumotion_user_id" type="number" min="1" placeholder="Forumotion gebruikers-ID" required>
     <input name="forum_username" placeholder="Forumotion gebruikersnaam" required>
-    <select name="role"><option value="administrator">Administrator</option><option value="support_moderator">Support moderator</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option><option value="faq_editor">FAQ-medewerker</option><option value="faq_supervisor">FAQ-supervisor</option><option value="guest">Gast</option><option value="member">Lid</option></select>
+    <select name="role"><option value="administrator">Administrator</option><option value="support_moderator">Support moderator</option><option value="news_poster">Nieuwsposter</option><option value="news_poster_supervisor">Nieuwsposter-supervisor</option><option value="faq_moderator">FAQ-moderator</option><option value="guest">Gast</option><option value="member">Lid</option></select>
     <button class="btn primary" type="submit">Koppelen / opslaan</button>
    </form>
    <h3 style="margin-top:24px">Gebruikers en rollen</h3><div id="portalAdminUsers">Laden…</div>
@@ -4310,7 +4310,7 @@ document.addEventListener("hpmw:supabase-role",start);
 <script id="hpmw-tool-portal-admin">
 (()=>{"use strict";
  const client=()=>window.hpmwSupabase;
- const roles=[["administrator","Administrator"],["support_moderator","Support moderator"],["news_poster","Nieuwsposter"],["news_poster_supervisor","Nieuwsposter-supervisor"],["faq_editor","FAQ-medewerker"],["faq_supervisor","FAQ-supervisor"],["guest","Gast"],["member","Lid"],["user","Gebruiker (legacy)"],["supervisor_support_team","Supervisor supportteam (legacy)"]];
+ const roles=[["administrator","Administrator"],["support_moderator","Support moderator"],["news_poster","Nieuwsposter"],["news_poster_supervisor","Nieuwsposter-supervisor"],["faq_moderator","FAQ-moderator"],["guest","Gast"],["member","Lid"],["user","Gebruiker (legacy)"],["supervisor_support_team","Supervisor supportteam (legacy)"]];
  const keys=["can_view_portal","can_use_tickets","can_manage_news","can_delete_news","can_approve_news","can_manage_faq","can_delete_faq","can_approve_faq","can_manage_settings","can_manage_roles"];
  const labels=["Portaal lezen","Tickets","Nieuws beheren","Nieuws verwijderen","Nieuws goedkeuren","FAQ beheren","FAQ verwijderen","FAQ goedkeuren","Instellingen","Rollen"];
  const $=id=>document.getElementById(id), panel=$("portalAdminPanel"), status=$("portalAdminStatus"), content=$("portalAdminContent");
