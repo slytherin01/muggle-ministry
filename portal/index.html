@@ -1878,15 +1878,17 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 </style>
 <script id="hpmw-my-tickets-masthead-switch">
 (()=>{"use strict";
+ const supportUrl="https://i44.servimg.com/u/f44/11/48/74/42/ticket13.png";
  const ticketsUrl="https://i44.servimg.com/u/f44/11/48/74/42/mijnti10.png";
  const adminUrl="https://i44.servimg.com/u/f44/11/48/74/42/ticket12.png";
  const original="https://i44.servimg.com/u/f44/11/48/74/42/banner10.png";
  const bar=()=>document.querySelector(".hpmw-global-brandbar");
  const update=()=>{
   const el=bar();if(!el)return;
+  const support=document.querySelector("#homeView.active");
   const tickets=document.querySelector("#myTicketsView.active");
   const admin=document.querySelector("#adminView.active");
-  const activeImage=tickets?ticketsUrl:(admin?adminUrl:original);
+  const activeImage=tickets?ticketsUrl:(admin?adminUrl:(support?supportUrl:original));
   el.style.setProperty("background-image",'url("'+activeImage+'")',"important");
   el.style.setProperty("background-size","100% 100%","important");
   el.style.setProperty("background-position","center center","important");
