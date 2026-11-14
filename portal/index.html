@@ -5008,7 +5008,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
    ]);
    if(!cr.ok||!ar.ok)throw new Error("De FAQ kon niet worden opgehaald.");
    categories=await cr.json();articles=await ar.json();renderCategories();
-  }catch(err){target.innerHTML='<div class="empty">'+esc(err.message||"FAQ laden mislukt.")+'</div>'}
+  }catch(err){console.warn("[FAQ] Live FAQ kon niet worden geladen; voorbeeldinhoud wordt getoond.",err);categories=[{id:"portal",name:"Portaal",description:"Veelgestelde vragen over het portaal en tickets"},{id:"forum",name:"Forum",description:"Veelgestelde vragen over het forum"}];articles=[{id:"sample-portal",faq_category_id:"portal",title:"Hoe dien ik een supportticket in?",body:"Open Ticket Support in het portaal, vul het formulier in met een duidelijke onderwerpregel en omschrijving en verstuur je aanvraag. Je kunt de voortgang daarna bekijken via Mijn tickets."},{id:"sample-forum",faq_category_id:"forum",title:"Hoe plaats ik een nieuw bericht op het forum?",body:"Log in op het forum, open de juiste categorie en kies Nieuw onderwerp. Geef je bericht een duidelijke titel, schrijf je bericht en plaats het wanneer je klaar bent."}];selected=null;renderCategories();}
  }
  function renderCategories(){
   const target=host();if(!target)return;
