@@ -1732,7 +1732,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <div class="moderation-heading">
 <i class="fa-solid fa-shield-halved">
 </i> Moderatie</div>
-<button class="btn" id="faqManagementOpen" type="button" style="display:none;width:100%;justify-content:flex-start"><i class="fa-solid fa-circle-question"></i> FAQ-beheer</button>
+
 <section aria-label="Moderatie" class="internal-tools detail-inline-tools">
 <div class="internal-title">
 <i class="fa-solid fa-list-check">
@@ -4215,7 +4215,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function mount(){const main=document.querySelector("main.shell"),side=document.querySelector(".hpmw-tool-sidebar");if(!main||!side||document.getElementById("hpmwModteamAdmin"))return false;
 const view=document.createElement("section");view.className="view";view.id="hpmwModteamAdmin";view.innerHTML='<div class="page-head"><div><div class="eyebrow">Ministerie van Dreuzels</div><h1>Modteam beheren</h1><p class="subtitle">Beheer medewerkers, afdelingen en teamrollen.</p></div><button class="btn" id="mtReload">Vernieuwen</button></div><div class="mt-editor"><h2 id="mtFormTitle">Medewerker toevoegen</h2><div class="mt-grid"><div class="mt-field"><label for="mtName">Naam</label><input id="mtName" maxlength="80" placeholder="Forumnaam"></div><div class="mt-field"><label for="mtUserId">Forumotion profiel-ID (voor persoonlijk schild)</label><input id="mtUserId" type="number" min="1" placeholder="Bijv. 123"></div><div class="mt-field"><label for="mtRole">Teamrol</label><select id="mtRole">'+R.map(x=>'<option>'+x+'</option>').join("")+'</select></div><div class="mt-field"><label for="mtOrder">Volgorde</label><input id="mtOrder" type="number" value="0"></div></div><div class="mt-actions"><button class="btn primary" id="mtSave">Opslaan</button><button class="btn" id="mtCancel" hidden>Annuleren</button></div><div class="mt-status" id="mtStatus" role="status"></div></div><div class="mt-toolbar"><h2>Medewerkers</h2><span id="mtCount" class="subtitle"></span></div><div class="mt-list" id="mtList">Laden…</div>';
-main.append(view);const b=document.createElement("button");b.type="button";b.innerHTML='<i class="fa-solid fa-users-gear"></i><span>Modteam</span>';b.dataset.view="hpmwModteamAdmin";const beheerButton=side.querySelector('button[data-view="adminCmsView"]');if(beheerButton)beheerButton.insertAdjacentElement("afterend",b);else side.append(b);
+main.append(view);const b=document.createElement("button");b.type="button";b.innerHTML='<i class="fa-solid fa-users-gear"></i><span>Modteam</span>';b.dataset.view="hpmwModteamAdmin";const beheerButton=side.querySelector('button[data-view="adminCmsView"]');if(beheerButton)beheerButton.insertAdjacentElement("afterend",b);else side.append(b);const faqButton=document.getElementById("faqManagementOpen");if(faqButton){faqButton.className="tool-sidebar-button";faqButton.dataset.view="faqManagementPanel";faqButton.innerHTML='<i class="fa-solid fa-circle-question"></i><span>FAQ-beheer</span>';b.insertAdjacentElement("afterend",faqButton);}
 const show=()=>{main.querySelectorAll(":scope > .view").forEach(v=>{v.classList.toggle("active",v===view);v.style.setProperty("display",v===view?"block":"none","important")});side.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));load();};
 b.addEventListener("click",show);document.getElementById("mtReload").onclick=load;document.getElementById("mtCancel").onclick=reset;
 document.getElementById("mtSave").onclick=save;return true}
@@ -4409,7 +4409,7 @@ document.addEventListener("hpmw:supabase-role",start);
   const {data:r,error}=await c.from("tool_access_roles").select("role").eq("user_id",s.session.user.id).maybeSingle();
   return !error&&r?.role==="administrator";
  }
- function setNav(){const b=$("faqManagementOpen");if(b)b.style.display=allowed?"inline-flex":"none";}
+ function setNav(){const b=$("faqManagementOpen");if(b){b.style.display=allowed?"flex":"none";b.classList.toggle("active",!$("faqManagementPanel").hidden);}}
  async function loadAll(){
   if(!await isAdministrator()){allowed=false;setNav();status("Geen toegang. Alleen administrators kunnen FAQ-beheer openen.");return false;}
   allowed=true;setNav();status("FAQ-gegevens laden…");
