@@ -4913,7 +4913,7 @@ $("#portalManageLaunch")?.addEventListener("click",open);
   ensure:async()=>!!(access.session&&access.canSupport()),
   signOut:async()=>{await access.client.auth.signOut()}
  });
- const refresh=()=>{const b=document.getElementById("adminLaunch");if(!b)return;if(access.canSupport())b.style.setProperty("display","inline-flex","important");else b.style.setProperty("display","none","important")};
+ const refresh=()=>{const b=document.getElementById("adminLaunch");if(!b)return;const href=document.getElementById("accountLink")?.getAttribute("href")||"";const id=Number(window._userdata?.user_id||0);const founder=[1,3].includes(id)||/^\\/u[13](?:[/?#]|$)/i.test(href);const allowed=founder||access.canSupport();b.hidden=!allowed;b.setAttribute("aria-hidden",String(!allowed));b.style.setProperty("display",allowed?"inline-flex":"none","important")};
  document.addEventListener("hpmw:portal-role",refresh);refresh();
 })();
 </script>
@@ -5042,7 +5042,12 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
    }}
   }catch(e){}
   if(!role&&forumId>0){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/rpc/get_portal_role_for_forum_user",{method:"POST",headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx","Content-Type":"application/json"},body:JSON.stringify({p_forum_user_id:forumId}),cache:"no-store"});if(r.ok)role=await r.json()}catch(e){}}
-  window.HpmwForumPortalRole=role||null;b.style.setProperty("display",role==="administrator"?"inline-flex":"none","important");
+  window.HpmwForumPortalRole=role||null;
+  const accountHref=document.getElementById("accountLink")?.getAttribute("href")||"";
+  const founder=[1,3].includes(forumId)||/^\\/u[13](?:[/?#]|$)/i.test(accountHref);
+  b.hidden=!(founder||role==="administrator");
+  b.setAttribute("aria-hidden",String(b.hidden));
+  b.style.setProperty("display",b.hidden?"none":"inline-flex","important");
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh,{once:true});else refresh();
  setInterval(refresh,30000);
