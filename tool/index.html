@@ -1245,6 +1245,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <nav class="top-actions" aria-label="Beheerportaal">
 <div class="lux-nav-item" style="cursor:default"><span class="lux-nav-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><span class="lux-nav-label">Hpmagicworld · Beheer</span></div>
 <button type="button" class="lux-nav-item hpmw-nav-link" id="navTranslations"><span class="lux-nav-icon"><i class="fa-solid fa-language"></i></span><span>Vertalingen</span></button>
+<button type="button" class="lux-nav-item hpmw-nav-link" id="faqManagementOpen" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span>FAQ-beheer</span></button>
 <a href="#newSettingsView" class="lux-nav-item hpmw-nav-link" id="navSettings" role="button" onclick='event.preventDefault();document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});var v=document.getElementById("newSettingsView");v.classList.add("active");v.style.setProperty("display","block","important");v.style.setProperty("visibility","visible","important");window.scrollTo(0,0);return false;'><span class="lux-nav-icon"><i class="fa-solid fa-sliders"></i></span><span>Instellingen</span></a>
 
 <div class="lux-nav-item lux-user" id="adminSignedIn" style="cursor:default"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong>Beheerder</strong></span></div>
@@ -1517,7 +1518,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 <div class="eyebrow">Moderatie</div>
 <h1>Ticketbeheer</h1>
 <p class="subtitle">Beheer actieve en gesloten supporttickets.</p>
-<button class="btn primary" id="faqManagementOpen" type="button" style="display:none"><i class="fa-solid fa-circle-question"></i> FAQ-beheer</button>
+
 </div>
 <button class="btn" id="adminBack">
 <span class="fa-button-icon">
@@ -4433,7 +4434,7 @@ document.addEventListener("hpmw:supabase-role",start);
  function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;$("faqCategoryDelete").disabled=true;$("faqCategoryDelete").dataset.categoryId="";}
  function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.approval_status.value="pending";f.elements.sort_order.value="0";f.hidden=true;}
  async function openPanel(){$("adminListView").hidden=true;$("portalAdminPanel").hidden=true;$("faqManagementPanel").hidden=false;try{await loadAll()}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)))}}
- $("faqManagementOpen")?.addEventListener("click",openPanel);
+ $("faqManagementOpen")?.addEventListener("click",()=>{document.querySelectorAll(".view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important")});const adminView=$("adminView");adminView.classList.add("active");adminView.style.setProperty("display","block","important");openPanel();window.scrollTo(0,0);});
  $("faqManagementBack")?.addEventListener("click",()=>{$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;});
  $("faqCategoryReset")?.addEventListener("click",resetCategory);
  $("faqArticleNew")?.addEventListener("click",()=>{resetArticle();$("faqArticleForm").hidden=false;});
