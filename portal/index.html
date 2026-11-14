@@ -4480,28 +4480,35 @@ document.addEventListener("keydown",event=>{
 })();
 </script>
 
-<style id="hpmw-modteam-roster-style">
-#modteamView .hpmw-modteam-roster{padding:18px 20px 24px;display:grid;gap:20px}
-#modteamView .hpmw-team-house{border:1px solid #30445d;border-radius:15px;overflow:hidden;background:linear-gradient(150deg,#142238,#0d1726)}
-#modteamView .hpmw-team-house-head{padding:13px 17px;border-bottom:1px solid #30445d;display:flex;align-items:center;gap:12px;color:#e8f0fa;font-size:16px;font-weight:800}
-#modteamView .hpmw-team-house-head img{width:46px;height:46px;object-fit:contain}
-#modteamView .hpmw-team-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}
-#modteamView .hpmw-team-role{min-width:0;border:1px solid #293d55;border-radius:12px;background:#101c2c;padding:12px}
-#modteamView .hpmw-team-role h3{margin:0 0 10px;color:#a9c9e8;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-#modteamView .hpmw-team-person{display:flex;align-items:center;gap:11px;padding:9px 2px;border-bottom:1px solid #26384d;color:#edf3fa}
-#modteamView .hpmw-team-person:last-child{border-bottom:0}
-#modteamView .hpmw-team-person img{width:44px;height:44px;object-fit:contain;flex:none}
-#modteamView .hpmw-team-person strong{font-size:13px}
-#modteamView .hpmw-team-empty,#modteamView .hpmw-modteam-loading{padding:18px;color:#9aacc2;font-size:12px}
-@media(max-width:650px){#modteamView .hpmw-team-columns{grid-template-columns:1fr}#modteamView .hpmw-modteam-roster{padding:12px}}
+<style id="hpmw-modteam-roster-style-20261114">
+#modteamView .hpmw-modteam-page{background:radial-gradient(ellipse at 50% 0%,#5c4b9638,transparent 48%),linear-gradient(145deg,#090f1b,#101a2b 58%,#090f19)!important;border:1px solid #35435c!important;box-shadow:0 24px 70px #0008!important;color:#edf3fb!important}
+#modteamView .hpmw-modteam-page-head{padding:26px!important;border-bottom:1px solid #34445d!important}
+#modteamView .hpmw-modteam-page-head .eyebrow{color:#c1a6ed!important;letter-spacing:.2em!important}
+#modteamView .hpmw-modteam-page-head h1{color:#f4efff!important;text-shadow:0 0 24px #a98ae633!important}
+#modteamView .hpmw-modteam-page-head .subtitle{color:#aebdd1!important}
+#modteamView .hpmw-modteam-roster{padding:22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important}
+#modteamView .hpmw-team-house{overflow:hidden!important;border:1px solid #39445d!important;border-radius:16px!important;background:linear-gradient(145deg,#172238,#0d1524)!important;box-shadow:0 12px 32px #0005!important}
+#modteamView .hpmw-team-house-head{min-height:82px;padding:14px 18px!important;border-bottom:1px solid #39445d!important;background:linear-gradient(100deg,#9b7bd51b,#15243a)!important;color:#f1eaff!important;font:700 18px Georgia,serif!important}
+#modteamView .hpmw-team-house-head img{width:58px!important;height:58px!important;object-fit:contain!important;filter:drop-shadow(0 4px 9px #0009)!important}
+#modteamView .hpmw-team-columns{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;padding:13px!important}
+#modteamView .hpmw-team-role{border:1px solid #34435b!important;border-radius:12px!important;background:#0a1422!important;padding:12px 14px!important}
+#modteamView .hpmw-team-role h3{margin:0 0 8px!important;color:#c6afea!important;font-size:10px!important;letter-spacing:.16em!important}
+#modteamView .hpmw-team-person{display:flex!important;align-items:center!important;gap:12px!important;min-height:58px;padding:8px 2px!important;border-bottom:1px solid #26374d!important;color:#f0f4fb!important}
+#modteamView .hpmw-team-person img{width:44px!important;height:44px!important;object-fit:cover!important;border:2px solid #74619b!important;border-radius:50%!important;background:#18243a!important;box-shadow:0 0 0 3px #9a7bdb18!important}
+#modteamView .hpmw-team-person strong{font-size:13px!important;font-weight:750!important}
+#modteamView .hpmw-team-empty{padding:9px 2px!important;color:#778ba5!important;font-size:11px!important}
+#modteamView .hpmw-team-empty:before{content:"Nog geen teamleden toegevoegd via de beheertool."}
+#modteamView .hpmw-modteam-loading{grid-column:1/-1;padding:22px!important;color:#aebdd1!important}
+@media(max-width:760px){#modteamView .hpmw-modteam-roster{grid-template-columns:1fr!important;padding:14px!important;gap:13px!important}#modteamView .hpmw-modteam-page-head{padding:18px 16px!important}}
 </style>
-<script id="hpmw-modteam-roster-loader">
+<script id="hpmw-modteam-roster-loader-20261114">
 (()=>{const URL="https://vuaajsjjluwgqmneinds.supabase.co",KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
 const houses=["Griffoendor","Zwadderich","Huffelpuf","Ravenklauw"];
-const shields={Griffoendor:"https://i44.servimg.com/u/f44/11/48/74/42/griffo11.png",Zwadderich:"https://i44.servimg.com/u/f44/11/48/74/42/zwadde12.png",Huffelpuf:"https://i44.servimg.com/u/f44/11/48/74/42/huffel11.png",Ravenklauw:"https://i44.servimg.com/u/f44/11/48/74/42/ravenk11.png"};
+const fallback={Griffoendor:"https://i44.servimg.com/u/f44/11/48/74/42/griffo11.png",Zwadderich:"https://i44.servimg.com/u/f44/11/48/74/42/zwadde12.png",Huffelpuf:"https://i44.servimg.com/u/f44/11/48/74/42/huffel11.png",Ravenklauw:"https://i44.servimg.com/u/f44/11/48/74/42/ravenk11.png"};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-async function getShield(id,house){if(id){try{const r=await fetch("/u"+id,{credentials:"include"});if(r.ok){const d=new DOMParser().parseFromString(await r.text(),"text/html"),f=d.querySelector("#field_id3 .field_uneditable, #field_id3"),img=f?.querySelector("img"),src=img?.getAttribute("src")||img?.getAttribute("data-src");if(src&&/^https?:\/\//i.test(src))return src;}}catch(e){}}return shields[house]}
-async function load(){const root=document.getElementById("hpmwModteamRoster");if(!root)return;try{const r=await fetch(URL+"/rest/v1/modteam_members?select=id,display_name,forumotion_user_id,house,team_role,sort_order&enabled=eq.true&order=sort_order.asc",{headers:{apikey:KEY}});if(!r.ok)throw Error("Teamgegevens konden niet worden geladen.");const rows=await r.json();const shieldsByHouse={};await Promise.all(houses.map(async h=>{const ids=[...new Set(rows.filter(x=>x.house===h&&x.forumotion_user_id).map(x=>x.forumotion_user_id))];shieldsByHouse[h]=ids.length?await getShield(ids[0],h):shields[h]}));root.innerHTML=houses.map(h=>{const members=rows.filter(x=>x.house===h);const roleHtml=role=>{const list=members.filter(x=>x.team_role===role);return '<div class="hpmw-team-role"><h3>'+role+'</h3>'+(list.length?list.map(x=>'<div class="hpmw-team-person"><img src="'+esc(shieldsByHouse[h]||shields[h])+'" alt="'+esc(h)+'-schild"><strong>'+esc(x.display_name)+'</strong></div>').join(""):'<div class="hpmw-team-empty">Nog geen medewerkers toegevoegd.</div>')+'</div>'};return '<section class="hpmw-team-house"><div class="hpmw-team-house-head"><img src="'+esc(shieldsByHouse[h]||shields[h])+'" alt="'+esc(h)+'-schild"><span>'+h+'</span></div><div class="hpmw-team-columns">'+roleHtml("Head Prefect")+roleHtml("Prefect")+'</div></section>'}).join("");}catch(e){root.innerHTML='<div class="hpmw-team-empty">'+esc(e.message)+'</div>';console.error("[Hpmw] Modteam:",e)}}
+const absolute=u=>{try{return new URL(u,location.origin).href}catch(e){return ""}};
+async function profile(id){if(!id)return {};try{const r=await fetch("/u"+encodeURIComponent(id),{credentials:"include",cache:"no-store"});if(!r.ok)return {};const d=new DOMParser().parseFromString(await r.text(),"text/html");const f=d.querySelector("#field_id3 .field_uneditable,#field_id3"),si=f?.querySelector("img");const av=d.querySelector(".profile-avatar img,#profile-advanced-right .profile-avatar img,.module .box-content .avatar img,.avatar img,img[alt*='avatar' i],img[alt*='profielfoto' i]");const og=d.querySelector('meta[property="og:image"]');return {shield:absolute(si?.getAttribute("src")||si?.getAttribute("data-src")||""),avatar:absolute(av?.getAttribute("src")||av?.getAttribute("data-src")||og?.content||"")}}catch(e){return {}}}
+async function load(){const root=document.getElementById("hpmwModteamRoster");if(!root)return;try{const r=await fetch(URL+"/rest/v1/modteam_members?select=id,display_name,forumotion_user_id,house,team_role,sort_order&enabled=eq.true&order=sort_order.asc",{headers:{apikey:KEY}});if(!r.ok)throw Error("Teamgegevens konden niet worden geladen.");const rows=await r.json(),profiles={};await Promise.all(rows.filter(x=>x.forumotion_user_id).map(async x=>{profiles[x.forumotion_user_id]=await profile(x.forumotion_user_id)}));const shields={...fallback};houses.forEach(h=>{const m=rows.find(x=>x.house===h&&profiles[x.forumotion_user_id]?.shield);if(m)shields[h]=profiles[m.forumotion_user_id].shield});root.innerHTML=houses.map(h=>{const members=rows.filter(x=>x.house===h);const roleHtml=role=>{const list=members.filter(x=>x.team_role===role);return '<div class="hpmw-team-role"><h3>'+role+'</h3>'+(list.length?list.map(x=>'<div class="hpmw-team-person"><img src="'+esc(profiles[x.forumotion_user_id]?.avatar||shields[h])+'" alt="'+esc(x.display_name)+'" loading="lazy"><strong>'+esc(x.display_name)+'</strong></div>').join(""):'<div class="hpmw-team-empty"></div>')+'</div>'};return '<section class="hpmw-team-house"><div class="hpmw-team-house-head"><img src="'+esc(shields[h])+'" alt="'+esc(h)+'-schild"><span>'+h+'</span></div><div class="hpmw-team-columns">'+roleHtml("Head Prefect")+roleHtml("Prefect")+'</div></section>'}).join("")}catch(e){root.innerHTML='<div class="hpmw-team-empty">'+esc(e.message)+'</div>';console.error("[Hpmw] Modteam:",e)}}
 document.addEventListener("DOMContentLoaded",load);document.addEventListener("hpmw:modteam-refresh",load);
 })();
 </script>
