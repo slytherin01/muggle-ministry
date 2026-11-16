@@ -49,7 +49,7 @@
    <div class="hpmw-auth-overview">
     <div class="hpmw-auth-stat"><span>Rollen</span><strong id="roleCount">—</strong><small>Systeem- en eigen rollen</small></div>
     <div class="hpmw-auth-stat"><span>Gebruikers</span><strong id="roleUserCount">—</strong><small>Toegewezen accounts</small></div>
-    <div class="hpmw-auth-stat"><span>Rechten</span><strong>13</strong><small>Centraal beheerde mogelijkheden</small></div>
+    <div class="hpmw-auth-stat"><span>Rechten</span><strong>18</strong><small>Centraal beheerde mogelijkheden</small></div>
    </div>
    <section class="cms-panel hpmw-auth-create" id="roleCreatePanel">
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 1</div><h2>Nieuwe rol aanmaken</h2><p>Maak een rol voor een functie binnen Hpmagicworld.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-user-plus"></i></span></div>
@@ -145,7 +145,7 @@
 
 
  const permissionGroups=[
-  {title:"Portaal bekijken",items:[["can_view_portal","Portaal openen"],["can_view_news","Nieuws bekijken"],["can_view_faq","FAQ bekijken"],["can_view_tickets","Ticket Support bekijken"]]},
+  {title:"Portaalonderdelen bekijken",items:[["can_view_portal","Portaal openen"],["can_view_news","Nieuws bekijken"],["can_view_faq","FAQ bekijken"],["can_view_tickets","Ticket Support bekijken"],["can_view_my_tickets","Mijn tickets bekijken"],["can_view_sorting_hat","Sorteerhoed bekijken"],["can_view_vacancies","Vacatures bekijken"],["can_view_modteam","Moderators bekijken"],["can_view_awards","Awards bekijken"]]},
   {title:"Ticket Support",items:[["can_use_tickets","Tickets aanmaken en beheren"]]},
   {title:"Nieuwsberichten",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws publiceren en goedkeuren"],["can_delete_news","Nieuws verwijderen"]]},
   {title:"Veelgestelde vragen",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ publiceren en goedkeuren"],["can_delete_faq","FAQ verwijderen"]]},
