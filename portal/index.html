@@ -6828,5 +6828,48 @@ html body{padding-top:70px!important}
 })();
 </script>
 </script>
+
+<style id="hpmw-portal-clickability-emergency-fix-20261116">
+/* Herstel de kliklaag: portalinhoud staat boven decoratieve/lege fixed lagen. */
+html body main.shell{
+  position:relative!important;
+  z-index:100501!important;
+  isolation:isolate!important;
+  pointer-events:auto!important;
+}
+html body main.shell .view.active,
+html body main.shell .view.active *{
+  pointer-events:auto;
+}
+html body main.shell .view.active [hidden],
+html body main.shell .view.active [aria-hidden="true"]{
+  pointer-events:none!important;
+}
+html body header.topbar.luxury-nav-v2{
+  z-index:100502!important;
+  pointer-events:auto!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions,
+html body header.topbar.luxury-nav-v2 nav.top-actions>*{
+  pointer-events:auto!important;
+}
+html body main.shell button,
+html body main.shell a,
+html body main.shell input,
+html body main.shell select,
+html body main.shell textarea,
+html body main.shell [role="button"],
+html body main.shell summary{
+  position:relative;
+  z-index:1;
+  pointer-events:auto!important;
+  cursor:pointer;
+}
+html body main.shell .view.active .panel,
+html body main.shell .view.active .categories,
+html body main.shell .view.active .cat{
+  pointer-events:auto!important;
+}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
