@@ -56,12 +56,12 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { data: roleRow, error: roleError } = await adminClient
-      .from("user_roles")
+      .from("tool_access_roles")
       .select("role")
       .eq("user_id", userData.user.id)
       .maybeSingle();
-    if (roleError || !roleRow || !["admin", "moderator"].includes(roleRow.role)) {
-      return json({ error: "Geen beheerrechten om vertalingen te publiceren." }, 403);
+    if (roleError || !roleRow || roleRow.role !== "administrator") {
+      return json({ error: "Alleen administrators kunnen vertalingen publiceren." }, 403);
     }
 
     const { data: rows, error: rowsError } = await adminClient
