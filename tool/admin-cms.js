@@ -111,7 +111,7 @@
   $("main.shell")?.append(newsView);
   const switchNewsTab=tab=>{newsView.querySelectorAll("[data-news-panel]").forEach(p=>p.hidden=p.dataset.newsPanel!==tab);newsView.querySelectorAll("[data-news-tab]").forEach(b=>b.classList.toggle("active",b.dataset.newsTab===tab));if(tab==="content"){selectKind("news");}else loadNewsModerators();};
   newsView.querySelectorAll("[data-news-tab]").forEach(b=>b.onclick=()=>switchNewsTab(b.dataset.newsTab));
-  $("#newsPageBack").onclick=()=>go("newAdminDashboard");
+  $("#newsPageBack")?.addEventListener("click",()=>go("newAdminDashboard"));
 
   const faqPanel=section.querySelector('[data-main-panel="news"]');
   const faqGrid=faqPanel?.querySelector(".cms-grid");
@@ -121,26 +121,26 @@
   if(faqPanel&&faqGrid){faqPanel.insertBefore(faqManager,faqGrid);faqGrid.hidden=true;faqManager.append(faqEditorPanel);}
   function hideFaqManagementHeading(){document.querySelectorAll(":is(#adminCmsView,#newsManagementView) h1,:is(#adminCmsView,#newsManagementView) h2,:is(#adminCmsView,#newsManagementView) h3").forEach(h=>{if(h.textContent.trim().replace(/\\s+/g," ").toLocaleLowerCase("nl-NL")==="vragen beheren")h.hidden=true;});}
   hideFaqManagementHeading();
-  $("#faqBackPortal").onclick=()=>go("homeView");
-  $("#faqBackCategories").onclick=()=>{selectedFaqCategory=null;$("#faqQuestionView").hidden=true;$("#faqCategoryGrid").hidden=false;faqManager.querySelector(".cms-panel").hidden=true;renderFaqCategories();};
-  $("#faqAddCategory").onclick=addFaqCategory;
-  $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
+  $("#faqBackPortal")?.addEventListener("click",()=>go("homeView"));
+  $("#faqBackCategories")?.addEventListener("click",()=>{selectedFaqCategory=null;$("#faqQuestionView").hidden=true;$("#faqCategoryGrid").hidden=false;faqManager.querySelector(".cms-panel")?.setAttribute("hidden","");renderFaqCategories();});
+  $("#faqAddCategory")?.addEventListener("click",addFaqCategory);
+  $("#faqAddQuestion")?.addEventListener("click",()=>openFaqQuestionForm());
 
-  $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
-  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;
-  $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
-  $("#roleAssignForm").onsubmit=saveToolRole;
-  $("#roleCreateForm").onsubmit=createToolRole;
-  $("#roleEditorSelect").onchange=()=>{renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);};
-  $("#roleCatalogList").addEventListener("click",event=>{
+  $("#cmsBack")?.addEventListener("click",()=>go("newAdminDashboard"));$("#cmsNew")?.addEventListener("click",reset);
+  $("#ticketModAdd")?.addEventListener("click",addTicketModerator);$("#saveTicketRights")?.addEventListener("click",saveTicketModeratorRights);
+  $("#newsModAdd")?.addEventListener("click",addNewsModerator);$("#saveNewsRights")?.addEventListener("click",saveNewsModeratorsRights);$("#syncNewsRights")?.addEventListener("click",syncNewsModerators);
+  $("#roleAssignForm")?.addEventListener("submit",saveToolRole);
+  $("#roleCreateForm")?.addEventListener("submit",createToolRole);
+  $("#roleEditorSelect")?.addEventListener("change",()=>{renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);});
+  $("#roleCatalogList")?.addEventListener("click",event=>{
    const tile=event.target.closest("[data-role-pick]");if(!tile)return;
    selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;
    renderSelectedRole();
    const members=Array.isArray(window.__hpmwRoleMembers)?window.__hpmwRoleMembers:[];
    renderRoleCatalog(members);
   });
-  $("#roleRefresh").onclick=()=>loadToolRoles(true);
-  $("#roleUserRefresh").onclick=()=>loadToolRoles(true);
+  $("#roleRefresh")?.addEventListener("click",()=>loadToolRoles(true));
+  $("#roleUserRefresh")?.addEventListener("click",()=>loadToolRoles(true));
   document.addEventListener("click",async e=>{
    const save=e.target.closest("[data-role-save-all]");if(save)saveRoleDefinition(save);
    const del=e.target.closest("[data-role-delete]");if(del)deleteToolRole(del);
@@ -160,7 +160,7 @@
     if(confirm("Deze gebruiker de toegang tot de tool ontnemen?")){const {error}=await client().from("tool_access_roles").delete().eq("user_id",id);$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles(true)}
    }
   });
-  $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
+  $("#cmsForm")?.addEventListener("submit",save); $("#faqCategoryAdd")?.addEventListener("click",addFaqCategory);
   const tabs=$("#cmsTabs");const newsKindButton=document.createElement("button");newsKindButton.textContent="Nieuwspagina";newsKindButton.dataset.kind="news";newsKindButton.onclick=()=>selectKind("news");tabs.append(newsKindButton);
   switchNewsTab("content");selectKind("news");
   const role=document.body.dataset.supabaseRole||"member";
