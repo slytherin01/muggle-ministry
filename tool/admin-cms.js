@@ -200,10 +200,16 @@
   const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect"),catalog=$("#roleCatalogList");
   if(!box)return;
   const status=$("#roleCatalogStatus");if(status)status.textContent="Verbinding met Supabase controleren…";
-  if(select)select.innerHTML='<option value="">Rollen ophalen…</option>';
-  const assignLoading=$("#roleValue");if(assignLoading)assignLoading.innerHTML='<option value="">Rollen ophalen…</option>';
-  if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
-  box.innerHTML='<p class="cms-help">Selecteer een rol om de rechten te bekijken.</p>';
+  // Keep an already loaded role catalogue interactive during background refreshes.
+  // Only show loading placeholders on the very first request.
+  if(!roleDefinitions.length){
+   if(select)select.innerHTML='<option value="">Rollen ophalen…</option>';
+   const assignLoading=$("#roleValue");if(assignLoading)assignLoading.innerHTML='<option value="">Rollen ophalen…</option>';
+   if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
+   box.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
+  }else{
+   if(status)status.textContent=roleDefinitions.length+" rollen beschikbaar · vernieuwen…";
+  }
   if(!db){
    const message="Supabase-client ontbreekt. Vernieuw de pagina nadat je bent ingelogd.";
    showRoleLoadError(message);
@@ -455,5 +461,5 @@
   window.hpmwInitAdminCms=init;
  window.hpmwOpenAdminCms=()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();go("adminCmsView");loadToolRoles();if(hasPermission("can_use_tickets"))loadTicketModerators();};
  document.addEventListener("DOMContentLoaded",init);if(document.readyState!=="loading")init();
- document.addEventListener("hpmw:supabase-role",()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();const canRoles=hasPermission("can_manage_roles"),canTickets=hasPermission("can_use_tickets");$("#roleCreatePanel")&&($("#roleCreatePanel").dataset.permissionHidden=String(!canRoles));$("#roleManagerSection")&&($("#roleManagerSection").dataset.permissionHidden=String(!canRoles));$("#roleAssignPanel")&&($("#roleAssignPanel").dataset.permissionHidden=String(!canRoles));$("#ticketModeratorsPanel")&&($("#ticketModeratorsPanel").dataset.permissionHidden=String(!canTickets));document.querySelectorAll("#adminCmsView [data-auth-menu]").forEach(b=>{b.hidden=b.dataset.authMenu==="tickets"?!canTickets:!canRoles;});if(canRoles)loadToolRoles();if(canTickets)loadTicketModerators();});
+ document.addEventListener("hpmw:supabase-role",()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();const canRoles=hasPermission("can_manage_roles"),canTickets=hasPermission("can_use_tickets");$("#roleCreatePanel")&&($("#roleCreatePanel").dataset.permissionHidden=String(!canRoles));$("#roleManagerSection")&&($("#roleManagerSection").dataset.permissionHidden=String(!canRoles));$("#roleAssignPanel")&&($("#roleAssignPanel").dataset.permissionHidden=String(!canRoles));$("#ticketModeratorsPanel")&&($("#ticketModeratorsPanel").dataset.permissionHidden=String(!canTickets));document.querySelectorAll("#adminCmsView [data-auth-menu]").forEach(b=>{b.hidden=b.dataset.authMenu==="tickets"?!canTickets:!canRoles;});if(canRoles&&$("#adminCmsView")?.classList.contains("active"))loadToolRoles();if(canTickets&&$("#adminCmsView")?.classList.contains("active"))loadTicketModerators();});
 })();
