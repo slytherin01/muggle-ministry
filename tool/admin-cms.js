@@ -135,6 +135,7 @@
   $("#roleCreateForm")?.addEventListener("submit",createToolRole);
   $("#roleEditorSelect")?.addEventListener("change",()=>{roleDetailsOpen=true;renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);});
   $("#roleCatalogList")?.addEventListener("click",event=>{
+   if(event.target.closest("[data-role-show-all]")){roleDetailsOpen=false;selectedRoleKey="";$("#roleEditorSelect").value="";renderRoleCatalog(window.__hpmwRoleMembers||[]);renderSelectedRole();return}
    const tile=event.target.closest("[data-role-pick]");if(!tile)return;
    selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;roleDetailsOpen=true;
    renderSelectedRole();
@@ -317,7 +318,8 @@
  }
  function renderRoleCatalog(members=[]){
   const box=$("#roleCatalogList");if(!box)return;
-  box.innerHTML=roleDefinitions.map(role=>{
+  const visibleRoles=roleDetailsOpen?roleDefinitions.filter(role=>role.role===$("#roleEditorSelect")?.value):roleDefinitions;
+  box.innerHTML=(roleDetailsOpen?'<div class="hpmw-role-list-toolbar"><button type="button" class="cms-btn" data-role-show-all>← Alle rollen</button><span>Geselecteerde rol</span></div>':"")+visibleRoles.map(role=>{
    const count=members.filter(m=>m.role===role.role).length;
    const title=role.role_name||systemRoleNames[role.role]||role.role;
    const isSelected=roleDetailsOpen&&role.role===$("#roleEditorSelect")?.value;
@@ -338,6 +340,9 @@
  #adminCmsView .hpmw-simple-permission-group{margin-top:12px;padding:14px;border:1px solid #344967;border-radius:11px;background:#0d1929}
  #adminCmsView .hpmw-simple-permission-group h3{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #2b3e56}
  #adminCmsView .hpmw-simple-role-fields{padding:14px;border:1px solid #344967;border-radius:11px;background:#0d1929;margin-top:12px}
+ #adminCmsView .hpmw-role-list-toolbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:2px;color:#c6d4e6;font-size:12px;font-weight:700}
+ #adminCmsView .hpmw-role-list-toolbar .cms-btn{min-height:34px;padding:7px 12px}
+ #adminCmsView .hpmw-role-delete{background:#512b36!important;border:1px solid #a65b6d!important;color:#ffe4e9!important}
  #adminCmsView .hpmw-role-tile{cursor:pointer;text-align:left}
  #adminCmsView .hpmw-role-tile:hover{transform:translateY(-1px);border-color:#a293ff}
  #adminCmsView .hpmw-permission-widget .hpmw-simple-permission{display:flex!important;align-items:center!important;gap:10px!important;cursor:pointer!important;pointer-events:auto!important;position:relative!important;z-index:2!important}
