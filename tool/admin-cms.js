@@ -51,26 +51,27 @@
     <div class="hpmw-auth-stat"><span>Gebruikers</span><strong id="roleUserCount">—</strong><small>Toegewezen accounts</small></div>
     <div class="hpmw-auth-stat"><span>Rechten</span><strong>18</strong><small>Centraal beheerde mogelijkheden</small></div>
    </div>
-   <section class="cms-panel hpmw-auth-create" id="roleCreatePanel">
-    <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 1</div><h2>Nieuwe rol aanmaken</h2><p>Maak een rol voor een functie binnen Hpmagicworld.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-user-plus"></i></span></div>
+   <nav class="hpmw-auth-menu" aria-label="Autorisatie onderdelen"><button type="button" class="hpmw-auth-menu-btn is-active" data-auth-menu="roles"><i class="fa-solid fa-shield-halved"></i><span>Rollen en rechten</span></button><button type="button" class="hpmw-auth-menu-btn" data-auth-menu="create"><i class="fa-solid fa-user-plus"></i><span>Nieuwe rol</span></button><button type="button" class="hpmw-auth-menu-btn" data-auth-menu="assign"><i class="fa-solid fa-users"></i><span>Gebruikers koppelen</span></button><button type="button" class="hpmw-auth-menu-btn" data-auth-menu="tickets"><i class="fa-solid fa-ticket"></i><span>Ticketmoderators</span></button></nav>
+   <section class="cms-panel hpmw-auth-create" id="roleCreatePanel" data-auth-panel="create" hidden>
+    <div class="hpmw-auth-section-head"><div><h2>Nieuwe rol aanmaken</h2><p>Maak een rol voor een functie binnen Hpmagicworld.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-user-plus"></i></span></div>
     <form id="roleCreateForm" class="hpmw-role-create-form"><label>Naam van de rol<input id="roleCreateName" maxlength="60" required placeholder="Bijv. Contentbeheerder"></label><label>Omschrijving<input id="roleCreateDescription" maxlength="180" placeholder="Beschrijf waarvoor deze rol bedoeld is"></label><button class="cms-btn primary" type="submit">+ Rol aanmaken</button></form>
     <p class="cms-status" id="roleCreateStatus" role="status"></p>
    </section>
-   <section class="hpmw-auth-section" id="roleManagerSection">
-    <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 2</div><h2>Rechten instellen</h2><p>Kies één rol en vink aan wat deze rol in het portaal mag doen.</p></div></div>
+   <section class="hpmw-auth-section" id="roleManagerSection" data-auth-panel="roles">
+    <div class="hpmw-auth-section-head"><div><h2>Rechten instellen</h2><p>Kies één rol en vink aan wat deze rol in het portaal mag doen.</p></div></div>
     <div class="hpmw-role-catalog-heading"><div><h3>Alle rollen</h3><p>Klik op een rol om de rechten en instellingen te openen.</p></div><span id="roleCatalogStatus">Rollen ophalen…</span></div>
     <div id="roleCatalogList" class="hpmw-role-catalog"><p class="cms-help">Rollen ophalen uit Supabase…</p></div>
     <div class="hpmw-simple-role-select"><label for="roleEditorSelect">Geselecteerde rol</label><select id="roleEditorSelect"><option value="">Rollen laden…</option></select><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div>
     <div id="roleManagerList" class="hpmw-simple-role-editor"><p class="cms-help">Rollen laden…</p></div>
    </section>
-   <section class="cms-panel hpmw-auth-assign" id="roleAssignPanel">
-    <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 3</div><h2>Gebruikers toegang geven</h2><p>Koppel een Supabase-account aan een rol. Een bestaande toewijzing kan hieronder worden gewijzigd.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-users"></i></span></div>
+   <section class="cms-panel hpmw-auth-assign" id="roleAssignPanel" data-auth-panel="assign" hidden>
+    <div class="hpmw-auth-section-head"><div><h2>Gebruikers toegang geven</h2><p>Koppel een Supabase-account aan een rol. Een bestaande toewijzing kan hieronder worden gewijzigd.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-users"></i></span></div>
     <form id="roleAssignForm" class="hpmw-role-assign-form"><label>Supabase gebruikers-ID (UUID)<input id="roleUserId" type="text" required placeholder="00000000-0000-0000-0000-000000000000"></label><label>Toe te wijzen rol<select id="roleValue" required><option value="">Rollen laden…</option></select></label><button class="cms-btn primary" type="submit">Gebruiker koppelen</button></form>
     <div class="hpmw-auth-user-heading"><h3>Huidige toewijzingen</h3><span id="roleUserCountInline">Laden…</span></div>
     <button class="cms-btn" type="button" id="roleUserRefresh">Gebruikerslijst vernieuwen</button><div id="roleList" class="hpmw-auth-user-list"></div><p class="cms-status" id="roleStatus" role="status"></p>
    </section>
-   <section class="cms-panel hpmw-auth-ticket" id="ticketModeratorsPanel">
-    <div class="hpmw-auth-section-head"><div><div class="eyebrow">AANVULLENDE TOEGANG</div><h2>Individuele ticketmoderators</h2><p>Beheer specifieke Forumotion-accounts die extra ticketrechten nodig hebben.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-ticket"></i></span></div>
+   <section class="cms-panel hpmw-auth-ticket" id="ticketModeratorsPanel" data-auth-panel="tickets" hidden>
+    <div class="hpmw-auth-section-head"><div><div class="eyebrow">TICKETTOEGANG</div><h2>Individuele ticketmoderators</h2><p>Beheer specifieke Forumotion-accounts die extra ticketrechten nodig hebben.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-ticket"></i></span></div>
     <div class="hpmw-role-assign-form"><label>Forumotion gebruikersnummer<input id="ticketModId" type="number" min="1" step="1" placeholder="Bijv. 3"></label><label>Naam / herkenning<input id="ticketModName" maxlength="80" placeholder="Bijv. /u3"></label><button class="cms-btn primary" type="button" id="ticketModAdd">Moderator toevoegen</button></div>
     <div id="ticketModList" class="hpmw-auth-user-list"></div>
     <div class="hpmw-auth-actions"><button class="cms-btn primary" type="button" id="saveTicketRights">Ticketrechten opslaan</button></div><p class="cms-status" id="ticketModStatus" role="status"></p>
@@ -82,6 +83,26 @@
    <div data-main-panel="newsRights" hidden><div class="cms-panel" id="newsModeratorsPanel"><h2>Nieuwspaginarechten</h2><p>Stel per Forumotion-gebruiker de nieuwsrechten in.</p><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(160px,1fr) auto;gap:8px;align-items:end"><label>Forumotion gebruikersnummer<input id="newsModId" type="number" min="1" step="1" placeholder="Bijv. 3"></label><label>Naam / herkenning<input id="newsModName" maxlength="80" placeholder="Bijv. /u3"></label><button class="cms-btn primary" type="button" id="newsModAdd">Gebruiker toevoegen</button></div><div id="newsModList" style="margin-top:12px"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="cms-btn primary" type="button" id="saveNewsRights">Rechten opslaan</button><button class="cms-btn" type="button" id="syncNewsRights">Portaal synchroniseren</button></div><p class="cms-status" id="newsModStatus" role="status"></p></div></div>`;
 
   $("main.shell")?.append(section);
+  const authPanels=[...section.querySelectorAll("[data-auth-panel]")];
+  const authMenu=[...section.querySelectorAll("[data-auth-menu]")];
+  const showAuthPanel=(key)=>{
+   authPanels.forEach(panel=>{panel.hidden=panel.dataset.authPanel!==key;});
+   authMenu.forEach(button=>{const active=button.dataset.authMenu===key;button.classList.toggle("is-active",active);button.setAttribute("aria-pressed",active?"true":"false");});
+   const active=section.querySelector('[data-auth-panel="'+key+'"]');active?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  authMenu.forEach(button=>button.addEventListener("click",()=>showAuthPanel(button.dataset.authMenu)));
+  showAuthPanel("roles");
+  const authStyle=document.createElement("style");authStyle.id="hpmw-auth-menu-style";authStyle.textContent=`
+   #adminCmsView .hpmw-auth-menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 20px}
+   #adminCmsView .hpmw-auth-menu-btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;padding:13px 16px;border:1px solid #344967;border-radius:13px;background:linear-gradient(145deg,#172a43,#101b2c);color:#dce8f7;font-weight:800;cursor:pointer;transition:.15s}
+   #adminCmsView .hpmw-auth-menu-btn:hover,#adminCmsView .hpmw-auth-menu-btn.is-active{border-color:#9b8cff;background:linear-gradient(145deg,#302b59,#192b43);color:#fff}
+   #adminCmsView .hpmw-auth-menu-btn i{color:#b8aaff;font-size:16px}
+   #adminCmsView [data-auth-panel][hidden]{display:none!important}
+   #adminCmsView .hpmw-auth-create,#adminCmsView .hpmw-auth-assign,#adminCmsView .hpmw-auth-ticket,#adminCmsView #roleManagerSection{margin-top:0}
+   @media(max-width:850px){#adminCmsView .hpmw-auth-menu{grid-template-columns:repeat(2,minmax(0,1fr))}}
+   @media(max-width:520px){#adminCmsView .hpmw-auth-menu{grid-template-columns:1fr 1fr;gap:8px}#adminCmsView .hpmw-auth-menu-btn{min-height:52px;padding:10px 7px;font-size:11px;gap:6px;flex-direction:column}}
+  `;
+  document.head.append(authStyle);
   const newsView=document.createElement("section");newsView.className="view";newsView.id="newsManagementView";
   newsView.innerHTML='<div class="page-head translation-bluebar"><div class="translation-bluebar-copy"><div class="eyebrow">CONTENTBEHEER</div><h1>Nieuwspagina</h1><p class="subtitle">Maak nieuwsberichten, bewerk ze en beheer publicatie en toegangsrechten.</p></div><div class="translation-bluebar-actions"><button class="btn" id="newsPageBack">← Werkruimte</button></div></div><div class="cms-tabs cms-main-tabs" id="newsMainTabs"><button type="button" class="active" data-news-tab="content">Berichten beheren</button><button type="button" data-news-tab="rights">Nieuwspaginarechten</button></div>';
   const newsContent=section.querySelector('[data-main-panel="news"]'),newsRights=section.querySelector('[data-main-panel="newsRights"]');
@@ -167,7 +188,7 @@
  let selectedRoleKey="";
  async function loadToolRoles(){
   const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect"),catalog=$("#roleCatalogList");
-  if(!db||!box)return;
+  if(!box)return;
   if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
   box.innerHTML='<p class="cms-help">Selecteer een rol om de rechten te bekijken.</p>';
   if(!db){
@@ -409,5 +430,5 @@
   window.hpmwInitAdminCms=init;
  window.hpmwOpenAdminCms=()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();go("adminCmsView");if(hasPermission("can_manage_roles"))loadToolRoles();if(hasPermission("can_use_tickets"))loadTicketModerators();};
  document.addEventListener("DOMContentLoaded",init);if(document.readyState!=="loading")init();
- document.addEventListener("hpmw:supabase-role",()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();const canRoles=hasPermission("can_manage_roles"),canTickets=hasPermission("can_use_tickets");$("#roleCreatePanel")&&($("#roleCreatePanel").hidden=!canRoles);$("#roleManagerSection")&&($("#roleManagerSection").hidden=!canRoles);$("#roleAssignPanel")&&($("#roleAssignPanel").hidden=!canRoles);$("#ticketModeratorsPanel")&&($("#ticketModeratorsPanel").hidden=!canTickets);if(canRoles)loadToolRoles();if(canTickets)loadTicketModerators();});
+ document.addEventListener("hpmw:supabase-role",()=>{if(!$(":is(#adminCmsView,#newsManagementView)"))init();const canRoles=hasPermission("can_manage_roles"),canTickets=hasPermission("can_use_tickets");$("#roleCreatePanel")&&($("#roleCreatePanel").dataset.permissionHidden=String(!canRoles));$("#roleManagerSection")&&($("#roleManagerSection").dataset.permissionHidden=String(!canRoles));$("#roleAssignPanel")&&($("#roleAssignPanel").dataset.permissionHidden=String(!canRoles));$("#ticketModeratorsPanel")&&($("#ticketModeratorsPanel").dataset.permissionHidden=String(!canTickets));document.querySelectorAll("#adminCmsView [data-auth-menu]").forEach(b=>{b.hidden=b.dataset.authMenu==="tickets"?!canTickets:!canRoles;});if(canRoles)loadToolRoles();if(canTickets)loadTicketModerators();});
 })();
