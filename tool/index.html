@@ -1808,7 +1808,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
  <div id="faqCategoryList" hidden></div>
  <div class="panel" style="padding:14px;margin-bottom:14px">
   <label style="display:block;font-weight:700;margin-bottom:8px">Categorie<select id="faqCategoryFilter" style="display:block;width:100%;max-width:420px;margin-top:6px"><option value="">Selecteer een categorie…</option></select></label>
-  <div id="faqArticleList" class="ticket-table-wrap" style="margin-top:10px">Selecteer een categorie om de vragen te bekijken.</div>
+  <div id="faqArticleList" class="ticket-table-wrap" style="margin-top:10px"></div>
  </div>
  <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px" class="panel">
    <input type="hidden" name="id">
@@ -4432,12 +4432,12 @@ document.addEventListener("hpmw:supabase-role",start);
  }
  function renderArticles(){
   const list=$("faqArticleList"),filter=$("faqCategoryFilter"),selected=filter?.value||"";
-  if(!selected){list.innerHTML='<p style="padding:14px">Selecteer hierboven een categorie om alleen de vragen uit die categorie te bekijken.</p>';$("faqOrderSave").disabled=true;return;}
+  if(!selected){list.innerHTML="";const save=$("faqOrderSave");if(save)save.disabled=true;return;}
   const visible=articles.filter(a=>a.faq_category_id===selected);
   list.innerHTML=visible.length?'<table class="ticket-table"><thead><tr><th>Volgorde</th><th>Vraag</th><th>Status</th><th>Publicatie</th><th>Acties</th></tr></thead><tbody>'+visible.map(a=>'<tr draggable="true" data-faq-id="'+a.id+'" data-faq-category="'+(a.faq_category_id||"")+'"><td><span class="faq-drag-handle" title="Sleep om te sorteren">⠿</span>'+Number(a.sort_order||0)+'</td><td><strong>'+esc(a.title)+'</strong><br><small>'+esc(a.body).slice(0,150)+'</small></td><td><span class="faq-state">'+esc(a.approval_status)+'</span></td><td>'+(a.published?"Gepubliceerd":"Niet gepubliceerd")+'</td><td><div class="faq-row-actions"><button class="btn" type="button" data-faq-article-edit="'+a.id+'">Bewerken / verplaatsen</button><button class="btn danger" type="button" data-faq-article-delete="'+a.id+'">Verwijderen</button></div></td></tr>').join("")+'</tbody></table>':'<p style="padding:14px">Nog geen FAQ-vragen in deze categorie.</p>';
-  $("faqOrderSave").disabled=true;
+  const save=$("faqOrderSave");if(save)save.disabled=true;
  }
- function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;$("faqCategoryDelete").disabled=true;$("faqCategoryDelete").dataset.categoryId="";}
+ function resetCategory(){const f=$("faqCategoryForm");f.reset();f.elements.id.value="";f.elements.sort_order.value="0";f.elements.is_active.checked=true;const del=$("faqCategoryDelete");if(del){del.disabled=true;del.dataset.categoryId="";}}
  function resetArticle(){const f=$("faqArticleForm");f.reset();f.elements.id.value="";f.elements.published.checked=false;f.elements.approval_status.value="pending";f.elements.sort_order.value="0";f.hidden=true;}
  async function openPanel(){document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.toggle("active",v.id==="faqManagementPanel");v.style.setProperty("display",v.id==="faqManagementPanel"?"block":"none","important")});$("faqManagementPanel").hidden=false;try{await loadAll()}catch(e){status("FAQ laden mislukt: "+(e.message||String(e)))}}
  window.hpmwOpenFaqManagement=openPanel;
@@ -4451,8 +4451,8 @@ document.addEventListener("hpmw:supabase-role",start);
  $("faqCategoryFilter")?.addEventListener("change",()=>{resetArticle();renderArticles();});
  $("faqArticleCancel")?.addEventListener("click",resetArticle);
  $("faqCategoryForm")?.addEventListener("submit",async e=>{
-  e.preventDefault();if(!await isAdministrator()){status("Geen toegang.");return;}
-  const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||"");
+  e.preventDefault();const f=e.currentTarget;if(!(f instanceof HTMLFormElement))return;if(!await isAdministrator()){status("Geen toegang.");return;}
+  const d=new FormData(f),id=String(d.get("id")||"");
   const p={name:String(d.get("name")||"").trim(),description:String(d.get("description")||"").trim(),sort_order:Number(d.get("sort_order")||0),is_active:f.elements.is_active.checked};
   if(!p.name){status("Vul een categorienaam in.");return;}
   const {data:sd}=await client().auth.getSession();p.updated_by=sd.session.user.id;if(!id)p.created_by=sd.session.user.id;
@@ -4462,11 +4462,12 @@ document.addEventListener("hpmw:supabase-role",start);
  });
  $("faqArticleForm")?.addEventListener("submit",async e=>{
   e.preventDefault();
-  const submit=e.currentTarget.querySelector('button[type="submit"]');
+  const f=e.currentTarget;if(!(f instanceof HTMLFormElement))return;
+  const submit=f.querySelector('button[type="submit"]');
   if(submit)submit.disabled=true;
   try{
    if(!await isAdministrator())throw Error("Geen toegang. Log in met een administrator-account.");
-   const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"pending");
+   const d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"pending");
    const {data:sd,error:sessionError}=await client().auth.getSession();
    if(sessionError)throw sessionError;
    if(!sd.session)throw Error("Je sessie is verlopen. Log opnieuw in.");
