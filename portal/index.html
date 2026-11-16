@@ -4817,7 +4817,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
  function applyPortalVisibility(){
   const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets]];
-  checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
+  checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=canViewPortal()&&!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
   document.documentElement.dataset.hpmwPortalRole=role;
   document.dispatchEvent(new CustomEvent("hpmw:portal-access-updated",{detail:{role,permissions}}));
  } 
