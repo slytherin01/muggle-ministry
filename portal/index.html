@@ -6698,8 +6698,6 @@ html body{padding-top:70px!important}
  }
  function start(){
   wrapNavigation();
-  const active=document.querySelector("main.shell>.view.active");
-  if(active&&allowed.has(active.id))try{localStorage.setItem(KEY,active.id)}catch(e){}
   restore();bannerSetup();
   new MutationObserver(()=>{wrapNavigation();bannerSetup()}).observe(document.body,{childList:true,subtree:true});
  }
