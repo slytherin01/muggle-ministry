@@ -4797,7 +4797,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
  const canViewPortal=()=>permissions.can_view_portal===true;
  const canViewNews=()=>permissions.can_view_news===true||canNews();
- const canViewFaq=()=>permissions.can_view_faq===true;
+ const canViewFaq=()=>permissions.can_view_faq===true||permissions.can_manage_faq===true;
  const canViewTickets=()=>permissions.can_view_tickets===true||canSupport();
  const canUseTickets=()=>permissions.can_use_tickets===true;
  const canNews=()=>permissions.can_manage_news===true;
