@@ -109,19 +109,28 @@
   $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
   $("#roleAssignForm").onsubmit=saveToolRole;
   $("#roleCreateForm").onsubmit=createToolRole;
-  $("#roleSearch").oninput=applyRoleFilters;$("#roleFilter").onchange=applyRoleFilters;$("#roleRefresh").onclick=loadToolRoles;
-  $("#roleUserSearch").oninput=applyUserFilters;$("#roleUserRefresh").onclick=loadToolRoles;
+  $("#roleEditorSelect").onchange=renderSelectedRole;
+  $("#roleRefresh").onclick=loadToolRoles;
+  $("#roleUserRefresh").onclick=loadToolRoles;
   document.addEventListener("click",async e=>{
-   const roleOpen=e.target.closest("[data-role-open]");if(roleOpen){const d=document.querySelector('[data-role-details="'+CSS.escape(roleOpen.dataset.roleOpen)+'"]');if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"center"})}}
-   const userEdit=e.target.closest("[data-role-user-edit]");if(userEdit){const select=document.querySelector('[data-user-role="'+CSS.escape(userEdit.dataset.roleUserEdit)+'"]');select?.focus();select?.scrollIntoView({behavior:"smooth",block:"center"})}
-   const save=e.target.closest("[data-role-save]");if(save)saveRoleDefinition(save);
+   const save=e.target.closest("[data-role-save-all]");if(save)saveRoleDefinition(save);
    const del=e.target.closest("[data-role-delete]");if(del)deleteToolRole(del);
    const userSave=e.target.closest("[data-role-user-save]");
-   if(userSave){const id=userSave.dataset.roleUserSave,role=document.querySelector('[data-user-role="'+CSS.escape(id)+'"]')?.value;userSave.disabled=true;const current=await client().auth.getUser();if(id===current.data.user?.id){$("#roleStatus").textContent="Je kunt je eigen accountrol niet vanuit dit scherm wijzigen.";userSave.disabled=false;return}if(role==="administrator"&&document.body.dataset.supabaseRole!=="administrator"){$("#roleStatus").textContent="Alleen een administrator kan de administratorrol toewijzen.";userSave.disabled=false;return}const {error}=await client().from("tool_access_roles").update({role}).eq("user_id",id);$("#roleStatus").textContent=error?"Wijzigen mislukt: "+error.message:"Gebruikersrol bijgewerkt.";userSave.disabled=false;if(!error)loadToolRoles();}
+   if(userSave){
+    const id=userSave.dataset.roleUserSave,role=document.querySelector('[data-user-role="'+CSS.escape(id)+'"]')?.value;
+    userSave.disabled=true;const current=await client().auth.getUser();
+    if(id===current.data.user?.id){$("#roleStatus").textContent="Je kunt je eigen accountrol niet wijzigen.";userSave.disabled=false;return}
+    if(role==="administrator"&&document.body.dataset.supabaseRole!=="administrator"){$("#roleStatus").textContent="Alleen een administrator kan de administratorrol toewijzen.";userSave.disabled=false;return}
+    const {error}=await client().from("tool_access_roles").update({role}).eq("user_id",id);
+    $("#roleStatus").textContent=error?"Wijzigen mislukt: "+error.message:"Gebruikersrol bijgewerkt.";userSave.disabled=false;if(!error)loadToolRoles();
+   }
    const userDel=e.target.closest("[data-role-user-delete]");
-   if(userDel){const id=userDel.dataset.roleUserDelete,row=document.querySelector('[data-user-row="'+CSS.escape(id)+'"]'),current=await client().auth.getUser();if(id===current.data.user?.id||row?.querySelector("[data-user-role]")?.value==="administrator"){ $("#roleStatus").textContent="De eigen accountrol en administratoraccounts kunnen hier niet worden ingetrokken.";return}if(confirm("Deze gebruiker de toegang tot de tool ontnemen?")){const {error}=await client().from("tool_access_roles").delete().eq("user_id",id);$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles()}}
+   if(userDel){
+    const id=userDel.dataset.roleUserDelete,row=document.querySelector('[data-user-row="'+CSS.escape(id)+'"]'),current=await client().auth.getUser();
+    if(id===current.data.user?.id||row?.querySelector("[data-user-role]")?.value==="administrator"){$("#roleStatus").textContent="De eigen accountrol en administratoraccounts zijn beschermd.";return}
+    if(confirm("Deze gebruiker de toegang tot de tool ontnemen?")){const {error}=await client().from("tool_access_roles").delete().eq("user_id",id);$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles()}
+   }
   });
-  document.addEventListener("change",e=>{const input=e.target.closest("[data-role-permission]");if(input)saveRolePermission(input)});
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
   const tabs=$("#cmsTabs");const newsKindButton=document.createElement("button");newsKindButton.textContent="Nieuwspagina";newsKindButton.dataset.kind="news";newsKindButton.onclick=()=>selectKind("news");tabs.append(newsKindButton);
   switchNewsTab("content");selectKind("news");
