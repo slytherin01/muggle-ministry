@@ -4820,7 +4820,19 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=canViewPortal()&&!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
   document.documentElement.dataset.hpmwPortalRole=role;
   document.dispatchEvent(new CustomEvent("hpmw:portal-access-updated",{detail:{role,permissions}}));
- } 
+ }
+ const originalPortalShow=window.hpmwShowPortalView;
+ if(typeof originalPortalShow==="function"&&!originalPortalShow.__hpmwRoleGuard){
+  const guardedPortalShow=function(id,...args){
+   if(id!=="introView"&&!canViewPortal())return false;
+   if(id==="newsView"&&!canViewNews())return false;
+   if(id==="faqView"&&!canViewFaq())return false;
+   if(id==="homeView"&&!canViewTickets())return false;
+   return originalPortalShow.call(this,id,...args);
+  };
+  guardedPortalShow.__hpmwRoleGuard=true;window.hpmwShowPortalView=guardedPortalShow;
+ }
+ 
  document.addEventListener("click",event=>{
   const button=event.target instanceof Element?event.target.closest("#faqLaunch,#newsLaunch,#newsQuickLink,#ticketSupportLaunch"):null;if(!button)return;
   const allowed=button.matches("#faqLaunch")?canViewFaq():button.matches("#newsLaunch,#newsQuickLink")?canViewNews():canViewTickets();
