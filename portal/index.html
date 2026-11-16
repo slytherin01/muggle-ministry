@@ -4760,7 +4760,29 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
 .hpmw-permission-table thead th{background:#192d45;color:#c9dcf1;font-size:10px}
 .hpmw-permission-table tbody th{text-align:left;font-weight:650;color:#e3eaf4}
 .hpmw-permission-table .allowed{color:#9ce0b2;font-weight:900}.hpmw-permission-table .denied{color:#8796a9}
-</style>\n<script id="hpmw-unified-portal-rbac">
+</style>
+<style id="hpmw-role-manager-styles">
+#hpmwRolePermissionEditor .hpmw-role-create-card{border-color:#58769a;background:linear-gradient(145deg,#172d47,#102137)}
+#hpmwRolePermissionEditor .hpmw-role-create-form{display:grid;grid-template-columns:1fr 1.5fr auto;align-items:end;gap:12px}
+#hpmwRolePermissionEditor .hpmw-role-create-form .hpmw-manage-field{margin:0}
+#hpmwRolePermissionEditor .hpmw-role-definition{border-color:#354d69}
+#hpmwRolePermissionEditor .hpmw-role-definition-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+#hpmwRolePermissionEditor .hpmw-role-definition-head h3{margin:0 0 4px}
+#hpmwRolePermissionEditor .hpmw-role-definition-head code{font-size:11px;color:#9fb4cc}
+#hpmwRolePermissionEditor .hpmw-role-system{white-space:nowrap;padding:5px 9px;border:1px solid #4c6682;border-radius:20px;color:#c7d8eb;font-size:10px;font-weight:800}
+#hpmwRolePermissionEditor .hpmw-role-edit-fields{display:grid;grid-template-columns:1fr 1.5fr auto auto;gap:10px;align-items:end;margin:14px 0;padding:13px 0;border-top:1px solid #30465f;border-bottom:1px solid #30465f}
+#hpmwRolePermissionEditor .hpmw-role-edit-fields .hpmw-manage-field{margin:0}
+#hpmwRolePermissionEditor .hpmw-role-permission-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#hpmwRolePermissionEditor .hpmw-role-permission-group{padding:13px;border:1px solid #2d435d;border-radius:10px;background:#0e1c2d}
+#hpmwRolePermissionEditor .hpmw-role-permission-group h4{margin:0 0 10px;color:#dbe9f8;font-size:13px}
+#hpmwRolePermissionEditor .hpmw-role-permission-options{display:grid;gap:9px}
+#hpmwRolePermissionEditor .hpmw-role-permission-option{display:flex;align-items:center;gap:9px;color:#bdcde0;font-size:12px;cursor:pointer}
+#hpmwRolePermissionEditor .hpmw-role-permission-option input{width:16px;height:16px;accent-color:#8cb8e8}
+#hpmwRolePermissionEditor .hpmw-role-save-status{min-height:18px;margin-top:9px;color:#9ed9b0;font-size:11px}
+#hpmwRolePermissionEditor .hpmw-manage-btn.danger{border-color:#8d4d52;color:#ffd9dc}
+@media(max-width:760px){#hpmwRolePermissionEditor .hpmw-role-create-form,#hpmwRolePermissionEditor .hpmw-role-edit-fields,#hpmwRolePermissionEditor .hpmw-role-permission-groups{grid-template-columns:1fr}}
+</style>
+<script id="hpmw-unified-portal-rbac">
 (()=>{"use strict";
  const URL="https://vuaajsjjluwgqmneinds.supabase.co";
  const KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
