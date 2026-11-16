@@ -6871,5 +6871,35 @@ html body main.shell .view.active .cat{
   pointer-events:auto!important;
 }
 </style>
+
+<style id="hpmw-intro-overlay-hit-test-fix-20261116">
+/* De lege vaste intro-container mag geen klikvlak vormen; echte inhoud blijft klikbaar. */
+html body main.shell #introView{pointer-events:auto!important}
+html body main.shell #introView .intro-login-layout{
+  pointer-events:none!important;
+}
+html body main.shell #introView .intro-static-card,
+html body main.shell #introView .intro-static-card *,
+html body main.shell #introView .hpmw-entry-actions,
+html body main.shell #introView .hpmw-entry-actions *{
+  pointer-events:auto!important;
+}
+html body main.shell #introView .intro-static-card{
+  position:relative!important;
+  z-index:2!important;
+}
+html body main.shell #introView .hpmw-intro-quicklinks button,
+html body main.shell #introView .hpmw-intro-quicklinks a,
+html body header.topbar.luxury-nav-v2 .lux-nav-item{
+  position:relative!important;
+  z-index:100503!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+html body main.shell #introView .intro-static-card::before,
+html body main.shell #introView .intro-static-card::after{
+  pointer-events:none!important;
+}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
