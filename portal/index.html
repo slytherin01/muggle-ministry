@@ -2254,7 +2254,7 @@ if(nameEl)nameEl.textContent=user.logged?user.name:"Gast";
 if(account)account.href=user.logged?"/u"+user.id:"/login";
 if(avatarSlot){
 if(user.avatar)avatarSlot.innerHTML='<img src="'+esc(user.avatar)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">';
-else avatarSlot.innerHTML='<i class="fa-solid fa-user-astronaut" aria-hidden="true"></i>';
+else avatarSlot.innerHTML='<i class="fa-solid fa-user-circle" aria-hidden="true"></i>';
 }
 const adminButton=$("#adminLaunch"),portalButton=$("#portalManageLaunch"),myButton=$("#myTicketsLaunch");
 const forumId=Number(user.id||0),founder=user.logged&&[1,3].includes(forumId);
@@ -2512,7 +2512,7 @@ main.shell>.view{height:auto!important;min-height:0!important;overflow:visible!i
 #adminView .stat strong{font-size:20px!important}
 #adminView .ticket-table th,#adminView .ticket-table td,#myTicketsView .member-table th,#myTicketsView .member-table td{padding:8px 9px!important}
 /* Geen terugnavigatie naar forum of homepage vanuit Ticket Support. */
-a[href="/forum"],a[href="/"],a[href*="viewforum"],a[href*="index.php"],.global-brand{pointer-events:none!important}
+a[href="/forum"],a[href="/"],a[href*="viewforum"],a[href*="index.php"],.global-brand{pointer-events:auto!important;cursor:pointer!important}
 @media(max-width:850px){#homeView .categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:600px){
  main.shell{width:calc(100% - 18px);margin:14px auto 20px!important;min-height:calc(100vh - 100px)!important}
@@ -2633,7 +2633,7 @@ main.shell>.view::before{content:none!important;display:none!important;backgroun
 #hpmwLanguagePopup button:hover,#hpmwLanguagePopup button.active{background:#354765;color:#fff}
 @media(max-width:760px){.top-actions{gap:4px!important;overflow-x:auto!important;overflow-y:visible!important}#hpmwGlobeButton{width:32px;height:32px;flex-basis:32px!important}}
 </style>
-<script id="hpmw-language-menu-fixed-script" src="https://slytherin01.github.io/muggle-ministry/translations.js?v=20261108-6" defer></script>
+<script id="hpmw-language-menu-fixed-script" src="https://slytherin01.github.io/muggle-ministry/translations.js?v=20261116-56" defer></script>
 <div aria-hidden="true" class="hpmw-modal-overlay" id="hpmwFaqOverlay">
 <section aria-labelledby="hpmwFaqTitle" aria-modal="true" class="hpmw-modal-card hpmw-faq-card" role="dialog">
 <button aria-label="Sluiten" class="hpmw-modal-close" data-hpmw-close="" type="button">×</button>
@@ -4811,8 +4811,8 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  async function getRole(){
   await ensureClient();
-  if(!session?.user){role=document.documentElement.classList.contains("member-login-ready")?"member":"guest"}
-  else{const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"member"}
+  if(!session?.user){role=document.documentElement.classList.contains("member-login-ready")?"user":"guest"}
+  else{const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user"}
   const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("*").eq("role",role).maybeSingle();
   if(permissionError)throw permissionError;permissions=permissionRow||{};
   applyPortalVisibility();return role
@@ -6829,3 +6829,4 @@ html body{padding-top:70px!important}
 </script>
 </script>
 </body></html>
+<style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
