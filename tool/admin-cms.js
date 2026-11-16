@@ -58,7 +58,9 @@
    </section>
    <section class="hpmw-auth-section" id="roleManagerSection">
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 2</div><h2>Rechten instellen</h2><p>Kies één rol en vink aan wat deze rol in het portaal mag doen.</p></div></div>
-    <div class="hpmw-simple-role-select"><label for="roleEditorSelect">Welke rol wil je aanpassen?</label><select id="roleEditorSelect"><option value="">Rollen laden…</option></select><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div>
+    <div class="hpmw-role-catalog-heading"><div><h3>Alle rollen</h3><p>Klik op een rol om de rechten en instellingen te openen.</p></div><span id="roleCatalogStatus">Rollen ophalen…</span></div>
+    <div id="roleCatalogList" class="hpmw-role-catalog"><p class="cms-help">Rollen ophalen uit Supabase…</p></div>
+    <div class="hpmw-simple-role-select"><label for="roleEditorSelect">Geselecteerde rol</label><select id="roleEditorSelect"><option value="">Rollen laden…</option></select><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div>
     <div id="roleManagerList" class="hpmw-simple-role-editor"><p class="cms-help">Rollen laden…</p></div>
    </section>
    <section class="cms-panel hpmw-auth-assign" id="roleAssignPanel">
@@ -108,7 +110,14 @@
   $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
   $("#roleAssignForm").onsubmit=saveToolRole;
   $("#roleCreateForm").onsubmit=createToolRole;
-  $("#roleEditorSelect").onchange=renderSelectedRole;
+  $("#roleEditorSelect").onchange=()=>{renderSelectedRole();renderRoleCatalog([]);};
+  $("#roleCatalogList").addEventListener("click",event=>{
+   const tile=event.target.closest("[data-role-pick]");if(!tile)return;
+   selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;
+   renderSelectedRole();
+   const members=Array.isArray(window.__hpmwRoleMembers)?window.__hpmwRoleMembers:[];
+   renderRoleCatalog(members);
+  });
   $("#roleRefresh").onclick=loadToolRoles;
   $("#roleUserRefresh").onclick=loadToolRoles;
   document.addEventListener("click",async e=>{
@@ -157,22 +166,38 @@
  const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
  let selectedRoleKey="";
  async function loadToolRoles(){
-  const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect");if(!db||!box)return;
-  box.textContent="Rollen laden…";
-  const [{data:defs,error:de},{data:members,error:me}]=await Promise.all([
-   db.from("portal_role_permissions").select("*").order("role_name"),
-   db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false})
-  ]);
-  if(de||me){box.textContent="Laden mislukt: "+(de?.message||me?.message);return}
-  roleDefinitions=defs||[];
-  $("#roleCount").textContent=roleDefinitions.length;$("#roleUserCount").textContent=(members||[]).length;$("#roleUserCountInline").textContent=(members||[]).length+" gekoppeld";
+  const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect"),catalog=$("#roleCatalogList");
+  if(!db||!box)return;
+  if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
+  box.innerHTML='<p class="cms-help">Selecteer een rol om de rechten te bekijken.</p>';
+  const defsResult=await db.from("portal_role_permissions").select("*").order("role_name",{ascending:true});
+  if(defsResult.error){
+   const message="Rollen konden niet worden geladen: "+defsResult.error.message;
+   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   $("#roleCount").textContent="—";
+   return;
+  }
+  roleDefinitions=Array.isArray(defsResult.data)?defsResult.data:[];
+  $("#roleCount").textContent=String(roleDefinitions.length);
+  if(!roleDefinitions.length){
+   const message="Supabase heeft geen rollen teruggegeven. Controleer de tabel portal_role_permissions en de leesrechten (RLS).";
+   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   return;
+  }
+  // Roles are rendered independently from user assignments: a restricted assignment query
+  // must never hide the role catalogue.
+  const membersResult=await db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false});
+  const members=membersResult.error?[]:(membersResult.data||[]);window.__hpmwRoleMembers=members;
+  $("#roleUserCount").textContent=membersResult.error?"—":String(members.length);
+  $("#roleUserCountInline").textContent=membersResult.error?"Gebruikerslijst niet toegankelijk":members.length+" gekoppeld";
   if(select){
    const previous=selectedRoleKey||select.value;
-   select.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+' ('+(members||[]).filter(m=>m.role===r.role).length+')</option>').join("");
-   selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions.some(r=>r.role==="guest")?"guest":(roleDefinitions[0]?.role||""));
+   select.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("");
+   selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions.some(r=>r.role==="guest")?"guest":roleDefinitions[0].role);
    select.value=selectedRoleKey;
   }
-  // Keep the assignment selector in sync too; otherwise it remains stuck on “Rollen laden…”.
   const assignSelect=$("#roleValue");
   if(assignSelect){
    const previousAssign=assignSelect.value;
@@ -180,22 +205,40 @@
    assignSelect.innerHTML='<option value="">Selecteer een rol…</option>'+roleDefinitions
     .filter(r=>r.role!=="administrator"||canAssignAdmin)
     .map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("");
-   assignSelect.value=roleDefinitions.some(r=>r.role===previousAssign)&&
-    (previousAssign!=="administrator"||canAssignAdmin)?previousAssign:"";
+   assignSelect.value=roleDefinitions.some(r=>r.role===previousAssign)&&(previousAssign!=="administrator"||canAssignAdmin)?previousAssign:"";
   }
+  renderRoleCatalog(members);
   renderSelectedRole();
   const userBox=$("#roleList");
-  if(userBox)userBox.innerHTML=(members||[]).map(row=>{
-   const current=roleDefinitions.find(r=>r.role===row.role),name=current?.role_name||systemRoleNames[row.role]||row.role;
-   return '<div class="hpmw-auth-user-row" data-user-row="'+esc(row.user_id)+'"><div class="hpmw-auth-user-identity"><strong>'+esc(name)+'</strong><code>'+esc(row.user_id)+'</code></div><div class="hpmw-auth-user-controls"><select data-user-role="'+esc(row.user_id)+'">'+roleDefinitions.filter(r=>r.role!=="administrator"||document.body.dataset.supabaseRole==="administrator").map(r=>'<option value="'+esc(r.role)+'" '+(r.role===row.role?"selected":"")+'>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("")+'</select><button class="cms-btn" type="button" data-role-user-save="'+esc(row.user_id)+'">Rol opslaan</button><button class="cms-btn hpmw-role-delete" type="button" data-role-user-delete="'+esc(row.user_id)+'" '+(row.role==="administrator"?"disabled":"")+'>Toegang intrekken</button></div></div>';
-  }).join("")||'<p class="cms-help">Nog geen gebruikers gekoppeld. Koppel hierboven een Supabase UUID aan een rol.</p>';
+  if(userBox){
+   if(membersResult.error){
+    userBox.innerHTML='<p class="cms-error">Gebruikerstoewijzingen niet toegankelijk: '+esc(membersResult.error.message)+'. De rollen hierboven zijn wel geladen.</p>';
+   }else{
+    userBox.innerHTML=members.map(row=>{
+     const current=roleDefinitions.find(r=>r.role===row.role),name=current?.role_name||systemRoleNames[row.role]||row.role;
+     return '<div class="hpmw-auth-user-row" data-user-row="'+esc(row.user_id)+'"><div class="hpmw-auth-user-identity"><strong>'+esc(name)+'</strong><code>'+esc(row.user_id)+'</code></div><div class="hpmw-auth-user-controls"><select data-user-role="'+esc(row.user_id)+'">'+roleDefinitions.filter(r=>r.role!=="administrator"||document.body.dataset.supabaseRole==="administrator").map(r=>'<option value="'+esc(r.role)+'" '+(r.role===row.role?"selected":"")+'>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("")+'</select><button class="cms-btn" type="button" data-role-user-save="'+esc(row.user_id)+'">Rol opslaan</button><button class="cms-btn hpmw-role-delete" type="button" data-role-user-delete="'+esc(row.user_id)+'" '+(row.role==="administrator"?"disabled":"")+'>Toegang intrekken</button></div></div>';
+    }).join("")||'<p class="cms-help">Nog geen gebruikers gekoppeld. Koppel hierboven een Supabase UUID aan een rol.</p>';
+   }
+  }
+ }
+ function renderRoleCatalog(members=[]){
+  const box=$("#roleCatalogList");if(!box)return;
+  box.innerHTML=roleDefinitions.map(role=>{
+   const count=members.filter(m=>m.role===role.role).length;
+   const title=role.role_name||systemRoleNames[role.role]||role.role;
+   const isSelected=role.role===$("#roleEditorSelect")?.value;
+   const type=role.is_system?"Systeemrol":"Eigen rol";
+   const active=permissionKeys.filter(k=>!!role[k]).length;
+   return '<button type="button" class="hpmw-role-tile '+(isSelected?"is-selected":"")+'" data-role-pick="'+esc(role.role)+'" aria-pressed="'+(isSelected?"true":"false")+'"><span class="hpmw-role-tile-top"><strong>'+esc(title)+'</strong><span class="hpmw-role-kind">'+type+'</span></span><code>'+esc(role.role)+'</code><span class="hpmw-role-tile-meta">'+count+' gebruiker(s) · '+active+'/'+permissionKeys.length+' rechten</span><span class="hpmw-role-tile-action">'+(isSelected?"Geselecteerd":"Rechten bekijken →")+'</span></button>';
+  }).join("");
+  const status=$("#roleCatalogStatus");if(status)status.textContent=roleDefinitions.length+" rollen beschikbaar";
  }
  function renderSelectedRole(){
   const box=$("#roleManagerList"),role=roleDefinitions.find(r=>r.role===$("#roleEditorSelect")?.value);if(!box)return;
   if(!role){box.innerHTML='<p class="cms-help">Maak eerst een rol aan.</p>';return}
   selectedRoleKey=role.role;
   const protectedAdmin=role.role==="administrator";
-  box.innerHTML='<div class="hpmw-simple-role-head"><div><strong>'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'</strong><small>'+esc(role.role)+(role.is_system?' · Systeemrol':' · Eigen rol')+'</small></div><span>'+permissionKeys.filter(k=>!!role[k]).length+' van '+permissionKeys.length+' rechten actief</span></div><div class="hpmw-simple-role-fields"><label>Rolnaam<input id="roleEditName" maxlength="60" value="'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'" '+(protectedAdmin?'disabled':'')+'></label><label>Omschrijving<input id="roleEditDescription" maxlength="180" value="'+esc(role.description||"")+'" '+(protectedAdmin?'disabled':'')+'></label></div>'+permissionGroups.map(g=>'<section class="hpmw-simple-permission-group"><h3>'+g.title+'</h3>'+g.items.map(([key,label])=>'<label class="hpmw-simple-permission"><input type="checkbox" data-role-edit-permission="'+key+'" '+(role[key]?'checked':'')+' '+(protectedAdmin?'disabled':'')+'><span>'+label+'</span></label>').join("")+'</section>').join("")+'<div class="hpmw-simple-role-actions"><button class="cms-btn primary" type="button" data-role-save-all="'+esc(role.role)+'" '+(protectedAdmin?'disabled':'')+'>Alle rechten opslaan</button>'+(role.is_system?'':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(role.role)+'">Rol verwijderen</button>')+'</div><p class="cms-status" id="roleEditorStatus" role="status"></p>';
+  box.innerHTML='<div class="hpmw-simple-role-head"><div><strong>'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'</strong><small>'+esc(role.role)+(role.is_system?' · Systeemrol':' · Eigen rol')+'</small></div><span>'+permissionKeys.filter(k=>!!role[k]).length+' van '+permissionKeys.length+' rechten actief</span></div><div class="hpmw-simple-role-fields"><label>Rolnaam<input id="roleEditName" maxlength="60" value="'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'" '+(protectedAdmin?'disabled':'')+'></label><label>Omschrijving<input id="roleEditDescription" maxlength="180" value="'+esc(role.description||"")+'" '+(protectedAdmin?'disabled':'')+'></label></div>'+permissionGroups.map(g=>'<section class="hpmw-simple-permission-group hpmw-permission-widget"><h3>'+g.title+'</h3>'+g.items.map(([key,label])=>'<label class="hpmw-simple-permission"><input type="checkbox" data-role-edit-permission="'+key+'" '+(role[key]?'checked':'')+' '+(protectedAdmin?'disabled':'')+'><span>'+label+'</span></label>').join("")+'</section>').join("")+'<div class="hpmw-simple-role-actions"><button class="cms-btn primary" type="button" data-role-save-all="'+esc(role.role)+'" '+(protectedAdmin?'disabled':'')+'>Alle rechten opslaan</button>'+(role.is_system?'':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(role.role)+'">Rol verwijderen</button>')+'</div><p class="cms-status" id="roleEditorStatus" role="status"></p>';
  }
  async function saveToolRole(event){
   event.preventDefault();const db=client(),id=$("#roleUserId").value.trim(),role=$("#roleValue").value;
