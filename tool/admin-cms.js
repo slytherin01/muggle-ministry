@@ -128,7 +128,7 @@
 
   $("#cmsBack")?.addEventListener("click",()=>go("newAdminDashboard"));$("#cmsNew")?.addEventListener("click",reset);
   $("#ticketModAdd")?.addEventListener("click",addTicketModerator);$("#saveTicketRights")?.addEventListener("click",saveTicketModeratorRights);
-  $("#newsModAdd")?.addEventListener("click",addNewsModerator);$("#saveNewsRights")?.addEventListener("click",saveNewsModeratorsRights);$("#syncNewsRights")?.addEventListener("click",syncNewsModerators);
+  $("#newsModAdd")?.addEventListener("click",addNewsModerator);$("#saveNewsRights")?.addEventListener("click",saveNewsModeratorRights);$("#syncNewsRights")?.addEventListener("click",syncNewsModerators);
   $("#roleAssignForm")?.addEventListener("submit",saveToolRole);
   $("#roleCreateForm")?.addEventListener("submit",createToolRole);
   $("#roleEditorSelect")?.addEventListener("change",()=>{renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);});
