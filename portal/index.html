@@ -4805,9 +4805,9 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const canViewModteam=()=>permissions.can_view_modteam===true;
  const canViewAwards=()=>permissions.can_view_awards===true;
  const canUseTickets=()=>permissions.can_use_tickets===true;
- const canNews=()=>permissions.can_manage_news===true;
- const canDeleteNews=()=>permissions.can_delete_news===true;
- const canApproveNews=()=>permissions.can_approve_news===true;
+ const canNews=()=>!!session?.user&&permissions.can_manage_news===true;
+ const canDeleteNews=()=>!!session?.user&&permissions.can_delete_news===true;
+ const canApproveNews=()=>!!session?.user&&permissions.can_approve_news===true;
  const canSupport=()=>permissions.can_use_tickets===true;
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  async function getRole(){
