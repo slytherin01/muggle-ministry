@@ -4760,33 +4760,11 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
 .hpmw-permission-table thead th{background:#192d45;color:#c9dcf1;font-size:10px}
 .hpmw-permission-table tbody th{text-align:left;font-weight:650;color:#e3eaf4}
 .hpmw-permission-table .allowed{color:#9ce0b2;font-weight:900}.hpmw-permission-table .denied{color:#8796a9}
-</style>
-<style id="hpmw-role-manager-styles">
-#hpmwRolePermissionEditor .hpmw-role-create-card{border-color:#58769a;background:linear-gradient(145deg,#172d47,#102137)}
-#hpmwRolePermissionEditor .hpmw-role-create-form{display:grid;grid-template-columns:1fr 1.5fr auto;align-items:end;gap:12px}
-#hpmwRolePermissionEditor .hpmw-role-create-form .hpmw-manage-field{margin:0}
-#hpmwRolePermissionEditor .hpmw-role-definition{border-color:#354d69}
-#hpmwRolePermissionEditor .hpmw-role-definition-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-#hpmwRolePermissionEditor .hpmw-role-definition-head h3{margin:0 0 4px}
-#hpmwRolePermissionEditor .hpmw-role-definition-head code{font-size:11px;color:#9fb4cc}
-#hpmwRolePermissionEditor .hpmw-role-system{white-space:nowrap;padding:5px 9px;border:1px solid #4c6682;border-radius:20px;color:#c7d8eb;font-size:10px;font-weight:800}
-#hpmwRolePermissionEditor .hpmw-role-edit-fields{display:grid;grid-template-columns:1fr 1.5fr auto auto;gap:10px;align-items:end;margin:14px 0;padding:13px 0;border-top:1px solid #30465f;border-bottom:1px solid #30465f}
-#hpmwRolePermissionEditor .hpmw-role-edit-fields .hpmw-manage-field{margin:0}
-#hpmwRolePermissionEditor .hpmw-role-permission-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-#hpmwRolePermissionEditor .hpmw-role-permission-group{padding:13px;border:1px solid #2d435d;border-radius:10px;background:#0e1c2d}
-#hpmwRolePermissionEditor .hpmw-role-permission-group h4{margin:0 0 10px;color:#dbe9f8;font-size:13px}
-#hpmwRolePermissionEditor .hpmw-role-permission-options{display:grid;gap:9px}
-#hpmwRolePermissionEditor .hpmw-role-permission-option{display:flex;align-items:center;gap:9px;color:#bdcde0;font-size:12px;cursor:pointer}
-#hpmwRolePermissionEditor .hpmw-role-permission-option input{width:16px;height:16px;accent-color:#8cb8e8}
-#hpmwRolePermissionEditor .hpmw-role-save-status{min-height:18px;margin-top:9px;color:#9ed9b0;font-size:11px}
-#hpmwRolePermissionEditor .hpmw-manage-btn.danger{border-color:#8d4d52;color:#ffd9dc}
-@media(max-width:760px){#hpmwRolePermissionEditor .hpmw-role-create-form,#hpmwRolePermissionEditor .hpmw-role-edit-fields,#hpmwRolePermissionEditor .hpmw-role-permission-groups{grid-template-columns:1fr}}
-</style>
-<script id="hpmw-unified-portal-rbac">
+</style>\n<script id="hpmw-unified-portal-rbac">
 (()=>{"use strict";
  const URL="https://vuaajsjjluwgqmneinds.supabase.co";
  const KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
- let ROLES=[
+ const ROLES=[
   ["administrator","Administrator","Volledige toegang tot alle portaalonderdelen, rechten en instellingen."],
   ["support_moderator","Support moderator","Uitsluitend Ticket Support."],
   ["news_poster","Nieuwsposter","Nieuws indienen en eigen concepten bewerken; geen publicatie of verwijdering."],
@@ -4817,27 +4795,26 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  }
  let session=null,role="guest",editingNewsId=null;
  const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
- const canNews=()=>role==="administrator"||permissions.can_manage_news===true;
- const canDeleteNews=()=>role==="administrator"||permissions.can_delete_news===true;
- const canApproveNews=()=>role==="administrator"||permissions.can_approve_news===true;
- const canSupport=()=>role==="administrator"||permissions.can_use_tickets===true;
- const canManageRoles=()=>role==="administrator"||permissions.can_manage_roles===true;
+ const canNews=()=>role==="administrator"||permissions.can_manage_news===true||["news_poster","news_poster_supervisor"].includes(role);
+ const canDeleteNews=()=>role==="administrator"||permissions.can_delete_news===true||role==="news_poster_supervisor";
+ const canApproveNews=()=>role==="administrator"||permissions.can_approve_news===true||role==="news_poster_supervisor";
+ const canSupport=()=>["administrator","support_moderator","supervisor_support_team"].includes(role);
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- async function getRole(){if(!session?.user){role="guest";permissions={};return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("*").eq("role",role).maybeSingle();if(permissionError)throw permissionError;permissions=permissionRow||{};return role}
+ async function getRole(){if(!session?.user){role="guest";permissions={};return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("can_manage_news,can_delete_news,can_approve_news").eq("role",role).maybeSingle();if(permissionError)throw permissionError;permissions=permissionRow||{};return role}
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canNews,canDeleteNews,canApproveNews,canSupport,canManageRoles,client,headers,ensureClient};
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient};
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
  function open(){if(!layer)return;layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()} window.HpmwOpenPortalAdmin=open;
  function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Beveiligde beheerderslogin</h3><p>Log eenmalig in met het bestaande beheerdersaccount. Je hoeft geen nieuw account aan te maken.</p><form id="hpmwPortalMagicLink"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="email" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-envelope"></i> Stuur een eenmalige inloglink</button><div class="hpmw-manage-status" id="hpmwManageStatus" aria-live="polite"></div></form><details style="margin-top:14px"><summary>Of inloggen met wachtwoord</summary><form id="hpmwPortalLogin" style="margin-top:12px"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button></form></details></div>'}
  function buildPortalAdminTabs(){
  if(!body)return;
  const sections={overview:body.querySelector('[data-admin-section="overview"]'),users:body.querySelector('[data-admin-section="users"]'),permissions:body.querySelector('[data-admin-section="permissions"]'),tickets:body.querySelector('[data-admin-section="tickets"]'),faq:body.querySelector('[data-admin-section="faq"]')};
- 
+ if(sections.users&&sections.permissions)sections.users.appendChild(sections.permissions);
 
  const shell=document.createElement("div");shell.className="hpmw-admin-tab-shell";
  const nav=document.createElement("nav");nav.className="hpmw-admin-tabs";nav.setAttribute("aria-label","Portal Admin onderdelen");
  const content=document.createElement("div");content.className="hpmw-admin-tab-content";
- const defs=[["overview","Overzicht"],["users","Gebruikers"],["permissions","Autorisaties & rollen"]],panes={};
+ const defs=[["overview","Overzicht"],["users","Gebruikers & rollen"]],panes={};
  defs.forEach(([id,label],i)=>{const b=document.createElement("button");b.type="button";b.className="hpmw-admin-tab"+(i===0?" active":"");b.dataset.adminTab=id;b.textContent=label;nav.appendChild(b);const p=document.createElement("section");p.className="hpmw-admin-pane";p.dataset.adminPane=id;p.hidden=i!==0;if(sections[id])p.appendChild(sections[id]);content.appendChild(p);panes[id]=p});
  shell.append(nav,content);body.prepend(shell);
  nav.addEventListener("click",e=>{const b=e.target.closest("[data-admin-tab]");if(!b)return;if(b.dataset.adminTab==="faq"){close();window.hpmwShowPortalView?.("faqView");setTimeout(()=>document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}})),180);return}nav.querySelectorAll(".hpmw-admin-tab").forEach(x=>x.classList.toggle("active",x===b));Object.entries(panes).forEach(([id,p])=>p.hidden=id!==b.dataset.adminTab)});
@@ -4849,7 +4826,6 @@ async function renderManage(){
  if(!session){role="guest";body.innerHTML=loginMarkup();return}
  try{await getRole()}catch(e){body.innerHTML='<p class="hpmw-manage-status">'+esc(e.message)+'</p>';return}
  if(role!=="administrator"){body.innerHTML='<p class="hpmw-manage-status">Geen toegang. Portal Admin is uitsluitend beschikbaar voor administrators.</p>';return}
- const {data:roleDefs,error:roleDefsError}=await client.from("portal_role_permissions").select("role,role_name,description,is_system").order("role_name");if(roleDefsError){body.innerHTML='<p class="hpmw-manage-status">'+esc(roleDefsError.message)+'</p>';return}ROLES=(roleDefs||[]).map(r=>[r.role,r.role_name||r.role,r.description||""]);
  const {data:members,error}=await client.from("tool_access_roles").select("id,user_id,role,created_at").order("created_at");if(error){body.innerHTML='<p class="hpmw-manage-status">'+esc(error.message)+'</p>';return}
  const {data:links,error:linkError}=await client.from("portal_forum_accounts").select("supabase_user_id,forumotion_user_id,forum_username");if(linkError){body.innerHTML='<p class="hpmw-manage-status">'+esc(linkError.message)+'</p>';return}
  const linkMap=Object.fromEntries((links||[]).map(x=>[x.supabase_user_id,x]));
@@ -5065,60 +5041,11 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 </script>
 <script id="hpmw-portal-admin-role-visibility">/* Vervangen door de centrale navigatierechtencontrole. */</script><script id="hpmw-portal-role-permission-ui">
 (()=>{"use strict";
- const groups=[
-  {title:"Portaal",items:[["can_view_portal","Portaal bekijken"],["can_use_tickets","Ticket Support gebruiken"]]},
-  {title:"Nieuwsberichten",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws goedkeuren en publiceren"],["can_delete_news","Nieuws verwijderen"]]},
-  {title:"FAQ",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ goedkeuren en publiceren"],["can_delete_faq","FAQ verwijderen"]]},
-  {title:"Beheer",items:[["can_manage_settings","Instellingen beheren"],["can_manage_roles","Rollen en rechten beheren"]]}
- ];
- const allKeys=groups.flatMap(g=>g.items.map(x=>x[0]));
- const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- const slug=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
- const host=()=>document.getElementById("hpmwRolePermissionEditor");
- async function load(){
-  const el=host(),a=window.HpmwPortalAccess;if(!el)return;
-  if(!a?.session||a.role!=="administrator"){el.textContent="Alleen administrators kunnen rollen en autorisaties beheren.";return}
-  el.innerHTML='<p class="hpmw-admin-muted">Rollen en rechten laden…</p>';
-  const {data,error}=await a.client.from("portal_role_permissions").select("*").order("role_name");
-  if(error){el.textContent="Rollen konden niet worden geladen: "+error.message;return}
-  const rows=data||[];
-  el.innerHTML='<section class="hpmw-admin-card hpmw-role-create-card"><h3><i class="fa-solid fa-circle-plus"></i> Nieuwe rol aanmaken</h3><p>Maak een eigen rol en bepaal hieronder welke onderdelen toegankelijk zijn.</p><form id="hpmwCreatePortalRole" class="hpmw-role-create-form"><label class="hpmw-manage-field">Rolnaam<input name="role_name" maxlength="60" required placeholder="Bijv. Nieuwsredactie"></label><label class="hpmw-manage-field">Omschrijving<input name="description" maxlength="180" placeholder="Waarvoor is deze rol bedoeld?"></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-plus"></i> Rol aanmaken</button><div class="hpmw-manage-status" id="hpmwRoleCreateStatus" aria-live="polite"></div></form></section>'+
- '<div class="hpmw-role-definitions">'+rows.map(r=>{
-  const system=r.is_system||r.role==="administrator";
-  return '<section class="hpmw-admin-card hpmw-role-definition" data-role-card="'+esc(r.role)+'"><div class="hpmw-role-definition-head"><div><h3>'+esc(r.role_name||r.role)+'</h3><code>'+esc(r.role)+'</code><p>'+esc(r.description||"Geen omschrijving")+'</p></div><span class="hpmw-role-system">'+(system?"Systeemrol":"Eigen rol")+'</span></div>'+
-   '<div class="hpmw-role-edit-fields"><label class="hpmw-manage-field">Naam<input data-role-name="'+esc(r.role)+'" maxlength="60" value="'+esc(r.role_name||r.role)+'" '+(r.role==="administrator"?"disabled":"")+'></label><label class="hpmw-manage-field">Omschrijving<input data-role-description="'+esc(r.role)+'" maxlength="180" value="'+esc(r.description||"")+'"></label><button type="button" class="hpmw-manage-btn" data-role-definition-save="'+esc(r.role)+'">Naam opslaan</button>'+(system?'<span class="hpmw-admin-muted">Systeemrol — verwijderen niet mogelijk</span>':'<button type="button" class="hpmw-manage-btn danger" data-role-definition-delete="'+esc(r.role)+'"><i class="fa-solid fa-trash"></i> Rol verwijderen</button>')+'</div>'+
-   '<div class="hpmw-role-permission-groups">'+groups.map(g=>'<div class="hpmw-role-permission-group"><h4>'+g.title+'</h4><div class="hpmw-role-permission-options">'+g.items.map(([key,label])=>'<label class="hpmw-role-permission-option"><input type="checkbox" data-role-permission="'+esc(r.role)+'" data-permission-key="'+key+'" '+(r[key]?"checked":"")+' '+(r.role==="administrator"?"disabled":"")+'><span>'+label+'</span></label>').join("")+'</div></div>').join("")+'</div>'+
-   '<div class="hpmw-role-save-status" data-role-status="'+esc(r.role)+'" aria-live="polite"></div></section>';
- }).join("")+'</div>';
- }
- document.addEventListener("submit",async e=>{
-  if(e.target.id!=="hpmwCreatePortalRole")return;
-  e.preventDefault();const a=window.HpmwPortalAccess,fd=new FormData(e.target),name=String(fd.get("role_name")||"").trim(),description=String(fd.get("description")||"").trim(),key=slug(name),status=document.getElementById("hpmwRoleCreateStatus");
-  if(!key||key==="administrator"){status.textContent="Kies een geldige rolnaam.";return}
-  status.textContent="Rol wordt aangemaakt…";
-  const payload={role:key,role_name:name,description,is_system:false,...Object.fromEntries(allKeys.map(k=>[k,false]))};
-  const {error}=await a.client.from("portal_role_permissions").insert(payload);
-  if(error){status.textContent=error.code==="23505"?"Deze rol bestaat al. Kies een andere naam.":error.message;return}
-  status.textContent="Rol aangemaakt.";document.dispatchEvent(new CustomEvent("hpmw:portal-admin-rendered"));
-  await load();
- });
- document.addEventListener("click",async e=>{
-  const a=window.HpmwPortalAccess;if(!a?.session||a.role!=="administrator")return;
-  const save=e.target.closest("[data-role-definition-save]");
-  if(save){const role=save.dataset.roleDefinitionSave,name=host().querySelector("[data-role-name='"+CSS.escape(role)+"']")?.value.trim(),description=host().querySelector("[data-role-description='"+CSS.escape(role)+"']")?.value.trim()||"",status=host().querySelector("[data-role-status='"+CSS.escape(role)+"']");if(!name){status.textContent="Rolnaam is verplicht.";return}save.disabled=true;const {error}=await a.client.from("portal_role_permissions").update({role_name:name,description,updated_by:a.session.user.id,updated_at:new Date().toISOString()}).eq("role",role);save.disabled=false;status.textContent=error?"Opslaan mislukt: "+error.message:"Rolgegevens opgeslagen.";if(!error)await load();return}
-  const del=e.target.closest("[data-role-definition-delete]");
-  if(del){const role=del.dataset.roleDefinitionDelete;const {count,error}=await a.client.from("tool_access_roles").select("id",{count:"exact",head:true}).eq("role",role);if(error){alert(error.message);return}if(count){alert("Deze rol is nog aan "+count+" gebruiker(s) gekoppeld. Wijs eerst een andere rol toe.");return}if(!confirm("Rol '"+role+"' definitief verwijderen?"))return;const {error:removeError}=await a.client.from("portal_role_permissions").delete().eq("role",role).eq("is_system",false);if(removeError){alert("Verwijderen mislukt: "+removeError.message);return}await load();document.dispatchEvent(new CustomEvent("hpmw:portal-admin-rendered"));return}
- });
- document.addEventListener("change",async e=>{
-  const input=e.target.closest("[data-role-permission]");if(!input)return;
-  const a=window.HpmwPortalAccess;if(!a?.session||a.role!=="administrator")return;
-  const role=input.dataset.rolePermission,key=input.dataset.permissionKey,card=input.closest("[data-role-card]"),status=card?.querySelector("[data-role-status]"),before=!input.checked;
-  input.disabled=true;if(status)status.textContent="Recht opslaan…";
-  const {error}=await a.client.from("portal_role_permissions").update({[key]:input.checked,updated_by:a.session.user.id,updated_at:new Date().toISOString()}).eq("role",role);
-  input.disabled=role==="administrator";
-  if(error){input.checked=before;if(status)status.textContent="Opslaan mislukt: "+error.message}
-  else if(status)status.textContent="Rechten opgeslagen.";
- });
+ const keys=["can_view_portal","can_use_tickets","can_manage_news","can_delete_news","can_approve_news","can_manage_settings","can_manage_roles"];
+ const labels=["Portaal lezen","Ticket Support","Nieuws indienen/bewerken","Nieuws verwijderen","Nieuws goedkeuren","Instellingen beheren","Rollen beheren"];
+ const names={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam (legacy)"};
+ async function load(){const host=document.getElementById("hpmwRolePermissionEditor"),a=window.HpmwPortalAccess;if(!host||!a?.session||a.role!=="administrator")return;const {data,error}=await a.client.from("portal_role_permissions").select("*").order("role");if(error){host.textContent="Rechten konden niet worden geladen: "+error.message;return}host.innerHTML='<div class="hpmw-admin-scroll"><table class="hpmw-admin-table"><thead><tr><th>Rol</th>'+labels.map(x=>'<th>'+x+'</th>').join("")+'</tr></thead><tbody>'+(data||[]).filter(r=>!String(r.role).startsWith('faq_')).map(r=>'<tr><th>'+(names[r.role]||r.role)+'</th>'+keys.map(k=>'<td><input type="checkbox" data-permission-role="'+r.role+'" data-permission-key="'+k+'" '+(r[k]?'checked':'')+' '+(r.role==="administrator"?'disabled':'')+'></td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
+ document.addEventListener("change",async e=>{const el=e.target.closest("[data-permission-role]");if(!el)return;const a=window.HpmwPortalAccess;if(!a?.session||a.role!=="administrator")return;el.disabled=true;const payload={[el.dataset.permissionKey]:el.checked,updated_by:a.session.user.id,updated_at:new Date().toISOString()};const {error}=await a.client.from("portal_role_permissions").update(payload).eq("role",el.dataset.permissionRole);if(error){el.checked=!el.checked;alert("Opslaan mislukt: "+error.message)}el.disabled=false});
  document.addEventListener("hpmw:portal-admin-rendered",()=>setTimeout(load,0));
 })();
 </script>
