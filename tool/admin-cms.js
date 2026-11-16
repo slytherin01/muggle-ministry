@@ -355,8 +355,8 @@
   if(!roleDetailsOpen){box.innerHTML='<div class="hpmw-role-empty-widget"><span class="hpmw-role-empty-icon">✦</span><strong>Kies een rol om de details te bekijken</strong><p>Selecteer een rolkaart hierboven. De omschrijving, instellingen en rechten verschijnen dan hieronder.</p></div>';return}
   if(!role){box.innerHTML='<p class="cms-help">Maak eerst een rol aan.</p>';return}
   selectedRoleKey=role.role;
-  const protectedAdmin=role.role==="administrator"&&document.body.dataset.supabaseRole!=="administrator";
-  box.innerHTML='<div class="hpmw-simple-role-head"><div><strong>'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'</strong><small>'+esc(role.role)+(role.is_system?' · Systeemrol':' · Eigen rol')+'</small></div><span>'+permissionKeys.filter(k=>!!role[k]).length+' van '+permissionKeys.length+' rechten actief</span></div><div class="hpmw-simple-role-fields"><label>Rolnaam<input id="roleEditName" maxlength="60" value="'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'" '+(protectedAdmin?'disabled':'')+'></label><label>Omschrijving<input id="roleEditDescription" maxlength="180" value="'+esc(role.description||"")+'" '+(protectedAdmin?'disabled':'')+'></label></div>'+permissionGroups.map(g=>'<section class="hpmw-simple-permission-group hpmw-permission-widget"><h3>'+g.title+'</h3>'+g.items.map(([key,label])=>'<label class="hpmw-simple-permission"><input type="checkbox" data-role-edit-permission="'+key+'" '+(role[key]?'checked':'')+' '+(protectedAdmin?'disabled':'')+'><span>'+label+'</span></label>').join("")+'</section>').join("")+'<div class="hpmw-simple-role-actions"><button class="cms-btn primary" type="button" data-role-save-all="'+esc(role.role)+'" '+(protectedAdmin?'disabled':'')+'>Alle rechten opslaan</button>'+(role.is_system?'':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(role.role)+'">Rol verwijderen</button>')+'</div><p class="cms-status" id="roleEditorStatus" role="status"></p>';
+  const protectedAdmin=role.role==="administrator"&&document.body.dataset.supabaseRole!=="administrator";const protectedRole=["administrator","guest","user"].includes(role.role);
+  box.innerHTML='<div class="hpmw-simple-role-head"><div><strong>'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'</strong><small>'+esc(role.role)+(role.is_system?' · Systeemrol':' · Eigen rol')+'</small></div><span>'+permissionKeys.filter(k=>!!role[k]).length+' van '+permissionKeys.length+' rechten actief</span></div><div class="hpmw-simple-role-fields"><label>Rolnaam<input id="roleEditName" maxlength="60" value="'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'" '+(protectedAdmin?'disabled':'')+'></label><label>Omschrijving<input id="roleEditDescription" maxlength="180" value="'+esc(role.description||"")+'" '+(protectedAdmin?'disabled':'')+'></label></div>'+permissionGroups.map(g=>'<section class="hpmw-simple-permission-group hpmw-permission-widget"><h3>'+g.title+'</h3>'+g.items.map(([key,label])=>'<label class="hpmw-simple-permission"><input type="checkbox" data-role-edit-permission="'+key+'" '+(role[key]?'checked':'')+' '+(protectedAdmin?'disabled':'')+'><span>'+label+'</span></label>').join("")+'</section>').join("")+'<div class="hpmw-simple-role-actions"><button class="cms-btn primary" type="button" data-role-save-all="'+esc(role.role)+'" '+(protectedAdmin?'disabled':'')+'>Alle rechten opslaan</button>'+(protectedRole?'<span class="cms-help">Vaste basisrol · verwijderen uitgeschakeld</span>':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(role.role)+'">Rol verwijderen</button>')+'</div><p class="cms-status" id="roleEditorStatus" role="status"></p>';
  }
  async function saveToolRole(event){
   event.preventDefault();const db=client(),id=$("#roleUserId").value.trim(),role=$("#roleValue").value;
@@ -389,11 +389,13 @@
   if(!error)await loadToolRoles(true);
  }
  async function deleteToolRole(button){
-  const role=button.dataset.roleDelete,usage=await client().from("tool_access_roles").select("user_id",{count:"exact",head:true}).eq("role",role);
+  const role=button.dataset.roleDelete;
+  if(["administrator","guest","user"].includes(role)){const status=$("#roleEditorStatus");if(status)status.textContent="Deze basisrol kan niet worden verwijderd. Je kunt de zichtbare rolnaam wel aanpassen.";return}
+  const usage=await client().from("tool_access_roles").select("user_id",{count:"exact",head:true}).eq("role",role);
   if(usage.error){$("#roleEditorStatus").textContent=usage.error.message;return}
   if(usage.count){$("#roleEditorStatus").textContent="Deze rol is nog aan "+usage.count+" gebruiker(s) gekoppeld. Wijs eerst een andere rol toe.";return}
   if(!confirm("Rol '"+role+"' definitief verwijderen?"))return;
-  const {error}=await client().from("portal_role_permissions").delete().eq("role",role).eq("is_system",false);
+  const {error}=await client().from("portal_role_permissions").delete().eq("role",role);
   if(error){$("#roleEditorStatus").textContent="Verwijderen mislukt: "+error.message;return}
   selectedRoleKey="";await loadToolRoles(true);
  }
