@@ -157,7 +157,7 @@
    if(userDel){
     const id=userDel.dataset.roleUserDelete,row=document.querySelector('[data-user-row="'+CSS.escape(id)+'"]'),current=await client().auth.getUser();
     if(id===current.data.user?.id||row?.querySelector("[data-user-role]")?.value==="administrator"){$("#roleStatus").textContent="De eigen accountrol en administratoraccounts zijn beschermd.";return}
-    if(confirm("Deze gebruiker de toegang tot de tool ontnemen?")){const {error}=await client().from("tool_access_roles").delete().eq("user_id",id);$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles()}
+    if(confirm("Deze gebruiker de toegang tot de tool ontnemen?")){const {error}=await client().from("tool_access_roles").delete().eq("user_id",id);$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles(true)}
    }
   });
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
@@ -369,7 +369,7 @@
   if(!confirm("Rol '"+role+"' definitief verwijderen?"))return;
   const {error}=await client().from("portal_role_permissions").delete().eq("role",role).eq("is_system",false);
   if(error){$("#roleEditorStatus").textContent="Verwijderen mislukt: "+error.message;return}
-  selectedRoleKey="";await loadToolRoles();
+  selectedRoleKey="";await loadToolRoles(true);
  }
  async function loadNewsModerators(){
   const db=client(),box=$("#newsModList");if(!db||!box)return;
