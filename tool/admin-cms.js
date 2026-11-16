@@ -340,13 +340,17 @@
  #adminCmsView .hpmw-simple-role-fields{padding:14px;border:1px solid #344967;border-radius:11px;background:#0d1929;margin-top:12px}
  #adminCmsView .hpmw-role-tile{cursor:pointer;text-align:left}
  #adminCmsView .hpmw-role-tile:hover{transform:translateY(-1px);border-color:#a293ff}
+ #adminCmsView .hpmw-permission-widget .hpmw-simple-permission{display:flex!important;align-items:center!important;gap:10px!important;cursor:pointer!important;pointer-events:auto!important;position:relative!important;z-index:2!important}
+ #adminCmsView .hpmw-permission-widget .hpmw-simple-permission input[type="checkbox"]{display:inline-block!important;flex:0 0 18px!important;width:18px!important;min-width:18px!important;height:18px!important;margin:0!important;accent-color:#9b8cff!important;cursor:pointer!important;pointer-events:auto!important;opacity:1!important;visibility:visible!important;appearance:auto!important;-webkit-appearance:checkbox!important;position:relative!important;z-index:3!important}
+ #adminCmsView .hpmw-permission-widget .hpmw-simple-permission span{cursor:pointer!important;pointer-events:auto!important}
+ #adminCmsView .hpmw-permission-widget .hpmw-simple-permission:has(input:disabled){opacity:.55;cursor:not-allowed!important}
  `;document.head.append(roleWidgetStyle);
  function renderSelectedRole(){
   const box=$("#roleManagerList"),role=roleDefinitions.find(r=>r.role===$("#roleEditorSelect")?.value);if(!box)return;
   if(!roleDetailsOpen){box.innerHTML='<div class="hpmw-role-empty-widget"><span class="hpmw-role-empty-icon">✦</span><strong>Kies een rol om de details te bekijken</strong><p>Selecteer een rolkaart hierboven. De omschrijving, instellingen en rechten verschijnen dan hieronder.</p></div>';return}
   if(!role){box.innerHTML='<p class="cms-help">Maak eerst een rol aan.</p>';return}
   selectedRoleKey=role.role;
-  const protectedAdmin=role.role==="administrator";
+  const protectedAdmin=role.role==="administrator"&&document.body.dataset.supabaseRole!=="administrator";
   box.innerHTML='<div class="hpmw-simple-role-head"><div><strong>'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'</strong><small>'+esc(role.role)+(role.is_system?' · Systeemrol':' · Eigen rol')+'</small></div><span>'+permissionKeys.filter(k=>!!role[k]).length+' van '+permissionKeys.length+' rechten actief</span></div><div class="hpmw-simple-role-fields"><label>Rolnaam<input id="roleEditName" maxlength="60" value="'+esc(role.role_name||systemRoleNames[role.role]||role.role)+'" '+(protectedAdmin?'disabled':'')+'></label><label>Omschrijving<input id="roleEditDescription" maxlength="180" value="'+esc(role.description||"")+'" '+(protectedAdmin?'disabled':'')+'></label></div>'+permissionGroups.map(g=>'<section class="hpmw-simple-permission-group hpmw-permission-widget"><h3>'+g.title+'</h3>'+g.items.map(([key,label])=>'<label class="hpmw-simple-permission"><input type="checkbox" data-role-edit-permission="'+key+'" '+(role[key]?'checked':'')+' '+(protectedAdmin?'disabled':'')+'><span>'+label+'</span></label>').join("")+'</section>').join("")+'<div class="hpmw-simple-role-actions"><button class="cms-btn primary" type="button" data-role-save-all="'+esc(role.role)+'" '+(protectedAdmin?'disabled':'')+'>Alle rechten opslaan</button>'+(role.is_system?'':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(role.role)+'">Rol verwijderen</button>')+'</div><p class="cms-status" id="roleEditorStatus" role="status"></p>';
  }
  async function saveToolRole(event){
