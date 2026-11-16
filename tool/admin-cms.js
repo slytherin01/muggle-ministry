@@ -104,7 +104,7 @@ else {switchNewsTab("content");selectKind("news");loadToolRoles();loadNewsModera
 
  }
  let kind="maintenance",editing=null;
- function syncFaqAdminTab(role=document.body.dataset.supabaseRole){const b=document.querySelector('#cmsMainTabs [data-main-tab="faq"]');if(b)b.hidden=!["admin","administrator"].includes(role);}
+ function syncFaqAdminTab(){const b=document.querySelector('#cmsMainTabs [data-main-tab="faq"]');if(b)b.hidden=!hasPermission("can_manage_faq");}
  function reset(){editing=null;$("#cmsForm").reset();$("#cmsOrder").value=0;$("#cmsPinned").checked=false;$("#cmsPinWrap").style.display=kind==="news"?"block":"none";$("#cmsSourceWrap").hidden=kind!=="news";$("#cmsAuthorWrap").hidden=kind!=="news";$("#cmsFaqCategoryWrap").hidden=kind!=="faq";$("#faqCategoryManager").hidden=kind!=="faq"||!hasPermission("can_manage_faq");$("#cmsFormTitle").textContent=kind==="faq"?"Nieuwe FAQ-vraag":"Nieuw item";if(kind==="faq"){loadFaqCategories();loadFaqCategoryManager();}}
  function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];if(k==="faq"){$("#cmsTabs").hidden=true;$("#faqManager").hidden=false;$("#faqManager .cms-panel").hidden=true;load();return;}$("#cmsTabs").hidden=false;$("#faqManager").hidden=true;reset();load();}
 
