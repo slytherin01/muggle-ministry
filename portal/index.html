@@ -6732,5 +6732,45 @@ html body{padding-top:70px!important}
  },true);
 })();
 </script>
+
+<style id="hpmw-full-widget-click-targets-20261116">
+#introView #hpmwHomeLayout .hpmw-home-left .hpmw-extra-widget:has([data-open-modteam]),
+#introView #hpmwHomeLayout .hpmw-home-right .hpmw-extra-widget:has([data-open-awards]){
+ cursor:pointer!important;
+}
+#introView #hpmwHomeLayout .hpmw-home-left .hpmw-extra-widget:has([data-open-modteam]):focus-visible,
+#introView #hpmwHomeLayout .hpmw-home-right .hpmw-extra-widget:has([data-open-awards]):focus-visible{
+ outline:2px solid #a9c9e8!important;outline-offset:3px!important;
+}
+</style>
+<script id="hpmw-full-widget-click-targets-20261116">
+(()=>{"use strict";
+ const getCard=target=>{
+  if(!(target instanceof Element))return null;
+  const mod=target.closest("#introView #hpmwHomeLayout .hpmw-home-left .hpmw-extra-widget");
+  if(mod?.querySelector("[data-open-modteam]"))return {card:mod,view:"modteamView",label:"Open Modteam"};
+  const awards=target.closest("#introView #hpmwHomeLayout .hpmw-home-right .hpmw-extra-widget");
+  if(awards?.querySelector("[data-open-awards]"))return {card:awards,view:"awardsView",label:"Open Awards"};
+  return null;
+ };
+ const setup=()=>{
+  document.querySelectorAll("#introView #hpmwHomeLayout .hpmw-home-left .hpmw-extra-widget:has([data-open-modteam]),#introView #hpmwHomeLayout .hpmw-home-right .hpmw-extra-widget:has([data-open-awards])").forEach(card=>{
+   card.setAttribute("role","button");card.setAttribute("tabindex","0");
+   card.setAttribute("aria-label",card.querySelector("[data-open-modteam]")?"Open Modteam":"Open Awards");
+  });
+ };
+ document.addEventListener("click",event=>{
+  const item=getCard(event.target);if(!item)return;
+  if(event.target.closest("a,button,input,select,textarea"))return;
+  event.preventDefault();event.stopImmediatePropagation();window.hpmwShowPortalView?.(item.view);
+ },true);
+ document.addEventListener("keydown",event=>{
+  if(event.key!=="Enter"&&event.key!==" ")return;
+  const item=getCard(event.target);if(!item||event.target!==item.card)return;
+  event.preventDefault();event.stopImmediatePropagation();window.hpmwShowPortalView?.(item.view);
+ },true);
+ setup();new MutationObserver(setup).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </script>
 </body></html>
