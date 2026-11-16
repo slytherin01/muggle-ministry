@@ -4795,14 +4795,33 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  }
  let session=null,role="guest",editingNewsId=null;
  const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
- const canNews=()=>role==="administrator"||permissions.can_manage_news===true||["news_poster","news_poster_supervisor"].includes(role);
- const canDeleteNews=()=>role==="administrator"||permissions.can_delete_news===true||role==="news_poster_supervisor";
- const canApproveNews=()=>role==="administrator"||permissions.can_approve_news===true||role==="news_poster_supervisor";
- const canSupport=()=>["administrator","support_moderator","supervisor_support_team"].includes(role);
+ const canViewPortal=()=>permissions.can_view_portal===true;
+ const canViewNews=()=>permissions.can_view_news===true||canNews();
+ const canViewFaq=()=>permissions.can_view_faq===true;
+ const canViewTickets=()=>permissions.can_view_tickets===true||canSupport();
+ const canUseTickets=()=>permissions.can_use_tickets===true;
+ const canNews=()=>permissions.can_manage_news===true;
+ const canDeleteNews=()=>permissions.can_delete_news===true;
+ const canApproveNews=()=>permissions.can_approve_news===true;
+ const canSupport=()=>permissions.can_use_tickets===true;
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- async function getRole(){if(!session?.user){role="guest";permissions={};return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("can_manage_news,can_delete_news,can_approve_news").eq("role",role).maybeSingle();if(permissionError)throw permissionError;permissions=permissionRow||{};return role}
+ async function getRole(){
+  await ensureClient();
+  if(!session?.user){role=document.documentElement.classList.contains("member-login-ready")?"member":"guest"}
+  else{const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"member"}
+  const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("*").eq("role",role).maybeSingle();
+  if(permissionError)throw permissionError;permissions=permissionRow||{};
+  applyPortalVisibility();return role
+ }
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient};
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
+ function applyPortalVisibility(){
+  const checks=[["#faqLaunch",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets]];
+  checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
+  document.documentElement.dataset.hpmwPortalRole=role;
+  document.dispatchEvent(new CustomEvent("hpmw:portal-access-updated",{detail:{role,permissions}}));
+ }
+
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
  function open(){if(!layer)return;layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()} window.HpmwOpenPortalAdmin=open;
  function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Beveiligde beheerderslogin</h3><p>Log eenmalig in met het bestaande beheerdersaccount. Je hoeft geen nieuw account aan te maken.</p><form id="hpmwPortalMagicLink"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="email" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-envelope"></i> Stuur een eenmalige inloglink</button><div class="hpmw-manage-status" id="hpmwManageStatus" aria-live="polite"></div></form><details style="margin-top:14px"><summary>Of inloggen met wachtwoord</summary><form id="hpmwPortalLogin" style="margin-top:12px"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button></form></details></div>'}
