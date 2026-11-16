@@ -4775,7 +4775,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   ["supervisor_support_team","Supervisor supportteam (legacy)","Alleen Ticket Support."]
  ];
  const roleNames=Object.fromEntries(ROLES.map(r=>[r[0],r[1]]));
- let client=null,clientPromise=null;
+ let client=null,clientPromise=null,permissions={};
  async function ensureClient(){
   if(client)return client;
   if(clientPromise)return clientPromise;
@@ -4793,13 +4793,14 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  }
  let session=null,role="guest",editingNewsId=null;
  const $=s=>document.querySelector(s), layer=$("#hpmwManageLayer"),body=$("#hpmwManageBody"),editor=$("#hpmwNewsEditorLayer"),form=$("#hpmwNewsEditorForm");
- const canNews=()=>["administrator","news_poster","news_poster_supervisor"].includes(role);
- const canDeleteNews=()=>["administrator","news_poster_supervisor"].includes(role);
+ const canNews=()=>role==="administrator"||permissions.can_manage_news===true;
+ const canDeleteNews=()=>role==="administrator"||permissions.can_delete_news===true;
+ const canApproveNews=()=>role==="administrator"||permissions.can_approve_news===true;
  const canSupport=()=>["administrator","support_moderator","supervisor_support_team"].includes(role);
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- async function getRole(){if(!session?.user){role="guest";return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";return role}
+ async function getRole(){if(!session?.user){role="guest";permissions={};return role}await ensureClient();const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user";const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("can_manage_news,can_delete_news,can_approve_news").eq("role",role).maybeSingle();if(permissionError)throw permissionError;permissions=permissionRow||{};return role}
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canSupport,client,headers,ensureClient};
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient};
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
  function open(){if(!layer)return;layer.classList.add("open");layer.setAttribute("aria-hidden","false");renderManage()} window.HpmwOpenPortalAdmin=open;
  function loginMarkup(){return '<div class="hpmw-manage-login"><h3>Beveiligde beheerderslogin</h3><p>Log eenmalig in met het bestaande beheerdersaccount. Je hoeft geen nieuw account aan te maken.</p><form id="hpmwPortalMagicLink"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="email" required></label><button class="hpmw-manage-btn primary" type="submit"><i class="fa-solid fa-envelope"></i> Stuur een eenmalige inloglink</button><div class="hpmw-manage-status" id="hpmwManageStatus" aria-live="polite"></div></form><details style="margin-top:14px"><summary>Of inloggen met wachtwoord</summary><form id="hpmwPortalLogin" style="margin-top:12px"><label class="hpmw-manage-field">E-mailadres<input name="email" type="email" autocomplete="username" required></label><label class="hpmw-manage-field">Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="hpmw-manage-btn" type="submit"><i class="fa-solid fa-lock"></i> Inloggen</button></form></details></div>'}
@@ -4857,14 +4858,14 @@ document.addEventListener("click",function(event){const button=event.target?.clo
   const r=await fetch(url,{method,headers:h,body:payload?JSON.stringify(payload):undefined,cache:"no-store"});
   if(!r.ok){const t=await r.text();throw new Error(t||"Opslaan mislukt")}return r.status===204?null:r.json();
  }
- function openEditor(item){if(!canNews()){alert("Je hebt geen rechten om nieuws te beheren.");return}editingNewsId=item?.id||null;form.reset();const submitter=role==="news_poster";form.elements.published.innerHTML=submitter?'<option value="false">Indienen ter goedkeuring</option>':'<option value="true">Publiceren</option><option value="false">Concept bewaren</option>';$("#hpmwNewsEditorTitle").textContent=editingNewsId?"Nieuwsbericht bewerken":"Nieuwsbericht maken";if(item){form.elements.title.value=item.title||"";form.elements.body.value=item.body||"";form.elements.author.value=item.author||"";form.elements.source.value=item.source||"";form.elements.published.value=String(!!item.published);form.elements.is_pinned.checked=!!item.is_pinned}$("#hpmwNewsEditorStatus").textContent="";editor.classList.add("open")}
+ function openEditor(item){if(!canNews()){alert("Je hebt geen rechten om nieuws te beheren.");return}editingNewsId=item?.id||null;form.reset();const submitter=!canApproveNews();form.elements.published.innerHTML=submitter?'<option value="false">Indienen ter goedkeuring</option>':'<option value="true">Publiceren</option><option value="false">Concept bewaren</option>';$("#hpmwNewsEditorTitle").textContent=editingNewsId?"Nieuwsbericht bewerken":"Nieuwsbericht maken";if(item){form.elements.title.value=item.title||"";form.elements.body.value=item.body||"";form.elements.author.value=item.author||"";form.elements.source.value=item.source||"";form.elements.published.value=String(!!item.published);form.elements.is_pinned.checked=!!item.is_pinned}$("#hpmwNewsEditorStatus").textContent="";editor.classList.add("open")}
  document.addEventListener("click",async e=>{
   const create=e.target.closest("[data-hpmw-news-create]");if(create){openEditor();return}
   const edit=e.target.closest("[data-hpmw-news-edit]");if(edit){const card=edit.closest(".hpmw-cms-card");openEditor(card?JSON.parse(card.dataset.item||"{}"):null);return}
   const del=e.target.closest("[data-hpmw-news-delete]");if(del){if(!canDeleteNews()){alert("Alleen de nieuwsposter-supervisor of administrator mag nieuws verwijderen.");return}const card=del.closest(".hpmw-cms-card");const id=card?.dataset.id;if(!id||!confirm("Dit nieuwsbericht definitief verwijderen?"))return;try{await newsRequest("DELETE",null,id);card.remove()}catch(err){alert(err.message)}}
  },true);
  document.querySelectorAll("[data-news-close]").forEach(b=>b.addEventListener("click",()=>editor.classList.remove("open")));
- form.addEventListener("submit",async e=>{e.preventDefault();const status=$("#hpmwNewsEditorStatus");status.textContent="Opslaan…";const supervisor=["administrator","news_poster_supervisor"].includes(role);const publish=supervisor&&form.elements.published.value==="true";const payload={kind:"news",title:form.elements.title.value.trim(),body:form.elements.body.value.trim(),author:form.elements.author.value.trim(),source:form.elements.source.value.trim(),published:publish,approval_status:supervisor?(publish?"approved":"pending"):"pending",is_pinned:supervisor&&form.elements.is_pinned.checked,updated_at:new Date().toISOString(),updated_by:session?.user?.id};try{if(editingNewsId)await newsRequest("PATCH",payload,editingNewsId);else{payload.created_by=session.user.id;await newsRequest("POST",payload)}status.textContent=role==="news_poster"?"Ingediend ter goedkeuring. De nieuwsfeed wordt vernieuwd.":"Opgeslagen. De nieuwsfeed wordt vernieuwd.";setTimeout(()=>location.reload(),450)}catch(err){status.textContent=err.message}});
+ form.addEventListener("submit",async e=>{e.preventDefault();const status=$("#hpmwNewsEditorStatus");status.textContent="Opslaan…";const supervisor=canApproveNews();const publish=supervisor&&form.elements.published.value==="true";const payload={kind:"news",title:form.elements.title.value.trim(),body:form.elements.body.value.trim(),author:form.elements.author.value.trim(),source:form.elements.source.value.trim(),published:publish,approval_status:supervisor?(publish?"approved":"pending"):"pending",is_pinned:supervisor&&form.elements.is_pinned.checked,updated_at:new Date().toISOString(),updated_by:session?.user?.id};try{if(editingNewsId)await newsRequest("PATCH",payload,editingNewsId);else{payload.created_by=session.user.id;await newsRequest("POST",payload)}status.textContent=role==="news_poster"?"Ingediend ter goedkeuring. De nieuwsfeed wordt vernieuwd.":"Opgeslagen. De nieuwsfeed wordt vernieuwd.";setTimeout(()=>location.reload(),450)}catch(err){status.textContent=err.message}});
  const decorateNews=()=>{
   const sections=[$("#hpmwNewsPageList")].filter(Boolean);
   sections.forEach(section=>{
@@ -4883,8 +4884,8 @@ document.addEventListener("click",function(event){const button=event.target?.clo
  document.addEventListener("click",e=>{if(e.target.closest("#newsLaunch,#newsQuickLink")){e.preventDefault();window.hpmwShowPortalView?.("newsView");return}if(e.target.closest("#newsBack")){window.hpmwShowPortalView?.("introView")}});
  document.addEventListener("hpmw:portal-role",decorateNews);
  const observer=new MutationObserver(decorateNews);observer.observe(document.body,{childList:true,subtree:true});
- ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()})).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
- (async()=>{try{await ensureClient();const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user"}}else role="guest";document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}})();
+ ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()})).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
+ (async()=>{try{await ensureClient();const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}})();
 })();
 </script>
 
