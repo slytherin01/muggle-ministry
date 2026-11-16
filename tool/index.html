@@ -1794,22 +1794,23 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 </div>
 </section>
 <section class="view" id="faqManagementPanel" style="width:100%">
- <div class="page-head"><div><div class="eyebrow">Beheer · Alleen administrators</div><h2>FAQ-beheer</h2><p class="subtitle">Beheer categorieën, vragen, antwoorden en publicatiestatus. Gepubliceerde wijzigingen verschijnen automatisch in het portaal.</p></div><button class="btn" id="faqManagementBack" type="button">Terug naar werkruimte</button></div>
- <div class="panel" style="padding:18px;margin-bottom:18px">
-  <div class="page-head"><div><h3>Categorie beheren</h3><p class="subtitle">Maak categorieën aan of pas bestaande categorieën aan.</p></div></div>
+ <div class="page-head hpmw-faq-compact-head"><div><div class="eyebrow">Beheer · Alleen administrators</div><h2>FAQ-beheer</h2></div><div class="hpmw-faq-top-actions"><button class="btn primary" id="faqArticleNew" type="button">Nieuwe vraag</button><button class="btn" id="faqCategoryNew" type="button">Nieuwe categorie</button><button class="btn" id="faqManagementBack" type="button">Terug naar werkruimte</button></div></div>
+ <div class="panel hpmw-faq-category-editor" id="faqCategoryEditor" hidden style="padding:14px;margin-bottom:14px">
   <form id="faqCategoryForm" class="admin-toolbar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
    <input type="hidden" name="id">
    <input name="name" placeholder="Categorienaam" maxlength="100" required>
    <input name="description" placeholder="Omschrijving" maxlength="240">
    <input name="sort_order" type="number" min="0" step="1" value="0" placeholder="Volgorde">
    <label style="display:flex;align-items:center;gap:8px"><input name="is_active" type="checkbox" checked> Actief in portaal</label>
-   <div style="display:flex;gap:8px"><button class="btn primary" type="submit">Categorie opslaan</button><button class="btn" id="faqCategoryReset" type="button">Wissen</button></div>
+   <div style="display:flex;gap:8px"><button class="btn primary" type="submit">Categorie opslaan</button><button class="btn" id="faqCategoryReset" type="button">Annuleren</button></div>
   </form>
-  <div id="faqCategoryList" class="ticket-table-wrap" style="margin-top:14px">Categorieën laden…</div>
  </div>
- <div class="panel" style="padding:18px;margin-bottom:18px">
-  <div class="page-head"><div><h3>FAQ-vragen</h3><p class="subtitle">Sleep vragen om de volgorde te wijzigen. Verplaats vragen via Bewerken en sla de volgorde daarna op.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="faqOrderSave" type="button">Volgorde opslaan</button><button class="btn" id="faqArticleNew" type="button">Nieuwe vraag</button></div></div>
-  <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+ <div id="faqCategoryList" hidden></div>
+ <div class="panel" style="padding:14px;margin-bottom:14px">
+  <label style="display:block;font-weight:700;margin-bottom:8px">Categorie<select id="faqCategoryFilter" style="display:block;width:100%;max-width:420px;margin-top:6px"><option value="">Selecteer een categorie…</option></select></label>
+  <div id="faqArticleList" class="ticket-table-wrap" style="margin-top:10px">Selecteer een categorie om de vragen te bekijken.</div>
+ </div>
+ <form id="faqArticleForm" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px" class="panel">
    <input type="hidden" name="id">
    <label>Categorie<select name="faq_category_id" required></select></label>
    <label>Vraag<input name="title" maxlength="240" required placeholder="Veelgestelde vraag"></label>
@@ -1817,11 +1818,9 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
    <label>Status<select name="approval_status"><option value="pending" selected>In afwachting</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select></label>
    <label>Volgorde<input name="sort_order" type="number" min="0" step="1" value="0"></label>
    <label style="display:flex;align-items:center;gap:8px"><input name="published" type="checkbox"> Publiceren in portaal</label>
-   <div style="display:flex;gap:8px;align-items:end"><button class="btn primary" type="submit">FAQ opslaan</button><button class="btn" id="faqArticleCancel" type="button">Annuleren</button></div>
-  </form>
-  <label class="hpmw-faq-category-filter-label" style="display:block;margin:12px 0 8px;font-weight:700">Kies eerst een categorie<select id="faqCategoryFilter" style="display:block;width:100%;max-width:420px;margin-top:6px"><option value="">Selecteer een categorie…</option></select></label><div id="faqArticleList" class="ticket-table-wrap" style="margin-top:14px">Selecteer een categorie om de vragen te bekijken.</div>
- </div>
- <p id="faqManagementStatus" role="status" aria-live="polite"></p>
+   <div style="display:flex;gap:8px;grid-column:1/-1"><button class="btn primary" type="submit">FAQ opslaan</button><button class="btn" id="faqArticleCancel" type="button">Annuleren</button></div>
+ </form>
+ <div id="faqManagementStatus" class="status" role="status" aria-live="polite"></div>
 </section>
 </main>
 <footer class="lux-footer">
@@ -4444,6 +4443,10 @@ document.addEventListener("hpmw:supabase-role",start);
  window.hpmwOpenFaqManagement=openPanel;
  $("faqManagementBack")?.addEventListener("click",()=>{document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.toggle("active",v.id==="newAdminDashboard");v.style.setProperty("display",v.id==="newAdminDashboard"?"block":"none","important")});});
  $("faqCategoryReset")?.addEventListener("click",resetCategory);
+ $("faqCategoryNew")?.addEventListener("click",()=>{resetCategory();$("faqCategoryEditor").hidden=false;$("faqCategoryEditor").scrollIntoView({behavior:"smooth",block:"nearest"});});
+ $("faqCategoryReset")?.addEventListener("click",()=>{$("faqCategoryEditor").hidden=true;resetCategory();});
+ $("faqArticleCancel")?.addEventListener("click",resetArticle);
+
  $("faqArticleNew")?.addEventListener("click",()=>{resetArticle();$("faqArticleForm").hidden=false;});
  $("faqCategoryFilter")?.addEventListener("change",()=>{resetArticle();renderArticles();});
  $("faqArticleCancel")?.addEventListener("click",resetArticle);
@@ -4611,6 +4614,13 @@ document.addEventListener("hpmw:supabase-role",start);
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
+<style id="hpmw-faq-compact-toolbar">
+#faqManagementPanel .hpmw-faq-compact-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+#faqManagementPanel .hpmw-faq-top-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-left:auto}
+#faqManagementPanel .hpmw-faq-top-actions .btn{padding:8px 12px;font-size:12px}
+#faqManagementPanel .hpmw-faq-category-editor[hidden],#faqManagementPanel #faqArticleForm[hidden]{display:none!important}
+@media(max-width:650px){#faqManagementPanel .hpmw-faq-top-actions{width:100%;margin-left:0}#faqManagementPanel .hpmw-faq-top-actions .btn{flex:1}}
+</style>
 </body>
 </html>
 <style id="hpmw-force-pt-editor-visible">
