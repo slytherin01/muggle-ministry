@@ -4886,7 +4886,6 @@ document.addEventListener("click",function(event){const button=event.target?.clo
    top.append(actions);
    card.dataset.item=JSON.stringify({...original,id:card.dataset.id||original.id||"",title:card.querySelector(".hpmw-cms-title")?.textContent||original.title||"",body:card.querySelector(".hpmw-cms-body")?.textContent||original.body||""});
   });
- }
  };
  document.addEventListener("click",e=>{if(e.target.closest("#newsLaunch,#newsQuickLink")){e.preventDefault();window.hpmwShowPortalView?.("newsView");setTimeout(decorateNews,250);return}if(e.target.closest("#newsBack")){window.hpmwShowPortalView?.("introView")}});
  document.addEventListener("hpmw:portal-role",decorateNews);
