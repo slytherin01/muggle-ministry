@@ -172,6 +172,17 @@
    selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions.some(r=>r.role==="guest")?"guest":(roleDefinitions[0]?.role||""));
    select.value=selectedRoleKey;
   }
+  // Keep the assignment selector in sync too; otherwise it remains stuck on “Rollen laden…”.
+  const assignSelect=$("#roleValue");
+  if(assignSelect){
+   const previousAssign=assignSelect.value;
+   const canAssignAdmin=document.body.dataset.supabaseRole==="administrator";
+   assignSelect.innerHTML='<option value="">Selecteer een rol…</option>'+roleDefinitions
+    .filter(r=>r.role!=="administrator"||canAssignAdmin)
+    .map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("");
+   assignSelect.value=roleDefinitions.some(r=>r.role===previousAssign)&&
+    (previousAssign!=="administrator"||canAssignAdmin)?previousAssign:"";
+  }
   renderSelectedRole();
   const userBox=$("#roleList");
   if(userBox)userBox.innerHTML=(members||[]).map(row=>{
