@@ -67,7 +67,7 @@
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">AANVULLENDE TOEGANG</div><h2>Individuele ticketmoderators</h2><p>Beheer specifieke Forumotion-accounts die extra ticketrechten nodig hebben.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-ticket"></i></span></div>
     <div class="hpmw-role-assign-form"><label>Forumotion gebruikersnummer<input id="ticketModId" type="number" min="1" step="1" placeholder="Bijv. 3"></label><label>Naam / herkenning<input id="ticketModName" maxlength="80" placeholder="Bijv. /u3"></label><button class="cms-btn primary" type="button" id="ticketModAdd">Moderator toevoegen</button></div>
     <div id="ticketModList" class="hpmw-auth-user-list"></div>
-    <div class="hpmw-auth-actions"><button class="cms-btn primary" type="button" id="saveTicketRights">Ticketrechten opslaan</button><button class="cms-btn" type="button" id="syncPortal">Portaal synchroniseren</button></div><p class="cms-status" id="ticketModStatus" role="status"></p>
+    <div class="hpmw-auth-actions"><button class="cms-btn primary" type="button" id="saveTicketRights">Ticketrechten opslaan</button></div><p class="cms-status" id="ticketModStatus" role="status"></p>
    </section>
    <div data-main-panel="news" hidden><div class="cms-tabs" id="cmsTabs"></div><div class="cms-grid">
     <div class="cms-panel"><h2 id="cmsListTitle">Inhoud</h2><div id="cmsList"></div></div>
@@ -100,7 +100,7 @@
   $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
 
   $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
-  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;
+  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;
   $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
   $("#roleAssignForm").onsubmit=saveToolRole;
   $("#roleCreateForm").onsubmit=createToolRole;
@@ -261,7 +261,6 @@
  }
  async function collectTicketModeratorRights(){const lines=[...document.querySelectorAll("#ticketModList .cms-item")],payload=[];for(const line of lines){const title=line.querySelector("strong")?.textContent||"",id=Number(title.match(/\/u(\d+)/)?.[1]);if(!id)continue;const checks=[...line.querySelectorAll("label input[type=checkbox]")];payload.push({forumotion_user_id:id,display_name:title.split(" · ")[0],enabled:!!(checks[0]?.checked||checks[1]?.checked||checks[2]?.checked),can_view_tickets:!!(checks[0]?.checked||checks[1]?.checked||checks[2]?.checked),can_moderate_tickets:!!checks[1]?.checked,can_delete_tickets:!!checks[2]?.checked});}return payload;}
  async function saveTicketModeratorRights(){const db=client(),u=await db.auth.getUser();if(!u.data.user)return;const rows=await collectTicketModeratorRights();if(!rows.length){$("#ticketModStatus").textContent="Geen gebruikersrechten om op te slaan.";return}const payload=rows.map(x=>({...x,updated_by:u.data.user.id,updated_at:new Date().toISOString()}));const {error}=await db.from("ticket_moderators").upsert(payload,{onConflict:"forumotion_user_id"});$("#ticketModStatus").textContent=error?"Opslaan mislukt: "+error.message:"Ticketrechten opgeslagen. Gebruik daarna Sync naar portaal om de portaalrechten te vernieuwen.";if(!error)loadTicketModerators();}
- async function syncTicketModerators(){await saveTicketModeratorRights();if(!$("#ticketModStatus").textContent.startsWith("Ticketrechten opgeslagen."))return;$("#ticketModStatus").textContent="Ticketrechten opgeslagen. Het portaal leest de actuele rechten rechtstreeks uit Supabase; vernieuw het portaal als de knop nog niet zichtbaar is.";}
  async function addTicketModerator(){
   const id=Number($("#ticketModId").value),name=$("#ticketModName").value.trim(),db=client();
   if(!Number.isInteger(id)||id<1){$("#ticketModStatus").textContent="Vul een geldig Forumotion-gebruikersnummer in.";return}
