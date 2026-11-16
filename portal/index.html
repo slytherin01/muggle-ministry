@@ -4816,7 +4816,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
  window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
  function applyPortalVisibility(){
-  const checks=[["#faqLaunch",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets]];
+  const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets]];
   checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
   document.documentElement.dataset.hpmwPortalRole=role;
   document.dispatchEvent(new CustomEvent("hpmw:portal-access-updated",{detail:{role,permissions}}));
@@ -4825,7 +4825,10 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   const button=event.target instanceof Element?event.target.closest("#faqLaunch,#newsLaunch,#newsQuickLink,#ticketSupportLaunch"):null;if(!button)return;
   const allowed=button.matches("#faqLaunch")?canViewFaq():button.matches("#newsLaunch,#newsQuickLink")?canViewNews():canViewTickets();
   if(!allowed){event.preventDefault();event.stopImmediatePropagation()}
- },true);
+ },true); 
+ let previousMemberState=document.documentElement.classList.contains("member-login-ready");
+ new MutationObserver(()=>{const next=document.documentElement.classList.contains("member-login-ready");if(next!==previousMemberState){previousMemberState=next;getRole().then(()=>document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}))).catch(error=>console.warn("[Hpmw] Portalrol kon niet worden vernieuwd:",error))}}).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+
 
 
  const close=()=>{layer.classList.remove("open");layer.setAttribute("aria-hidden","true")};
@@ -5064,16 +5067,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
-<script id="hpmw-portal-admin-role-visibility">/* Vervangen door de centrale navigatierechtencontrole. */</script><script id="hpmw-portal-role-permission-ui">
-(()=>{"use strict";
- const keys=["can_view_portal","can_use_tickets","can_manage_news","can_delete_news","can_approve_news","can_manage_settings","can_manage_roles"];
- const labels=["Portaal lezen","Ticket Support","Nieuws indienen/bewerken","Nieuws verwijderen","Nieuws goedkeuren","Instellingen beheren","Rollen beheren"];
- const names={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam (legacy)"};
- async function load(){const host=document.getElementById("hpmwRolePermissionEditor"),a=window.HpmwPortalAccess;if(!host||!a?.session||a.role!=="administrator")return;const {data,error}=await a.client.from("portal_role_permissions").select("*").order("role");if(error){host.textContent="Rechten konden niet worden geladen: "+error.message;return}host.innerHTML='<div class="hpmw-admin-scroll"><table class="hpmw-admin-table"><thead><tr><th>Rol</th>'+labels.map(x=>'<th>'+x+'</th>').join("")+'</tr></thead><tbody>'+(data||[]).filter(r=>!String(r.role).startsWith('faq_')).map(r=>'<tr><th>'+(names[r.role]||r.role)+'</th>'+keys.map(k=>'<td><input type="checkbox" data-permission-role="'+r.role+'" data-permission-key="'+k+'" '+(r[k]?'checked':'')+' '+(r.role==="administrator"?'disabled':'')+'></td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
- document.addEventListener("change",async e=>{const el=e.target.closest("[data-permission-role]");if(!el)return;const a=window.HpmwPortalAccess;if(!a?.session||a.role!=="administrator")return;el.disabled=true;const payload={[el.dataset.permissionKey]:el.checked,updated_by:a.session.user.id,updated_at:new Date().toISOString()};const {error}=await a.client.from("portal_role_permissions").update(payload).eq("role",el.dataset.permissionRole);if(error){el.checked=!el.checked;alert("Opslaan mislukt: "+error.message)}el.disabled=false});
- document.addEventListener("hpmw:portal-admin-rendered",()=>setTimeout(load,0));
-})();
-</script>
+<script id="hpmw-portal-admin-role-visibility">/* Vervangen door de centrale navigatierechtencontrole. */</script>
 
 
 
