@@ -56,12 +56,17 @@
     <form id="roleCreateForm" class="hpmw-role-create-form"><label>Naam van de rol<input id="roleCreateName" maxlength="60" required placeholder="Bijv. Contentbeheerder"></label><label>Omschrijving<input id="roleCreateDescription" maxlength="180" placeholder="Beschrijf waarvoor deze rol bedoeld is"></label><button class="cms-btn primary" type="submit">+ Rol aanmaken</button></form>
     <p class="cms-status" id="roleCreateStatus" role="status"></p>
    </section>
-   <section class="hpmw-auth-section" id="roleManagerSection"><div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 2</div><h2>Rollen en rechten</h2><p>Open een rol en stel precies in welke onderdelen toegankelijk zijn.</p></div></div><div class="hpmw-role-toolbar"><label class="hpmw-role-search"><i class="fa-solid fa-magnifying-glass"></i><input id="roleSearch" type="search" placeholder="Zoek op rolnaam of recht…"></label><label class="hpmw-role-filter-label">Type<select id="roleFilter"><option value="all">Alle rollen</option><option value="system">Systeemrollen</option><option value="custom">Eigen rollen</option></select></label><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div><p class="hpmw-role-results" id="roleResults" aria-live="polite">11 rollen beschikbaar</p><div id="roleManagerList" class="hpmw-role-manager-list"><p class="cms-help">Rollen laden…</p></div></section>
+   <section class="hpmw-auth-section" id="roleManagerSection">
+    <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 2</div><h2>Rechten instellen</h2><p>Kies één rol en vink aan wat deze rol in het portaal mag doen.</p></div></div>
+    <div class="hpmw-simple-role-select"><label for="roleEditorSelect">Welke rol wil je aanpassen?</label><select id="roleEditorSelect"><option value="">Rollen laden…</option></select><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div>
+    <div id="roleManagerList" class="hpmw-simple-role-editor"><p class="cms-help">Rollen laden…</p></div>
+    <p class="cms-status" id="roleStatus" role="status"></p>
+   </section>
    <section class="cms-panel hpmw-auth-assign" id="roleAssignPanel">
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 3</div><h2>Gebruikers toegang geven</h2><p>Koppel een Supabase-account aan een rol. Een bestaande toewijzing kan hieronder worden gewijzigd.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-users"></i></span></div>
     <form id="roleAssignForm" class="hpmw-role-assign-form"><label>Supabase gebruikers-ID (UUID)<input id="roleUserId" type="text" required placeholder="00000000-0000-0000-0000-000000000000"></label><label>Toe te wijzen rol<select id="roleValue" required><option value="">Rollen laden…</option></select></label><button class="cms-btn primary" type="submit">Gebruiker koppelen</button></form>
     <div class="hpmw-auth-user-heading"><h3>Huidige toewijzingen</h3><span id="roleUserCountInline">Laden…</span></div>
-    <div class="hpmw-role-toolbar hpmw-user-toolbar"><label class="hpmw-role-search"><i class="fa-solid fa-magnifying-glass"></i><input id="roleUserSearch" type="search" placeholder="Zoek gebruiker op naam of UUID…"></label><button class="cms-btn" type="button" id="roleUserRefresh">Vernieuwen</button></div><div id="roleList" class="hpmw-auth-user-list"></div><p class="cms-status" id="roleStatus" role="status"></p>
+    <button class="cms-btn" type="button" id="roleUserRefresh">Gebruikerslijst vernieuwen</button><div id="roleList" class="hpmw-auth-user-list"></div><p class="cms-status" id="roleStatus" role="status"></p>
    </section>
    <section class="cms-panel hpmw-auth-ticket" id="ticketModeratorsPanel">
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">AANVULLENDE TOEGANG</div><h2>Individuele ticketmoderators</h2><p>Beheer specifieke Forumotion-accounts die extra ticketrechten nodig hebben.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-ticket"></i></span></div>
@@ -132,11 +137,11 @@
 
 
  const permissionGroups=[
-  {title:"Werkruimte",items:[["can_view_portal","Werkruimte openen"]]},
-  {title:"Ticket Support",items:[["can_use_tickets","Ticketbeheer openen"]]},
-  {title:"Nieuws",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws goedkeuren en publiceren"],["can_delete_news","Nieuws verwijderen"]]},
-  {title:"FAQ",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ goedkeuren en publiceren"],["can_delete_faq","FAQ verwijderen"]]},
-  {title:"Systeembeheer",items:[["can_manage_settings","Instellingen beheren"],["can_manage_roles","Rollen en gebruikers beheren"]]}
+  {title:"Portaal bekijken",items:[["can_view_portal","Portaal openen"],["can_view_news","Nieuws bekijken"],["can_view_faq","FAQ bekijken"],["can_view_tickets","Ticket Support bekijken"]]},
+  {title:"Ticket Support",items:[["can_use_tickets","Tickets aanmaken en beheren"]]},
+  {title:"Nieuwsberichten",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws publiceren en goedkeuren"],["can_delete_news","Nieuws verwijderen"]]},
+  {title:"Veelgestelde vragen",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ publiceren en goedkeuren"],["can_delete_faq","FAQ verwijderen"]]},
+  {title:"Beheer",items:[["can_manage_settings","Portaalinstellingen beheren"],["can_manage_roles","Rollen en gebruikers beheren"]]}
  ];
  const permissionKeys=permissionGroups.flatMap(g=>g.items.map(x=>x[0]));
  const roleSlug=name=>String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
