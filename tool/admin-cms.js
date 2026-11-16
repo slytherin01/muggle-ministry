@@ -170,11 +170,31 @@
   if(!db||!box)return;
   if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
   box.innerHTML='<p class="cms-help">Selecteer een rol om de rechten te bekijken.</p>';
-  const defsResult=await db.from("portal_role_permissions").select("*").order("role_name",{ascending:true});
+  if(!db){
+   const message="Supabase-client ontbreekt. Vernieuw de pagina nadat je bent ingelogd.";
+   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   return;
+  }
+  let defsResult;
+  try{
+   defsResult=await Promise.race([
+    db.from("portal_role_permissions").select("*").order("role_name",{ascending:true}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase reageert niet binnen 12 seconden. Controleer de verbinding en klik op Vernieuwen.")),12000))
+   ]);
+  }catch(loadError){
+   const message="Rollen ophalen mislukt: "+(loadError?.message||String(loadError));
+   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   $("#roleCatalogStatus").textContent="Laden mislukt";
+   $("#roleCount").textContent="—";
+   return;
+  }
   if(defsResult.error){
    const message="Rollen konden niet worden geladen: "+defsResult.error.message;
    if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
    box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   $("#roleCatalogStatus").textContent="Laden mislukt";
    $("#roleCount").textContent="—";
    return;
   }
@@ -188,7 +208,13 @@
   }
   // Roles are rendered independently from user assignments: a restricted assignment query
   // must never hide the role catalogue.
-  const membersResult=await db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false});
+  let membersResult;
+  try{
+   membersResult=await Promise.race([
+    db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Gebruikerstoewijzingen ophalen duurde langer dan 12 seconden.")),12000))
+   ]);
+  }catch(assignError){membersResult={data:[],error:assignError};}
   const members=membersResult.error?[]:(membersResult.data||[]);window.__hpmwRoleMembers=members;
   $("#roleUserCount").textContent=membersResult.error?"—":String(members.length);
   $("#roleUserCountInline").textContent=membersResult.error?"Gebruikerslijst niet toegankelijk":members.length+" gekoppeld";
