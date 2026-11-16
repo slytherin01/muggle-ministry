@@ -6769,7 +6769,7 @@ html body{padding-top:70px!important}
   if(nav){
    const label=(nav.innerText||nav.textContent||"").replace(/\\s+/g," ").trim().toLocaleLowerCase("nl-NL");
    const href=nav.getAttribute("href")||"";
-   if(label==="portaal"||/\\/h3-portaal(?:[?#]|$)/i.test(href)){
+   if(label==="portaal"||/\/h3-portaal(?:[?#]|$)/i.test(href)){
     event.preventDefault();event.stopImmediatePropagation();goHome();return;
    }
   }
