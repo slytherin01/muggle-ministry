@@ -139,8 +139,8 @@
    const members=Array.isArray(window.__hpmwRoleMembers)?window.__hpmwRoleMembers:[];
    renderRoleCatalog(members);
   });
-  $("#roleRefresh").onclick=loadToolRoles;
-  $("#roleUserRefresh").onclick=loadToolRoles;
+  $("#roleRefresh").onclick=()=>loadToolRoles(true);
+  $("#roleUserRefresh").onclick=()=>loadToolRoles(true);
   document.addEventListener("click",async e=>{
    const save=e.target.closest("[data-role-save-all]");if(save)saveRoleDefinition(save);
    const del=e.target.closest("[data-role-delete]");if(del)deleteToolRole(del);
@@ -151,7 +151,7 @@
     if(id===current.data.user?.id){$("#roleStatus").textContent="Je kunt je eigen accountrol niet wijzigen.";userSave.disabled=false;return}
     if(role==="administrator"&&document.body.dataset.supabaseRole!=="administrator"){$("#roleStatus").textContent="Alleen een administrator kan de administratorrol toewijzen.";userSave.disabled=false;return}
     const {error}=await client().from("tool_access_roles").update({role}).eq("user_id",id);
-    $("#roleStatus").textContent=error?"Wijzigen mislukt: "+error.message:"Gebruikersrol bijgewerkt.";userSave.disabled=false;if(!error)loadToolRoles();
+    $("#roleStatus").textContent=error?"Wijzigen mislukt: "+error.message:"Gebruikersrol bijgewerkt.";userSave.disabled=false;if(!error)loadToolRoles(true);
    }
    const userDel=e.target.closest("[data-role-user-delete]");
    if(userDel){
@@ -186,6 +186,7 @@
  let roleDefinitions=[];
  const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
  let selectedRoleKey="",roleLoadSequence=0;
+ let roleLoadPending=null;
  function showRoleLoadError(message){
   const safe=esc(message),select=$("#roleEditorSelect"),assignSelect=$("#roleValue"),box=$("#roleManagerList"),catalog=$("#roleCatalogList"),status=$("#roleCatalogStatus");
   if(select)select.innerHTML='<option value="">Rollen niet geladen — klik op Vernieuwen</option>';
@@ -195,7 +196,7 @@
   if(status)status.textContent="Laden mislukt";
   if($("#roleCount"))$("#roleCount").textContent="—";
  }
- async function loadToolRoles(){
+ async function loadToolRolesInternal(){
   const requestId=++roleLoadSequence;
   const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect"),catalog=$("#roleCatalogList");
   if(!box)return;
@@ -299,6 +300,19 @@
    }
   }
  }
+ function loadToolRoles(force=false){
+  // Eén aanvraag tegelijk; een al opgehaalde catalogus blijft direct beschikbaar.
+  if(roleLoadPending)return roleLoadPending;
+  if(roleDefinitions.length&&!force){
+   renderRoleCatalog(window.__hpmwRoleMembers||[]);
+   renderSelectedRole();
+   const status=$("#roleCatalogStatus");if(status)status.textContent=roleDefinitions.length+" rollen beschikbaar";
+   return Promise.resolve();
+  }
+  const request=loadToolRolesInternal();
+  roleLoadPending=request.finally(()=>{roleLoadPending=null;});
+  return roleLoadPending;
+ }
  function renderRoleCatalog(members=[]){
   const box=$("#roleCatalogList");if(!box)return;
   box.innerHTML=roleDefinitions.map(role=>{
@@ -326,7 +340,7 @@
   const current=await db.auth.getUser();if(!current.data.user){$("#roleStatus").textContent="Log opnieuw in.";return}
   const {error}=await db.from("tool_access_roles").upsert({user_id:id,role,created_at:new Date().toISOString()},{onConflict:"user_id"});
   $("#roleStatus").textContent=error?"Toewijzen mislukt: "+error.message:"Gebruiker succesvol aan de rol gekoppeld.";
-  if(!error){$("#roleUserId").value="";await loadToolRoles()}
+  if(!error){$("#roleUserId").value="";await loadToolRoles(true)}
  }
  async function createToolRole(event){
   event.preventDefault();const db=client(),name=$("#roleCreateName").value.trim(),description=$("#roleCreateDescription").value.trim(),role=roleSlug(name),status=$("#roleCreateStatus");
@@ -335,7 +349,7 @@
   const payload={role,role_name:name,description,is_system:false,...Object.fromEntries(permissionKeys.map(k=>[k,false]))};
   const {error}=await db.from("portal_role_permissions").insert(payload);
   if(error){status.textContent=error.code==="23505"?"Deze rol bestaat al. Kies een andere naam.":error.message;return}
-  selectedRoleKey=role;$("#roleCreateForm").reset();status.textContent="Rol aangemaakt. Stel hieronder de rechten in.";await loadToolRoles();
+  selectedRoleKey=role;$("#roleCreateForm").reset();status.textContent="Rol aangemaakt. Stel hieronder de rechten in.";await loadToolRoles(true);
  }
  async function saveRoleDefinition(button){
   const role=button.dataset.roleSaveAll,box=$("#roleManagerList"),status=$("#roleEditorStatus");
@@ -346,7 +360,7 @@
   payload.updated_by=user.data.user.id;button.disabled=true;status.textContent="Rechten opslaan…";
   const {error}=await client().from("portal_role_permissions").update(payload).eq("role",role);
   button.disabled=false;status.textContent=error?"Opslaan mislukt: "+error.message:"Alle rechten zijn opgeslagen.";
-  if(!error)await loadToolRoles();
+  if(!error)await loadToolRoles(true);
  }
  async function deleteToolRole(button){
   const role=button.dataset.roleDelete,usage=await client().from("tool_access_roles").select("user_id",{count:"exact",head:true}).eq("role",role);
