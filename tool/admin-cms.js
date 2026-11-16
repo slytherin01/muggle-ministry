@@ -128,10 +128,11 @@
 
 
  const permissionGroups=[
-  {title:"Algemene toegang",items:[["can_view_portal","Portaal bekijken"],["can_use_tickets","Ticket Support gebruiken"]]},
-  {title:"Nieuwsberichten",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws goedkeuren en publiceren"],["can_delete_news","Nieuws verwijderen"]]},
+  {title:"Werkruimte",items:[["can_view_portal","Werkruimte openen"]]},
+  {title:"Ticket Support",items:[["can_use_tickets","Ticketbeheer openen"]]},
+  {title:"Nieuws",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws goedkeuren en publiceren"],["can_delete_news","Nieuws verwijderen"]]},
   {title:"FAQ",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ goedkeuren en publiceren"],["can_delete_faq","FAQ verwijderen"]]},
-  {title:"Beheer",items:[["can_manage_settings","Instellingen beheren"],["can_manage_roles","Rollen en rechten beheren"]]}
+  {title:"Systeembeheer",items:[["can_manage_settings","Instellingen beheren"],["can_manage_roles","Rollen en gebruikers beheren"]]}
  ];
  const permissionKeys=permissionGroups.flatMap(g=>g.items.map(x=>x[0]));
  const roleSlug=name=>String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
@@ -139,30 +140,35 @@
  const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
  async function loadToolRoles(){
   const db=client(),box=$("#roleManagerList"),assign=$("#roleValue");if(!db||!box)return;
-  box.textContent="Rollen laden…";
+  box.textContent="Rollen en gebruikers laden…";
   const [{data:defs,error:de},{data:members,error:me}]=await Promise.all([
    db.from("portal_role_permissions").select("*").order("role_name"),
    db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false})
   ]);
-  if(de){box.textContent="Rollen laden mislukt: "+de.message;$("#roleStatus").textContent="Controleer de databaseverbinding.";return}
-  if(me){box.textContent="Gebruikers laden mislukt: "+me.message;return}
+  if(de){box.textContent="Rollen laden mislukt: "+de.message;$("#roleStatus").textContent=de.message;return}
+  if(me){box.textContent="Gebruikers laden mislukt: "+me.message;$("#roleStatus").textContent=me.message;return}
   roleDefinitions=defs||[];
-  $("#roleCount").textContent=roleDefinitions.length+" rollen";
+  const roleCount=roleDefinitions.length,userCount=(members||[]).length;
+  $("#roleCount").textContent=roleCount;$("#roleUserCount").textContent=userCount;$("#roleUserCountInline").textContent=userCount+" gekoppeld";
   if(assign)assign.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("")||'<option value="">Maak eerst een rol aan</option>';
   box.innerHTML=roleDefinitions.map(r=>{
    const protectedRole=!!r.is_system||r.role==="administrator";
-   return '<section class="cms-panel hpmw-role-card" data-role-card="'+esc(r.role)+'"><div class="hpmw-role-card-head"><div><h3>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</h3><code>'+esc(r.role)+'</code><p>'+esc(r.description||"Geen omschrijving")+'</p></div><span class="hpmw-role-kind">'+(protectedRole?"Systeemrol":"Eigen rol")+'</span></div><div class="hpmw-role-fields"><label>Rolnaam<input data-role-name="'+esc(r.role)+'" maxlength="60" value="'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'" '+(r.role==="administrator"?"disabled":"")+'></label><label>Omschrijving<input data-role-description="'+esc(r.role)+'" maxlength="180" value="'+esc(r.description||"")+'"></label><button class="cms-btn" type="button" data-role-save="'+esc(r.role)+'">Gegevens opslaan</button>'+(protectedRole?'<span class="cms-help">Systeemrol — verwijderen niet mogelijk</span>':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(r.role)+'">Verwijderen</button>')+'</div><div class="hpmw-role-permission-groups">'+permissionGroups.map(g=>'<div class="hpmw-role-permission-group"><h4>'+g.title+'</h4>'+g.items.map(([key,label])=>'<label class="hpmw-role-permission"><input type="checkbox" data-role-permission="'+esc(r.role)+'" data-permission-key="'+key+'" '+(r[key]?"checked":"")+' '+(r.role==="administrator"?"disabled":"")+'><span>'+label+'</span></label>').join("")+'</div>').join("")+'</div><p class="cms-status" data-role-status="'+esc(r.role)+'" role="status"></p></section>';
-  }).join("")||'<div class="cms-panel">Nog geen rollen gevonden.</div>';
-  const userBox=$("#roleList");if(userBox)userBox.innerHTML=(members||[]).map(row=>'<div class="cms-item"><div><strong>'+esc(row.user_id)+'</strong><small>'+esc((roleDefinitions.find(r=>r.role===row.role)?.role_name)||systemRoleNames[row.role]||row.role)+'</small></div><button class="cms-btn" type="button" data-role-user-delete="'+esc(row.user_id)+'">Toewijzing verwijderen</button></div>').join("")||'<p class="cms-help">Nog geen gebruikersrollen ingesteld.</p>';
+   return '<section class="cms-panel hpmw-role-card" data-role-card="'+esc(r.role)+'"><div class="hpmw-role-card-head"><div><h3>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</h3><code>'+esc(r.role)+'</code><p>'+esc(r.description||"Geen omschrijving")+'</p></div><span class="hpmw-role-kind">'+(protectedRole?"Systeemrol":"Eigen rol")+'</span></div><div class="hpmw-role-fields"><label>Weergavenaam<input data-role-name="'+esc(r.role)+'" maxlength="60" value="'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'" '+(r.role==="administrator"?"disabled":"")+'></label><label>Omschrijving<input data-role-description="'+esc(r.role)+'" maxlength="180" value="'+esc(r.description||"")+'"></label><button class="cms-btn" type="button" data-role-save="'+esc(r.role)+'">Opslaan</button>'+(protectedRole?'<span class="cms-help">Vaste systeemrol</span>':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(r.role)+'">Rol verwijderen</button>')+'</div><div class="hpmw-role-permission-groups">'+permissionGroups.map(g=>'<div class="hpmw-role-permission-group"><h4>'+g.title+'</h4>'+g.items.map(([key,label])=>'<label class="hpmw-role-permission"><input type="checkbox" data-role-permission="'+esc(r.role)+'" data-permission-key="'+key+'" '+(r[key]?"checked":"")+' '+(r.role==="administrator"?"disabled":"")+'><span>'+label+'</span></label>').join("")+'</div>').join("")+'</div><p class="cms-status" data-role-status="'+esc(r.role)+'" role="status"></p></section>';
+  }).join("")||'<div class="cms-panel">Nog geen rollen beschikbaar. Maak hierboven een nieuwe rol aan.</div>';
+  const userBox=$("#roleList");
+  if(userBox)userBox.innerHTML=(members||[]).map(row=>{
+   const current=roleDefinitions.find(r=>r.role===row.role),name=current?.role_name||systemRoleNames[row.role]||row.role;
+   return '<div class="hpmw-auth-user-row"><div class="hpmw-auth-user-identity"><strong>'+esc(name)+'</strong><code>'+esc(row.user_id)+'</code></div><div class="hpmw-auth-user-controls"><select data-user-role="'+esc(row.user_id)+'">'+roleDefinitions.map(r=>'<option value="'+esc(r.role)+'" '+(r.role===row.role?"selected":"")+'>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("")+'</select><button class="cms-btn" type="button" data-role-user-save="'+esc(row.user_id)+'">Wijzigen</button><button class="cms-btn hpmw-role-delete" type="button" data-role-user-delete="'+esc(row.user_id)+'">Ontkoppelen</button></div></div>';
+  }).join("")||'<p class="cms-help">Er zijn nog geen gebruikers aan rollen gekoppeld.</p>';
  }
- async function saveToolRole(){
-  const db=client(),id=$("#roleUserId").value.trim(),role=$("#roleValue").value;
+ async function saveToolRole(event){
+  event.preventDefault();const db=client(),id=$("#roleUserId").value.trim(),role=$("#roleValue").value;
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)){ $("#roleStatus").textContent="Vul een geldige Supabase gebruikers-UUID in.";return}
   if(!role){$("#roleStatus").textContent="Selecteer eerst een rol.";return}
   const current=await db.auth.getUser();if(!current.data.user){$("#roleStatus").textContent="Log opnieuw in.";return}
   const {error}=await db.from("tool_access_roles").upsert({user_id:id,role,created_at:new Date().toISOString()},{onConflict:"user_id"});
-  $("#roleStatus").textContent=error?"Toewijzen mislukt: "+error.message:"Gebruikersrol toegewezen.";
-  if(!error){$("#roleUserId").value="";loadToolRoles()}
+  $("#roleStatus").textContent=error?"Toewijzen mislukt: "+error.message:"Gebruiker succesvol aan de rol gekoppeld.";
+  if(!error){$("#roleUserId").value="";await loadToolRoles()}
  }
  async function createToolRole(event){
   event.preventDefault();const db=client(),name=$("#roleCreateName").value.trim(),description=$("#roleCreateDescription").value.trim(),role=roleSlug(name),status=$("#roleCreateStatus");
