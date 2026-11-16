@@ -1218,9 +1218,9 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
  window.hpmwSupabase=client;
  const gate=document.getElementById('supabaseAuthGate'),form=document.getElementById('supabaseAuthForm'),email=document.getElementById('supabaseAuthEmail'),password=document.getElementById('supabaseAuthPassword'),submit=document.getElementById('supabaseAuthSubmit'),message=document.getElementById('supabaseAuthMessage'),logout=document.getElementById('supabaseLogout');
- let currentRole='member',currentPermissions={};
+ let currentRole='guest',currentPermissions={};
  const refreshRole=async(session)=>{
-  currentRole='member';currentPermissions={};
+  currentRole=session?.user?'user':'guest';currentPermissions={};
   if(session?.user){
    const {data:toolRole,error:toolRoleError}=await client.from('tool_access_roles').select('role').eq('user_id',session.user.id).maybeSingle();
    if(!toolRoleError&&toolRole?.role)currentRole=toolRole.role;
@@ -1232,7 +1232,7 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
   document.body.dataset.supabaseRole=currentRole;
   document.dispatchEvent(new CustomEvent('hpmw:supabase-role',{detail:{role:currentRole,permissions:currentPermissions}}));
  };
- const showApp=async(session)=>{document.body.classList.toggle('supabase-authenticated',!!session);gate.hidden=!!session;logout.hidden=!session;if(session){document.body.dataset.supabaseUser=session.user.email||'';await refreshRole(session);}else{delete document.body.dataset.supabaseUser;delete document.body.dataset.supabaseRole;currentRole='member';currentPermissions={};window.hpmwSupabaseRole='member';window.hpmwSupabasePermissions={};document.dispatchEvent(new CustomEvent('hpmw:supabase-role',{detail:{role:'member',permissions:{}}}));}};
+ const showApp=async(session)=>{document.body.classList.toggle('supabase-authenticated',!!session);gate.hidden=!!session;logout.hidden=!session;if(session){document.body.dataset.supabaseUser=session.user.email||'';await refreshRole(session);}else{delete document.body.dataset.supabaseUser;delete document.body.dataset.supabaseRole;currentRole='guest';currentPermissions={};window.hpmwSupabaseRole='guest';window.hpmwSupabasePermissions={};document.dispatchEvent(new CustomEvent('hpmw:supabase-role',{detail:{role:'member',permissions:{}}}));}};
  const explain=(e)=>{const m=(e&&e.message)||'Er ging iets mis.';return /invalid login credentials/i.test(m)?'E-mailadres of wachtwoord klopt niet.':m;};
  form.addEventListener('submit',async e=>{e.preventDefault();submit.disabled=true;message.textContent='Bezig met inloggen…';let timedOut=false;try{const attempt=client.auth.signInWithPassword({email:email.value.trim(),password:password.value});const timeout=new Promise((_,reject)=>setTimeout(()=>{timedOut=true;reject(new Error('De verbinding met Supabase reageert niet binnen 15 seconden. Controleer of deze website Supabase mag bereiken en probeer het opnieuw.'));},15000));const {data,error}=await Promise.race([attempt,timeout]);if(error)throw error;if(!data?.session)throw new Error('Supabase heeft geen actieve sessie teruggegeven. Controleer of het account bevestigd is.');await showApp(data.session);message.textContent='';}catch(err){message.textContent=explain(err);console.error('Hpmw Supabase login:',err);}finally{submit.disabled=false;if(timedOut)submit.textContent='Opnieuw proberen';}});
  document.getElementById('supabaseAuthReset').addEventListener('click',async()=>{const v=email.value.trim();if(!v){message.textContent='Vul eerst je e-mailadres in.';return;}message.textContent='Bezig…';const {error}=await client.auth.resetPasswordForEmail(v,{redirectTo:location.href.split('#')[0]});message.textContent=error?explain(error):'Als dit account bestaat, is een resetlink verstuurd.';});
