@@ -4869,26 +4869,30 @@ document.addEventListener("click",function(event){const button=event.target?.clo
  document.querySelectorAll("[data-news-close]").forEach(b=>b.addEventListener("click",()=>editor.classList.remove("open")));
  form.addEventListener("submit",async e=>{e.preventDefault();const status=$("#hpmwNewsEditorStatus");status.textContent="Opslaan…";const supervisor=canApproveNews();const publish=supervisor&&form.elements.published.value==="true";const payload={kind:"news",title:form.elements.title.value.trim(),body:form.elements.body.value.trim(),author:form.elements.author.value.trim(),source:form.elements.source.value.trim(),published:publish,approval_status:supervisor?(publish?"approved":"pending"):"pending",is_pinned:supervisor&&form.elements.is_pinned.checked,updated_at:new Date().toISOString(),updated_by:session?.user?.id};try{if(editingNewsId)await newsRequest("PATCH",payload,editingNewsId);else{payload.created_by=session.user.id;await newsRequest("POST",payload)}status.textContent=role==="news_poster"?"Ingediend ter goedkeuring. De nieuwsfeed wordt vernieuwd.":"Opgeslagen. De nieuwsfeed wordt vernieuwd.";setTimeout(()=>location.reload(),450)}catch(err){status.textContent=err.message}});
  const decorateNews=()=>{
-  const sections=[$("#hpmwNewsPageList")].filter(Boolean);
-  sections.forEach(section=>{
-   if(!canNews()){section.querySelectorAll(".hpmw-cms-manage,.hpmw-cms-create").forEach(x=>x.remove());return}
-   section.querySelectorAll("[data-hpmw-news-create]").forEach(x=>{if(!x.closest(".page-head"))x.remove()});
-   const heading=section.closest(".hpmw-news-page")?.querySelector(".page-head h1");
-   if(heading&&!heading.parentElement.querySelector("[data-hpmw-news-create]")){const b=document.createElement("button");b.className="hpmw-cms-create";b.dataset.hpmwNewsCreate="1";b.type="button";b.title="Nieuwsbericht plaatsen";b.setAttribute("aria-label","Nieuwsbericht plaatsen");b.innerHTML='<i class="fa-solid fa-plus"></i>';heading.insertAdjacentElement("afterend",b)}
-   section.querySelectorAll(".hpmw-cms-card[data-kind='news'],.hpmw-cms-card:not([data-kind])").forEach(card=>{
-    if(card.querySelector(".hpmw-cms-manage"))return;
-    let original={};try{original=JSON.parse(card.dataset.item||"{}")}catch(_){}
-    const actions=document.createElement("div");actions.className="hpmw-cms-manage";
-    actions.innerHTML='<button class="hpmw-cms-icon-btn" type="button" data-hpmw-news-edit title="Nieuwsbericht bewerken" aria-label="Nieuwsbericht bewerken"><i class="fa-solid fa-pen-to-square"></i></button>'+(canDeleteNews()?'<button class="hpmw-cms-icon-btn delete" type="button" data-hpmw-news-delete title="Nieuwsbericht verwijderen" aria-label="Nieuwsbericht verwijderen"><i class="fa-solid fa-trash"></i></button>':"");
-    card.querySelector(".hpmw-cms-card-top")?.append(actions);
-    card.dataset.item=JSON.stringify({...original,id:card.dataset.id||original.id||"",title:card.querySelector(".hpmw-cms-title")?.textContent||original.title||"",body:card.querySelector(".hpmw-cms-body")?.textContent||original.body||""});
-   });
+  const section=$("#hpmwNewsPageList");
+  const allowed=!!(window.HpmwPortalAccess?.canNews?.()||canNews());
+  const page=section?.closest(".hpmw-news-page");
+  if(!section||!page)return;
+  const heading=page.querySelector(".page-head h1");
+  const headingHost=heading?.parentElement;
+  if(!allowed){page.querySelectorAll("[data-hpmw-news-create],.hpmw-cms-manage").forEach(x=>x.remove());return}
+  if(headingHost&&!headingHost.querySelector("[data-hpmw-news-create]")){const b=document.createElement("button");b.className="hpmw-cms-create";b.dataset.hpmwNewsCreate="1";b.type="button";b.title="Nieuwsbericht plaatsen";b.setAttribute("aria-label","Nieuwsbericht plaatsen");b.innerHTML='<i class="fa-solid fa-plus"></i>';headingHost.append(b)}
+  section.querySelectorAll(".hpmw-cms-card[data-kind='news'],.hpmw-cms-card:not([data-kind])").forEach(card=>{
+   if(card.querySelector(".hpmw-cms-manage"))return;
+   let original={};try{original=JSON.parse(card.dataset.item||"{}")}catch(_){}
+   const actions=document.createElement("div");actions.className="hpmw-cms-manage";
+   actions.innerHTML='<button class="hpmw-cms-icon-btn" type="button" data-hpmw-news-edit title="Nieuwsbericht bewerken" aria-label="Nieuwsbericht bewerken"><i class="fa-solid fa-pen-to-square"></i></button>'+(window.HpmwPortalAccess?.canDeleteNews?.()||canDeleteNews()?'<button class="hpmw-cms-icon-btn delete" type="button" data-hpmw-news-delete title="Nieuwsbericht verwijderen" aria-label="Nieuwsbericht verwijderen"><i class="fa-solid fa-trash"></i></button>':"");
+   const top=card.querySelector(".hpmw-cms-card-top")||card;
+   top.append(actions);
+   card.dataset.item=JSON.stringify({...original,id:card.dataset.id||original.id||"",title:card.querySelector(".hpmw-cms-title")?.textContent||original.title||"",body:card.querySelector(".hpmw-cms-body")?.textContent||original.body||""});
   });
+ }
  };
- document.addEventListener("click",e=>{if(e.target.closest("#newsLaunch,#newsQuickLink")){e.preventDefault();window.hpmwShowPortalView?.("newsView");return}if(e.target.closest("#newsBack")){window.hpmwShowPortalView?.("introView")}});
+ document.addEventListener("click",e=>{if(e.target.closest("#newsLaunch,#newsQuickLink")){e.preventDefault();window.hpmwShowPortalView?.("newsView");setTimeout(decorateNews,250);return}if(e.target.closest("#newsBack")){window.hpmwShowPortalView?.("introView")}});
  document.addEventListener("hpmw:portal-role",decorateNews);
  document.addEventListener("hpmw:news-rendered",decorateNews);
  const observer=new MutationObserver(decorateNews);observer.observe(document.body,{childList:true,subtree:true});
+ const actionStyle=document.createElement("style");actionStyle.textContent=".hpmw-news-page .hpmw-cms-create,.hpmw-news-page .hpmw-cms-manage,.hpmw-news-page .hpmw-cms-icon-btn{display:inline-grid!important;visibility:visible!important;opacity:1!important}.hpmw-news-page .hpmw-cms-manage{display:flex!important;align-items:center!important;gap:7px!important}.hpmw-news-page .hpmw-cms-create{display:inline-grid!important;place-items:center!important}.hpmw-news-page .hpmw-cms-icon-btn{display:inline-grid!important;place-items:center!important}";document.head.append(actionStyle);
  ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()})).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
  (async()=>{try{await ensureClient();const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}})();
 })();
