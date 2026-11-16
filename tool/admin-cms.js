@@ -1,6 +1,7 @@
 /* Admin CMS module — loaded by tool/index.html */
 (()=> {
  const $=(s,r=document)=>r.querySelector(s);
+ const esc=value=>String(value??"").replace(/[&<>"\']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#39;"}[c]));
  const client=()=>window.hpmwSupabase;
  const hasPermission=key=>["admin","administrator"].includes(document.body.dataset.supabaseRole)||window.hpmwSupabasePermissions?.[key]===true;
  const kinds={news:"Nieuwspagina"};
@@ -114,7 +115,7 @@
   newsView.querySelectorAll("[data-news-tab]").forEach(b=>b.onclick=()=>switchNewsTab(b.dataset.newsTab));
   $("#newsPageBack")?.addEventListener("click",()=>go("newAdminDashboard"));
 
-  const faqPanel=section.querySelector('[data-main-panel="news"]');
+  const faqPanel=newsView.querySelector('[data-main-panel="news"]');
   const faqGrid=faqPanel?.querySelector(".cms-grid");
   const faqEditorPanel=faqGrid?.lastElementChild;
   const faqManager=document.createElement("div");faqManager.className="faq-manager";faqManager.id="faqManager";
