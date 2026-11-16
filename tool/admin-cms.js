@@ -100,28 +100,29 @@
   $("#faqAddQuestion").onclick=()=>openFaqQuestionForm();
 
   $("#cmsBack").onclick=()=>go("newAdminDashboard");$("#cmsNew").onclick=reset;
-  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;$("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cmsMainTabs [data-main-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("#adminCmsView [data-main-panel]").forEach(p=>p.hidden=p.dataset.mainPanel!==b.dataset.mainTab);});
-  $("#roleSave").onclick=saveToolRole;
+  $("#ticketModAdd").onclick=addTicketModerator;$("#saveTicketRights").onclick=saveTicketModeratorRights;$("#syncPortal").onclick=syncTicketModerators;
+  $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
+  $("#roleAssignForm").onsubmit=saveToolRole;
   $("#roleCreateForm").onsubmit=createToolRole;
   document.addEventListener("click",e=>{
    const save=e.target.closest("[data-role-save]");if(save)saveRoleDefinition(save);
    const del=e.target.closest("[data-role-delete]");if(del)deleteToolRole(del);
+   const userSave=e.target.closest("[data-role-user-save]");
+   if(userSave){const id=userSave.dataset.roleUserSave,role=document.querySelector('[data-user-role="'+CSS.escape(id)+'"]')?.value;userSave.disabled=true;client().from("tool_access_roles").update({role}).eq("user_id",id).then(({error})=>{$("#roleStatus").textContent=error?"Wijzigen mislukt: "+error.message:"Gebruikersrol bijgewerkt.";userSave.disabled=false;if(!error)loadToolRoles()});}
    const userDel=e.target.closest("[data-role-user-delete]");
-   if(userDel){const id=userDel.dataset.roleUserDelete;if(confirm("Deze gebruikersrol verwijderen?"))client().from("tool_access_roles").delete().eq("user_id",id).then(({error})=>{$("#roleStatus").textContent=error?.message||"Toewijzing verwijderd.";if(!error)loadToolRoles()});}
+   if(userDel){const id=userDel.dataset.roleUserDelete;if(confirm("Deze gebruikerskoppeling verwijderen?"))client().from("tool_access_roles").delete().eq("user_id",id).then(({error})=>{$("#roleStatus").textContent=error?.message||"Gebruiker ontkoppeld.";if(!error)loadToolRoles()});}
   });
   document.addEventListener("change",e=>{const input=e.target.closest("[data-role-permission]");if(input)saveRolePermission(input)});
   $("#cmsForm").onsubmit=save; $("#faqCategoryAdd").onclick=addFaqCategory;
   const tabs=$("#cmsTabs");const newsKindButton=document.createElement("button");newsKindButton.textContent="Nieuwspagina";newsKindButton.dataset.kind="news";newsKindButton.onclick=()=>selectKind("news");tabs.append(newsKindButton);
+  switchNewsTab("content");selectKind("news");
   const role=document.body.dataset.supabaseRole||"member";
-  syncFaqAdminTab(role);
-  const tabButtons=[...document.querySelectorAll("#cmsMainTabs [data-main-tab]")];
-  if(role==="support_moderator"){tabButtons.forEach(b=>b.hidden=b.dataset.mainTab!=="ticketRights");document.querySelector('#cmsMainTabs [data-main-tab="ticketRights"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
-  else if(role==="news_poster"){const rightsTab=document.querySelector('#newsMainTabs [data-news-tab="rights"]');if(rightsTab)rightsTab.hidden=true;document.querySelector('#newsMainTabs [data-news-tab="content"]')?.click();$("#roleList")?.closest(".cms-panel")?.setAttribute("hidden","");}
-else {switchNewsTab("content");selectKind("news");loadToolRoles();loadNewsModerators();}
-
+  const canRoles=hasPermission("can_manage_roles"),canTickets=hasPermission("can_use_tickets");
+  $("#roleCreatePanel").hidden=!canRoles;$("#roleManagerSection").hidden=!canRoles;$("#roleAssignPanel").hidden=!canRoles;$("#ticketModeratorsPanel").hidden=!canTickets;
+  if(canRoles)loadToolRoles();if(canTickets)loadTicketModerators();loadNewsModerators();
  }
  let kind="maintenance",editing=null;
- function syncFaqAdminTab(){const b=document.querySelector('#cmsMainTabs [data-main-tab="faq"]');if(b)b.hidden=!hasPermission("can_manage_faq");}
+ function syncFaqAdminTab(){}
  function reset(){editing=null;$("#cmsForm").reset();$("#cmsOrder").value=0;$("#cmsPinned").checked=false;$("#cmsPinWrap").style.display=kind==="news"?"block":"none";$("#cmsSourceWrap").hidden=kind!=="news";$("#cmsAuthorWrap").hidden=kind!=="news";$("#cmsFaqCategoryWrap").hidden=kind!=="faq";$("#faqCategoryManager").hidden=kind!=="faq"||!hasPermission("can_manage_faq");$("#cmsFormTitle").textContent=kind==="faq"?"Nieuwe FAQ-vraag":"Nieuw item";if(kind==="faq"){loadFaqCategories();loadFaqCategoryManager();}}
  function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];if(k==="faq"){$("#cmsTabs").hidden=true;$("#faqManager").hidden=false;$("#faqManager .cms-panel").hidden=true;load();return;}$("#cmsTabs").hidden=false;$("#faqManager").hidden=true;reset();load();}
 
