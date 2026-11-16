@@ -169,7 +169,7 @@
   if(select){
    const previous=selectedRoleKey||select.value;
    select.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+' ('+(members||[]).filter(m=>m.role===r.role).length+')</option>').join("");
-   selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions[0]?.role||"");
+   selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions.some(r=>r.role==="guest")?"guest":(roleDefinitions[0]?.role||""));
    select.value=selectedRoleKey;
   }
   renderSelectedRole();
