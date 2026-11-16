@@ -531,7 +531,7 @@ function apply(lang){
 }
 async function loadSupabaseTranslations(){
  try{
-  const response=await fetch('https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/translations?select=translation_key,nl,en,pt&order=translation_key',{
+  const response=await fetch('https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/portal_translations?select=source_key,nl,en,pt&order=nl',{
    headers:{'apikey':'sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx','Authorization':'Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx'},
    cache:'no-store'
   });
@@ -541,7 +541,7 @@ async function loadSupabaseTranslations(){
    rows.forEach(row=>{
     // De Nederlandse tekst is de zichtbare brontekst op het forum.
     // Gebruik die daarom als sleutel; val terug op translation_key indien nodig.
-    const keys=[row.nl,row.translation_key]
+    const keys=[row.nl,row.source_key]
  .filter(value=>typeof value==='string' && value.trim())
  .map(value=>value.trim());
 
@@ -571,6 +571,7 @@ async function init(){
  globe.addEventListener('click',toggle);popup.addEventListener('click',e=>e.stopPropagation());document.addEventListener('click',()=>popup.classList.remove('open'));document.addEventListener('keydown',e=>{if(e.key==='Escape')popup.classList.remove('open')});
  const savedLang=(()=>{try{return localStorage.getItem('hpmwSelectedLanguage')}catch(_){return null}})();
  const initialLang=['nl','en','pt'].includes(savedLang)?savedLang:'nl';
+ await loadSupabaseTranslations();
  select.value=initialLang;
  apply(initialLang);
  // Vertaal ook CMS-panelen en lijsten die pas na het openen van Beheer worden opgebouwd.
