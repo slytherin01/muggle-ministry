@@ -4799,6 +4799,11 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const canViewNews=()=>permissions.can_view_news===true||canNews();
  const canViewFaq=()=>permissions.can_view_faq===true||permissions.can_manage_faq===true;
  const canViewTickets=()=>permissions.can_view_tickets===true||canSupport();
+ const canViewMyTickets=()=>permissions.can_view_my_tickets===true;
+ const canViewSortingHat=()=>permissions.can_view_sorting_hat===true;
+ const canViewVacancies=()=>permissions.can_view_vacancies===true;
+ const canViewModteam=()=>permissions.can_view_modteam===true;
+ const canViewAwards=()=>permissions.can_view_awards===true;
  const canUseTickets=()=>permissions.can_use_tickets===true;
  const canNews=()=>permissions.can_manage_news===true;
  const canDeleteNews=()=>permissions.can_delete_news===true;
@@ -4814,9 +4819,9 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   applyPortalVisibility();return role
  }
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
  function applyPortalVisibility(){
-  const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets]];
+  const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets],["#myTicketsLaunch",canViewMyTickets]];
   checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=canViewPortal()&&!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
   document.documentElement.dataset.hpmwPortalRole=role;
   document.dispatchEvent(new CustomEvent("hpmw:portal-access-updated",{detail:{role,permissions}}));
@@ -4828,6 +4833,11 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
    if(id==="newsView"&&!canViewNews())return false;
    if(id==="faqView"&&!canViewFaq())return false;
    if(id==="homeView"&&!canViewTickets())return false;
+   if(id==="myTicketsView"&&!canViewMyTickets())return false;
+   if(id==="sortingHatView"&&!canViewSortingHat())return false;
+   if(id==="vacanciesView"&&!canViewVacancies())return false;
+   if(id==="modteamView"&&!canViewModteam())return false;
+   if(id==="awardsView"&&!canViewAwards())return false;
    return originalPortalShow.call(this,id,...args);
   };
   guardedPortalShow.__hpmwRoleGuard=true;window.hpmwShowPortalView=guardedPortalShow;
