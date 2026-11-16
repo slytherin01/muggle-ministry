@@ -2041,7 +2041,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
    <button class="cat" type="button" data-faq-category="portal"><span class="round-icon"><i class="fa-solid fa-ticket"></i></span><span><strong>Portaal</strong><span>Veelgestelde vragen over het portaal en tickets</span></span></button>
    <button class="cat" type="button" data-faq-category="forum"><span class="round-icon"><i class="fa-solid fa-comments"></i></span><span><strong>Forum</strong><span>Veelgestelde vragen over het forum</span></span></button>
   </div>
-  <div class="hpmw-faq-category-content" id="hpmwFaqCategoryContent" aria-live="polite" hidden><div class="empty">Selecteer een categorie om de artikelen te bekijken.</div></div>
+  <div class="hpmw-faq-category-content" id="hpmwFaqCategoryContent" aria-live="polite" hidden></div>
  </section>
 </section>
 <div class="quiz-backdrop" id="sortQuizBackdrop"><section class="quiz-dialog" role="dialog" aria-modal="true" aria-labelledby="sortQuizTitle"><div class="popup-head"><div><div class="quiz-kicker">DE AFDELINGSQUIZ</div><h2 id="sortQuizTitle">Welke afdeling past bij jou?</h2></div><button type="button" class="close-btn" id="sortQuizClose" aria-label="Quiz sluiten">×</button></div><div><p class="quiz-intro">Beantwoord vier korte vragen. Kies steeds het antwoord dat het beste bij jou past.</p><div id="sortQuizQuestion"></div><div class="quiz-progress" id="sortQuizProgress">Vraag 1 van 4</div></div></section></div>
@@ -5009,7 +5009,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
   const target=host();if(!target)return;
   target.innerHTML=categories.length?categories.map(c=>'<button class="cat" type="button" data-faq-category="'+c.id+'" aria-pressed="'+(selected===c.id)+'"><span class="round-icon"><i class="fa-solid fa-circle-question"></i></span><span><strong>'+esc(c.name)+'</strong><span>'+esc(c.description||"Bekijk de veelgestelde vragen in deze categorie")+'</span></span></button>').join(""):'<div class="empty">Er zijn nog geen FAQ-categorieën gepubliceerd.</div>';
   if(selected&&!categories.some(c=>c.id===selected))selected=null;
-  if(selected)renderArticles();else if(out())out().innerHTML='<div class="empty">Selecteer een categorie om de artikelen te bekijken.</div>';
+  if(selected)renderArticles();else if(out())out().innerHTML="";
  }
  function renderArticles(){
   const target=out();if(!target)return;
@@ -6660,6 +6660,50 @@ html body{padding-top:70px!important}
  };
  removeFaqAdminNav();
  new MutationObserver(removeFaqAdminNav).observe(document.querySelector('header.topbar nav.top-actions')||document.body,{childList:true,subtree:true});
+})();
+</script>
+
+<script id="hpmw-portal-last-view-and-clickable-banner">
+(()=>{"use strict";
+ const KEY="hpmw_portal_last_open_view_v1";
+ const allowed=new Set(["introView","homeView","formView","myTicketsView","adminView","faqView","awardsView","modteamView","newsView","vacanciesView","sortingHatView"]);
+ function wrapNavigation(){
+  const original=window.hpmwShowPortalView;
+  if(typeof original!=="function"||original.__hpmwPersistsView)return false;
+  const wrapped=function(id,...args){
+   if(allowed.has(id)){try{localStorage.setItem(KEY,id)}catch(e){}}
+   return original.call(this,id,...args);
+  };
+  wrapped.__hpmwPersistsView=true;
+  window.hpmwShowPortalView=wrapped;
+  return true;
+ }
+ function restore(){
+  wrapNavigation();
+  let saved="";try{saved=localStorage.getItem(KEY)||""}catch(e){}
+  if(allowed.has(saved)&&typeof window.hpmwShowPortalView==="function"){
+   window.hpmwShowPortalView(saved);
+  }else if(typeof window.hpmwShowPortalView==="function"){
+   const active=document.querySelector("main.shell>.view.active");
+   if(active&&allowed.has(active.id))try{localStorage.setItem(KEY,active.id)}catch(e){}
+  }
+ }
+ function bannerSetup(){
+  const bar=document.querySelector(".hpmw-global-brandbar");if(!bar||bar.dataset.portalHomeLink)return;
+  bar.dataset.portalHomeLink="1";bar.setAttribute("role","link");bar.setAttribute("tabindex","0");
+  bar.setAttribute("aria-label","Terug naar de portaalindex");bar.style.cursor="pointer";
+  const go=()=>{try{localStorage.setItem(KEY,"introView")}catch(e){}window.hpmwShowPortalView?.("introView")};
+  bar.addEventListener("click",e=>{if(e.target.closest("a,button,input,select,textarea"))return;go()});
+  bar.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}});
+ }
+ function start(){
+  wrapNavigation();
+  const active=document.querySelector("main.shell>.view.active");
+  if(active&&allowed.has(active.id))try{localStorage.setItem(KEY,active.id)}catch(e){}
+  restore();bannerSetup();
+  new MutationObserver(()=>{wrapNavigation();bannerSetup()}).observe(document.body,{childList:true,subtree:true});
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
 </body></html>
