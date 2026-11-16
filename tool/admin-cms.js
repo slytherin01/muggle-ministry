@@ -106,7 +106,7 @@
   $("#roleCreateForm").onsubmit=createToolRole;
   $("#roleSearch").oninput=applyRoleFilters;$("#roleFilter").onchange=applyRoleFilters;$("#roleRefresh").onclick=loadToolRoles;
   $("#roleUserSearch").oninput=applyUserFilters;$("#roleUserRefresh").onclick=loadToolRoles;
-  document.addEventListener("click",e=>{
+  document.addEventListener("click",async e=>{
    const roleOpen=e.target.closest("[data-role-open]");if(roleOpen){const d=document.querySelector('[data-role-details="'+CSS.escape(roleOpen.dataset.roleOpen)+'"]');if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"center"})}}
    const userEdit=e.target.closest("[data-role-user-edit]");if(userEdit){const select=document.querySelector('[data-user-role="'+CSS.escape(userEdit.dataset.roleUserEdit)+'"]');select?.focus();select?.scrollIntoView({behavior:"smooth",block:"center"})}
    const save=e.target.closest("[data-role-save]");if(save)saveRoleDefinition(save);
