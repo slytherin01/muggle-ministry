@@ -99,21 +99,73 @@ else {switchNewsTab("content");selectKind("news");loadToolRoles();loadNewsModera
  function reset(){editing=null;$("#cmsForm").reset();$("#cmsOrder").value=0;$("#cmsPinned").checked=false;$("#cmsPinWrap").style.display=kind==="news"?"block":"none";$("#cmsSourceWrap").hidden=kind!=="news";$("#cmsAuthorWrap").hidden=kind!=="news";$("#cmsFaqCategoryWrap").hidden=kind!=="faq";$("#faqCategoryManager").hidden=kind!=="faq"||document.body.dataset.supabaseRole==="faq_editor";$("#cmsFormTitle").textContent=kind==="faq"?"Nieuwe FAQ-vraag":"Nieuw item";if(kind==="faq"){loadFaqCategories();loadFaqCategoryManager();}}
  function selectKind(k){kind=k;editing=null;document.querySelectorAll("#cmsTabs button").forEach(b=>b.classList.toggle("active",b.dataset.kind===k));$("#cmsListTitle").textContent=kinds[k];if(k==="faq"){$("#cmsTabs").hidden=true;$("#faqManager").hidden=false;$("#faqManager .cms-panel").hidden=true;load();return;}$("#cmsTabs").hidden=false;$("#faqManager").hidden=true;reset();load();}
 
+
+ const permissionGroups=[
+  {title:"Algemene toegang",items:[["can_view_portal","Portaal bekijken"],["can_use_tickets","Ticket Support gebruiken"]]},
+  {title:"Nieuwsberichten",items:[["can_manage_news","Nieuws aanmaken en bewerken"],["can_approve_news","Nieuws goedkeuren en publiceren"],["can_delete_news","Nieuws verwijderen"]]},
+  {title:"FAQ",items:[["can_manage_faq","FAQ aanmaken en bewerken"],["can_approve_faq","FAQ goedkeuren en publiceren"],["can_delete_faq","FAQ verwijderen"]]},
+  {title:"Beheer",items:[["can_manage_settings","Instellingen beheren"],["can_manage_roles","Rollen en rechten beheren"]]}
+ ];
+ const permissionKeys=permissionGroups.flatMap(g=>g.items.map(x=>x[0]));
+ const roleSlug=name=>String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+ let roleDefinitions=[];
+ const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
  async function loadToolRoles(){
-  const db=client(),box=$("#roleList");if(!db||!box)return;
-  const {data,error}=await db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false});
-  if(error){box.textContent="Gebruikersrollen laden mislukt: "+error.message;$("#roleStatus").textContent="Controleer de tabelrechten en SQL-migratie.";return}
-  box.innerHTML="";
-  (data||[]).forEach(row=>{const item=document.createElement("div");item.className="cms-item";const info=document.createElement("div"),who=document.createElement("strong"),meta=document.createElement("small");who.textContent=row.user_id;meta.textContent=row.role;info.append(who,meta);const del=document.createElement("button");del.className="cms-btn";del.textContent="Verwijderen";del.onclick=async()=>{if(!confirm("Deze gebruikersrol verwijderen?"))return;const {error}=await db.from("tool_access_roles").delete().eq("user_id",row.user_id);$("#roleStatus").textContent=error?.message||"Rol verwijderd.";if(!error)loadToolRoles()};item.append(info,del);box.append(item)});
-  if(!(data||[]).length)box.textContent="Nog geen gebruikersrollen ingesteld.";
+  const db=client(),box=$("#roleManagerList"),assign=$("#roleValue");if(!db||!box)return;
+  box.textContent="Rollen laden…";
+  const [{data:defs,error:de},{data:members,error:me}]=await Promise.all([
+   db.from("portal_role_permissions").select("*").order("role_name"),
+   db.from("tool_access_roles").select("user_id,role,created_at").order("created_at",{ascending:false})
+  ]);
+  if(de){box.textContent="Rollen laden mislukt: "+de.message;$("#roleStatus").textContent="Controleer de databaseverbinding.";return}
+  if(me){box.textContent="Gebruikers laden mislukt: "+me.message;return}
+  roleDefinitions=defs||[];
+  $("#roleCount").textContent=roleDefinitions.length+" rollen";
+  if(assign)assign.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("")||'<option value="">Maak eerst een rol aan</option>';
+  box.innerHTML=roleDefinitions.map(r=>{
+   const protectedRole=!!r.is_system||r.role==="administrator";
+   return '<section class="cms-panel hpmw-role-card" data-role-card="'+esc(r.role)+'"><div class="hpmw-role-card-head"><div><h3>'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</h3><code>'+esc(r.role)+'</code><p>'+esc(r.description||"Geen omschrijving")+'</p></div><span class="hpmw-role-kind">'+(protectedRole?"Systeemrol":"Eigen rol")+'</span></div><div class="hpmw-role-fields"><label>Rolnaam<input data-role-name="'+esc(r.role)+'" maxlength="60" value="'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'" '+(r.role==="administrator"?"disabled":"")+'></label><label>Omschrijving<input data-role-description="'+esc(r.role)+'" maxlength="180" value="'+esc(r.description||"")+'"></label><button class="cms-btn" type="button" data-role-save="'+esc(r.role)+'">Gegevens opslaan</button>'+(protectedRole?'<span class="cms-help">Systeemrol — verwijderen niet mogelijk</span>':'<button class="cms-btn hpmw-role-delete" type="button" data-role-delete="'+esc(r.role)+'">Verwijderen</button>')+'</div><div class="hpmw-role-permission-groups">'+permissionGroups.map(g=>'<div class="hpmw-role-permission-group"><h4>'+g.title+'</h4>'+g.items.map(([key,label])=>'<label class="hpmw-role-permission"><input type="checkbox" data-role-permission="'+esc(r.role)+'" data-permission-key="'+key+'" '+(r[key]?"checked":"")+' '+(r.role==="administrator"?"disabled":"")+'><span>'+label+'</span></label>').join("")+'</div>').join("")+'</div><p class="cms-status" data-role-status="'+esc(r.role)+'" role="status"></p></section>';
+  }).join("")||'<div class="cms-panel">Nog geen rollen gevonden.</div>';
+  const userBox=$("#roleList");if(userBox)userBox.innerHTML=(members||[]).map(row=>'<div class="cms-item"><div><strong>'+esc(row.user_id)+'</strong><small>'+esc((roleDefinitions.find(r=>r.role===row.role)?.role_name)||systemRoleNames[row.role]||row.role)+'</small></div><button class="cms-btn" type="button" data-role-user-delete="'+esc(row.user_id)+'">Toewijzing verwijderen</button></div>').join("")||'<p class="cms-help">Nog geen gebruikersrollen ingesteld.</p>';
  }
  async function saveToolRole(){
   const db=client(),id=$("#roleUserId").value.trim(),role=$("#roleValue").value;
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)){ $("#roleStatus").textContent="Vul een geldige Supabase gebruikers-UUID in.";return}
+  if(!role){$("#roleStatus").textContent="Selecteer eerst een rol.";return}
   const current=await db.auth.getUser();if(!current.data.user){$("#roleStatus").textContent="Log opnieuw in.";return}
   const {error}=await db.from("tool_access_roles").upsert({user_id:id,role,created_at:new Date().toISOString()},{onConflict:"user_id"});
   $("#roleStatus").textContent=error?"Toewijzen mislukt: "+error.message:"Gebruikersrol toegewezen.";
   if(!error){$("#roleUserId").value="";loadToolRoles()}
+ }
+ async function createToolRole(event){
+  event.preventDefault();const db=client(),name=$("#roleCreateName").value.trim(),description=$("#roleCreateDescription").value.trim(),role=roleSlug(name),status=$("#roleCreateStatus");
+  if(!role||role==="administrator"){status.textContent="Vul een geldige rolnaam in.";return}
+  status.textContent="Rol aanmaken…";
+  const payload={role,role_name:name,description,is_system:false,...Object.fromEntries(permissionKeys.map(k=>[k,false]))};
+  const {error}=await db.from("portal_role_permissions").insert(payload);
+  if(error){status.textContent=error.code==="23505"?"Deze rol bestaat al. Kies een andere naam.":error.message;return}
+  $("#roleCreateForm").reset();status.textContent="Rol aangemaakt.";await loadToolRoles();
+ }
+ async function saveRoleDefinition(button){
+  const role=button.dataset.roleSave,card=button.closest("[data-role-card]"),name=card.querySelector("[data-role-name]").value.trim(),description=card.querySelector("[data-role-description]").value.trim(),status=card.querySelector("[data-role-status]");
+  if(!name){status.textContent="Rolnaam is verplicht.";return}
+  button.disabled=true;const {data:current}=await client().auth.getUser();const {error}=await client().from("portal_role_permissions").update({role_name:name,description,updated_by:current.user.id,updated_at:new Date().toISOString()}).eq("role",role);button.disabled=false;
+  status.textContent=error?"Opslaan mislukt: "+error.message:"Rolgegevens opgeslagen.";if(!error)await loadToolRoles();
+ }
+ async function deleteToolRole(button){
+  const role=button.dataset.roleDelete,usage=await client().from("tool_access_roles").select("user_id",{count:"exact",head:true}).eq("role",role);
+  if(usage.error){$("#roleStatus").textContent=usage.error.message;return}
+  if(usage.count){$("#roleStatus").textContent="Deze rol is nog aan "+usage.count+" gebruiker(s) gekoppeld. Wijs eerst een andere rol toe.";return}
+  if(!confirm("Rol '"+role+"' definitief verwijderen?"))return;
+  const {error}=await client().from("portal_role_permissions").delete().eq("role",role).eq("is_system",false);
+  if(error){$("#roleStatus").textContent="Verwijderen mislukt: "+error.message;return}
+  $("#roleStatus").textContent="Rol verwijderd.";await loadToolRoles();
+ }
+ async function saveRolePermission(input){
+  const role=input.dataset.rolePermission,key=input.dataset.permissionKey,card=input.closest("[data-role-card]"),status=card.querySelector("[data-role-status]"),previous=!input.checked;
+  input.disabled=true;status.textContent="Recht opslaan…";
+  const {data:sd}=await client().auth.getSession();const {error}=await client().from("portal_role_permissions").update({[key]:input.checked,updated_by:sd.session.user.id,updated_at:new Date().toISOString()}).eq("role",role);
+  input.disabled=role==="administrator";if(error){input.checked=previous;status.textContent="Opslaan mislukt: "+error.message}else status.textContent="Rechten opgeslagen.";
  }
  async function loadNewsModerators(){
   const db=client(),box=$("#newsModList");if(!db||!box)return;
