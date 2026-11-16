@@ -110,7 +110,7 @@
   $("#newsModAdd").onclick=addNewsModerator;$("#saveNewsRights").onclick=saveNewsModeratorRights;$("#syncNewsRights").onclick=syncNewsModerators;
   $("#roleAssignForm").onsubmit=saveToolRole;
   $("#roleCreateForm").onsubmit=createToolRole;
-  $("#roleEditorSelect").onchange=()=>{renderSelectedRole();renderRoleCatalog([]);};
+  $("#roleEditorSelect").onchange=()=>{renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);};
   $("#roleCatalogList").addEventListener("click",event=>{
    const tile=event.target.closest("[data-role-pick]");if(!tile)return;
    selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;
