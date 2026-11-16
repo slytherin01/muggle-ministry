@@ -232,6 +232,24 @@
    showRoleLoadError("Supabase heeft geen rollen teruggegeven. Controleer de tabel portal_role_permissions en de leesrechten (RLS).");
    return;
   }
+  // Populate both role selectors immediately. The role catalogue must not wait
+  // for the separate user-assignment request to finish.
+  const earlySelect=$("#roleEditorSelect");
+  if(earlySelect){
+   const previous=selectedRoleKey||earlySelect.value;
+   earlySelect.innerHTML=roleDefinitions.map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("");
+   selectedRoleKey=roleDefinitions.some(r=>r.role===previous)?previous:(roleDefinitions.some(r=>r.role==="guest")?"guest":roleDefinitions[0].role);
+   earlySelect.value=selectedRoleKey;
+  }
+  const earlyAssignSelect=$("#roleValue");
+  if(earlyAssignSelect){
+   const previousAssign=earlyAssignSelect.value,canAssignAdmin=document.body.dataset.supabaseRole==="administrator";
+   earlyAssignSelect.innerHTML='<option value="">Selecteer een rol…</option>'+roleDefinitions.filter(r=>r.role!=="administrator"||canAssignAdmin).map(r=>'<option value="'+esc(r.role)+'">'+esc(r.role_name||systemRoleNames[r.role]||r.role)+'</option>').join("");
+   earlyAssignSelect.value=roleDefinitions.some(r=>r.role===previousAssign)&&(previousAssign!=="administrator"||canAssignAdmin)?previousAssign:"";
+  }
+  renderRoleCatalog(window.__hpmwRoleMembers||[]);
+  renderSelectedRole();
+  if(status)status.textContent=roleDefinitions.length+" rollen geladen · gebruikers ophalen…";
   // Roles are rendered independently from user assignments: a restricted assignment query
   // must never hide the role catalogue.
   let membersResult;
