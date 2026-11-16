@@ -6703,5 +6703,34 @@ html body{padding-top:70px!important}
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
+
+<script id="hpmw-portal-home-navigation-20261116">
+(()=>{"use strict";
+ const goHome=()=>{
+  try{localStorage.setItem("hpmw_portal_last_open_view_v1","introView")}catch(e){}
+  if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("introView");
+  else{
+   document.querySelectorAll("main.shell>.view").forEach(v=>{
+    const home=v.id==="introView";v.classList.toggle("active",home);v.hidden=!home;
+    v.style.setProperty("display",home?"block":"none","important");
+   });
+  }
+ };
+ document.addEventListener("click",event=>{
+  const target=event.target instanceof Element?event.target:null;if(!target)return;
+  const nav=target.closest('header.topbar nav.top-actions a');
+  if(nav){
+   const label=(nav.innerText||nav.textContent||"").replace(/\\s+/g," ").trim().toLocaleLowerCase("nl-NL");
+   const href=nav.getAttribute("href")||"";
+   if(label==="portaal"||/\\/h3-portaal(?:[?#]|$)/i.test(href)){
+    event.preventDefault();event.stopImmediatePropagation();goHome();return;
+   }
+  }
+  if(target.closest(".hpmw-global-brandbar")){
+   event.preventDefault();event.stopImmediatePropagation();goHome();
+  }
+ },true);
+})();
+</script>
 </script>
 </body></html>
