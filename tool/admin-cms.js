@@ -185,17 +185,28 @@
  const roleSlug=name=>String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
  let roleDefinitions=[];
  const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
- let selectedRoleKey="";
+ let selectedRoleKey="",roleLoadSequence=0;
+ function showRoleLoadError(message){
+  const safe=esc(message),select=$("#roleEditorSelect"),assignSelect=$("#roleValue"),box=$("#roleManagerList"),catalog=$("#roleCatalogList"),status=$("#roleCatalogStatus");
+  if(select)select.innerHTML='<option value="">Rollen niet geladen — klik op Vernieuwen</option>';
+  if(assignSelect)assignSelect.innerHTML='<option value="">Rollen niet beschikbaar</option>';
+  if(catalog)catalog.innerHTML='<p class="cms-error">'+safe+'</p>';
+  if(box)box.innerHTML='<p class="cms-error">'+safe+'</p>';
+  if(status)status.textContent="Laden mislukt";
+  if($("#roleCount"))$("#roleCount").textContent="—";
+ }
  async function loadToolRoles(){
+  const requestId=++roleLoadSequence;
   const db=client(),box=$("#roleManagerList"),select=$("#roleEditorSelect"),catalog=$("#roleCatalogList");
   if(!box)return;
   const status=$("#roleCatalogStatus");if(status)status.textContent="Verbinding met Supabase controleren…";
+  if(select)select.innerHTML='<option value="">Rollen ophalen…</option>';
+  const assignLoading=$("#roleValue");if(assignLoading)assignLoading.innerHTML='<option value="">Rollen ophalen…</option>';
   if(catalog)catalog.innerHTML='<p class="cms-help">Rollen ophalen uit Supabase…</p>';
   box.innerHTML='<p class="cms-help">Selecteer een rol om de rechten te bekijken.</p>';
   if(!db){
    const message="Supabase-client ontbreekt. Vernieuw de pagina nadat je bent ingelogd.";
-   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   showRoleLoadError(message);
    if(status)status.textContent="Verbinding ontbreekt";
    return;
   }
@@ -206,27 +217,19 @@
     new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase reageert niet binnen 12 seconden. Controleer de verbinding en klik op Vernieuwen.")),12000))
    ]);
   }catch(loadError){
-   const message="Rollen ophalen mislukt: "+(loadError?.message||String(loadError));
-   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   $("#roleCatalogStatus").textContent="Laden mislukt";
-   $("#roleCount").textContent="—";
+   if(requestId!==roleLoadSequence)return;
+   showRoleLoadError("Rollen ophalen mislukt: "+(loadError?.message||String(loadError)));
    return;
   }
+  if(requestId!==roleLoadSequence)return;
   if(defsResult.error){
-   const message="Rollen konden niet worden geladen: "+defsResult.error.message;
-   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   $("#roleCatalogStatus").textContent="Laden mislukt";
-   $("#roleCount").textContent="—";
+   showRoleLoadError("Rollen konden niet worden geladen: "+defsResult.error.message);
    return;
   }
   roleDefinitions=Array.isArray(defsResult.data)?defsResult.data:[];
   $("#roleCount").textContent=String(roleDefinitions.length);
   if(!roleDefinitions.length){
-   const message="Supabase heeft geen rollen teruggegeven. Controleer de tabel portal_role_permissions en de leesrechten (RLS).";
-   if(catalog)catalog.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
-   box.innerHTML='<p class="cms-error">'+esc(message)+'</p>';
+   showRoleLoadError("Supabase heeft geen rollen teruggegeven. Controleer de tabel portal_role_permissions en de leesrechten (RLS).");
    return;
   }
   // Roles are rendered independently from user assignments: a restricted assignment query
@@ -238,6 +241,7 @@
     new Promise((_,reject)=>setTimeout(()=>reject(new Error("Gebruikerstoewijzingen ophalen duurde langer dan 12 seconden.")),12000))
    ]);
   }catch(assignError){membersResult={data:[],error:assignError};}
+  if(requestId!==roleLoadSequence)return;
   const members=membersResult.error?[]:(membersResult.data||[]);window.__hpmwRoleMembers=members;
   $("#roleUserCount").textContent=membersResult.error?"—":String(members.length);
   $("#roleUserCountInline").textContent=membersResult.error?"Gebruikerslijst niet toegankelijk":members.length+" gekoppeld";
@@ -258,6 +262,7 @@
   }
   renderRoleCatalog(members);
   renderSelectedRole();
+  if(status)status.textContent=membersResult.error?"Rollen geladen · gebruikerslijst beperkt":"Rollen en gebruikers geladen";
   const userBox=$("#roleList");
   if(userBox){
    if(membersResult.error){
