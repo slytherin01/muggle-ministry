@@ -133,10 +133,10 @@
   $("#newsModAdd")?.addEventListener("click",addNewsModerator);$("#saveNewsRights")?.addEventListener("click",saveNewsModeratorRights);$("#syncNewsRights")?.addEventListener("click",syncNewsModerators);
   $("#roleAssignForm")?.addEventListener("submit",saveToolRole);
   $("#roleCreateForm")?.addEventListener("submit",createToolRole);
-  $("#roleEditorSelect")?.addEventListener("change",()=>{renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);});
+  $("#roleEditorSelect")?.addEventListener("change",()=>{roleDetailsOpen=true;renderSelectedRole();renderRoleCatalog(window.__hpmwRoleMembers||[]);});
   $("#roleCatalogList")?.addEventListener("click",event=>{
    const tile=event.target.closest("[data-role-pick]");if(!tile)return;
-   selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;
+   selectedRoleKey=tile.dataset.rolePick;$("#roleEditorSelect").value=selectedRoleKey;roleDetailsOpen=true;
    renderSelectedRole();
    const members=Array.isArray(window.__hpmwRoleMembers)?window.__hpmwRoleMembers:[];
    renderRoleCatalog(members);
@@ -187,7 +187,7 @@
  const roleSlug=name=>String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
  let roleDefinitions=[];
  const systemRoleNames={administrator:"Administrator",support_moderator:"Support moderator",news_poster:"Nieuwsposter",news_poster_supervisor:"Nieuwsposter-supervisor",faq_editor:"FAQ-medewerker",faq_moderator:"FAQ-moderator",faq_supervisor:"FAQ-supervisor",guest:"Gast",member:"Lid",user:"Gebruiker (legacy)",supervisor_support_team:"Supervisor supportteam"};
- let selectedRoleKey="",roleLoadSequence=0;
+ let selectedRoleKey="",roleLoadSequence=0,roleDetailsOpen=false;
  let roleLoadPending=null;
  function showRoleLoadError(message){
   const safe=esc(message),select=$("#roleEditorSelect"),assignSelect=$("#roleValue"),box=$("#roleManagerList"),catalog=$("#roleCatalogList"),status=$("#roleCatalogStatus");
@@ -320,15 +320,30 @@
   box.innerHTML=roleDefinitions.map(role=>{
    const count=members.filter(m=>m.role===role.role).length;
    const title=role.role_name||systemRoleNames[role.role]||role.role;
-   const isSelected=role.role===$("#roleEditorSelect")?.value;
+   const isSelected=roleDetailsOpen&&role.role===$("#roleEditorSelect")?.value;
    const type=role.is_system?"Systeemrol":"Eigen rol";
    const active=permissionKeys.filter(k=>!!role[k]).length;
-   return '<button type="button" class="hpmw-role-tile '+(isSelected?"is-selected":"")+'" data-role-pick="'+esc(role.role)+'" aria-pressed="'+(isSelected?"true":"false")+'"><span class="hpmw-role-tile-top"><strong>'+esc(title)+'</strong><span class="hpmw-role-kind">'+type+'</span></span><code>'+esc(role.role)+'</code><span class="hpmw-role-tile-meta">'+count+' gebruiker(s) · '+active+'/'+permissionKeys.length+' rechten</span><span class="hpmw-role-tile-action">'+(isSelected?"Geselecteerd":"Rechten bekijken →")+'</span></button>';
+   return '<button type="button" class="hpmw-role-tile '+(isSelected?"is-selected":"")+'" data-role-pick="'+esc(role.role)+'" aria-pressed="'+(isSelected?"true":"false")+'"><span class="hpmw-role-tile-top"><strong>'+esc(title)+'</strong><span class="hpmw-role-kind">'+type+'</span></span><code>'+esc(role.role)+'</code><span class="hpmw-role-tile-meta">'+count+' gebruiker(s) · '+active+'/'+permissionKeys.length+' rechten</span><span class="hpmw-role-tile-action">'+(isSelected?"Rechten geopend":"Bekijk rol en rechten →")+'</span></button>';
   }).join("");
   const status=$("#roleCatalogStatus");if(status)status.textContent=roleDefinitions.length+" rollen beschikbaar";
  }
+ const roleWidgetStyle=document.createElement("style");roleWidgetStyle.textContent=`
+ #adminCmsView .hpmw-simple-role-select{display:none!important}
+ #adminCmsView .hpmw-role-empty-widget{display:grid;justify-items:center;text-align:center;gap:8px;padding:30px 18px;border:1px dashed #405574;border-radius:13px;background:#0d1929;color:#dce8f7}
+ #adminCmsView .hpmw-role-empty-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#29264b;color:#c3b9ff;font-size:20px}
+ #adminCmsView .hpmw-role-empty-widget strong{font-size:14px}
+ #adminCmsView .hpmw-role-empty-widget p{max-width:440px;margin:0;color:#9fb0c5;font-size:12px;line-height:1.6}
+ #adminCmsView .hpmw-simple-role-editor{margin-top:14px}
+ #adminCmsView .hpmw-simple-role-head{padding:15px;background:linear-gradient(145deg,#192b43,#111e2f);border:1px solid #344967;border-radius:11px}
+ #adminCmsView .hpmw-simple-permission-group{margin-top:12px;padding:14px;border:1px solid #344967;border-radius:11px;background:#0d1929}
+ #adminCmsView .hpmw-simple-permission-group h3{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #2b3e56}
+ #adminCmsView .hpmw-simple-role-fields{padding:14px;border:1px solid #344967;border-radius:11px;background:#0d1929;margin-top:12px}
+ #adminCmsView .hpmw-role-tile{cursor:pointer;text-align:left}
+ #adminCmsView .hpmw-role-tile:hover{transform:translateY(-1px);border-color:#a293ff}
+ `;document.head.append(roleWidgetStyle);
  function renderSelectedRole(){
   const box=$("#roleManagerList"),role=roleDefinitions.find(r=>r.role===$("#roleEditorSelect")?.value);if(!box)return;
+  if(!roleDetailsOpen){box.innerHTML='<div class="hpmw-role-empty-widget"><span class="hpmw-role-empty-icon">✦</span><strong>Kies een rol om de details te bekijken</strong><p>Selecteer een rolkaart hierboven. De omschrijving, instellingen en rechten verschijnen dan hieronder.</p></div>';return}
   if(!role){box.innerHTML='<p class="cms-help">Maak eerst een rol aan.</p>';return}
   selectedRoleKey=role.role;
   const protectedAdmin=role.role==="administrator";
@@ -351,7 +366,7 @@
   const payload={role,role_name:name,description,is_system:false,...Object.fromEntries(permissionKeys.map(k=>[k,false]))};
   const {error}=await db.from("portal_role_permissions").insert(payload);
   if(error){status.textContent=error.code==="23505"?"Deze rol bestaat al. Kies een andere naam.":error.message;return}
-  selectedRoleKey=role;$("#roleCreateForm").reset();status.textContent="Rol aangemaakt. Stel hieronder de rechten in.";await loadToolRoles(true);
+  selectedRoleKey=role;roleDetailsOpen=true;$("#roleCreateForm").reset();status.textContent="Rol aangemaakt. Stel hieronder de rechten in.";await loadToolRoles(true);
  }
  async function saveRoleDefinition(button){
   const role=button.dataset.roleSaveAll,box=$("#roleManagerList"),status=$("#roleEditorStatus");
