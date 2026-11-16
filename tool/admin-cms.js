@@ -60,7 +60,6 @@
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 2</div><h2>Rechten instellen</h2><p>Kies één rol en vink aan wat deze rol in het portaal mag doen.</p></div></div>
     <div class="hpmw-simple-role-select"><label for="roleEditorSelect">Welke rol wil je aanpassen?</label><select id="roleEditorSelect"><option value="">Rollen laden…</option></select><button class="cms-btn" type="button" id="roleRefresh">Vernieuwen</button></div>
     <div id="roleManagerList" class="hpmw-simple-role-editor"><p class="cms-help">Rollen laden…</p></div>
-    <p class="cms-status" id="roleEditorStatus" role="status"></p>
    </section>
    <section class="cms-panel hpmw-auth-assign" id="roleAssignPanel">
     <div class="hpmw-auth-section-head"><div><div class="eyebrow">STAP 3</div><h2>Gebruikers toegang geven</h2><p>Koppel een Supabase-account aan een rol. Een bestaande toewijzing kan hieronder worden gewijzigd.</p></div><span class="hpmw-auth-icon"><i class="fa-solid fa-users"></i></span></div>
