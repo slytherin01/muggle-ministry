@@ -4452,8 +4452,8 @@ document.addEventListener("hpmw:supabase-role",start);
  $("faqArticleCancel")?.addEventListener("click",resetArticle);
  $("faqCategoryForm")?.addEventListener("submit",async e=>{
   e.preventDefault();const f=e.currentTarget;if(!(f instanceof HTMLFormElement))return;if(!await isAdministrator()){status("Geen toegang.");return;}
-  const d=new FormData(f),id=String(d.get("id")||"");
-  const p={name:String(d.get("name")||"").trim(),description:String(d.get("description")||"").trim(),sort_order:Number(d.get("sort_order")||0),is_active:f.elements.is_active.checked};
+  const fields=f.elements,id=String(fields.id.value||"");
+  const p={name:String(fields.name.value||"").trim(),description:String(fields.description.value||"").trim(),sort_order:Number(fields.sort_order.value||0),is_active:fields.is_active.checked};
   if(!p.name){status("Vul een categorienaam in.");return;}
   const {data:sd}=await client().auth.getSession();p.updated_by=sd.session.user.id;if(!id)p.created_by=sd.session.user.id;
   const result=id?await client().from("faq_categories").update(p).eq("id",id):await client().from("faq_categories").insert(p);
@@ -4467,11 +4467,11 @@ document.addEventListener("hpmw:supabase-role",start);
   if(submit)submit.disabled=true;
   try{
    if(!await isAdministrator())throw Error("Geen toegang. Log in met een administrator-account.");
-   const d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"pending");
+   const fields=f.elements,id=String(fields.id.value||""),approval=String(fields.approval_status.value||"pending");
    const {data:sd,error:sessionError}=await client().auth.getSession();
    if(sessionError)throw sessionError;
    if(!sd.session)throw Error("Je sessie is verlopen. Log opnieuw in.");
-   const p={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
+   const p={kind:"faq",title:String(fields.title.value||"").trim(),body:String(fields.body.value||"").trim(),faq_category_id:String(fields.faq_category_id.value||"")||null,sort_order:Number(fields.sort_order.value||0),approval_status:approval,published:approval==="approved"&&fields.published.checked,updated_by:sd.session.user.id};
    if(!p.title||!p.body||!p.faq_category_id)throw Error("Vul vraag, antwoord en categorie in.");
    if(!id&&approval==="rejected")throw Error("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");
    if(!id){p.created_by=sd.session.user.id;p.submitted_by=sd.session.user.id;}
