@@ -4452,15 +4452,30 @@ document.addEventListener("hpmw:supabase-role",start);
   resetCategory();await loadAll();
  });
  $("faqArticleForm")?.addEventListener("submit",async e=>{
-  e.preventDefault();if(!await isAdministrator()){status("Geen toegang.");return;}
-  const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"draft");
-  const {data:sd}=await client().auth.getSession();
-  const p={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
-  if(!p.title||!p.body||!p.faq_category_id){status("Vul vraag, antwoord en categorie in.");return;}if(!id&&approval==="rejected"){status("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");return;}
-  if(!id){p.created_by=sd.session.user.id;p.submitted_by=sd.session.user.id;}
-  const result=id?await client().from("admin_content").update(p).eq("id",id).eq("kind","faq"):await client().from("admin_content").insert(p);
-  if(result.error){status("FAQ opslaan mislukt: "+result.error.message);return;}
-  resetArticle();await loadAll();status("FAQ opgeslagen en direct gesynchroniseerd met het portaal.");
+  e.preventDefault();
+  const submit=e.currentTarget.querySelector('button[type="submit"]');
+  if(submit)submit.disabled=true;
+  try{
+   if(!await isAdministrator())throw Error("Geen toegang. Log in met een administrator-account.");
+   const f=e.currentTarget,d=new FormData(f),id=String(d.get("id")||""),approval=String(d.get("approval_status")||"pending");
+   const {data:sd,error:sessionError}=await client().auth.getSession();
+   if(sessionError)throw sessionError;
+   if(!sd.session)throw Error("Je sessie is verlopen. Log opnieuw in.");
+   const p={kind:"faq",title:String(d.get("title")||"").trim(),body:String(d.get("body")||"").trim(),faq_category_id:String(d.get("faq_category_id")||"")||null,sort_order:Number(d.get("sort_order")||0),approval_status:approval,published:approval==="approved"&&f.elements.published.checked,updated_by:sd.session.user.id};
+   if(!p.title||!p.body||!p.faq_category_id)throw Error("Vul vraag, antwoord en categorie in.");
+   if(!id&&approval==="rejected")throw Error("Een nieuwe FAQ kan alleen als In afwachting of Goedgekeurd worden aangemaakt.");
+   if(!id){p.created_by=sd.session.user.id;p.submitted_by=sd.session.user.id;}
+   if(approval==="approved"){p.approved_by=sd.session.user.id;p.approved_at=new Date().toISOString();}
+   else {p.approved_by=null;p.approved_at=null;p.published=false;}
+   status("FAQ opslaan…");
+   const result=id?await client().from("admin_content").update(p).eq("id",id).eq("kind","faq").select("id").maybeSingle():await client().from("admin_content").insert(p).select("id").single();
+   if(result.error)throw result.error;
+   if(!result.data?.id)throw Error("De database heeft geen opgeslagen FAQ bevestigd.");
+   resetArticle();
+   await loadAll();
+   status(p.published?"FAQ opgeslagen en gepubliceerd. Het portaal toont de wijziging bij de volgende inhoudsverversing.":"FAQ opgeslagen als "+(approval==="approved"?"goedgekeurd maar nog niet gepubliceerd":"in afwachting")+". Voor zichtbaarheid in het portaal: kies Goedgekeurd én vink Publiceren in portaal aan.");
+  }catch(err){status("FAQ opslaan/verzenden mislukt: "+(err?.message||String(err)));}
+  finally{if(submit)submit.disabled=false;}
  });
  $("faqOrderSave")?.addEventListener("click",async()=>{
   if(!await isAdministrator()){status("Geen toegang.");return;}
