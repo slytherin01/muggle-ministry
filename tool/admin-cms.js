@@ -270,49 +270,6 @@
   $("#ticketModStatus").textContent=error?.message||"Ticketbeheerrechten opgeslagen.";
   if(!error){$("#ticketModId").value="";$("#ticketModName").value="";loadTicketModerators()}
  }
- async function loadPermissions(){
- const db=client(),box=$("#cmsPermissions");if(!box)return;
- const {data,error}=await db.from("admin_permissions").select("*").order("updated_at",{ascending:false});
- if(error){box.textContent="Rechten niet beschikbaar: "+error.message;return}
- box.innerHTML="";
- (data||[]).forEach(row=>{
-  const card=document.createElement("section");card.className="cms-user-rights";
-  const head=document.createElement("div");head.className="cms-user-rights-head";
-  const who=document.createElement("code");who.textContent=row.user_id;head.append(who);
-  const del=document.createElement("button");del.className="cms-btn";del.textContent="Profiel verwijderen";del.onclick=async()=>{if(!confirm("CMS-rechten verwijderen?"))return;const {error}=await db.from("admin_permissions").delete().eq("user_id",row.user_id);$("#cmsPermStatus").textContent=error?.message||"Profiel verwijderd.";loadPermissions()};head.append(del);card.append(head);
-  [["Onderhoud","maintenance"]].forEach(([name,slug])=>{
-   const group=document.createElement("div");group.className="cms-right-group";const title=document.createElement("strong");title.textContent=name;group.append(title);
-   [["Bekijken","view"],["Bewerken","edit"],["Publiceren","publish"],["Verwijderen","delete"]].forEach(([label,action])=>{
-    if(slug!=="maintenance")return;const key="can_"+action+"_"+slug,wrap=document.createElement("label");wrap.className="cms-right-check";const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!row[key];
-    cb.onchange=async()=>{cb.disabled=true;const u=await db.auth.getUser();const {error}=await db.from("admin_permissions").update({[key]:cb.checked,updated_by:u.data.user.id,updated_at:new Date().toISOString()}).eq("user_id",row.user_id);$("#cmsPermStatus").textContent=error?.message||"Rechten opgeslagen.";cb.disabled=false};
-    wrap.append(cb,document.createTextNode(label));group.append(wrap);
-   });card.append(group);
-  });box.append(card);
- });
- if(!(data||[]).length)box.textContent="Nog geen CMS-rechtenprofielen.";
-}
-async function addPermissionProfile(){
- const id=$("#permissionUserId").value.trim(),db=client();
- if(!/^[0-9a-f-]{36}$/i.test(id)){ $("#cmsPermStatus").textContent="Vul een geldige Supabase gebruikers-UUID in.";return; }
- const u=await db.auth.getUser();if(!u.data.user)return;
- const {error}=await db.from("admin_permissions").upsert({user_id:id,updated_by:u.data.user.id},{onConflict:"user_id"});
- $("#cmsPermStatus").textContent=error?.message||"Leeg profiel toegevoegd; alle rechten staan uit.";
- if(!error){$("#permissionUserId").value="";loadPermissions()}
-}
- // Import/export: the starter package contains the existing portal welcome copy and FAQ.
- const starter=[
-  {kind:"page",title:"Welkomsttekst voor bezoekers",body:"Je hebt een account nodig. Deze kun je gratis aanmaken om door te gaan naar het Ministerie van Dreuzels, oftewel onze community. Registreer hier een account.\n\nGebruik ons portaal om onder andere support aan te vragen.",source:"Bestaand portaal: introView",author:""},
-  {kind:"page",title:"Welkomsttekst voor leden",body:"Gebruik ons portaal om onder andere support aan te vragen en je account te voorzien van een afdeling door onze Sorteerhoed op te zetten.\nWie weet zit je wel bij Griffoendor, Zwadderich, Huffelpuf of Ravenklauw!",source:"Bestaand portaal: introView",author:""},
-  {kind:"news",title:"Einde van Dreuzels.com",body:"Lieve Dreuzelsvrienden,\n\nNa vele jaren komt er een einde aan Dreuzels.com.\n\nDe techniek achter de website is inmiddels verouderd. Om de website weer helemaal up-to-date te maken, zou alles opnieuw opgebouwd moeten worden. Dat bleek helaas niet haalbaar.\n\nDaarom is besloten om Dreuzels.com per 1 september 2020 offline te halen.\n\nDreuzels.com heeft twintig jaar bestaan. Daarmee kwam een bijzonder hoofdstuk uit de geschiedenis van Harry Potter-fansites ten einde.\n\nBedankt aan iedereen die in al die jaren deel heeft uitgemaakt van Dreuzels.com. ❤️",source:"Dreuzels.com · oorspronkelijk geplaatst op 9 juli 2020",author:"Webmaster",is_pinned:false},
-  {kind:"faq",title:"1. Hoe maak ik een nieuw ticket aan?",body:"Klik op Ticket Support, kies de categorie die het beste bij je vraag past en vul het formulier volledig in. Klik daarna op Ticket versturen."},
-  {kind:"faq",title:"2. Welke categorie moet ik kiezen?",body:"Kies het onderwerp dat het meest aansluit bij je vraag. Twijfel je? Kies dan Overige Support. Het supportteam kan je ticket indien nodig verder helpen."},
-  {kind:"faq",title:"3. Waar kan ik mijn tickets terugvinden?",body:"Klik op Mijn tickets in de navigatie. Daar kun je je eigen tickets en de reacties van het supportteam bekijken. Je moet hiervoor ingelogd zijn."},
-  {kind:"faq",title:"4. Hoe reageer ik op een ticket?",body:"Open je ticket via Mijn tickets, typ je reactie in het reactieveld en verstuur deze. Je reactie wordt aan het gesprek toegevoegd."},
-  {kind:"faq",title:"5. Hoe lang duurt het voordat ik antwoord krijg?",body:"Dat verschilt per vraag en drukte bij het supportteam. Houd je ticket in de gaten voor een reactie. Maak niet meerdere tickets aan voor hetzelfde probleem."},
-  {kind:"faq",title:"6. Kan ik een ticket sluiten?",body:"Je kunt via het ticket een verzoek indienen om het te sluiten. Het supportteam ontvangt hiervan een melding."},
-  {kind:"faq",title:"7. Ik kan geen ticket aanmaken of mijn tickets niet zien. Wat nu?",body:"Controleer of je bent ingelogd met het juiste Hpmagicworld-account. Werkt het nog steeds niet, kies dan de categorie Forumfouten & Bugs of vraag een moderator om hulp."},
-  {kind:"faq",title:"8. Waarvoor gebruik ik De Sorteerhoed?",body:"Gebruik De Sorteerhoed voor de sorteer- en afdelingsaanvraag. Deze opent in een apart tabblad."}
- ];
  let selectedFaqCategory=null;
  async function renderFaqCategories(){
   const db=client(),box=$("#faqCategoryGrid");if(!db||!box)return;
