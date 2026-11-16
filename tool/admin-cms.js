@@ -86,7 +86,7 @@
   const authPanels=[...section.querySelectorAll("[data-auth-panel]")];
   const authMenu=[...section.querySelectorAll("[data-auth-menu]")];
   const showAuthPanel=(key)=>{
-   authPanels.forEach(panel=>{panel.hidden=panel.dataset.authPanel!==key;});
+   authPanels.forEach(panel=>{panel.hidden=panel.dataset.authPanel!==key||panel.dataset.permissionHidden==="true";});
    authMenu.forEach(button=>{const active=button.dataset.authMenu===key;button.classList.toggle("is-active",active);button.setAttribute("aria-pressed",active?"true":"false");});
    const active=section.querySelector('[data-auth-panel="'+key+'"]');active?.scrollIntoView({behavior:"smooth",block:"start"});
   };
