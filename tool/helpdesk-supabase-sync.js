@@ -154,7 +154,7 @@
     const local = readLocal();
     for (const row of data || []) {
       const id = String(row.forumotion_topic_id || "");
-      if (!/^\\d+$/.test(id)) continue;
+      if (!/^\d+$/.test(id)) continue;
       local[id] = Object.assign({}, local[id] || {}, toInternal(row));
     }
     writeLocal(local);
