@@ -10044,3 +10044,36 @@ html body main.shell>#homeView>.support-categories-panel{
  }
 }
 </style>
+
+
+<style id="hpmw-ticket-support-banner-only-centered-20261117">
+/* Ticket Support: toon alleen de banner, zonder extra titel of tekst erboven/erin. */
+html body .hpmw-global-brandbar{
+ display:block!important;
+ width:min(1180px,calc(100% - 36px))!important;
+ max-width:1180px!important;
+ height:auto!important;min-height:0!important;
+ aspect-ratio:3.2/1!important;
+ margin:18px auto 24px!important;
+ background-image:url("https://i44.servimg.com/u/f44/11/48/74/42/banner10.png")!important;
+ background-repeat:no-repeat!important;
+ background-position:center center!important;
+ background-size:contain!important;
+ border:0!important;border-radius:0!important;
+ box-shadow:none!important;
+}
+html body main.shell>#homeView>.page-head{
+ display:none!important;
+}
+html body main.shell>#homeView>.support-categories-panel{
+ margin:0 auto 22px!important;
+}
+@media(max-width:650px){
+ html body .hpmw-global-brandbar{
+  width:calc(100% - 20px)!important;
+  aspect-ratio:3.2/1!important;
+  margin:12px auto 18px!important;
+  background-size:contain!important;
+ }
+}
+</style>
