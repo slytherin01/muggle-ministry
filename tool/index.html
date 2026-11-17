@@ -4682,3 +4682,50 @@ main.shell>.view.active{display:block!important;height:auto!important;min-height
 @media(max-width:900px){#adminDetail .detail-workspace{grid-template-columns:1fr}#adminDetail .detail-sidebar{position:static;grid-row:1}#adminDetail .detail-conversation-column{grid-row:2}}
 @media(max-width:600px){#adminListView .admin-search-box{grid-template-columns:1fr}#adminListView .admin-search-title{grid-column:1}#adminListView .search-main-btn{width:100%}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-head{padding:16px}#adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-workspace{padding:10px}#adminDetail .moderation-actions{grid-template-columns:1fr 1fr}}
 </style>
+
+
+<style id="hpmw-ticket-management-full-redesign">
+/* Complete ticketbeheer-workspace: page header, outer frame, navigation, overview and ticket detail. */
+#adminView{--tm-bg:#0a1420;--tm-panel:#101e2d;--tm-panel2:#15263a;--tm-line:#2b4056;--tm-text:#edf3fa;--tm-muted:#9aadc1;color:var(--tm-text)!important}
+#adminView>.page-head{max-width:1480px;margin:0 auto 20px;padding:22px 24px;border:1px solid #304963;border-radius:17px;background:radial-gradient(ellipse at 85% 0%,#29486a88,transparent 48%),linear-gradient(125deg,#1b3550,#102135 72%);box-shadow:0 15px 40px #0004}
+#adminView>.page-head .eyebrow{color:#a9c9e8;font-size:10px;letter-spacing:.18em}
+#adminView>.page-head h1{margin:5px 0;color:#f5f8fc;font-size:clamp(25px,3vw,34px);letter-spacing:-.04em}
+#adminView>.page-head .subtitle{color:#b3c4d6;font-size:13px}
+#adminView>#adminBack{border:1px solid #45627f;background:#203b57;color:#edf5fc}
+#adminView>.panel{max-width:1480px;margin:0 auto;overflow:hidden;border:1px solid #2b4056;border-radius:17px;background:#0e1a28;box-shadow:0 22px 55px #0005}
+#adminView .admin-layout{grid-template-columns:205px minmax(0,1fr);min-height:720px;background:#0e1a28}
+#adminView .admin-nav{display:flex;flex-direction:column;gap:9px;padding:18px 13px;border-right:1px solid #2b4056;background:linear-gradient(180deg,#122337,#0d1926)}
+#adminView .admin-nav .nav-btn{width:100%;min-height:45px;margin:0;padding:11px 12px;border:1px solid #2b4056;border-radius:10px;background:#15263a;color:#c5d5e5;font-size:11px}
+#adminView .admin-nav .nav-btn:hover{border-color:#6284a5;background:#1c3550;color:#fff}
+#adminView .admin-nav #adminRefresh{border-color:#416489;background:#1c3b59;color:#eaf4ff}
+#adminView .admin-nav .nav-btn .fa-button-icon{color:#a9d1f5}
+#adminView .admin-main{min-width:0;padding:22px;background:linear-gradient(180deg,#101e2d,#0d1926);color:var(--tm-text)}
+#adminView #adminListView{display:block}
+#adminView #adminListView .admin-toolbar{margin:0 0 16px}
+#adminView #adminListView .admin-search-box{border:1px solid #2d435b;border-radius:14px;background:linear-gradient(145deg,#172b40,#112033);box-shadow:0 10px 25px #0002}
+#adminView #adminListView .admin-search-title{color:#e8f0f8}
+#adminView #adminListView .search-input-row input{border-color:#344c66;background:#0b1724;color:#edf3fa}
+#adminView #adminListView .status-filter{border-color:#344c66;background:#0b1724;color:#edf3fa}
+#adminView #adminListView .stats{margin-top:0}
+#adminView #adminListView .status-index{padding-bottom:13px;border-bottom:1px solid #26394e}
+#adminView #adminListView .ticket-list{padding-top:2px}
+#adminView #adminDetail{min-width:0}
+#adminView #adminDetail .detail-head{border:1px solid #30465e;border-radius:14px 14px 0 0;background:linear-gradient(135deg,#1b3049,#142337)}
+#adminView #adminDetail .detail-workspace{border:1px solid #2b4056;border-top:0;border-radius:0 0 14px 14px;background:#0f1a27}
+#adminView #adminDetail .detail-sidebar{min-width:0}
+#adminView #adminDetail .detail-conversation-column{min-width:0}
+#adminView .notice{border-radius:10px}
+@media(max-width:850px){
+ #adminView .admin-layout{grid-template-columns:1fr}
+ #adminView .admin-nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #2b4056;padding:11px}
+ #adminView .admin-nav .nav-btn{width:auto;flex:1 1 150px}
+ #adminView .admin-main{padding:16px}
+}
+@media(max-width:600px){
+ #adminView>.page-head{margin-bottom:12px;padding:17px;gap:10px}
+ #adminView>.page-head h1{font-size:25px}
+ #adminView>.panel{border-radius:13px}
+ #adminView .admin-nav .nav-btn{flex:1 1 100%}
+ #adminView .admin-main{padding:11px}
+}
+</style>
