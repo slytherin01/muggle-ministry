@@ -2191,71 +2191,73 @@ async function loadTickets(){
  updateAdminTicketCount();
  if(!list.querySelector(".ticket-table-wrap"))list.innerHTML='<div class="ticket-table-wrap"><table class="ticket-table"><thead><tr><th>Ticket ID</th><th>Onderwerp</th><th>Categorie</th><th>Status</th><th>Auteur</th><th>Toegewezen aan</th></tr></thead><tbody id="ticketRows"></tbody></table></div>';
  const errors=[];
+ let discovered=[];
  try{
-  if(!window.HpmwTicketStore||typeof window.HpmwTicketStore.list!=="function")throw new Error("Ticketregistratie is niet beschikbaar.");
-  // Eenmalige import van bestaande Forumotion-topics. Forumotion blijft de bron
-  // voor tickets; Supabase bewaart alleen workflowmetadata en moderatiegegevens.
-  if(!window.__hpmwForumBackfillDone){
-   try{
-    const jobs=[],closedForums=new Set(),forumErrors=[];
-    for(const category of CATS){
-     jobs.push(readForum(category,false).catch(error=>{forumErrors.push(category.name+" (open): "+(error?.message||error));console.warn("Open supportforum kon niet worden ingelezen:",category.name,error);return [];}));
-     if(!closedForums.has(category.closed)){
-      closedForums.add(category.closed);
-      jobs.push(readForum(category,true).catch(error=>{forumErrors.push(category.name+" (gesloten): "+(error?.message||error));console.warn("Gesloten supportforum kon niet worden ingelezen:",category.name,error);return [];}));
-     }
-    }
-    const discovered=new Map();
-    const batches=await Promise.all(jobs);
-    batches.flat().forEach(ticket=>{
-     if(ticket&&/^\d+$/.test(String(ticket.id))&&!discovered.has(String(ticket.id)))discovered.set(String(ticket.id),ticket);
-    });
-    if(discovered.size&&window.HpmwTicketStore&&typeof window.HpmwTicketStore.sync==="function"){
-     const result=await window.HpmwTicketStore.sync(Array.from(discovered.values()));
-     window.__hpmwForumBackfillDone=true;
-     console.info("[Hpmw] Forumotion-ticketimport voltooid:",{gevonden:discovered.size,...result});
-    }else if(forumErrors.length){
-     errors.push("Forumotion kon de supportforums niet uitlezen: "+forumErrors.slice(0,3).join(" · ")+". Klik op Vernieuwen om opnieuw te proberen.");
-    }else{
-     console.warn("[Hpmw] Forumotion-scan leverde 0 topics op; volgende verversing probeert opnieuw.");
-     errors.push("De Forumotion-koppeling reageerde, maar er zijn geen topics gevonden. Controleer de forumverbinding en klik op Vernieuwen.");
-    }
-   }catch(importError){
-    console.warn("[Hpmw] Bestaande Forumotion-tickets konden niet volledig worden gesynchroniseerd:",importError);
-    errors.push("Forumotion-import mislukt: "+(importError?.message||importError)+". Klik op Vernieuwen om opnieuw te proberen.");
+  // Forumotion is the source of truth. Scan it on every refresh and render its
+  // topics immediately; Supabase only enriches tickets with workflow metadata.
+  const jobs=[],closedForums=new Set();
+  for(const category of CATS){
+   jobs.push(readForum(category,false).catch(error=>{errors.push(category.name+" (open): "+(error?.message||error));return [];}));
+   if(!closedForums.has(category.closed)){
+    closedForums.add(category.closed);
+    jobs.push(readForum(category,true).catch(error=>{errors.push(category.name+" (gesloten): "+(error?.message||error));return [];}));
    }
   }
-  const rows=await window.HpmwTicketStore.list();
-  const mapped=[];
-  for(const row of rows){
-   const id=String(row.forumotion_topic_id||"");
-   const num=String(row.ticket_number||id);
-   if(!/^\d+$/.test(id)||num==="91380")continue;
-   const forumId=Number(row.forumotion_forum_id)||0;
-   const category=CATS.find(c=>c.id===forumId||c.closed===forumId)||CATS.find(c=>c.name===row.category);
-   const isClosed=!!(category&&forumId===category.closed)||row.status==="done";
-   mapped.push({
-    id,num,title:String(row.subject||("Ticket #"+num)),cat:String(row.category||(category&&category.name)||"Support"),
-    catKey:category?category.key:"",forumId,openForumId:category?category.id:forumId,
-    closedForumId:category?category.closed:forumId,closed:isClosed,
-    url:BASE+"/t"+id,user:String(row.created_by_name||"Onbekend"),
-    userId:Number(row.created_by_forumotion_user_id)||0,
-    department:String(row.department||""),meta:"",createdAt:row.created_at?new Date(row.created_at).getTime():0
-   });
+  const batches=await Promise.all(jobs);
+  const unique=new Map();
+  batches.flat().forEach(ticket=>{
+   if(ticket&&/^\d+$/.test(String(ticket.id))&&!unique.has(String(ticket.id)))unique.set(String(ticket.id),ticket);
+  });
+  discovered=Array.from(unique.values());
+  let metadata=[];
+  if(window.HpmwTicketStore&&typeof window.HpmwTicketStore.sync==="function"&&discovered.length){
+   try{
+    const result=await window.HpmwTicketStore.sync(discovered);
+    console.info("[Hpmw] Forumotion-ticketimport:",{gevonden:discovered.length,...result});
+   }catch(syncError){
+    errors.push("Supabase-metadata niet bijgewerkt: "+(syncError?.message||syncError));
+    console.warn("[Hpmw] Metadata-sync mislukt; tickets blijven zichtbaar vanuit Forumotion.",syncError);
+   }
   }
-  all=mapped;
+  if(window.HpmwTicketStore&&typeof window.HpmwTicketStore.list==="function"){
+   try{metadata=await window.HpmwTicketStore.list();}catch(listError){
+    errors.push("Workflowgegevens niet beschikbaar: "+(listError?.message||listError));
+   }
+  }
+  const metaById=new Map(metadata.map(row=>[String(row.forumotion_topic_id),row]));
+  all=discovered.map(ticket=>{
+   const row=metaById.get(String(ticket.id))||{};
+   const status=row.status|| (ticket.closed?"done":"pending");
+   return Object.assign({},ticket,{
+    user:String(row.created_by_name||ticket.user||"Onbekend"),
+    userId:Number(row.created_by_forumotion_user_id)||Number(ticket.userId)||0,
+    department:String(row.department||ticket.department||""),
+    createdAt:row.created_at?new Date(row.created_at).getTime():(ticket.createdAt||0),
+    _workflowStatus:status,
+    _priority:row.priority||"normal"
+   });
+  });
+  window.__hpmwForumBackfillDone=discovered.length>0;
  }catch(error){
-  errors.push("Ticketregistratie: "+(error?.message||"kon niet worden gelezen"));
+  errors.push("Forumotion-ticketimport: "+(error?.message||error));
+  console.error("[Hpmw] Ticketlijst kon niet worden ingelezen:",error);
+  all=discovered;
  }
  updateAdminTicketCount();
  renderList();
  if(!all.length){
   const body=$("#ticketRows");
-  if(body)body.innerHTML='<tr><td colspan="6" class="loading-cell">Nog geen tickets aangemaakt via het supportportaal.</td></tr>';
+  if(body)body.innerHTML='<tr><td colspan="6" class="loading-cell">Geen tickets gevonden in de gekoppelde supportforums.</td></tr>';
   const note=document.createElement("div");
   note.className="notice show"+(errors.length?" error":"");
   note.style.marginTop="12px";
-  note.textContent=errors.length?errors.join(" · "):"Nieuwe supporttickets verschijnen hier automatisch zodra ze via het portaal zijn aangemaakt.";
+  note.textContent=errors.length?errors.slice(0,5).join(" · "):"Forumotion heeft de supportforums ingelezen, maar er staan geen topics in de ingestelde categorieën.";
+  list.appendChild(note);
+ }else if(errors.length){
+  const note=document.createElement("div");
+  note.className="notice show error";
+  note.style.marginTop="12px";
+  note.textContent="Tickets zijn uit Forumotion geladen. Enkele workflowgegevens konden niet worden gesynchroniseerd: "+errors.slice(0,3).join(" · ");
   list.appendChild(note);
  }
 }const latestPosterCache=new Map(),topicPostsCache=new Map(),latestPosterQueue=[];let latestPosterActive=0;function queueLatestPoster(t){if(latestPosterCache.has(t.id)||latestPosterQueue.some(x=>x.id===t.id)||t._posterQueued)return;t._posterQueued=true;latestPosterQueue.push(t);runLatestPosterQueue()}function runLatestPosterQueue(){while(latestPosterActive<2&&latestPosterQueue.length){const t=latestPosterQueue.shift();latestPosterActive++;const request=loadTopicPosts(t).then(posts=>{topicPostsCache.set(t.id,posts);const latest=posts.length?posts[posts.length-1]:null;latestPosterCache.set(t.id,latest?{author:latest.author||"Onbekend",userId:latest.userId||0}:{author:"Geen reacties",userId:0});return posts});topicPostsCache.set(t.id,request);request.catch(()=>latestPosterCache.set(t.id,{author:"Niet beschikbaar",userId:0})).finally(()=>{latestPosterActive--;t._posterQueued=false;if(document.querySelector("#adminView.active")&&document.querySelector("#adminListView").style.display!=="none")renderList();runLatestPosterQueue()})}}function assignedModerator(t){const id=String(getInternal(t).assignee||"");if(!id)return "Niet toegewezen";const mod=MODS.find(m=>String(m.id)===id);return mod?mod.name:"Onbekend"}function renderList(){updateAdminTicketCount();const q=$("#ticketSearch").value.trim().toLowerCase();let list=currentTab==="open"?all.filter(t=>!t.closed):all.filter(t=>t.closed);const sf=$("#statusFilter")?.value||"all";if(sf!=="all")list=list.filter(t=>getInternal(t).status===sf);if(q)list=list.filter(t=>(t.num+" "+t.id+" "+t.title+" "+t.user+" "+t.cat).toLowerCase().includes(q));$("#statOpen").textContent=all.filter(x=>!x.closed).length;$("#statClosed").textContent=all.filter(x=>x.closed).length;$("#statTotal").textContent=all.length;$("#statResult").textContent=list.length;const counts={pending:0,progress:0,done:0,refused:0};all.forEach(x=>{const st=getInternal(x).status;counts[st]=(counts[st]||0)+1});["pending","progress","done","refused"].forEach(st=>{const el=$("#count"+st.charAt(0).toUpperCase()+st.slice(1));if(el)el.textContent=counts[st]||0});$("#ticketList").innerHTML=list.length?`<div class="ticket-table-wrap">
