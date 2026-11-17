@@ -7771,7 +7771,20 @@ html body main.shell #introView .intro-static-card::after{
 })();
 </script>
 <style id="hpmw-portal-ticket-admin-enabled">#adminView{display:block}#adminView:not(.active){display:none}</style>
-<script id="hpmw-restored-1">
+<div id="supabaseAuthGate" role="dialog" aria-modal="true" aria-labelledby="supabaseAuthTitle">
+ <div class="auth-card">
+  <div class="auth-mark">Hpmagicworld · Ticket Support</div>
+  <h1 id="supabaseAuthTitle">Inloggen</h1>
+  <p>Log in met je persoonlijke beheeraccount om de tickettool te openen.</p>
+  <form id="supabaseAuthForm">
+   <label for="supabaseAuthEmail">E-mailadres</label>
+   <input id="supabaseAuthEmail" type="email" autocomplete="username" required placeholder="naam@voorbeeld.nl">
+   <label for="supabaseAuthPassword">Wachtwoord</label>
+   <input id="supabaseAuthPassword" type="password" autocomplete="current-password" required placeholder="Wachtwoord">
+   <button id="supabaseAuthSubmit" type="submit">Inloggen</button>
+  </form>
+  <button id="supabaseAuthReset" type="button" style="background:transparent;border:1px solid #55446b;margin-top:10px">Wachtwoord vergeten?</button>
+  <div id="supabaseAuthMessage" aria-live="polite"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script id="hpmw-restored-1">
 (()=>{
  const SUPABASE_URL='https://vuaajsjjluwgqmneinds.supabase.co';
  const SUPABASE_KEY='sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx';
@@ -8130,7 +8143,7 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
-</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script></body></html>
+</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script></body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
 <style id="hpmw-nav-scrollbar-hidden">header.topbar.luxury-nav-v2 nav.top-actions{scrollbar-width:none!important;-ms-overflow-style:none!important}header.topbar.luxury-nav-v2 nav.top-actions::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}</style>
