@@ -8322,6 +8322,112 @@ document.addEventListener("hpmw:supabase-role",start);
  setTimeout(sync,250);
 })();
 </script>
+
+<style id="hpmw-tool-polished-header-20261117">
+/* Ministry Tool: herkenbare merkbalk, één accountvermelding en rustige dashboardintro. */
+html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink{
+ display:inline-flex!important;visibility:visible!important;opacity:1!important;
+ margin-left:auto!important;order:20!important;flex:0 0 auto!important;
+}
+html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink .lux-nav-usertext{
+ display:flex!important;flex-direction:column!important;gap:1px!important;
+}
+html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink .lux-nav-usertext small{
+ display:block!important;font-size:9px!important;letter-spacing:.13em!important;
+ color:#9fb2c8!important;font-weight:800!important;
+}
+html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink .lux-nav-usertext strong{
+ display:block!important;color:#f4f7fc!important;font-size:13px!important;
+ font-weight:800!important;max-width:170px!important;overflow:hidden!important;
+ text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink .lux-nav-icon{
+ display:grid!important;place-items:center!important;background:#233851!important;
+}
+html.hpmw-tool-focus .hpmw-tool-sidebar{top:66px!important}
+html.hpmw-tool-focus #newAdminDashboard{max-width:1500px!important;margin:0 auto!important}
+html.hpmw-tool-focus .hpmw-tool-brand{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;min-height:150px!important;max-height:210px!important;
+ margin:0 0 22px!important;overflow:hidden!important;position:relative!important;
+ border:1px solid #405675!important;border-radius:18px!important;
+ background:#0c1727 url("https://i44.servimg.com/u/f44/11/48/74/42/banner10.png") center 48%/cover no-repeat!important;
+ box-shadow:0 16px 38px #0005!important;
+}
+html.hpmw-tool-focus .hpmw-tool-brand:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(90deg,rgba(7,15,27,.18),rgba(7,15,27,.04),rgba(7,15,27,.22))!important;
+}
+html.hpmw-tool-focus .hpmw-tool-brand img{
+ display:none!important;
+}
+html.hpmw-tool-focus .hpmw-admin-intro{
+ margin:26px 0 10px!important;padding:24px 28px!important;
+ border:1px solid #405675!important;border-left:4px solid #d7b878!important;
+ border-radius:16px!important;
+ background:linear-gradient(135deg,rgba(25,43,65,.98),rgba(13,24,39,.98))!important;
+ box-shadow:0 14px 34px #0004!important;
+}
+html.hpmw-tool-focus .hpmw-admin-intro .eyebrow{
+ color:#d8bd83!important;letter-spacing:.18em!important;font-size:10px!important;font-weight:900!important;
+}
+html.hpmw-tool-focus .hpmw-admin-intro h1{
+ margin:9px 0 10px!important;color:#fff!important;
+ font-size:clamp(25px,3vw,36px)!important;line-height:1.12!important;
+}
+html.hpmw-tool-focus .hpmw-admin-intro h2{
+ margin:18px 0 7px!important;color:#f0d49a!important;font-size:17px!important;
+}
+html.hpmw-tool-focus .hpmw-admin-intro p{
+ color:#c8d5e5!important;font-size:14px!important;line-height:1.75!important;
+}
+html.hpmw-tool-focus .hpmw-tool-brand+ .hpmw-admin-intro{margin-top:0!important}
+@media(max-width:900px){
+ html.hpmw-tool-focus header.topbar.luxury-nav-v2 nav.top-actions>a#accountLink{margin-left:auto!important}
+ html.hpmw-tool-focus .hpmw-tool-brand{min-height:110px!important;max-height:145px!important}
+ html.hpmw-tool-focus .hpmw-admin-intro{padding:19px!important}
+}
+</style>
+<script id="hpmw-tool-polished-header-script-20261117">
+(()=>{"use strict";
+ const isTool=()=>location.hash.startsWith("#/tool");
+ function apply(){
+  const active=isTool();
+  document.documentElement.classList.toggle("hpmw-tool-focus",active);
+  if(!active)return;
+  const account=document.getElementById("accountLink");
+  const nav=account?.closest("nav.top-actions");
+  if(nav&&account){
+   account.style.setProperty("display","inline-flex","important");
+   account.style.setProperty("visibility","visible","important");
+   account.querySelector(".lux-nav-usertext small")?.replaceChildren(document.createTextNode("INGELOGD ALS"));
+   const name=account.querySelector("#username");
+   if(name&&(!name.textContent.trim()||name.textContent.trim()==="Gast")){
+    const fallback=window._userdata?.username||window._userdata?.username_clean;
+    if(fallback)name.textContent=fallback;
+   }
+  }
+  const dashboard=document.getElementById("newAdminDashboard");
+  const intro=dashboard?.querySelector(".hpmw-admin-intro");
+  if(dashboard&&intro){
+   let brand=dashboard.querySelector(":scope > .hpmw-tool-brand");
+   if(!brand){
+    brand=document.createElement("div");
+    brand.className="hpmw-tool-brand";
+    brand.setAttribute("role","img");
+    brand.setAttribute("aria-label","Hpmagicworld Ministry");
+    dashboard.insertBefore(brand,intro);
+   }
+   const grid=dashboard.querySelector(":scope > .dash-grid");
+   if(grid&&intro.previousElementSibling!==grid)grid.insertAdjacentElement("afterend",intro);
+  }
+ }
+ apply();
+ document.addEventListener("DOMContentLoaded",apply);
+ window.addEventListener("hashchange",apply);
+ new MutationObserver(()=>{if(isTool())apply()}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
