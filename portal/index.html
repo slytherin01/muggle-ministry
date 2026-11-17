@@ -2470,7 +2470,48 @@ main.shell>.view.active{display:block!important;height:auto!important;min-height
  #adminCmsView .hpmw-auth-user-controls{display:grid!important;grid-template-columns:1fr 1fr!important}
  #adminCmsView .hpmw-auth-user-controls select{grid-column:1/-1!important;width:100%!important}
 }
-</style></head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
+</style><style id="hpmw-home-three-column-centering-fix-20261117">
+/* Center the complete three-column homepage as one unit in the viewport. */
+html body #introView #hpmwHomeLayout{
+ display:grid!important;
+ grid-template-columns:minmax(190px,220px) minmax(0,1fr) minmax(190px,220px)!important;
+ gap:16px!important;
+ width:min(1084px,calc(100vw - 32px))!important;
+ max-width:1084px!important;min-width:0!important;
+ margin:0 auto!important;left:auto!important;right:auto!important;transform:none!important;
+ justify-self:center!important;box-sizing:border-box!important;align-items:start!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-left,
+html body #introView #hpmwHomeLayout > .hpmw-home-main,
+html body #introView #hpmwHomeLayout > .hpmw-home-right{
+ min-width:0!important;max-width:100%!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-left{grid-column:1!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout > .hpmw-home-main{grid-column:2!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout > .hpmw-home-right{grid-column:3!important;grid-row:1!important}
+@media(max-width:1050px){
+ html body #introView #hpmwHomeLayout{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  width:min(900px,calc(100vw - 28px))!important;max-width:900px!important;gap:14px!important;
+ }
+ html body #introView #hpmwHomeLayout > .hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+ html body #introView #hpmwHomeLayout > .hpmw-home-left{grid-column:1!important;grid-row:2!important}
+ html body #introView #hpmwHomeLayout > .hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:700px){
+ html body #introView #hpmwHomeLayout{
+  display:flex!important;flex-direction:column!important;width:calc(100vw - 20px)!important;
+  max-width:560px!important;margin:0 auto!important;gap:12px!important;
+ }
+ html body #introView #hpmwHomeLayout > .hpmw-home-main,
+ html body #introView #hpmwHomeLayout > .hpmw-home-left,
+ html body #introView #hpmwHomeLayout > .hpmw-home-right{
+  display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;
+  grid-column:auto!important;grid-row:auto!important;
+ }
+}
+</style>
+</head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
@@ -8151,73 +8192,4 @@ document.addEventListener("hpmw:supabase-role",start);
 </style>
 
 
-<style id="hpmw-home-three-column-centering-fix-20261117">
-/* Keep the Ministry home columns inside the viewport and centered.
-   The previous 1480px layout could exceed the available Forumotion content width. */
-html body #introView #hpmwHomeLayout{
-  display:grid!important;
-  grid-template-columns:minmax(190px,230px) minmax(0,1fr) minmax(190px,230px)!important;
-  gap:16px!important;
-  width:min(1120px,calc(100vw - 32px))!important;
-  max-width:1120px!important;
-  min-width:0!important;
-  margin-left:auto!important;
-  margin-right:auto!important;
-  position:relative!important;
-  left:auto!important;
-  right:auto!important;
-  transform:none!important;
-  box-sizing:border-box!important;
-  align-items:start!important;
-}
-html body #introView #hpmwHomeLayout > .hpmw-home-left,
-html body #introView #hpmwHomeLayout > .hpmw-home-main,
-html body #introView #hpmwHomeLayout > .hpmw-home-right{
-  min-width:0!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-html body #introView #hpmwHomeLayout > .hpmw-home-main{
-  grid-column:2!important;
-  grid-row:1!important;
-}
-html body #introView #hpmwHomeLayout > .hpmw-home-left{
-  grid-column:1!important;
-  grid-row:1!important;
-}
-html body #introView #hpmwHomeLayout > .hpmw-home-right{
-  grid-column:3!important;
-  grid-row:1!important;
-}
-@media(max-width:1050px){
-  html body #introView #hpmwHomeLayout{
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-    width:calc(100vw - 28px)!important;
-    max-width:900px!important;
-    gap:14px!important;
-  }
-  html body #introView #hpmwHomeLayout > .hpmw-home-main{
-    grid-column:1/-1!important;grid-row:1!important;
-  }
-  html body #introView #hpmwHomeLayout > .hpmw-home-left{
-    grid-column:1!important;grid-row:2!important;
-  }
-  html body #introView #hpmwHomeLayout > .hpmw-home-right{
-    grid-column:2!important;grid-row:2!important;
-  }
-}
-@media(max-width:700px){
-  html body #introView #hpmwHomeLayout{
-    display:flex!important;flex-direction:column!important;
-    width:calc(100vw - 20px)!important;max-width:560px!important;
-    gap:12px!important;
-  }
-  html body #introView #hpmwHomeLayout > .hpmw-home-main,
-  html body #introView #hpmwHomeLayout > .hpmw-home-left,
-  html body #introView #hpmwHomeLayout > .hpmw-home-right{
-    display:flex!important;flex-direction:column!important;
-    width:100%!important;max-width:100%!important;
-    grid-column:auto!important;grid-row:auto!important;
-  }
-}
-</style>
+
