@@ -10077,3 +10077,107 @@ html body main.shell>#homeView>.support-categories-panel{
  }
 }
 </style>
+
+
+<style id="hpmw-ticket-support-dark-refinement-20261117">
+/* Ticket Support: donkere, rustige uitstraling in dezelfde stijl als de hoofdportal. */
+html.hpmw-portal-focus .hpmw-global-brandbar{
+  width:min(1180px,calc(100% - 36px))!important;
+  max-width:1180px!important;
+  height:clamp(142px,17vw,200px)!important;
+  min-height:142px!important;max-height:200px!important;
+  aspect-ratio:auto!important;
+  margin:14px auto 22px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border:1px solid #40516a!important;
+  border-radius:16px!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.06)!important;
+  background-color:#101827!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-size:100% 100%!important;
+}
+/* Diepe antraciet- en nachtblauwtinten voor alle Ticket Support-kaarten. */
+html.hpmw-portal-focus #homeView,
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #homeView .support-categories-panel .panel,
+html.hpmw-portal-focus #homeView .support-categories-panel .category-card,
+html.hpmw-portal-focus #homeView .support-categories-panel .support-category,
+html.hpmw-portal-focus #homeView .support-categories-panel .category,
+html.hpmw-portal-focus #homeView .support-categories-panel .card{
+  background-color:#101827!important;
+  background-image:none!important;
+  border-color:#303d50!important;
+  color:#edf2fa!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.26)!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel{
+  border:1px solid #303d50!important;
+  border-radius:14px!important;
+  padding:16px!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel *{
+  color:#e3e9f2;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel a,
+html.hpmw-portal-focus #homeView .support-categories-panel button{
+  background:#151f30!important;
+  border:1px solid #35445a!important;
+  color:#edf2fa!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel a:hover,
+html.hpmw-portal-focus #homeView .support-categories-panel button:hover{
+  background:#202c3e!important;
+  border-color:#596b84!important;
+}
+/* Invoervelden in nieuwe tickets: donkergrijs in plaats van wit. */
+html.hpmw-portal-focus #formView input,
+html.hpmw-portal-focus #formView select,
+html.hpmw-portal-focus #formView textarea,
+html.hpmw-portal-focus #formView .field input,
+html.hpmw-portal-focus #formView .field select,
+html.hpmw-portal-focus #formView .field textarea{
+  background:#30343b!important;
+  background-color:#30343b!important;
+  color:#f1f3f5!important;
+  border:1px solid #59616c!important;
+  border-radius:9px!important;
+  box-shadow:none!important;
+  caret-color:#f1f3f5!important;
+}
+html.hpmw-portal-focus #formView input::placeholder,
+html.hpmw-portal-focus #formView textarea::placeholder{
+  color:#b5bbc4!important;opacity:1!important;
+}
+html.hpmw-portal-focus #formView input:focus,
+html.hpmw-portal-focus #formView select:focus,
+html.hpmw-portal-focus #formView textarea:focus{
+  border-color:#8995a5!important;
+  box-shadow:0 0 0 3px rgba(137,149,165,.18)!important;
+  outline:none!important;
+}
+html.hpmw-portal-focus #formView input[readonly],
+html.hpmw-portal-focus #formView input:disabled,
+html.hpmw-portal-focus #formView select:disabled,
+html.hpmw-portal-focus #formView textarea:disabled{
+  background:#252a31!important;color:#aeb5bf!important;
+}
+html.hpmw-portal-focus #formView .field,
+html.hpmw-portal-focus #formView .panel{
+  background-color:#101827!important;
+  border-color:#303d50!important;
+}
+html.hpmw-portal-focus #formView .field label,
+html.hpmw-portal-focus #formView .character-counter{
+  color:#d5dce6!important;
+}
+@media(max-width:650px){
+  html.hpmw-portal-focus .hpmw-global-brandbar{
+    width:calc(100% - 18px)!important;
+    height:118px!important;min-height:118px!important;
+    margin:10px auto 16px!important;border-radius:11px!important;
+  }
+  html.hpmw-portal-focus #homeView .support-categories-panel{padding:10px!important}
+}
+</style>
