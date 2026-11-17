@@ -8179,29 +8179,8 @@ html body #introView #hpmwHomeLayout .hpmw-home-main{width:100%!important;max-wi
 }
 </style>
 <style id="hpmw-forumotion-only-portal-entry">/* Forumotion is de enige algemene portal-login; verberg de losse Supabase-login permanent. */#supabaseAuthGate,#supabaseLogout{display:none!important}body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:revert}</style>
-<style id="hpmw-modal-viewport-centering-fix">
-html body .hpmw-modal-overlay{
- position:fixed!important;inset:0!important;left:0!important;top:0!important;
- width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;
- box-sizing:border-box!important;margin:0!important;padding:22px!important;
- display:none;align-items:center!important;justify-content:center!important;
- background:rgba(3,7,15,.82)!important;z-index:2147483000!important;
-}
-html body .hpmw-modal-overlay.open{display:flex!important}
-html body .hpmw-modal-overlay>.hpmw-modal-card{
- position:relative!important;float:none!important;
- width:min(900px,calc(100vw - 44px))!important;
- max-width:calc(100vw - 44px)!important;max-height:calc(100vh - 44px)!important;
- margin:auto!important;box-sizing:border-box!important;
-}
-@media(max-width:760px){
- html body .hpmw-modal-overlay{padding:10px!important}
- html body .hpmw-modal-overlay>.hpmw-modal-card{width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;max-height:calc(100vh - 20px)!important}
-}
-</style>
-<script id="hpmw-modal-move-to-body">
-(()=>{const move=()=>document.querySelectorAll("body .hpmw-modal-overlay").forEach(el=>{if(el.parentElement!==document.body)document.body.appendChild(el)});if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",move,{once:true});else move();})();
-</script>
+
+
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
