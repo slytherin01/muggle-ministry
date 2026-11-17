@@ -8149,3 +8149,75 @@ document.addEventListener("hpmw:supabase-role",start);
 .portal-ticket-thread article small{display:block;color:#9db3c9;margin-top:3px}
 #portalTicketReply{width:100%;min-height:110px;padding:12px;border:1px solid #40546a;border-radius:9px;background:#091522;color:#eef5ff}
 </style>
+
+
+<style id="hpmw-home-three-column-centering-fix-20261117">
+/* Keep the Ministry home columns inside the viewport and centered.
+   The previous 1480px layout could exceed the available Forumotion content width. */
+html body #introView #hpmwHomeLayout{
+  display:grid!important;
+  grid-template-columns:minmax(190px,230px) minmax(0,1fr) minmax(190px,230px)!important;
+  gap:16px!important;
+  width:min(1120px,calc(100vw - 32px))!important;
+  max-width:1120px!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+  align-items:start!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-left,
+html body #introView #hpmwHomeLayout > .hpmw-home-main,
+html body #introView #hpmwHomeLayout > .hpmw-home-right{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-main{
+  grid-column:2!important;
+  grid-row:1!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-left{
+  grid-column:1!important;
+  grid-row:1!important;
+}
+html body #introView #hpmwHomeLayout > .hpmw-home-right{
+  grid-column:3!important;
+  grid-row:1!important;
+}
+@media(max-width:1050px){
+  html body #introView #hpmwHomeLayout{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    width:calc(100vw - 28px)!important;
+    max-width:900px!important;
+    gap:14px!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-main{
+    grid-column:1/-1!important;grid-row:1!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-left{
+    grid-column:1!important;grid-row:2!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-right{
+    grid-column:2!important;grid-row:2!important;
+  }
+}
+@media(max-width:700px){
+  html body #introView #hpmwHomeLayout{
+    display:flex!important;flex-direction:column!important;
+    width:calc(100vw - 20px)!important;max-width:560px!important;
+    gap:12px!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-main,
+  html body #introView #hpmwHomeLayout > .hpmw-home-left,
+  html body #introView #hpmwHomeLayout > .hpmw-home-right{
+    display:flex!important;flex-direction:column!important;
+    width:100%!important;max-width:100%!important;
+    grid-column:auto!important;grid-row:auto!important;
+  }
+}
+</style>
