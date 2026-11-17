@@ -9532,3 +9532,77 @@ html.hpmw-portal-focus footer.lux-footer{display:none!important}
  html.hpmw-portal-focus #formView .actions{padding:14px!important}
 }
 </style>
+
+
+<style id="hpmw-restore-original-navigation-full-browser-layout-20261117">
+/* Restore the original portal top navigation. No secondary left workspace menu. */
+html.hpmw-portal-focus .hpmw-portal-rail{display:none!important;visibility:hidden!important;width:0!important;min-width:0!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2{
+ position:sticky!important;position:-webkit-sticky!important;top:0!important;left:0!important;right:0!important;
+ width:100%!important;height:auto!important;min-height:56px!important;margin:0!important;padding:6px clamp(10px,2vw,24px)!important;
+ z-index:10060!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{
+ display:flex!important;visibility:visible!important;width:100%!important;max-width:none!important;
+ flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:6px!important;margin:0 auto!important;
+}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #newsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{
+ display:inline-flex!important;visibility:visible!important;
+}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #accountLink{margin-left:auto!important}
+html.hpmw-portal-focus .hpmw-global-brandbar{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;
+ width:100%!important;max-width:none!important;height:clamp(120px,18vw,190px)!important;
+ min-height:120px!important;max-height:190px!important;margin:0!important;
+ border-radius:0!important;background-size:cover!important;background-position:center 48%!important;
+}
+html.hpmw-portal-focus main.shell{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+ width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;max-height:none!important;
+ margin:0!important;padding:clamp(14px,2vw,30px)!important;overflow:visible!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus main.shell>.view{width:100%!important;max-width:none!important;min-width:0!important}
+html.hpmw-portal-focus main.shell>.view.active{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ position:relative!important;width:100%!important;max-width:none!important;min-width:0!important;
+ height:auto!important;max-height:none!important;min-height:0!important;margin:0!important;
+ padding:0 0 30px!important;overflow:visible!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus main.shell>.view.active>*{max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #formView>.panel,
+html.hpmw-portal-focus #faqView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel{
+ width:100%!important;max-width:none!important;min-width:0!important;
+}
+html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html.hpmw-portal-focus #formView .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html.hpmw-portal-focus footer.lux-footer{display:block!important;width:100%!important;max-width:none!important}
+@media(max-width:900px){
+ html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{justify-content:flex-start!important}
+ html.hpmw-portal-focus main.shell{padding:16px!important}
+ html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:620px){
+ html.hpmw-portal-focus header.topbar.luxury-nav-v2{padding:6px 8px!important}
+ html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{gap:4px!important}
+ html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-item{padding:6px 8px!important;font-size:11px!important}
+ html.hpmw-portal-focus .hpmw-global-brandbar{height:116px!important;min-height:116px!important}
+ html.hpmw-portal-focus main.shell{padding:12px 9px!important}
+ html.hpmw-portal-focus #homeView #categories.categories,
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+ html.hpmw-portal-focus #myTicketsView .ticket-list,
+ html.hpmw-portal-focus #formView .form-grid{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+}
+</style>
+<script id="hpmw-remove-secondary-workspace-rail-20261117">
+(()=>{const remove=()=>document.querySelectorAll(".hpmw-portal-rail").forEach(x=>x.remove());remove();const obs=new MutationObserver(remove);if(document.body)obs.observe(document.body,{childList:true});})();
+</script>
