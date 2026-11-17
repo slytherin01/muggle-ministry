@@ -7115,6 +7115,7 @@ html body main.shell #introView .intro-static-card::after{
   const msg=event.data;
   if(!msg||msg.protocol!==protocol||!["get","post"].includes(msg.type)||!Number.isSafeInteger(msg.id))return;
   const reply=(ok,html,error,status,url)=>event.source.postMessage({protocol,type:"response",id:msg.id,ok,html,error,status,url},event.origin);
+  event.source.postMessage({protocol,type:"accepted",id:msg.id},event.origin);
   let target;
   try{target=new URL(msg.url,location.origin);}catch(_){reply(false,"","Ongeldige forumlink.");return;}
   if(target.origin!==location.origin||!/^\/(?:$|forum(?:\/|$)|f\d+(?:p\d+)?(?:[-/]|$)|t\d+(?:[-/]|$)|u\d+(?:[-/]|$)|modcp(?:[/?]|$)|post(?:\/|\?|$)|privmsg(?:\/|\?|$))/i.test(target.pathname+target.search)){
