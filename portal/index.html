@@ -10330,3 +10330,91 @@ html.hpmw-portal-focus body main.shell>#homeView .support-categories-panel butto
  html.hpmw-portal-focus body main.shell>#homeView .support-categories-panel{padding:10px!important}
 }
 </style>
+
+
+<style id="hpmw-ticket-support-layout-redesign-20261117">
+/* Nieuwe strakke Ticket Support-layout: compact, gecentreerd en zonder leeg paneel. */
+html.hpmw-portal-focus body main.shell{
+ position:relative!important;inset:auto!important;left:auto!important;right:auto!important;
+ top:auto!important;bottom:auto!important;transform:none!important;
+ display:block!important;float:none!important;
+ width:min(1120px,calc(100% - 36px))!important;max-width:1120px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ margin:24px auto 28px!important;padding:22px!important;
+ box-sizing:border-box!important;overflow:visible!important;
+ background:#111820!important;background-image:none!important;
+ border:1px solid #273341!important;border-radius:16px!important;
+ box-shadow:0 12px 32px rgba(0,0,0,.24)!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView{
+ display:block!important;width:100%!important;max-width:none!important;
+ margin:0!important;padding:0!important;background:transparent!important;
+ border:0!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView>.page-head{
+ display:none!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView>.support-categories-panel{
+ display:block!important;width:100%!important;max-width:none!important;
+ margin:0!important;padding:0!important;
+ background:transparent!important;background-image:none!important;
+ border:0!important;border-radius:0!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .support-categories-panel .panel-head{
+ display:none!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .categories{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:12px!important;padding:0!important;margin:0!important;
+ background:transparent!important;border:0!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat{
+ display:flex!important;align-items:center!important;gap:14px!important;
+ min-height:76px!important;height:auto!important;padding:14px 16px!important;
+ box-sizing:border-box!important;
+ background:#18232e!important;background-image:none!important;
+ border:1px solid #344454!important;border-radius:11px!important;
+ color:#edf2f7!important;box-shadow:none!important;
+ transition:border-color .16s ease,background-color .16s ease!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat:hover{
+ background:#18232e!important;border-color:#718397!important;
+ transform:none!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat *{
+ color:#edf2f7!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat .round-icon,
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat .cat-icon{
+ flex:0 0 42px!important;width:42px!important;height:42px!important;
+ display:grid!important;place-items:center!important;
+ background:#263747!important;border:1px solid #40566b!important;
+ border-radius:9px!important;color:#eaf1f8!important;
+}
+html.hpmw-portal-focus body .hpmw-global-brandbar{
+ width:min(1120px,calc(100% - 36px))!important;max-width:1120px!important;
+ height:156px!important;min-height:156px!important;max-height:156px!important;
+ margin:18px auto 0!important;border-radius:12px!important;
+ background-position:center center!important;background-size:cover!important;
+ border:1px solid #344454!important;box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+html.hpmw-portal-focus body .hpmw-global-brandbar .hpmw-banner-page-label{
+ display:none!important;visibility:hidden!important;
+}
+@media(max-width:700px){
+ html.hpmw-portal-focus body main.shell{
+  width:calc(100% - 20px)!important;margin:14px auto 20px!important;
+  padding:12px!important;border-radius:12px!important;
+ }
+ html.hpmw-portal-focus body main.shell>#homeView .categories{
+  grid-template-columns:1fr!important;gap:9px!important;
+ }
+ html.hpmw-portal-focus body main.shell>#homeView .categories .cat{
+  min-height:66px!important;padding:11px 12px!important;
+ }
+ html.hpmw-portal-focus body .hpmw-global-brandbar{
+  width:calc(100% - 20px)!important;height:112px!important;
+  min-height:112px!important;max-height:112px!important;margin:12px auto 0!important;
+ }
+}
+</style>
