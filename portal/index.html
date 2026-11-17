@@ -8143,11 +8143,13 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
-</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script><style id="hpmw-remove-blocking-supabase-gate">
-/* Keep the portal visible; do not cover it with the separate Supabase sign-in screen. */
+</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script><style id="hpmw-restore-public-portal-view">
+/* Restore the normal portal landing view; keep the separate tool modules hidden until selected. */
 body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:revert!important}
 #supabaseAuthGate{display:none!important;visibility:hidden!important;pointer-events:none!important}
-body:not(.supabase-authenticated) #adminTopbar{display:flex!important;visibility:visible!important}
+#introView.view.active{display:block!important;visibility:visible!important;opacity:1!important}
+.view:not(.active){display:none!important}
+#adminView.view:not(.active){display:none!important}
 </style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
