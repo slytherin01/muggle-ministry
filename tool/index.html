@@ -2022,7 +2022,7 @@ async function hpmwBridgeFetch(url,timeout=10000){
   hpmwForumBridgeFrame.contentWindow.postMessage({protocol:"hpmw-forum-bridge-v1",type:"get",id,url,timeout},HPMW_FORUM_BRIDGE_ORIGIN);
  });
 }
-function fetchText(url,timeout=10000){const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout),target=new URL(url,BASE);if(target.origin!==BASE)throw Error("Onverwachte externe forumlink.");return fetch(target.href,{mode:"cors",credentials:"include",cache:"no-store",signal:ctl.signal,headers:{"Accept":"text/html,application/rss+xml,application/atom+xml,*/*"}}).then(r=>{if(!r.ok)throw Error("Forumotion antwoordde met HTTP "+r.status+".");return r.text()}).catch(e=>{if(e.name==="AbortError")throw Error("Forumotion reageert niet op tijd. Probeer het opnieuw.");if(e instanceof TypeError)return hpmwBridgeFetch(target.href,timeout);throw e}).finally(()=>clearTimeout(timer));}async function readForum(catObj,closed){
+function fetchText(url,timeout=10000){const target=new URL(url,BASE);if(target.origin!==BASE)throw Error("Onverwachte externe forumlink.");return hpmwBridgeFetch(target.href,timeout);}async function readForum(catObj,closed){
 const fid=closed?catObj.closed:catObj.id;
 const page=closed?catObj.closedUrl:catObj.openUrl;
 const found=[],seen=new Set(),queue=[new URL(page,BASE).href],visited=new Set();
