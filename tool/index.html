@@ -1191,6 +1191,116 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 #faqManagementPanel .faq-state{display:inline-flex;padding:4px 8px;border-radius:20px;background:#24364b;color:#d9e7f8;font-size:10px}
 #faqManagementPanel [hidden]{display:none!important}\n#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
 </style>
+<style id="hpmw-ticket-console-redesign">
+/* Eigen Muggle Ministry ticketconsole: geïnspireerd op een overzichtelijke helpdesk, niet gekopieerd. */
+#adminListView,#adminDetail{color:#e7edf6}
+#adminListView .admin-toolbar{margin-bottom:18px}
+#adminListView .admin-search-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px;border:1px solid #2b3d52;border-radius:15px;background:linear-gradient(145deg,#142337,#101b2a);box-shadow:0 12px 28px #0003}
+#adminListView .admin-search-title{grid-column:1/-1;color:#e6edf7;font-size:13px}
+#adminListView .search-input-row{min-width:0}
+#adminListView .search-input-row input,#adminListView .status-filter{height:43px;border:1px solid #344a62;border-radius:10px;background:#0b1522;color:#edf3fb}
+#adminListView .search-main-btn{min-width:112px;background:#27496a;border-color:#416b91}
+#adminListView .stats{gap:12px;margin:0 0 15px}
+#adminListView .stat{min-height:94px;padding:17px 15px 14px 62px;border:1px solid #2d4259;border-radius:14px;background:linear-gradient(145deg,#17283b,#111d2c);transition:border-color .18s,transform .18s}
+#adminListView .stat:hover{border-color:#668bb0;transform:translateY(-2px)}
+#adminListView .stat.dashboard-tab.active{border-color:#78a6d2;box-shadow:inset 0 0 0 1px #78a6d244;background:linear-gradient(145deg,#203a54,#14283b)}
+#adminListView .stat-icon{width:36px;height:36px;left:14px;top:17px;border:1px solid #385777;border-radius:10px;background:#1b3550;color:#a9d1f5}
+#adminListView .stat small{color:#9eb1c5;font-size:9px;letter-spacing:.1em}
+#adminListView .stat strong{font-size:26px;color:#f5f8fc}
+#adminListView .status-index{gap:8px;margin:0 0 15px}
+#adminListView .status-index .status-pill{padding:8px 11px;border-radius:9px;background:#142438;border-color:#344a61}
+#adminListView .ticket-table-wrap{overflow:auto;border:1px solid #2b4056;border-radius:14px;background:#101b29}
+#adminListView .ticket-table{min-width:760px;border-collapse:separate;border-spacing:0}
+#adminListView .ticket-table th{padding:14px 15px;background:#17283b;color:#9fb8d1;border-bottom:1px solid #344a61;font-size:9px;letter-spacing:.1em}
+#adminListView .ticket-table td{padding:15px;border-bottom:1px solid #24364a;color:#cbd7e5;font-size:12px}
+#adminListView .ticket-table tbody tr{background:#111e2d;transition:background .15s}
+#adminListView .ticket-table tbody tr:nth-child(even){background:#132235}
+#adminListView .ticket-table tbody tr:hover{background:#20364d}
+#adminListView .ticket-id{color:#a9d2f5!important}
+#adminListView .ticket-subject{color:#f0f5fb!important}
+#adminListView .ticket-state{border-radius:7px}
+#adminDetail .detail-head{padding:22px 24px;background:linear-gradient(135deg,#1b3049,#142337);border:1px solid #30465e;border-radius:15px 15px 0 0}
+#adminDetail .detail-kicker{color:#a9c9e8;letter-spacing:.14em}
+#adminDetail .detail-title{color:#f3f7fc;font-size:22px}
+#adminDetail .detail-facts{gap:9px}
+#adminDetail .detail-facts>div{padding:12px;border:1px solid #30465d;border-radius:10px;background:#102033}
+#adminDetail .detail-facts small{color:#91a9c1}
+#adminDetail .detail-facts strong{color:#e7eff8}
+#adminDetail .detail-workspace{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;padding:17px;background:#0f1a27;border:1px solid #2b4056;border-top:0;border-radius:0 0 15px 15px;align-items:start}
+#adminDetail .detail-conversation-column{min-width:0}
+#adminDetail .detail-sidebar{position:sticky;top:84px;min-width:0}
+#adminDetail .moderation-nav{padding:15px;border:1px solid #30465d;border-radius:13px;background:linear-gradient(155deg,#17283b,#101c2b)}
+#adminDetail .moderation-heading{margin-bottom:13px;color:#c7d9eb;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+#adminDetail .internal-tools{padding:0;border:0;background:transparent}
+#adminDetail .internal-title,#adminDetail .moderation-actions-title{margin:0 0 9px;color:#9fb5cb;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+#adminDetail .internal-status-group .internal-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#adminDetail .internal-status-group .status-pill{justify-content:center;min-height:36px;padding:7px 8px;font-size:10px}
+#adminDetail .assign-block{margin-top:16px}
+#adminDetail .assign-label{color:#a9bfd4}
+#adminDetail .assign-select-wrap select{min-height:40px;border:1px solid #344a61;border-radius:9px;background:#0c1724;color:#edf3fb}
+#adminDetail .moderation-actions-title{margin-top:15px;padding-top:14px;border-top:1px solid #2b4056}
+#adminDetail .moderation-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#adminDetail .moderation-actions .btn{justify-content:center;min-height:38px;padding:7px;font-size:10px}
+#adminDetail .reply-box{margin:14px 0;padding:17px;border:1px solid #2d435a;border-radius:13px;background:#142235}
+#adminDetail .reply-box h3{color:#eaf1f8}
+#adminDetail .reply-box textarea{border:1px solid #344b63;border-radius:10px;background:#0b1521;color:#eef4fb}
+#adminDetail .chat-thread{max-height:680px;border:1px solid #2b4056;border-radius:13px;background:#0b1623}
+#adminDetail .chat-bubble{border-color:#344a61;background:#1a2c40;color:#e5edf6}
+#adminDetail .chat-msg.mine .chat-bubble{border-color:#47668b;background:#203c5a}
+#adminDetail .chat-meta{color:#b9cde0}
+#adminDetail .chat-time{color:#8ca1b7}
+@media(max-width:900px){#adminDetail .detail-workspace{grid-template-columns:1fr}#adminDetail .detail-sidebar{position:static;grid-row:1}#adminDetail .detail-conversation-column{grid-row:2}}
+@media(max-width:600px){#adminListView .admin-search-box{grid-template-columns:1fr}#adminListView .admin-search-title{grid-column:1}#adminListView .search-main-btn{width:100%}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-head{padding:16px}#adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-workspace{padding:10px}#adminDetail .moderation-actions{grid-template-columns:1fr 1fr}}
+
+#adminView #ticketList .ticket-table tbody tr[data-ticket]{cursor:pointer;pointer-events:auto;position:relative;z-index:1}
+#adminView #ticketList .ticket-table tbody tr[data-ticket]:focus{outline:2px solid #83b8e8;outline-offset:-2px}
+#adminView #adminDetail.active{display:block!important;visibility:visible!important}
+</style>
+<style id="hpmw-ticket-management-full-redesign">
+/* Complete ticketbeheer-workspace: page header, outer frame, navigation, overview and ticket detail. */
+#adminView{--tm-bg:#0a1420;--tm-panel:#101e2d;--tm-panel2:#15263a;--tm-line:#2b4056;--tm-text:#edf3fa;--tm-muted:#9aadc1;color:var(--tm-text)!important}
+#adminView>.page-head{max-width:1480px;margin:0 auto 20px;padding:22px 24px;border:1px solid #304963;border-radius:17px;background:radial-gradient(ellipse at 85% 0%,#29486a88,transparent 48%),linear-gradient(125deg,#1b3550,#102135 72%);box-shadow:0 15px 40px #0004}
+#adminView>.page-head .eyebrow{color:#a9c9e8;font-size:10px;letter-spacing:.18em}
+#adminView>.page-head h1{margin:5px 0;color:#f5f8fc;font-size:clamp(25px,3vw,34px);letter-spacing:-.04em}
+#adminView>.page-head .subtitle{color:#b3c4d6;font-size:13px}
+#adminView>#adminBack{border:1px solid #45627f;background:#203b57;color:#edf5fc}
+#adminView>.panel{max-width:1480px;margin:0 auto;overflow:hidden;border:1px solid #2b4056;border-radius:17px;background:#0e1a28;box-shadow:0 22px 55px #0005}
+#adminView .admin-layout{grid-template-columns:205px minmax(0,1fr);min-height:720px;background:#0e1a28}
+#adminView .admin-nav{display:flex;flex-direction:column;gap:9px;padding:18px 13px;border-right:1px solid #2b4056;background:linear-gradient(180deg,#122337,#0d1926)}
+#adminView .admin-nav .nav-btn{width:100%;min-height:45px;margin:0;padding:11px 12px;border:1px solid #2b4056;border-radius:10px;background:#15263a;color:#c5d5e5;font-size:11px}
+#adminView .admin-nav .nav-btn:hover{border-color:#6284a5;background:#1c3550;color:#fff}
+#adminView .admin-nav #adminRefresh{border-color:#416489;background:#1c3b59;color:#eaf4ff}
+#adminView .admin-nav .nav-btn .fa-button-icon{color:#a9d1f5}
+#adminView .admin-main{min-width:0;padding:22px;background:linear-gradient(180deg,#101e2d,#0d1926);color:var(--tm-text)}
+#adminView #adminListView{display:block}
+#adminView #adminListView .admin-toolbar{margin:0 0 16px}
+#adminView #adminListView .admin-search-box{border:1px solid #2d435b;border-radius:14px;background:linear-gradient(145deg,#172b40,#112033);box-shadow:0 10px 25px #0002}
+#adminView #adminListView .admin-search-title{color:#e8f0f8}
+#adminView #adminListView .search-input-row input{border-color:#344c66;background:#0b1724;color:#edf3fa}
+#adminView #adminListView .status-filter{border-color:#344c66;background:#0b1724;color:#edf3fa}
+#adminView #adminListView .stats{margin-top:0}
+#adminView #adminListView .status-index{padding-bottom:13px;border-bottom:1px solid #26394e}
+#adminView #adminListView .ticket-list{padding-top:2px}
+#adminView #adminDetail{min-width:0}
+#adminView #adminDetail .detail-head{border:1px solid #30465e;border-radius:14px 14px 0 0;background:linear-gradient(135deg,#1b3049,#142337)}
+#adminView #adminDetail .detail-workspace{border:1px solid #2b4056;border-top:0;border-radius:0 0 14px 14px;background:#0f1a27}
+#adminView #adminDetail .detail-sidebar{min-width:0}
+#adminView #adminDetail .detail-conversation-column{min-width:0}
+#adminView .notice{border-radius:10px}
+@media(max-width:850px){
+ #adminView .admin-layout{grid-template-columns:1fr}
+ #adminView .admin-nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #2b4056;padding:11px}
+ #adminView .admin-nav .nav-btn{width:auto;flex:1 1 150px}
+ #adminView .admin-main{padding:16px}
+}
+@media(max-width:600px){
+ #adminView>.page-head{margin-bottom:12px;padding:17px;gap:10px}
+ #adminView>.page-head h1{font-size:25px}
+ #adminView>.panel{border-radius:13px}
+ #adminView .admin-nav .nav-btn{flex:1 1 100%}
+ #adminView .admin-main{padding:11px}
+}
+</style>
 </head>
 <body>
 <div id="supabaseAuthGate" role="dialog" aria-modal="true" aria-labelledby="supabaseAuthTitle">
@@ -2070,7 +2180,7 @@ async function loadTickets(){const list=$("#ticketList");updateAdminTicketCount(
 <th>Toegewezen aan</th>
 </tr>
 </thead>
-<tbody>${list.map(t=>{const poster=latestPosterCache.get(t.id);return `<tr data-ticket="${esc(t.id)}">
+<tbody>${list.map(t=>{const poster=latestPosterCache.get(t.id);return `<tr data-ticket="${esc(t.id)}" role="button" tabindex="0" onclick="window.hpmwOpenAdminTicket(this.dataset.ticket)">
 <td class="ticket-id">#${esc(t.num)}</td>
 <td class="ticket-subject">${esc(t.title)}</td>
 <td class="ticket-category">${esc(t.cat)}</td>
@@ -2300,7 +2410,7 @@ $("#adminPosts").innerHTML=chatHtml(posts,t,"my-chat");
 status.textContent="Reactie geplaatst.";
 }catch(e){status.textContent=e.message||"Reactie plaatsen mislukt.";status.className="reply-status err";}
 finally{btn.disabled=false;}
-}$("#categories").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const selected=cat(b.dataset.cat);if(selected&&selected.externalUrl){window.location.href=selected.externalUrl;return}openForm(b.dataset.cat)});if($("#formBack"))$("#formBack").onclick=()=>show("homeView");if($("#formCancel"))$("#formCancel").onclick=()=>show("homeView");$("#formSubmit").onclick=postTicket;/* Legacy Portal-only admin/member launch buttons are not present in the Tool. */$("#myTicketsBack").onclick=()=>show("homeView");$("#statusFilter").onchange=renderList;$("#adminBack").onclick=()=>show("homeView");$("#detailBack").onclick=()=>{$("#adminDetail").classList.remove("active");$("#adminListView").style.display="block"};$("#actionCancel").onclick=closeAction;$("#actionModalClose").onclick=closeAction;$("#actionModal").addEventListener("click",e=>{if(e.target.id==="actionModal")closeAction()});$("#adminRefresh").onclick=loadTickets;document.querySelectorAll(".nav-btn[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentTab=b.dataset.tab||"open";$("#ticketSearch").value="";renderList()});document.querySelectorAll("[data-dashboard-tab]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.dashboardTab;document.querySelectorAll("[data-dashboard-tab]").forEach(x=>x.classList.toggle("active",x===b));$("#ticketSearch").value="";$("#statusFilter").value="all";renderList()}));$("#ticketSearch").addEventListener("input",renderList);$("#ticketSearch").addEventListener("keydown",e=>{if(e.key==="Enter")renderList()});$("#searchBtn").onclick=renderList;document.querySelectorAll("[data-index-status]").forEach(b=>b.onclick=()=>{$("#statusFilter").value=b.dataset.indexStatus;renderList()});$("#ticketList").addEventListener("click",e=>{const b=e.target.closest("[data-ticket]");if(b){const t=all.find(x=>x.id===b.dataset.ticket);if(t)detail(t)}});$("#myTicketsList").addEventListener("click",e=>{const b=e.target.closest("[data-my]");if(b){const t=all.find(x=>x.id===b.dataset.my);if(t)openMemberTicket(t)}});document.querySelectorAll("[data-member-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-member-tab]").forEach(x=>x.classList.remove("active"));b.classList.add("active");memberTab=b.dataset.memberTab;renderMyTickets()});$("#memberDetailBack").onclick=()=>{$("#memberDetail").classList.remove("active");$("#myTicketsList").style.display="block"};$("#memberReplySend").onclick=async()=>{const st=$("#memberReplyStatus"),m=$("#memberReply").value.trim();if(!m){st.textContent="Schrijf eerst een reactie.";st.className="reply-status err";return}try{await postForumReply(memberSelected,m);$("#memberReply").value="";st.textContent="Reactie geplaatst.";st.className="reply-status ok";openMemberTicket(memberSelected)}catch(e){st.textContent=e.message;st.className="reply-status err"}};$("#memberEditSend").onclick=async()=>{const st=$("#memberEditStatus"),m=$("#memberEditMessage").value.trim(),meta=getInternal(memberSelected);if(Date.now()-(meta.createdAt||0)>300000||meta.readAt||memberSelected.closed){st.textContent="Bewerken is niet meer beschikbaar.";st.className="reply-status err";return}try{await editMemberPost(memberSelected,m);st.textContent="Wijzigingen opgeslagen.";st.className="reply-status ok";setTimeout(()=>openMemberTicket(memberSelected),400)}catch(e){st.textContent=e.message;st.className="reply-status err"}};$("#memberCloseRequestBtn").onclick=()=>{$("#memberCloseConfirm").style.display="inline-flex";$("#memberCloseCancel").style.display="inline-flex";$("#memberCloseRequestBtn").style.display="none";$("#memberCloseStatus").textContent="Na bevestiging wordt een melding naar support gestuurd.";$("#memberCloseStatus").className="reply-status"};$("#memberCloseCancel").onclick=()=>{$("#memberCloseConfirm").style.display="none";$("#memberCloseCancel").style.display="none";$("#memberCloseRequestBtn").style.display="inline-flex";$("#memberCloseStatus").textContent=""};$("#memberCloseConfirm").onclick=async()=>{const st=$("#memberCloseStatus"),t=memberSelected;if(!t)return;try{const meta=getInternal(t),mid=meta.assignee?Number(meta.assignee):Number(MODS[0].id),mod=MODS.find(x=>Number(x.id)===mid)||MODS[0];await postPrivateMessage({id:mod.id,user:mod.username},"[TICKET "+t.num+"] Verzoek ticket sluiten","De ticket-auteur vraagt om ticket #"+t.num+" te sluiten. Onderwerp: "+t.title+". Open Ticketbeheer om dit verzoek te behandelen.");st.textContent="Je verzoek is verzonden naar support.";st.className="reply-status ok";$("#memberCloseConfirm").style.display="none";$("#memberCloseCancel").style.display="none";$("#memberCloseRequestBtn").style.display="inline-flex"}catch(e){st.textContent="Het verzoek kon niet worden verzonden: "+e.message;st.className="reply-status err"}};$("#formMessage").addEventListener("input",updateTicketMessageCounter);$("#formSubject").addEventListener("input",updateTicketMessageCounter);renderCats();resolveUser();})();</script>
+}$("#categories").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const selected=cat(b.dataset.cat);if(selected&&selected.externalUrl){window.location.href=selected.externalUrl;return}openForm(b.dataset.cat)});if($("#formBack"))$("#formBack").onclick=()=>show("homeView");if($("#formCancel"))$("#formCancel").onclick=()=>show("homeView");$("#formSubmit").onclick=postTicket;/* Legacy Portal-only admin/member launch buttons are not present in the Tool. */$("#myTicketsBack").onclick=()=>show("homeView");$("#statusFilter").onchange=renderList;$("#adminBack").onclick=()=>show("homeView");$("#detailBack").onclick=()=>{$("#adminDetail").classList.remove("active");$("#adminListView").style.display="block"};$("#actionCancel").onclick=closeAction;$("#actionModalClose").onclick=closeAction;$("#actionModal").addEventListener("click",e=>{if(e.target.id==="actionModal")closeAction()});$("#adminRefresh").onclick=loadTickets;document.querySelectorAll(".nav-btn[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentTab=b.dataset.tab||"open";$("#ticketSearch").value="";renderList()});document.querySelectorAll("[data-dashboard-tab]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.dashboardTab;document.querySelectorAll("[data-dashboard-tab]").forEach(x=>x.classList.toggle("active",x===b));$("#ticketSearch").value="";$("#statusFilter").value="all";renderList()}));$("#ticketSearch").addEventListener("input",renderList);$("#ticketSearch").addEventListener("keydown",e=>{if(e.key==="Enter")renderList()});$("#searchBtn").onclick=renderList;document.querySelectorAll("[data-index-status]").forEach(b=>b.onclick=()=>{$("#statusFilter").value=b.dataset.indexStatus;renderList()});window.hpmwOpenAdminTicket=(id)=>{const t=all.find(x=>x.id===String(id));if(t)detail(t).catch(error=>{console.error("Ticket openen mislukt:",error);});};$("#myTicketsList").addEventListener("click",e=>{const b=e.target.closest("[data-my]");if(b){const t=all.find(x=>x.id===b.dataset.my);if(t)openMemberTicket(t)}});document.querySelectorAll("[data-member-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-member-tab]").forEach(x=>x.classList.remove("active"));b.classList.add("active");memberTab=b.dataset.memberTab;renderMyTickets()});$("#memberDetailBack").onclick=()=>{$("#memberDetail").classList.remove("active");$("#myTicketsList").style.display="block"};$("#memberReplySend").onclick=async()=>{const st=$("#memberReplyStatus"),m=$("#memberReply").value.trim();if(!m){st.textContent="Schrijf eerst een reactie.";st.className="reply-status err";return}try{await postForumReply(memberSelected,m);$("#memberReply").value="";st.textContent="Reactie geplaatst.";st.className="reply-status ok";openMemberTicket(memberSelected)}catch(e){st.textContent=e.message;st.className="reply-status err"}};$("#memberEditSend").onclick=async()=>{const st=$("#memberEditStatus"),m=$("#memberEditMessage").value.trim(),meta=getInternal(memberSelected);if(Date.now()-(meta.createdAt||0)>300000||meta.readAt||memberSelected.closed){st.textContent="Bewerken is niet meer beschikbaar.";st.className="reply-status err";return}try{await editMemberPost(memberSelected,m);st.textContent="Wijzigingen opgeslagen.";st.className="reply-status ok";setTimeout(()=>openMemberTicket(memberSelected),400)}catch(e){st.textContent=e.message;st.className="reply-status err"}};$("#memberCloseRequestBtn").onclick=()=>{$("#memberCloseConfirm").style.display="inline-flex";$("#memberCloseCancel").style.display="inline-flex";$("#memberCloseRequestBtn").style.display="none";$("#memberCloseStatus").textContent="Na bevestiging wordt een melding naar support gestuurd.";$("#memberCloseStatus").className="reply-status"};$("#memberCloseCancel").onclick=()=>{$("#memberCloseConfirm").style.display="none";$("#memberCloseCancel").style.display="none";$("#memberCloseRequestBtn").style.display="inline-flex";$("#memberCloseStatus").textContent=""};$("#memberCloseConfirm").onclick=async()=>{const st=$("#memberCloseStatus"),t=memberSelected;if(!t)return;try{const meta=getInternal(t),mid=meta.assignee?Number(meta.assignee):Number(MODS[0].id),mod=MODS.find(x=>Number(x.id)===mid)||MODS[0];await postPrivateMessage({id:mod.id,user:mod.username},"[TICKET "+t.num+"] Verzoek ticket sluiten","De ticket-auteur vraagt om ticket #"+t.num+" te sluiten. Onderwerp: "+t.title+". Open Ticketbeheer om dit verzoek te behandelen.");st.textContent="Je verzoek is verzonden naar support.";st.className="reply-status ok";$("#memberCloseConfirm").style.display="none";$("#memberCloseCancel").style.display="none";$("#memberCloseRequestBtn").style.display="inline-flex"}catch(e){st.textContent="Het verzoek kon niet worden verzonden: "+e.message;st.className="reply-status err"}};$("#formMessage").addEventListener("input",updateTicketMessageCounter);$("#formSubject").addEventListener("input",updateTicketMessageCounter);renderCats();resolveUser();})();</script>
 <style id="hpmw-home-footer-clear">#homeView{padding-bottom:100px!important}.support-categories-panel{margin-bottom:12px}</style>
 <style id="hpmw-full-page-background">
 /* De afbeelding staat één keer op de volledige pagina, ook achter navigatie en footer. */
@@ -4621,111 +4731,7 @@ main.shell>.view.active{display:block!important;height:auto!important;min-height
 </style>
 
 
-<style id="hpmw-ticket-console-redesign">
-/* Eigen Muggle Ministry ticketconsole: geïnspireerd op een overzichtelijke helpdesk, niet gekopieerd. */
-#adminListView,#adminDetail{color:#e7edf6}
-#adminListView .admin-toolbar{margin-bottom:18px}
-#adminListView .admin-search-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px;border:1px solid #2b3d52;border-radius:15px;background:linear-gradient(145deg,#142337,#101b2a);box-shadow:0 12px 28px #0003}
-#adminListView .admin-search-title{grid-column:1/-1;color:#e6edf7;font-size:13px}
-#adminListView .search-input-row{min-width:0}
-#adminListView .search-input-row input,#adminListView .status-filter{height:43px;border:1px solid #344a62;border-radius:10px;background:#0b1522;color:#edf3fb}
-#adminListView .search-main-btn{min-width:112px;background:#27496a;border-color:#416b91}
-#adminListView .stats{gap:12px;margin:0 0 15px}
-#adminListView .stat{min-height:94px;padding:17px 15px 14px 62px;border:1px solid #2d4259;border-radius:14px;background:linear-gradient(145deg,#17283b,#111d2c);transition:border-color .18s,transform .18s}
-#adminListView .stat:hover{border-color:#668bb0;transform:translateY(-2px)}
-#adminListView .stat.dashboard-tab.active{border-color:#78a6d2;box-shadow:inset 0 0 0 1px #78a6d244;background:linear-gradient(145deg,#203a54,#14283b)}
-#adminListView .stat-icon{width:36px;height:36px;left:14px;top:17px;border:1px solid #385777;border-radius:10px;background:#1b3550;color:#a9d1f5}
-#adminListView .stat small{color:#9eb1c5;font-size:9px;letter-spacing:.1em}
-#adminListView .stat strong{font-size:26px;color:#f5f8fc}
-#adminListView .status-index{gap:8px;margin:0 0 15px}
-#adminListView .status-index .status-pill{padding:8px 11px;border-radius:9px;background:#142438;border-color:#344a61}
-#adminListView .ticket-table-wrap{overflow:auto;border:1px solid #2b4056;border-radius:14px;background:#101b29}
-#adminListView .ticket-table{min-width:760px;border-collapse:separate;border-spacing:0}
-#adminListView .ticket-table th{padding:14px 15px;background:#17283b;color:#9fb8d1;border-bottom:1px solid #344a61;font-size:9px;letter-spacing:.1em}
-#adminListView .ticket-table td{padding:15px;border-bottom:1px solid #24364a;color:#cbd7e5;font-size:12px}
-#adminListView .ticket-table tbody tr{background:#111e2d;transition:background .15s}
-#adminListView .ticket-table tbody tr:nth-child(even){background:#132235}
-#adminListView .ticket-table tbody tr:hover{background:#20364d}
-#adminListView .ticket-id{color:#a9d2f5!important}
-#adminListView .ticket-subject{color:#f0f5fb!important}
-#adminListView .ticket-state{border-radius:7px}
-#adminDetail .detail-head{padding:22px 24px;background:linear-gradient(135deg,#1b3049,#142337);border:1px solid #30465e;border-radius:15px 15px 0 0}
-#adminDetail .detail-kicker{color:#a9c9e8;letter-spacing:.14em}
-#adminDetail .detail-title{color:#f3f7fc;font-size:22px}
-#adminDetail .detail-facts{gap:9px}
-#adminDetail .detail-facts>div{padding:12px;border:1px solid #30465d;border-radius:10px;background:#102033}
-#adminDetail .detail-facts small{color:#91a9c1}
-#adminDetail .detail-facts strong{color:#e7eff8}
-#adminDetail .detail-workspace{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;padding:17px;background:#0f1a27;border:1px solid #2b4056;border-top:0;border-radius:0 0 15px 15px;align-items:start}
-#adminDetail .detail-conversation-column{min-width:0}
-#adminDetail .detail-sidebar{position:sticky;top:84px;min-width:0}
-#adminDetail .moderation-nav{padding:15px;border:1px solid #30465d;border-radius:13px;background:linear-gradient(155deg,#17283b,#101c2b)}
-#adminDetail .moderation-heading{margin-bottom:13px;color:#c7d9eb;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
-#adminDetail .internal-tools{padding:0;border:0;background:transparent}
-#adminDetail .internal-title,#adminDetail .moderation-actions-title{margin:0 0 9px;color:#9fb5cb;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
-#adminDetail .internal-status-group .internal-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-#adminDetail .internal-status-group .status-pill{justify-content:center;min-height:36px;padding:7px 8px;font-size:10px}
-#adminDetail .assign-block{margin-top:16px}
-#adminDetail .assign-label{color:#a9bfd4}
-#adminDetail .assign-select-wrap select{min-height:40px;border:1px solid #344a61;border-radius:9px;background:#0c1724;color:#edf3fb}
-#adminDetail .moderation-actions-title{margin-top:15px;padding-top:14px;border-top:1px solid #2b4056}
-#adminDetail .moderation-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-#adminDetail .moderation-actions .btn{justify-content:center;min-height:38px;padding:7px;font-size:10px}
-#adminDetail .reply-box{margin:14px 0;padding:17px;border:1px solid #2d435a;border-radius:13px;background:#142235}
-#adminDetail .reply-box h3{color:#eaf1f8}
-#adminDetail .reply-box textarea{border:1px solid #344b63;border-radius:10px;background:#0b1521;color:#eef4fb}
-#adminDetail .chat-thread{max-height:680px;border:1px solid #2b4056;border-radius:13px;background:#0b1623}
-#adminDetail .chat-bubble{border-color:#344a61;background:#1a2c40;color:#e5edf6}
-#adminDetail .chat-msg.mine .chat-bubble{border-color:#47668b;background:#203c5a}
-#adminDetail .chat-meta{color:#b9cde0}
-#adminDetail .chat-time{color:#8ca1b7}
-@media(max-width:900px){#adminDetail .detail-workspace{grid-template-columns:1fr}#adminDetail .detail-sidebar{position:static;grid-row:1}#adminDetail .detail-conversation-column{grid-row:2}}
-@media(max-width:600px){#adminListView .admin-search-box{grid-template-columns:1fr}#adminListView .admin-search-title{grid-column:1}#adminListView .search-main-btn{width:100%}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-head{padding:16px}#adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-workspace{padding:10px}#adminDetail .moderation-actions{grid-template-columns:1fr 1fr}}
-</style>
 
 
-<style id="hpmw-ticket-management-full-redesign">
-/* Complete ticketbeheer-workspace: page header, outer frame, navigation, overview and ticket detail. */
-#adminView{--tm-bg:#0a1420;--tm-panel:#101e2d;--tm-panel2:#15263a;--tm-line:#2b4056;--tm-text:#edf3fa;--tm-muted:#9aadc1;color:var(--tm-text)!important}
-#adminView>.page-head{max-width:1480px;margin:0 auto 20px;padding:22px 24px;border:1px solid #304963;border-radius:17px;background:radial-gradient(ellipse at 85% 0%,#29486a88,transparent 48%),linear-gradient(125deg,#1b3550,#102135 72%);box-shadow:0 15px 40px #0004}
-#adminView>.page-head .eyebrow{color:#a9c9e8;font-size:10px;letter-spacing:.18em}
-#adminView>.page-head h1{margin:5px 0;color:#f5f8fc;font-size:clamp(25px,3vw,34px);letter-spacing:-.04em}
-#adminView>.page-head .subtitle{color:#b3c4d6;font-size:13px}
-#adminView>#adminBack{border:1px solid #45627f;background:#203b57;color:#edf5fc}
-#adminView>.panel{max-width:1480px;margin:0 auto;overflow:hidden;border:1px solid #2b4056;border-radius:17px;background:#0e1a28;box-shadow:0 22px 55px #0005}
-#adminView .admin-layout{grid-template-columns:205px minmax(0,1fr);min-height:720px;background:#0e1a28}
-#adminView .admin-nav{display:flex;flex-direction:column;gap:9px;padding:18px 13px;border-right:1px solid #2b4056;background:linear-gradient(180deg,#122337,#0d1926)}
-#adminView .admin-nav .nav-btn{width:100%;min-height:45px;margin:0;padding:11px 12px;border:1px solid #2b4056;border-radius:10px;background:#15263a;color:#c5d5e5;font-size:11px}
-#adminView .admin-nav .nav-btn:hover{border-color:#6284a5;background:#1c3550;color:#fff}
-#adminView .admin-nav #adminRefresh{border-color:#416489;background:#1c3b59;color:#eaf4ff}
-#adminView .admin-nav .nav-btn .fa-button-icon{color:#a9d1f5}
-#adminView .admin-main{min-width:0;padding:22px;background:linear-gradient(180deg,#101e2d,#0d1926);color:var(--tm-text)}
-#adminView #adminListView{display:block}
-#adminView #adminListView .admin-toolbar{margin:0 0 16px}
-#adminView #adminListView .admin-search-box{border:1px solid #2d435b;border-radius:14px;background:linear-gradient(145deg,#172b40,#112033);box-shadow:0 10px 25px #0002}
-#adminView #adminListView .admin-search-title{color:#e8f0f8}
-#adminView #adminListView .search-input-row input{border-color:#344c66;background:#0b1724;color:#edf3fa}
-#adminView #adminListView .status-filter{border-color:#344c66;background:#0b1724;color:#edf3fa}
-#adminView #adminListView .stats{margin-top:0}
-#adminView #adminListView .status-index{padding-bottom:13px;border-bottom:1px solid #26394e}
-#adminView #adminListView .ticket-list{padding-top:2px}
-#adminView #adminDetail{min-width:0}
-#adminView #adminDetail .detail-head{border:1px solid #30465e;border-radius:14px 14px 0 0;background:linear-gradient(135deg,#1b3049,#142337)}
-#adminView #adminDetail .detail-workspace{border:1px solid #2b4056;border-top:0;border-radius:0 0 14px 14px;background:#0f1a27}
-#adminView #adminDetail .detail-sidebar{min-width:0}
-#adminView #adminDetail .detail-conversation-column{min-width:0}
-#adminView .notice{border-radius:10px}
-@media(max-width:850px){
- #adminView .admin-layout{grid-template-columns:1fr}
- #adminView .admin-nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #2b4056;padding:11px}
- #adminView .admin-nav .nav-btn{width:auto;flex:1 1 150px}
- #adminView .admin-main{padding:16px}
-}
-@media(max-width:600px){
- #adminView>.page-head{margin-bottom:12px;padding:17px;gap:10px}
- #adminView>.page-head h1{font-size:25px}
- #adminView>.panel{border-radius:13px}
- #adminView .admin-nav .nav-btn{flex:1 1 100%}
- #adminView .admin-main{padding:11px}
-}
-</style>
+
+
