@@ -2281,7 +2281,7 @@ async function loadTickets(){
   for(const row of rows||[]){
    const id=String(row.forumotion_topic_id||"");
    const num=String(row.ticket_number||id);
-   if(!/^\\d+$/.test(id)||num==="91380")continue;
+   if(!/^\d+$/.test(id)||num==="91380")continue;
    const forumId=Number(row.forumotion_forum_id)||0;
    const category=CATS.find(c=>c.id===forumId||c.closed===forumId)||CATS.find(c=>c.name===row.category);
    const closed=String(row.status||"")==="done"||!!(category&&forumId===category.closed);
