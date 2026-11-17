@@ -10418,3 +10418,25 @@ html.hpmw-portal-focus body .hpmw-global-brandbar .hpmw-banner-page-label{
  }
 }
 </style>
+
+
+<script id="hpmw-ensure-initial-portal-view-state-20261117">
+/* Zorg dat de actieve portalweergave ook bij de eerste paginalaad dezelfde
+   layoutmodus krijgt als na een klik op de navigatie. */
+(()=>{"use strict";
+ const sync=()=>{
+  const active=document.querySelector("main.shell > .view.active");
+  const id=active?.id||"";
+  const tool=id==="toolView"||id==="adminView";
+  document.documentElement.classList.toggle("hpmw-tool-focus",tool);
+  document.documentElement.classList.toggle("hpmw-portal-focus",!!id&&id!=="introView"&&!tool);
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});
+ else sync();
+ const shell=document.querySelector("main.shell");
+ if(shell)new MutationObserver(sync).observe(shell,{subtree:true,attributes:true,attributeFilter:["class"]});
+ document.addEventListener("click",()=>requestAnimationFrame(sync),true);
+ window.addEventListener("hashchange",()=>requestAnimationFrame(sync));
+ setTimeout(sync,100);setTimeout(sync,600);
+})();
+</script>
