@@ -8143,7 +8143,42 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
-</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script></body></html>
+</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script><style id="hpmw-home-layout-viewport-centering-fix">
+/* Keep the existing Ministry design, but fit the three home columns to the visible viewport. */
+html body #introView #hpmwHomeLayout{
+  box-sizing:border-box!important;
+  width:min(1480px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  grid-template-columns:minmax(170px,220px) minmax(0,1fr) minmax(170px,220px)!important;
+  gap:16px!important;
+}
+html body #introView #hpmwHomeLayout > *{min-width:0!important}
+html body #introView #hpmwHomeLayout .hpmw-home-main{width:100%!important;max-width:100%!important;min-width:0!important}
+@media(max-width:1100px){
+  html body #introView #hpmwHomeLayout{
+    width:calc(100vw - 24px)!important;
+    max-width:calc(100vw - 24px)!important;
+    grid-template-columns:minmax(150px,190px) minmax(0,1fr)!important;
+    gap:14px!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+  html body #introView #hpmwHomeLayout > .hpmw-home-left{grid-column:1!important;grid-row:2!important}
+  html body #introView #hpmwHomeLayout > .hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:700px){
+  html body #introView #hpmwHomeLayout{
+    display:flex!important;flex-direction:column!important;
+    width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;
+    margin-left:auto!important;margin-right:auto!important;
+  }
+  html body #introView #hpmwHomeLayout > .hpmw-home-main,
+  html body #introView #hpmwHomeLayout > .hpmw-home-left,
+  html body #introView #hpmwHomeLayout > .hpmw-home-right{width:100%!important;max-width:100%!important}
+}
+</style>
+</body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
 <style id="hpmw-nav-scrollbar-hidden">header.topbar.luxury-nav-v2 nav.top-actions{scrollbar-width:none!important;-ms-overflow-style:none!important}header.topbar.luxury-nav-v2 nav.top-actions::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}</style>
