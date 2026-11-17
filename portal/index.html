@@ -2832,7 +2832,7 @@ function loadTicketAdminIds(){return [...new Set([1,3,...Object.keys(loadTicketR
 let ADMINS=loadTicketAdminIds(),NEWS_VIEWERS=[];let user={id:0,name:"",logged:false}, all=[], currentTab="open", selected=null, activeCat=null;
 function refreshTicketModerators(){ADMINS.splice(0,ADMINS.length,...loadTicketAdminIds());if(typeof paintUser==="function")paintUser()}
 async function refreshNewsModerators(){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/news_moderators?select=forumotion_user_id&enabled=eq.true&can_view_news=eq.true",{headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx"},cache:"no-store"});if(!r.ok)throw Error("news permissions unavailable");const rows=await r.json();NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length,...rows.map(x=>Number(x.forumotion_user_id)).filter(x=>Number.isInteger(x)&&x>0));if(typeof paintUser==="function")paintUser()}catch(e){NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length);if(typeof paintUser==="function")paintUser();console.warn("[Hpmw] Nieuwspaginarechten niet geladen.",e)}}
-refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");if(id==="toolView"||id==="adminView")document.documentElement.classList.add("hpmw-tool-focus");else document.documentElement.classList.remove("hpmw-tool-focus");const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));scrollTo({top:0,behavior:"smooth"});}function hpmwRouteTool(path,write){
+refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");const isToolView=id==="toolView"||id==="adminView";document.documentElement.classList.toggle("hpmw-tool-focus",isToolView);document.documentElement.classList.toggle("hpmw-portal-focus",id!=="introView"&&!isToolView);if(id==="faqView"){const cats=$("#hpmwFaqCategories");if(cats)cats.hidden=false;const intro=$("#hpmwFaqIntro");if(intro)intro.hidden=true;}const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));scrollTo({top:0,behavior:"smooth"});}function hpmwRouteTool(path,write){
  const known=["/tool","/tool/ticketadmin","/tool/settings","/tool/team","/tool/translations","/tool/authorizations","/tool/news","/tool/faq"];
  if(!known.includes(path))path="/tool";
  if(typeof isAdmin==="function"&&!isAdmin())return;
@@ -8525,4 +8525,81 @@ header.topbar.luxury-nav-v2 nav.top-actions>#faqLaunch{position:absolute!importa
 #faqView #hpmwFaqCategoryContent:not(:empty){display:block!important;margin-top:14px!important;padding:16px!important;min-height:0!important;border:1px solid #30445b!important;border-radius:12px!important;background:#101b29!important;}
 #faqView #hpmwFaqCategories .cat[aria-pressed="true"]{border-color:#8ab4e8!important;background:#1a2b40!important;}
 @media(max-width:650px){#homeView.view.active #categories.categories,#faqView #hpmwFaqCategories.categories{grid-template-columns:1fr!important;}}
+</style>
+
+
+<style id="hpmw-portal-single-screen-layout-20261117">
+/* Portaalpagina's gebruiken dezelfde schermvullende werkruimte als de Ministry Tool. */
+html.hpmw-portal-focus,html.hpmw-portal-focus body{height:100%!important;min-height:100%!important;overflow:hidden!important}
+html.hpmw-portal-focus body{padding:0!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2{
+ position:fixed!important;z-index:10000!important;top:0!important;left:0!important;right:0!important;
+ width:100%!important;height:52px!important;min-height:52px!important;margin:0!important;
+}
+html.hpmw-portal-focus .hpmw-global-brandbar{
+ position:fixed!important;z-index:5!important;top:52px!important;left:0!important;right:0!important;
+ height:clamp(150px,24vw,300px)!important;max-height:300px!important;margin:0!important;
+}
+html.hpmw-portal-focus main.shell{
+ position:fixed!important;z-index:2!important;top:calc(52px + clamp(150px,24vw,300px))!important;
+ left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;
+ height:auto!important;max-height:none!important;margin:0!important;
+ padding:22px clamp(14px,3vw,42px) 30px!important;overflow:hidden!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus main.shell>.view{display:none!important}
+html.hpmw-portal-focus main.shell>.view.active{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ width:100%!important;height:100%!important;max-width:none!important;max-height:100%!important;
+ margin:0!important;padding:0 4px 28px!important;overflow-y:auto!important;overflow-x:hidden!important;
+ box-sizing:border-box!important;
+}
+html.hpmw-portal-focus footer,html.hpmw-portal-focus .footer{display:none!important}
+html.hpmw-portal-focus .view.active>.page-head:first-child,
+html.hpmw-portal-focus .view.active>.new-ticket-head{
+ width:min(100%,1120px)!important;margin:0 auto 14px!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #formView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel,
+html.hpmw-portal-focus #faqView>.panel{
+ display:block!important;width:min(100%,1120px)!important;max-width:1120px!important;
+ margin:0 auto 24px!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #homeView #categories.categories{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:12px!important;width:100%!important;padding:14px!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #homeView #categories .cat{
+ display:flex!important;width:100%!important;min-width:0!important;min-height:92px!important;
+ align-items:center!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #myTicketsView>.page-head.hpmw-section-title{display:none!important}
+html.hpmw-portal-focus #myTicketsView>.page-head.hpmw-my-tickets-page-head{
+ width:min(100%,1120px)!important;margin:0 auto 10px!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-tabs{display:flex!important;gap:10px!important}
+html.hpmw-portal-focus #myTicketsView #myTicketsList{min-height:90px!important}
+html.hpmw-portal-focus #faqView>.panel{padding:22px!important}
+html.hpmw-portal-focus #faqView .hpmw-faq-intro{display:none!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:12px!important;width:100%!important;margin:12px 0!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories .cat{
+ display:flex!important;width:100%!important;min-height:88px!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:empty{display:none!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:not(:empty){
+ display:block!important;min-height:0!important;margin-top:14px!important;
+}
+@media(max-width:900px){
+ html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:650px){
+ html.hpmw-portal-focus .hpmw-global-brandbar{height:150px!important}
+ html.hpmw-portal-focus main.shell{top:202px!important;padding:14px 10px 22px!important}
+ html.hpmw-portal-focus #homeView #categories.categories,
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #faqView>.panel{padding:14px!important}
+}
 </style>
