@@ -8078,15 +8078,16 @@ html body main.shell #introView .intro-static-card::after{
  async function init(){
    updateSnippet();
    const v=await loadSettings();Object.keys(ids).forEach(k=>{if(byId(ids[k]))byId(ids[k]).checked=!!v[k]});if(byId("effectYear"))byId("effectYear").value=v.year||"";if(byId("effectMaintenanceMessage"))byId("effectMaintenanceMessage").value=v.maintenance_message||"";
-   byId("navSettings").onclick=e=>{e.preventDefault();e.stopPropagation();activateView("newSettingsView")};
-   byId("dashSettings").onclick=e=>{e.preventDefault();e.stopPropagation();activateView("newSettingsView")};
-   byId("settingsBack").onclick=e=>{e.preventDefault();activateView("newAdminDashboard")};
-   byId("navTranslations").onclick=e=>{e.preventDefault();activateView("newTranslationsView")};
-   Object.values(ids).forEach(id=>byId(id).addEventListener("change",queueAutoSave));
-   byId("effectYear").addEventListener("input",queueAutoSave);
-   byId("effectMaintenanceMessage").addEventListener("input",queueAutoSave);
-   byId("savePortalEffects").onclick=save;
-   byId("copyPortalEffectsSql").onclick=()=>copy("portalEffectsSql","portalEffectsSqlStatus");
+   const bind=(id,event,handler)=>{const el=byId(id);if(el)el[event]=handler;};
+   bind("navSettings","onclick",e=>{e.preventDefault();e.stopPropagation();activateView("newSettingsView")});
+   bind("dashSettings","onclick",e=>{e.preventDefault();e.stopPropagation();activateView("newSettingsView")});
+   bind("settingsBack","onclick",e=>{e.preventDefault();activateView("newAdminDashboard")});
+   bind("navTranslations","onclick",e=>{e.preventDefault();e.stopPropagation();activateView("newTranslationsView")});
+   Object.values(ids).forEach(id=>byId(id)?.addEventListener("change",queueAutoSave));
+   byId("effectYear")?.addEventListener("input",queueAutoSave);
+   byId("effectMaintenanceMessage")?.addEventListener("input",queueAutoSave);
+   bind("savePortalEffects","onclick",save);
+   bind("copyPortalEffectsSql","onclick",()=>copy("portalEffectsSql","portalEffectsSqlStatus"));
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
