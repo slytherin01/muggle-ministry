@@ -2035,6 +2035,7 @@ if(!id||seen.has(id))return;
 seen.add(id);
 const tm=String(title||"").match(/\[\s*ticket\s*#?\s*([0-9]+)\s*\]/i);
 const num=tm?tm[1]:id;
+if(String(num)==="91380")return; // Uitgesloten uit de ticketadministratie; het oorspronkelijke forumtopic blijft bestaan.
 const clean=String(title||"Topic #"+id).replace(/^\s*\[\s*ticket\s*#?\s*[0-9]+\s*\]\s*/i,"").trim();
 found.push({id:String(id),num,title:clean||"Topic #"+id,cat:catObj.name,catKey:catObj.key,forumId:fid,openForumId:catObj.id,closedForumId:catObj.closed,closed:!!closed,url:new URL(url,current).href,user:"",meta:meta||""});
 };
