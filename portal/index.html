@@ -9063,3 +9063,132 @@ html.hpmw-portal-focus #myTicketsView .member-detail{
  html.hpmw-portal-focus #formView .field{padding:10px!important}
 }
 </style>
+
+
+<style id="hpmw-portal-full-width-usable-forms-20261117">
+/* Full-width portal work area: no narrow centered column and no clipped form controls. */
+html.hpmw-portal-focus main.shell{
+ left:224px!important;right:0!important;width:auto!important;max-width:none!important;
+ padding:22px clamp(18px,2.2vw,34px) 34px!important;
+}
+html.hpmw-portal-focus main.shell>.view.active{
+ width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;
+ min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
+ padding:0 2px 42px!important;box-sizing:border-box!important;
+ scrollbar-width:thin!important;scrollbar-color:#466789 transparent!important;
+}
+html.hpmw-portal-focus main.shell>.view.active::-webkit-scrollbar{width:9px!important}
+html.hpmw-portal-focus main.shell>.view.active::-webkit-scrollbar-thumb{background:#3a5a78!important;border-radius:10px!important}
+html.hpmw-portal-focus #homeView>.page-head,
+html.hpmw-portal-focus #formView>.new-ticket-head,
+html.hpmw-portal-focus #myTicketsView>.page-head,
+html.hpmw-portal-focus #faqView .page-head{
+ width:100%!important;max-width:none!important;margin:0 0 20px!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #formView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel,
+html.hpmw-portal-focus #faqView>.panel{
+ width:100%!important;max-width:none!important;margin:0 0 26px!important;
+ box-sizing:border-box!important;
+}
+
+/* Ticket form fills the entire work area and every field remains editable. */
+html.hpmw-portal-focus #formView{min-height:100%!important}
+html.hpmw-portal-focus #formView>.new-ticket-head{
+ display:flex!important;align-items:center!important;gap:16px!important;
+ padding:0 0 18px!important;border-bottom:1px solid #304b68!important;
+}
+html.hpmw-portal-focus #formView>.new-ticket-head>div:nth-child(2){flex:1 1 auto!important;min-width:0!important}
+html.hpmw-portal-focus #formView>.panel{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ width:100%!important;max-width:none!important;min-height:0!important;
+ padding:0!important;overflow:visible!important;
+ border:1px solid #355574!important;border-radius:16px!important;
+ background:linear-gradient(145deg,#12243a,#0d1a2a)!important;
+ box-shadow:0 14px 34px rgba(0,0,0,.24)!important;
+}
+html.hpmw-portal-focus #formView .form-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ align-items:start!important;gap:20px!important;padding:24px!important;
+ width:100%!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #formView .field{
+ display:block!important;min-width:0!important;width:100%!important;
+ padding:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #formView .field label{
+ display:block!important;margin:0 0 9px!important;color:#d9e9f8!important;
+ font-size:12px!important;font-weight:800!important;letter-spacing:.035em!important;
+}
+html.hpmw-portal-focus #formView .field input,
+html.hpmw-portal-focus #formView .field select,
+html.hpmw-portal-focus #formView .field textarea{
+ display:block!important;position:relative!important;z-index:1!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ min-height:48px!important;box-sizing:border-box!important;padding:13px 15px!important;
+ border:1px solid #496783!important;border-radius:10px!important;
+ background:#091a2c!important;color:#f0f6ff!important;
+ font:inherit!important;font-size:14px!important;line-height:1.5!important;
+ opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+}
+html.hpmw-portal-focus #formView .field input[readonly]{
+ background:#14283e!important;color:#b8cce0!important;cursor:default!important;
+}
+html.hpmw-portal-focus #formView .field input:focus,
+html.hpmw-portal-focus #formView .field select:focus,
+html.hpmw-portal-focus #formView .field textarea:focus{
+ outline:0!important;border-color:#80bce8!important;
+ box-shadow:0 0 0 3px rgba(83,159,218,.2)!important;
+}
+html.hpmw-portal-focus #formView .field textarea{
+ min-height:260px!important;height:260px!important;resize:vertical!important;
+}
+html.hpmw-portal-focus #formView .character-counter{
+ margin-top:7px!important;text-align:right!important;color:#9eb7d0!important;font-size:11px!important;
+}
+html.hpmw-portal-focus #formView .notice{
+ margin:0 24px 14px!important;
+}
+html.hpmw-portal-focus #formView .actions{
+ display:flex!important;justify-content:flex-end!important;gap:12px!important;
+ flex-wrap:wrap!important;padding:12px 24px 24px!important;margin:0!important;
+ border-top:1px solid #2b435c!important;
+}
+html.hpmw-portal-focus #formView .actions .btn{
+ min-height:44px!important;padding:10px 20px!important;font-size:13px!important;
+}
+
+/* FAQ and My Tickets also use the full workspace, without nested narrow panels. */
+html.hpmw-portal-focus #faqView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel{
+ width:100%!important;max-width:none!important;padding:0!important;
+ border:0!important;background:transparent!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:not(:empty){
+ width:100%!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus #myTicketsView .ticket-list{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-detail{width:100%!important;box-sizing:border-box!important}
+@media(max-width:900px){
+ html.hpmw-portal-focus main.shell{left:68px!important;padding:18px 16px 28px!important}
+ html.hpmw-portal-focus #formView .form-grid{gap:15px!important;padding:18px!important}
+}
+@media(max-width:620px){
+ html.hpmw-portal-focus main.shell{left:54px!important;padding:12px 10px 22px!important}
+ html.hpmw-portal-focus #formView .form-grid,
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+ html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+ html.hpmw-portal-focus #formView .form-grid{padding:14px!important}
+ html.hpmw-portal-focus #formView .field textarea{min-height:220px!important;height:220px!important}
+ html.hpmw-portal-focus #formView .actions{padding:12px 14px 16px!important}
+}
+</style>
