@@ -6967,6 +6967,11 @@ html body main.shell #introView .intro-static-card::after{
  const toolOrigin="https://slytherin01.github.io";
  const protocol="hpmw-forum-bridge-v1";
  if(window.parent===window)return;
+ window.addEventListener("message",async event=>{
+  if(event.origin!==toolOrigin||event.source!==window.parent)return;
+  const msg=event.data;
+  if(!msg||msg.protocol!==protocol||msg.type!=="get"||!Number.isSafeInteger(msg.id))return;
+  const reply=(ok,html,error)=>event.source.postMessage({protocol,type:"response",id:msg.id,ok,html,error},event.origin);
   let target;
   try{target=new URL(msg.url,location.origin);}catch(_){reply(false,"","Ongeldige forumlink.");return;}
   if(target.origin!==location.origin||!/^\/(?:f\d+|t\d+)(?:[-/?#]|$)/i.test(target.pathname)){
