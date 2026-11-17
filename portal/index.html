@@ -8486,3 +8486,30 @@ header.topbar.luxury-nav-v2 nav.top-actions>#faqLaunch{position:absolute!importa
 #myTicketsView .member-ticket-row{width:100%!important;text-align:left!important}
 @media(max-width:650px){#formView .form-grid{grid-template-columns:1fr!important}#formView .field.full{grid-column:auto!important}}
 </style>
+
+<style id="hpmw-restore-active-portal-ticket-views-20261117">
+/* Herstel de normale portaalweergaven: een oudere admin-regel verstopte deze ook wanneer ze actief waren. */
+#introView.view.active,
+#homeView.view.active,
+#formView.view.active,
+#myTicketsView.view.active{
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+ position:relative!important;
+}
+#homeView.view.active .support-categories-panel,
+#formView.view.active>.panel,
+#myTicketsView.view.active>.panel{
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
+#homeView.view.active #categories,
+#myTicketsView.view.active #myTicketsList{
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+ min-height:60px!important;
+}
+</style>
