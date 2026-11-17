@@ -3049,7 +3049,7 @@ function openForm(k){activeCat=cat(k); if(!activeCat)return;$("#formTitle").text
  btn.disabled=true;notify("Ticket wordt aangemaakt...","ok");
  try{
   await access.ensureClient();
-  const db=access.client();
+  const db=access.client;
   const {data:{session},error:sessionError}=await db.auth.getSession();
   if(sessionError)throw sessionError;
   if(!session?.user)throw new Error("Log eerst in met je portaalaccount en probeer opnieuw.");
@@ -3079,7 +3079,7 @@ async function loadMyTickets(){
  const host=$("#myTicketsList");if(!host)return;
  host.innerHTML='<div class="member-loading"><div class="member-loading-head">Je tickets laden...</div></div>';
  try{
-  const access=window.HpmwPortalAccess;await access.ensureClient();const db=access.client();
+  const access=window.HpmwPortalAccess;await access.ensureClient();const db=access.client;
   const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;
   if(!session?.user)throw new Error("Log in met je portaalaccount om je tickets te bekijken.");
   const {data:tickets,error}=await db.from("support_tickets").select("id,ticket_number,category,department,subject,status,priority,created_at,updated_at").eq("created_by",session.user.id).order("created_at",{ascending:false});
@@ -5714,7 +5714,6 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
    }
    if(!window.supabase?.createClient)throw new Error("Supabase JS is niet beschikbaar.");
    client=window.HpmwSupabaseClient||(window.HpmwSupabaseClient=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}));
-   window.HpmwPortalAccess.client=client;
    return client;
   })();
   try{return await clientPromise}catch(error){clientPromise=null;throw error}
@@ -5760,7 +5759,7 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   return role;
  }
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client:()=>client,headers,ensureClient}; 
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},get client(){return client},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,headers,ensureClient}; 
 function applyPortalVisibility(){
   const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets],["#myTicketsLaunch",canViewMyTickets],["#introView [data-open-sorting-hat]",canViewSortingHat],["#introView [data-open-vacancies]",canViewVacancies],["#introView [data-open-modteam]",canViewModteam],["#introView [data-open-awards]",canViewAwards]];
   checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=canViewPortal()&&!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
