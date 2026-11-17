@@ -1191,114 +1191,158 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 #faqManagementPanel .faq-state{display:inline-flex;padding:4px 8px;border-radius:20px;background:#24364b;color:#d9e7f8;font-size:10px}
 #faqManagementPanel [hidden]{display:none!important}\n#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
 </style>
-<style id="hpmw-ticket-console-redesign">
-/* Eigen Muggle Ministry ticketconsole: geïnspireerd op een overzichtelijke helpdesk, niet gekopieerd. */
-#adminListView,#adminDetail{color:#e7edf6}
-#adminListView .admin-toolbar{margin-bottom:18px}
-#adminListView .admin-search-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px;border:1px solid #2b3d52;border-radius:15px;background:linear-gradient(145deg,#142337,#101b2a);box-shadow:0 12px 28px #0003}
-#adminListView .admin-search-title{grid-column:1/-1;color:#e6edf7;font-size:13px}
-#adminListView .search-input-row{min-width:0}
-#adminListView .search-input-row input,#adminListView .status-filter{height:43px;border:1px solid #344a62;border-radius:10px;background:#0b1522;color:#edf3fb}
-#adminListView .search-main-btn{min-width:112px;background:#27496a;border-color:#416b91}
-#adminListView .stats{gap:12px;margin:0 0 15px}
-#adminListView .stat{min-height:94px;padding:17px 15px 14px 62px;border:1px solid #2d4259;border-radius:14px;background:linear-gradient(145deg,#17283b,#111d2c);transition:border-color .18s,transform .18s}
-#adminListView .stat:hover{border-color:#668bb0;transform:translateY(-2px)}
-#adminListView .stat.dashboard-tab.active{border-color:#78a6d2;box-shadow:inset 0 0 0 1px #78a6d244;background:linear-gradient(145deg,#203a54,#14283b)}
-#adminListView .stat-icon{width:36px;height:36px;left:14px;top:17px;border:1px solid #385777;border-radius:10px;background:#1b3550;color:#a9d1f5}
-#adminListView .stat small{color:#9eb1c5;font-size:9px;letter-spacing:.1em}
-#adminListView .stat strong{font-size:26px;color:#f5f8fc}
-#adminListView .status-index{gap:8px;margin:0 0 15px}
-#adminListView .status-index .status-pill{padding:8px 11px;border-radius:9px;background:#142438;border-color:#344a61}
-#adminListView .ticket-table-wrap{overflow:auto;border:1px solid #2b4056;border-radius:14px;background:#101b29}
-#adminListView .ticket-table{min-width:760px;border-collapse:separate;border-spacing:0}
-#adminListView .ticket-table th{padding:14px 15px;background:#17283b;color:#9fb8d1;border-bottom:1px solid #344a61;font-size:9px;letter-spacing:.1em}
-#adminListView .ticket-table td{padding:15px;border-bottom:1px solid #24364a;color:#cbd7e5;font-size:12px}
-#adminListView .ticket-table tbody tr{background:#111e2d;transition:background .15s}
-#adminListView .ticket-table tbody tr:nth-child(even){background:#132235}
-#adminListView .ticket-table tbody tr:hover{background:#20364d}
-#adminListView .ticket-id{color:#a9d2f5!important}
-#adminListView .ticket-subject{color:#f0f5fb!important}
-#adminListView .ticket-state{border-radius:7px}
-#adminDetail .detail-head{padding:22px 24px;background:linear-gradient(135deg,#1b3049,#142337);border:1px solid #30465e;border-radius:15px 15px 0 0}
-#adminDetail .detail-kicker{color:#a9c9e8;letter-spacing:.14em}
-#adminDetail .detail-title{color:#f3f7fc;font-size:22px}
-#adminDetail .detail-facts{gap:9px}
-#adminDetail .detail-facts>div{padding:12px;border:1px solid #30465d;border-radius:10px;background:#102033}
-#adminDetail .detail-facts small{color:#91a9c1}
-#adminDetail .detail-facts strong{color:#e7eff8}
-#adminDetail .detail-workspace{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;padding:17px;background:#0f1a27;border:1px solid #2b4056;border-top:0;border-radius:0 0 15px 15px;align-items:start}
-#adminDetail .detail-conversation-column{min-width:0}
-#adminDetail .detail-sidebar{position:sticky;top:84px;min-width:0}
-#adminDetail .moderation-nav{padding:15px;border:1px solid #30465d;border-radius:13px;background:linear-gradient(155deg,#17283b,#101c2b)}
-#adminDetail .moderation-heading{margin-bottom:13px;color:#c7d9eb;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
-#adminDetail .internal-tools{padding:0;border:0;background:transparent}
-#adminDetail .internal-title,#adminDetail .moderation-actions-title{margin:0 0 9px;color:#9fb5cb;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
-#adminDetail .internal-status-group .internal-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-#adminDetail .internal-status-group .status-pill{justify-content:center;min-height:36px;padding:7px 8px;font-size:10px}
-#adminDetail .assign-block{margin-top:16px}
-#adminDetail .assign-label{color:#a9bfd4}
-#adminDetail .assign-select-wrap select{min-height:40px;border:1px solid #344a61;border-radius:9px;background:#0c1724;color:#edf3fb}
-#adminDetail .moderation-actions-title{margin-top:15px;padding-top:14px;border-top:1px solid #2b4056}
-#adminDetail .moderation-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-#adminDetail .moderation-actions .btn{justify-content:center;min-height:38px;padding:7px;font-size:10px}
-#adminDetail .reply-box{margin:14px 0;padding:17px;border:1px solid #2d435a;border-radius:13px;background:#142235}
-#adminDetail .reply-box h3{color:#eaf1f8}
-#adminDetail .reply-box textarea{border:1px solid #344b63;border-radius:10px;background:#0b1521;color:#eef4fb}
-#adminDetail .chat-thread{max-height:680px;border:1px solid #2b4056;border-radius:13px;background:#0b1623}
-#adminDetail .chat-bubble{border-color:#344a61;background:#1a2c40;color:#e5edf6}
-#adminDetail .chat-msg.mine .chat-bubble{border-color:#47668b;background:#203c5a}
-#adminDetail .chat-meta{color:#b9cde0}
-#adminDetail .chat-time{color:#8ca1b7}
-@media(max-width:900px){#adminDetail .detail-workspace{grid-template-columns:1fr}#adminDetail .detail-sidebar{position:static;grid-row:1}#adminDetail .detail-conversation-column{grid-row:2}}
-@media(max-width:600px){#adminListView .admin-search-box{grid-template-columns:1fr}#adminListView .admin-search-title{grid-column:1}#adminListView .search-main-btn{width:100%}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-head{padding:16px}#adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-workspace{padding:10px}#adminDetail .moderation-actions{grid-template-columns:1fr 1fr}}
 
-#adminView #ticketList .ticket-table tbody tr[data-ticket]{cursor:pointer;pointer-events:auto;position:relative;z-index:1}
-#adminView #ticketList .ticket-table tbody tr[data-ticket]:focus{outline:2px solid #83b8e8;outline-offset:-2px}
-#adminView #adminDetail.active{display:block!important;visibility:visible!important}
-</style>
-<style id="hpmw-ticket-management-full-redesign">
-/* Complete ticketbeheer-workspace: page header, outer frame, navigation, overview and ticket detail. */
-#adminView{--tm-bg:#0a1420;--tm-panel:#101e2d;--tm-panel2:#15263a;--tm-line:#2b4056;--tm-text:#edf3fa;--tm-muted:#9aadc1;color:var(--tm-text)!important}
-#adminView>.page-head{max-width:1480px;margin:0 auto 20px;padding:22px 24px;border:1px solid #304963;border-radius:17px;background:radial-gradient(ellipse at 85% 0%,#29486a88,transparent 48%),linear-gradient(125deg,#1b3550,#102135 72%);box-shadow:0 15px 40px #0004}
-#adminView>.page-head .eyebrow{color:#a9c9e8;font-size:10px;letter-spacing:.18em}
-#adminView>.page-head h1{margin:5px 0;color:#f5f8fc;font-size:clamp(25px,3vw,34px);letter-spacing:-.04em}
-#adminView>.page-head .subtitle{color:#b3c4d6;font-size:13px}
-#adminView>#adminBack{border:1px solid #45627f;background:#203b57;color:#edf5fc}
-#adminView>.panel{max-width:1480px;margin:0 auto;overflow:hidden;border:1px solid #2b4056;border-radius:17px;background:#0e1a28;box-shadow:0 22px 55px #0005}
-#adminView .admin-layout{grid-template-columns:205px minmax(0,1fr);min-height:720px;background:#0e1a28}
-#adminView .admin-nav{display:flex;flex-direction:column;gap:9px;padding:18px 13px;border-right:1px solid #2b4056;background:linear-gradient(180deg,#122337,#0d1926)}
-#adminView .admin-nav .nav-btn{width:100%;min-height:45px;margin:0;padding:11px 12px;border:1px solid #2b4056;border-radius:10px;background:#15263a;color:#c5d5e5;font-size:11px}
-#adminView .admin-nav .nav-btn:hover{border-color:#6284a5;background:#1c3550;color:#fff}
-#adminView .admin-nav #adminRefresh{border-color:#416489;background:#1c3b59;color:#eaf4ff}
-#adminView .admin-nav .nav-btn .fa-button-icon{color:#a9d1f5}
-#adminView .admin-main{min-width:0;padding:22px;background:linear-gradient(180deg,#101e2d,#0d1926);color:var(--tm-text)}
-#adminView #adminListView{display:block}
-#adminView #adminListView .admin-toolbar{margin:0 0 16px}
-#adminView #adminListView .admin-search-box{border:1px solid #2d435b;border-radius:14px;background:linear-gradient(145deg,#172b40,#112033);box-shadow:0 10px 25px #0002}
-#adminView #adminListView .admin-search-title{color:#e8f0f8}
-#adminView #adminListView .search-input-row input{border-color:#344c66;background:#0b1724;color:#edf3fa}
-#adminView #adminListView .status-filter{border-color:#344c66;background:#0b1724;color:#edf3fa}
-#adminView #adminListView .stats{margin-top:0}
-#adminView #adminListView .status-index{padding-bottom:13px;border-bottom:1px solid #26394e}
-#adminView #adminListView .ticket-list{padding-top:2px}
-#adminView #adminDetail{min-width:0}
-#adminView #adminDetail .detail-head{border:1px solid #30465e;border-radius:14px 14px 0 0;background:linear-gradient(135deg,#1b3049,#142337)}
-#adminView #adminDetail .detail-workspace{border:1px solid #2b4056;border-top:0;border-radius:0 0 14px 14px;background:#0f1a27}
-#adminView #adminDetail .detail-sidebar{min-width:0}
-#adminView #adminDetail .detail-conversation-column{min-width:0}
-#adminView .notice{border-radius:10px}
-@media(max-width:850px){
- #adminView .admin-layout{grid-template-columns:1fr}
- #adminView .admin-nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #2b4056;padding:11px}
- #adminView .admin-nav .nav-btn{width:auto;flex:1 1 150px}
- #adminView .admin-main{padding:16px}
+
+<style id="hpmw-ticketbeheer-reference-redesign-v2">
+/* Nieuwe volledige ticketconsole: eigen helpdesk-layout, gebaseerd op de informatiehiërarchie uit de voorbeelden. */
+#adminView{
+ --tb-bg:#091321;--tb-panel:#101e2e;--tb-panel-raised:#17283c;--tb-panel-soft:#132337;
+ --tb-border:#2c435d;--tb-border-strong:#456784;--tb-text:#edf4fc;--tb-muted:#9eb1c6;
+ --tb-blue:#8fc5f2;--tb-blue-deep:#244c70;--tb-gold:#d6b56f;
+ color:var(--tb-text)!important;background:transparent!important;
 }
-@media(max-width:600px){
- #adminView>.page-head{margin-bottom:12px;padding:17px;gap:10px}
- #adminView>.page-head h1{font-size:25px}
- #adminView>.panel{border-radius:13px}
- #adminView .admin-nav .nav-btn{flex:1 1 100%}
- #adminView .admin-main{padding:11px}
+#adminView>.page-head{
+ width:min(1480px,calc(100% - 28px))!important;max-width:1480px!important;margin:18px auto 16px!important;
+ padding:23px 27px!important;min-height:116px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+ border:1px solid #496783!important;border-radius:16px!important;
+ background:radial-gradient(ellipse at 88% 0%,#365b7c77,transparent 42%),linear-gradient(112deg,#1b344e,#102135 75%)!important;
+ box-shadow:0 18px 45px #0005!important;
+}
+#adminView>.page-head .eyebrow{font-size:10px!important;letter-spacing:.18em!important;color:#b2cbe2!important;text-transform:uppercase!important}
+#adminView>.page-head h1{font-size:clamp(26px,3vw,35px)!important;letter-spacing:-.035em!important;color:#f6f8fc!important;margin:4px 0!important}
+#adminView>.page-head .subtitle{font-size:13px!important;color:#c0d0df!important}
+#adminView>#adminBack{border:1px solid #4a6885!important;border-radius:9px!important;background:#172a3e!important;color:#eff6fd!important}
+#adminView>.panel{
+ width:min(1480px,calc(100% - 28px))!important;max-width:1480px!important;margin:0 auto 32px!important;
+ overflow:hidden!important;border:1px solid var(--tb-border)!important;border-radius:16px!important;
+ background:var(--tb-bg)!important;box-shadow:0 24px 60px #0006!important;
+}
+#adminView .admin-layout{display:grid!important;grid-template-columns:218px minmax(0,1fr)!important;min-height:740px!important;background:var(--tb-bg)!important}
+#adminView .admin-nav{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:9px!important;
+ padding:20px 14px!important;border:0!important;border-right:1px solid var(--tb-border)!important;
+ background:linear-gradient(180deg,#13263b,#0c1928)!important;
+}
+#adminView .admin-nav:before{content:"TICKETTOOLS";display:block;padding:0 9px 9px;color:#8fa9c2;font-size:9px;font-weight:900;letter-spacing:.19em}
+#adminView .admin-nav .nav-btn{
+ display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:44px!important;
+ margin:0!important;padding:11px 12px!important;border:1px solid #2b4057!important;border-radius:9px!important;
+ background:#172a3f!important;color:#d8e5f2!important;font-size:11px!important;font-weight:750!important;text-decoration:none!important;
+}
+#adminView .admin-nav .nav-btn:hover{background:#203a55!important;border-color:#6284a5!important;color:#fff!important}
+#adminView .admin-nav #adminRefresh{background:#244768!important;border-color:#426d92!important;color:#f3f8fd!important}
+#adminView .admin-nav .fa-button-icon{color:#a9d1f5!important}
+#adminView .admin-main{min-width:0!important;padding:23px!important;background:linear-gradient(180deg,#0f1d2c,#0b1725)!important;color:var(--tb-text)!important}
+#adminView #adminListView{display:block}
+#adminView #adminListView .admin-toolbar{margin:0 0 17px!important}
+#adminView #adminListView .admin-search-box{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:10px!important;
+ padding:17px!important;border:1px solid var(--tb-border)!important;border-radius:13px!important;
+ background:linear-gradient(140deg,#172b40,#112033)!important;box-shadow:0 9px 24px #0003!important;
+}
+#adminView #adminListView .admin-search-title{grid-column:1/-1!important;color:#f0f5fb!important;font-size:13px!important}
+#adminView #adminListView .search-input-row{min-width:0!important}
+#adminView #adminListView .search-input-row input,#adminView #adminListView .status-filter{
+ min-height:42px!important;border:1px solid #3b536c!important;border-radius:8px!important;background:#0a1623!important;color:#eef4fb!important;
+}
+#adminView #adminListView .search-main-btn{min-width:112px!important;min-height:42px!important;border:1px solid #5481a9!important;border-radius:8px!important;background:#2a557d!important;color:#fff!important}
+#adminView #adminListView .stats{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px!important;margin:0 0 13px!important;
+}
+#adminView #adminListView .stat{
+ position:relative!important;min-height:90px!important;padding:16px 14px 13px 62px!important;
+ border:1px solid #304961!important;border-radius:11px!important;background:linear-gradient(145deg,#1a2d42,#122235)!important;
+ text-align:left!important;box-shadow:inset 0 1px #ffffff08!important;transition:.18s ease!important;
+}
+#adminView #adminListView .stat:hover{border-color:#7298ba!important;transform:translateY(-2px)!important}
+#adminView #adminListView .stat.dashboard-tab.active{border:1px solid #7eb0da!important;background:linear-gradient(145deg,#23415d,#172d43)!important;box-shadow:inset 0 0 0 1px #8fc5f244!important}
+#adminView #adminListView .stat-icon{left:14px!important;top:17px!important;width:35px!important;height:35px!important;border:1px solid #456b8d!important;border-radius:9px!important;background:#203e5a!important;color:#b7dcfb!important}
+#adminView #adminListView .stat small{display:block!important;color:#9fb5ca!important;font-size:9px!important;font-weight:850!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+#adminView #adminListView .stat strong{display:block!important;margin-top:5px!important;color:#f6f9fd!important;font-size:25px!important;line-height:1!important}
+#adminView #adminListView .status-index{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 13px!important;padding:0 0 14px!important;border-bottom:1px solid #2b4056!important}
+#adminView #adminListView .status-index .status-pill{padding:8px 11px!important;border:1px solid #354e68!important;border-radius:8px!important;background:#172a3e!important;color:#dce8f4!important}
+#adminView #adminListView .ticket-list{min-width:0!important}
+#adminView #adminListView .ticket-table-wrap{overflow:auto!important;border:1px solid #30465e!important;border-radius:12px!important;background:#101e2d!important}
+#adminView #adminListView .ticket-table{width:100%!important;min-width:760px!important;border-collapse:separate!important;border-spacing:0!important}
+#adminView #adminListView .ticket-table thead th{padding:13px 14px!important;background:#1a2d42!important;border-bottom:1px solid #3b5269!important;color:#a9c0d6!important;font-size:9px!important;font-weight:900!important;letter-spacing:.13em!important;text-transform:uppercase!important}
+#adminView #adminListView .ticket-table tbody tr{background:#111f2e!important;cursor:pointer!important;transition:background .15s ease!important}
+#adminView #adminListView .ticket-table tbody tr:nth-child(even){background:#142538!important}
+#adminView #adminListView .ticket-table tbody tr:hover{background:#203a54!important}
+#adminView #adminListView .ticket-table tbody tr:focus{outline:2px solid #8fc5f2!important;outline-offset:-2px!important}
+#adminView #adminListView .ticket-table td{padding:14px!important;border-bottom:1px solid #293e53!important;color:#d1deeb!important;font-size:11px!important}
+#adminView #adminListView .ticket-id{color:#9dccf1!important;font-weight:900!important}
+#adminView #adminListView .ticket-subject{color:#f2f6fb!important;font-weight:800!important}
+#adminView #adminListView .ticket-state{display:inline-flex!important;padding:5px 8px!important;border:1px solid #45617c!important;border-radius:6px!important;background:#1d344b!important;color:#dce9f5!important;font-size:9px!important;font-weight:800!important}
+#adminView #adminListView .loading,#adminView #adminListView .loading-cell{padding:28px!important;color:#a8bbce!important;text-align:center!important}
+#adminView #adminListView .notice{margin-top:12px!important;padding:12px 14px!important;border-radius:9px!important;background:#2a2028!important;border:1px solid #71444d!important;color:#f0c8cc!important}
+#adminView #adminDetail{min-width:0!important}
+#adminView #adminDetail .detail-head{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px 18px!important;align-items:center!important;
+ padding:20px 22px!important;border:1px solid #3a5874!important;border-radius:13px 13px 0 0!important;
+ background:radial-gradient(ellipse at 90% 0%,#365b7c66,transparent 48%),linear-gradient(120deg,#1a334d,#14263a)!important;
+}
+#adminView #adminDetail .detail-head>div{min-width:0!important}
+#adminView #adminDetail .detail-kicker{color:#a9c9e7!important;font-size:9px!important;font-weight:900!important;letter-spacing:.17em!important}
+#adminView #adminDetail .detail-title{margin:5px 0 12px!important;color:#f5f8fc!important;font-size:22px!important;font-weight:900!important}
+#adminView #adminDetail .detail-facts{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important}
+#adminView #adminDetail .detail-facts>div{min-width:0!important;padding:10px!important;border:1px solid #3b536b!important;border-radius:8px!important;background:#102237!important}
+#adminView #adminDetail .detail-facts small{display:block!important;margin-bottom:5px!important;color:#91abc4!important;font-size:8px!important;font-weight:900!important;letter-spacing:.1em!important;text-transform:uppercase!important}
+#adminView #adminDetail .detail-facts strong{display:block!important;overflow-wrap:anywhere!important;color:#e9f1f9!important;font-size:10px!important}
+#adminView #adminDetail .detail-sub{margin-top:9px!important;color:#a8bdd1!important;font-size:10px!important}
+#adminView #adminDetail .detail-workspace{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 260px!important;gap:14px!important;align-items:start!important;
+ padding:15px!important;border:1px solid #2e4359!important;border-top:0!important;border-radius:0 0 13px 13px!important;background:#0d1927!important;
+}
+#adminView #adminDetail .detail-conversation-column{grid-column:1!important;grid-row:1!important;min-width:0!important}
+#adminView #adminDetail .detail-sidebar{grid-column:2!important;grid-row:1!important;position:sticky!important;top:16px!important;min-width:0!important}
+#adminView #adminDetail .moderation-nav{padding:14px!important;border:1px solid #344d66!important;border-radius:11px!important;background:linear-gradient(150deg,#182c41,#101e2e)!important}
+#adminView #adminDetail .moderation-heading{margin-bottom:13px!important;color:#d5e4f2!important;font-size:10px!important;font-weight:900!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+#adminView #adminDetail .internal-tools{padding:0!important;border:0!important;background:transparent!important}
+#adminView #adminDetail .internal-title,#adminView #adminDetail .moderation-actions-title{margin:0 0 9px!important;color:#9fb6cb!important;font-size:9px!important;font-weight:900!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+#adminView #adminDetail .internal-status-group .internal-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+#adminView #adminDetail .internal-status-group .status-pill{justify-content:center!important;min-height:36px!important;padding:7px 5px!important;border:1px solid #3c566f!important;border-radius:7px!important;background:#1a3046!important;color:#e3edf7!important;font-size:9px!important}
+#adminView #adminDetail .internal-status-group .status-pill.active{border-color:#8db8df!important;background:#284b6b!important;box-shadow:inset 0 0 0 1px #8db8df44!important}
+#adminView #adminDetail .assign-block{margin-top:15px!important}
+#adminView #adminDetail .assign-label{color:#a9bfd4!important;font-size:10px!important}
+#adminView #adminDetail .assign-select-wrap select{width:100%!important;min-height:39px!important;border:1px solid #3a526a!important;border-radius:8px!important;background:#0b1724!important;color:#edf4fb!important}
+#adminView #adminDetail .moderation-actions-title{margin-top:15px!important;padding-top:13px!important;border-top:1px solid #30465c!important}
+#adminView #adminDetail .moderation-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+#adminView #adminDetail .moderation-actions .btn{justify-content:center!important;min-height:36px!important;padding:7px 5px!important;border:1px solid #3b536b!important;border-radius:7px!important;background:#1b3045!important;color:#e5eef7!important;font-size:9px!important}
+#adminView #adminDetail .helpdesk-chat,#adminView #adminDetail .chat-thread{max-height:620px!important;overflow:auto!important;border:1px solid #30475e!important;border-radius:11px!important;background:#0a1623!important}
+#adminView #adminDetail .chat-bubble{border:1px solid #344e68!important;border-radius:10px!important;background:#1a3046!important;color:#e7eff8!important}
+#adminView #adminDetail .chat-msg.mine .chat-bubble{border-color:#4c7194!important;background:#203e5b!important}
+#adminView #adminDetail .chat-meta{color:#bfd0e0!important}
+#adminView #adminDetail .chat-time{color:#8fa6bd!important}
+#adminView #adminDetail .reply-box{margin-top:13px!important;padding:15px!important;border:1px solid #30475e!important;border-radius:11px!important;background:#14263a!important}
+#adminView #adminDetail .reply-box h3{margin:0 0 10px!important;color:#eef4fa!important;font-size:13px!important}
+#adminView #adminDetail .reply-box textarea{width:100%!important;min-height:120px!important;border:1px solid #3b536c!important;border-radius:8px!important;background:#0a1622!important;color:#edf4fb!important}
+#adminView #adminDetail .reply-box .btn.primary{border:1px solid #5481a9!important;border-radius:8px!important;background:#2a557d!important;color:#fff!important}
+@media(max-width:1000px){
+ #adminView .admin-layout{grid-template-columns:175px minmax(0,1fr)!important}
+ #adminView .admin-main{padding:15px!important}
+ #adminView #adminDetail .detail-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #adminView #adminDetail .detail-workspace{grid-template-columns:minmax(0,1fr) 230px!important}
+}
+@media(max-width:760px){
+ #adminView>.page-head,#adminView>.panel{width:calc(100% - 16px)!important}
+ #adminView .admin-layout{grid-template-columns:1fr!important}
+ #adminView .admin-nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;border-right:0!important;border-bottom:1px solid var(--tb-border)!important;padding:11px!important}
+ #adminView .admin-nav:before{grid-column:1/-1!important}
+ #adminView .admin-main{padding:11px!important}
+ #adminView #adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #adminView #adminListView .admin-search-box{grid-template-columns:1fr!important}
+ #adminView #adminListView .admin-search-title{grid-column:1!important}
+ #adminView #adminListView .search-main-btn{width:100%!important}
+ #adminView #adminDetail .detail-head{grid-template-columns:1fr!important}
+ #adminView #adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #adminView #adminDetail .detail-workspace{grid-template-columns:1fr!important}
+ #adminView #adminDetail .detail-sidebar{grid-column:1!important;grid-row:1!important;position:static!important}
+ #adminView #adminDetail .detail-conversation-column{grid-column:1!important;grid-row:2!important}
+}
+@media(max-width:420px){
+ #adminView #adminListView .stats{grid-template-columns:1fr 1fr!important}
+ #adminView #adminListView .stat{padding-left:54px!important}
+ #adminView #adminView .detail-facts{grid-template-columns:1fr 1fr!important}
 }
 </style>
 </head>
