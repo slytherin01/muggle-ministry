@@ -3091,7 +3091,7 @@ async function loadMyTickets(){
 }
 async function openPortalTicket(id,host){
  try{
-  const db=window.HpmwPortalAccess.client();
+  const db=window.HpmwPortalAccess.client;
   const {data:{session}}=await db.auth.getSession();if(!session?.user)throw new Error("Log opnieuw in.");
   const {data:ticket,error}=await db.from("support_tickets").select("id,ticket_number,subject,status,category,department").eq("id",id).single();if(error)throw error;
   const {data:messages,error:messageError}=await db.from("support_ticket_messages").select("id,author_name,body,is_internal,created_at").eq("ticket_id",id).eq("is_internal",false).order("created_at");if(messageError)throw messageError;
