@@ -6961,6 +6961,51 @@ html body main.shell #introView .intro-static-card::after{
  refresh();
 })();
 </script>
+
+<script id="hpmw-forum-ticket-bridge">
+(()=>{"use strict";
+ const toolOrigin="https://slytherin01.github.io";
+ const protocol="hpmw-forum-bridge-v1";
+ if(window.parent===window)return;
+ const identity=()=>{
+  const u=window._userdata||{};
+  const id=Number(u.user_id||window.HpmwForumotionIdentity?.id||0);
+  const logged=Number(u.session_logged_in||0)>0||window.HpmwForumotionIdentity?.logged===true;
+  return {id,logged};
+ };
+ window.addEventListener("message",async event=>{
+  if(event.origin!==toolOrigin||event.source!==window.parent)return;
+  const msg=event.data;
+  if(!msg||msg.protocol!==protocol||msg.type!=="get"||!Number.isSafeInteger(msg.id))return;
+  const reply=(ok,html,error)=>event.source.postMessage({protocol,type:"response",id:msg.id,ok,html,error},event.origin);
+  const who=identity();
+  if(!who.logged||![1,3].includes(who.id)){
+   const access=window.HpmwPortalAccess;
+   if(!access?.session?.user||!["administrator","support_moderator","supervisor"].includes(access.role)){
+    reply(false,"","Je bent niet als ticketmoderator aangemeld op Forumotion.");return;
+   }
+  }
+  let target;
+  try{target=new URL(msg.url,location.origin);}catch(_){reply(false,"","Ongeldige forumlink.");return;}
+  if(target.origin!==location.origin||!/^\/(?:f\d+|t\d+)(?:[-/?#]|$)/i.test(target.pathname)){
+   reply(false,"","Deze forumlink is niet toegestaan.");return;
+  }
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),Math.min(12000,Math.max(1000,Number(msg.timeout)||8000)));
+  try{
+   const response=await fetch(target.href,{credentials:"include",cache:"no-store",signal:controller.signal});
+   if(!response.ok)throw Error("Forumotion HTTP "+response.status);
+   reply(true,await response.text(),"");
+  }catch(error){reply(false,"",error?.message||"Forumotion kon niet worden geladen");}
+  finally{clearTimeout(timer);}
+ });
+ window.parent.postMessage({protocol,type:"ready"},toolOrigin);
+})();
+</script>
+<style id="hpmw-portal-ticket-admin-disabled">
+/* Ticketbeheer is uitsluitend beschikbaar in de aparte Tool. */
+#adminView,#adminBack,#adminRefresh,#adminTicketsCount{display:none!important}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
