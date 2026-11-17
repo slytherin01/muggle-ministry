@@ -2604,6 +2604,47 @@ html body #introView.hpmw-home-layout-ready {
   visibility: visible !important;
 }
 </style>
+
+<style id="hpmw-ticket-support-final-head-20261117">
+/* Definitieve overrides in de HEAD zodat ze vóór de portaalmarkup geladen zijn. */
+html.hpmw-portal-focus body .hpmw-global-brandbar{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+ display:block!important;width:min(1120px,calc(100% - 36px))!important;max-width:1120px!important;
+ height:156px!important;min-height:156px!important;max-height:156px!important;
+ margin:16px auto 0!important;padding:0!important;transform:none!important;
+ background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;
+ border:1px solid #344454!important;border-radius:12px!important;box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+ overflow:hidden!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus body .hpmw-global-brandbar:before,
+html.hpmw-portal-focus body .hpmw-global-brandbar:after,
+html.hpmw-portal-focus body .hpmw-global-brandbar .hpmw-banner-page-label{display:none!important;content:none!important}
+html.hpmw-portal-focus body main.shell{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+ transform:none!important;float:none!important;display:block!important;
+ width:min(1120px,calc(100% - 36px))!important;max-width:1120px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ margin:22px auto 28px!important;padding:20px!important;overflow:visible!important;
+ background:#111820!important;background-image:none!important;border:1px solid #273341!important;
+ border-radius:15px!important;box-shadow:0 10px 28px rgba(0,0,0,.24)!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus body main.shell>#homeView{display:block!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important}
+html.hpmw-portal-focus body main.shell>#homeView>.page-head,
+html.hpmw-portal-focus body main.shell>#homeView .support-categories-panel .panel-head{display:none!important}
+html.hpmw-portal-focus body main.shell>#homeView>.support-categories-panel{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+html.hpmw-portal-focus body main.shell>#homeView .categories{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat{display:flex!important;align-items:center!important;gap:13px!important;min-height:72px!important;height:auto!important;padding:13px 15px!important;background:#18232e!important;background-image:none!important;color:#edf2f7!important;border:1px solid #344454!important;border-radius:10px!important;box-shadow:none!important;transform:none!important}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat *{color:#edf2f7!important}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat .round-icon{width:42px!important;height:42px!important;flex:0 0 42px!important;background:#263747!important;border:1px solid #40566b!important;border-radius:9px!important}
+html.hpmw-portal-focus body main.shell>#homeView .categories .cat:hover{background:#18232e!important;border-color:#718397!important}
+@media(max-width:700px){
+ html.hpmw-portal-focus body .hpmw-global-brandbar{width:calc(100% - 20px)!important;height:112px!important;min-height:112px!important;max-height:112px!important;margin:12px auto 0!important}
+ html.hpmw-portal-focus body main.shell{width:calc(100% - 20px)!important;margin:14px auto 20px!important;padding:12px!important}
+ html.hpmw-portal-focus body main.shell>#homeView .categories{grid-template-columns:1fr!important;gap:9px!important}
+ html.hpmw-portal-focus body main.shell>#homeView .categories .cat{min-height:64px!important;padding:10px 12px!important}
+}
+</style>
+
 </head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
