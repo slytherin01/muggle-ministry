@@ -8408,7 +8408,8 @@ html.hpmw-tool-focus .hpmw-tool-brand+ .hpmw-admin-intro{margin-top:0!important}
   if(nav&&account){
    account.style.setProperty("display","inline-flex","important");
    account.style.setProperty("visibility","visible","important");
-   account.querySelector(".lux-nav-usertext small")?.replaceChildren(document.createTextNode("INGELOGD ALS"));
+   const accountLabel=account.querySelector(".lux-nav-usertext small");
+   if(accountLabel&&accountLabel.textContent.trim()!=="INGELOGD ALS")accountLabel.textContent="INGELOGD ALS";
    const name=account.querySelector("#username");
    if(name&&(!name.textContent.trim()||name.textContent.trim()==="Gast")){
     const fallback=window._userdata?.username||window._userdata?.username_clean;
