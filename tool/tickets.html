@@ -60,12 +60,20 @@ async function checkAccess(){
  const {data,error}=await client().auth.getSession();if(error)throw error;session=data.session;
  if(!session){$("loginGate").hidden=false;return false}
  const uid=session.user.id;
- const [roleResult,adminResult]=await Promise.all([
+ const [roleResult,adminResult,linkResult]=await Promise.all([
   client().from("tool_access_roles").select("role").eq("user_id",uid).maybeSingle(),
-  client().from("translation_admins").select("user_id").eq("user_id",uid).maybeSingle()
+  client().from("translation_admins").select("user_id").eq("user_id",uid).maybeSingle(),
+  client().from("portal_forum_accounts").select("forumotion_user_id").eq("supabase_user_id",uid).maybeSingle()
  ]);
  if(roleResult.error)throw roleResult.error;
- isStaff=staffRoles.includes(roleResult.data?.role)||!!adminResult.data;
+ if(linkResult.error)throw linkResult.error;
+ let moderator=false;
+ if(linkResult.data?.forumotion_user_id){
+  const {data:mod,error:modError}=await client().from("ticket_moderators").select("can_view_tickets,can_moderate_tickets").eq("forumotion_user_id",linkResult.data.forumotion_user_id).eq("enabled",true).maybeSingle();
+  if(modError)throw modError;
+  moderator=!!(mod?.can_view_tickets&&mod?.can_moderate_tickets);
+ }
+ isStaff=staffRoles.includes(roleResult.data?.role)||!!adminResult.data||moderator;
  if(!isStaff)throw new Error("Je account heeft geen toegang tot Ticketbeheer.");
  $("loginGate").hidden=true;$("who").textContent=session.user.email||"Beheerder";return true;
 }
