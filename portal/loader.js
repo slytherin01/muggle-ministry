@@ -3,7 +3,7 @@
   if (window.__muggleMinistryPortalLoading) return;
   window.__muggleMinistryPortalLoading = true;
 
-  var version = "20261117-014";
+  var version = "20261117-015";
   var sources = [
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/index.html?cachebust=" + version,
     "https://slytherin01.github.io/muggle-ministry/portal/index.html?v=" + version
@@ -23,6 +23,17 @@
     }).finally(function () { clearTimeout(timer); });
   }
 
+  function removeGuestLoginScreen(html) {
+    html = html.replace(
+      "Je hebt een account nodig. Deze kun je gratis aanmaken om door te gaan naar het Ministerie van Dreuzels, oftewel onze community. Registreer hier een account.<br><br>Gebruik ons portaal om onder andere support aan te vragen.",
+      "Welkom bij het Ministerie van Dreuzels. Bekijk het nieuws, lees het forumreglement en ontdek wat er binnen het Ministerie te doen is.<br><br>Via dit portaal vind je onder andere informatie en ondersteuning."
+    );
+    html = html.replace(new RegExp('<div class="hpmw-entry-actions" id="hpmwGuestEntry">[\\s\\S]*?<\\/div>'), "");
+    var start = html.indexOf('<div class="hpmw-modal-overlay" id="hpmwLoginOverlay"');
+    var end = html.indexOf('</section><section class="view" id="homeView">', start);
+    if (start >= 0 && end >= 0) html = html.slice(0, start) + html.slice(end);
+    return html;
+  }
   function showError(error) {
     console.error("Hpmagicworld portal load failed:", error);
     document.open();
@@ -46,6 +57,7 @@
         }
         return html;
       }).then(function (html) {
+        html = removeGuestLoginScreen(html);
         try {
           var d = window._userdata || null;
           var id = d ? (Number(d.user_id) || 0) : 0;
