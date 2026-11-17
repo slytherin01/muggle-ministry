@@ -9629,3 +9629,121 @@ html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .hpmw-languag
  document.addEventListener("click",()=>requestAnimationFrame(removeRail),true);
 })();
 </script>
+
+
+<style id="hpmw-ticket-form-banner-scroll-and-panel-fix-20261117">
+/* Use document scrolling: no clipped fixed-height workspace while filling long forms. */
+html.hpmw-portal-focus,
+html.hpmw-portal-focus body{
+ height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;
+}
+html.hpmw-portal-focus body{min-height:100vh!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2{
+ position:sticky!important;top:0!important;left:auto!important;right:auto!important;
+ width:100%!important;height:auto!important;min-height:58px!important;
+}
+html.hpmw-portal-focus .hpmw-global-brandbar{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;
+ width:100%!important;max-width:none!important;height:clamp(150px,20vw,220px)!important;
+ min-height:150px!important;max-height:220px!important;margin:0!important;
+ background-size:cover!important;background-position:center center!important;
+ border-radius:0 0 16px 16px!important;overflow:hidden!important;
+}
+html.hpmw-portal-focus main.shell{
+ position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+ width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:clamp(14px,2.5vw,34px)!important;
+ overflow:visible!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus main.shell>.view,
+html.hpmw-portal-focus main.shell>.view.active{
+ position:relative!important;display:block!important;width:100%!important;max-width:none!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:0 0 28px!important;overflow:visible!important;
+}
+html.hpmw-portal-focus main.shell>.view:not(.active){display:none!important}
+html.hpmw-portal-focus #homeView>.page-head,
+html.hpmw-portal-focus #formView>.new-ticket-head,
+html.hpmw-portal-focus #myTicketsView>.page-head,
+html.hpmw-portal-focus #faqView .page-head{
+ width:100%!important;max-width:none!important;margin:0 0 14px!important;
+ padding:18px 22px!important;border:1px solid #3976aa!important;border-radius:14px!important;
+ background:linear-gradient(115deg,#0b3158 0%,#124b7d 58%,#10385f 100%)!important;
+ color:#f4f9ff!important;box-shadow:0 10px 26px rgba(0,18,42,.26)!important;
+}
+html.hpmw-portal-focus #homeView>.page-head h1,
+html.hpmw-portal-focus #formView>.new-ticket-head h1,
+html.hpmw-portal-focus #myTicketsView>.page-head h1,
+html.hpmw-portal-focus #faqView .page-head h1,
+html.hpmw-portal-focus #homeView>.page-head p,
+html.hpmw-portal-focus #formView>.new-ticket-head p,
+html.hpmw-portal-focus #myTicketsView>.page-head p,
+html.hpmw-portal-focus #faqView .page-head p,
+html.hpmw-portal-focus #homeView>.page-head .eyebrow,
+html.hpmw-portal-focus #myTicketsView>.page-head .eyebrow,
+html.hpmw-portal-focus #faqView .page-head .eyebrow{
+ color:#f4f9ff!important;
+}
+html.hpmw-portal-focus #formView>.new-ticket-head{
+ display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;
+}
+html.hpmw-portal-focus #formView>.new-ticket-head>div:nth-child(2){flex:1 1 260px!important;min-width:0!important}
+html.hpmw-portal-focus #formView>.new-ticket-head .btn{margin-left:auto!important}
+html.hpmw-portal-focus #formView>.panel{
+ width:100%!important;max-width:none!important;margin:0 0 24px!important;
+ padding:clamp(16px,2.4vw,30px)!important;
+ border:1px solid #3976aa!important;border-radius:14px!important;
+ background:linear-gradient(145deg,#0d3153 0%,#102b47 48%,#0b2138 100%)!important;
+ color:#f2f7ff!important;box-shadow:0 12px 30px rgba(0,15,35,.3)!important;
+}
+html.hpmw-portal-focus #formView .form-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:16px!important;width:100%!important;
+}
+html.hpmw-portal-focus #formView .field{
+ min-width:0!important;padding:14px!important;border:1px solid rgba(123,174,215,.34)!important;
+ border-radius:11px!important;background:rgba(5,24,43,.52)!important;
+}
+html.hpmw-portal-focus #formView .field label,
+html.hpmw-portal-focus #formView .field .character-counter{color:#e8f4ff!important}
+html.hpmw-portal-focus #formView .field input,
+html.hpmw-portal-focus #formView .field select,
+html.hpmw-portal-focus #formView .field textarea{
+ display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;
+ box-sizing:border-box!important;background:#f5f9ff!important;color:#10243a!important;
+ border:1px solid #9db8d1!important;border-radius:9px!important;
+ padding:12px 14px!important;font:inherit!important;font-size:15px!important;
+ opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+}
+html.hpmw-portal-focus #formView .field input{min-height:48px!important}
+html.hpmw-portal-focus #formView .field select{min-height:50px!important}
+html.hpmw-portal-focus #formView .field textarea{
+ min-height:300px!important;height:clamp(300px,42vh,560px)!important;
+ resize:vertical!important;line-height:1.55!important;
+}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #formView .notice{
+ color:#f4f9ff!important;background:rgba(5,24,43,.55)!important;
+ border-color:rgba(123,174,215,.4)!important;
+}
+html.hpmw-portal-focus #formView .actions{
+ display:flex!important;justify-content:flex-end!important;flex-wrap:wrap!important;gap:12px!important;
+ margin-top:18px!important;padding-top:18px!important;border-top:1px solid rgba(145,190,226,.35)!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #faqView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel{
+ width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;
+}
+html.hpmw-portal-focus #formView .btn{min-height:44px!important;cursor:pointer!important}
+@media(max-width:700px){
+ html.hpmw-portal-focus .hpmw-global-brandbar{height:140px!important;min-height:140px!important}
+ html.hpmw-portal-focus main.shell{padding:12px 9px!important}
+ html.hpmw-portal-focus #formView .form-grid{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #formView .field.full{grid-column:1!important}
+ html.hpmw-portal-focus #formView>.new-ticket-head{padding:14px!important}
+ html.hpmw-portal-focus #formView>.panel{padding:12px!important}
+ html.hpmw-portal-focus #formView .field{padding:10px!important}
+ html.hpmw-portal-focus #formView .field textarea{height:320px!important;min-height:260px!important}
+}
+</style>
