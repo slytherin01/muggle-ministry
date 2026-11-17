@@ -5760,8 +5760,8 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
   return role;
  }
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
- window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
- function applyPortalVisibility(){
+ window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client:()=>client,headers,ensureClient}; 
+function applyPortalVisibility(){
   const checks=[["#faqLaunch",canViewFaq],["#introView button[onclick*=faqLaunch]",canViewFaq],["#newsLaunch",canViewNews],["#newsQuickLink",canViewNews],["#ticketSupportLaunch",canViewTickets],["#introView button[onclick*=ticketSupportLaunch]",canViewTickets],["#myTicketsLaunch",canViewMyTickets],["#introView [data-open-sorting-hat]",canViewSortingHat],["#introView [data-open-vacancies]",canViewVacancies],["#introView [data-open-modteam]",canViewModteam],["#introView [data-open-awards]",canViewAwards]];
   checks.forEach(([selector,check])=>{document.querySelectorAll(selector).forEach(el=>{const allowed=canViewPortal()&&!!check();el.hidden=!allowed;el.setAttribute("aria-hidden",String(!allowed));el.style.setProperty("display",allowed?"":"none","important")})});
   document.documentElement.dataset.hpmwPortalRole=role;
