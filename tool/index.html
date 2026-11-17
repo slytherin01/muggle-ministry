@@ -4817,3 +4817,20 @@ main.shell>.view.active{display:block!important;height:auto!important;min-height
 
 
 
+
+<style id="hpmw-ticketdesk-final-overrides">
+/* Final ticket workspace overrides: no decorative hero image, wider working canvas. */
+main.shell:has(#adminView.active){background:#0a1421!important;background-image:none!important;padding:20px clamp(16px,2vw,32px) 42px!important}
+main.shell:has(#adminView.active)>.view::before{display:none!important;content:none!important}
+main.shell:has(#adminView.active) #adminView{display:block!important;width:100%!important;max-width:none!important;min-height:calc(100vh - 100px)!important;margin:0!important;padding:0!important;background:transparent!important}
+main.shell:has(#adminView.active) #adminView .tb-shell{width:100%!important;max-width:none!important;margin:0!important}
+main.shell:has(#adminView.active) #adminView .tb-layout{min-height:calc(100vh - 210px)!important}
+#adminView .tb-detail-grid{grid-template-columns:270px minmax(0,1fr)!important}
+#adminView .tb-moderation{grid-column:1!important;grid-row:1!important}
+#adminView .tb-conversation{grid-column:2!important;grid-row:1!important}
+@media(max-width:900px){
+ #adminView .tb-detail-grid{grid-template-columns:1fr!important}
+ #adminView .tb-moderation{grid-column:1!important;grid-row:1!important}
+ #adminView .tb-conversation{grid-column:1!important;grid-row:2!important}
+}
+</style>
