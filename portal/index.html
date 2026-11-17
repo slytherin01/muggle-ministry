@@ -1917,7 +1917,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 @media(max-width:700px){#hpmwManageLayer .hpmw-manage-card{width:98vw!important;max-width:98vw!important;height:94vh!important;max-height:94vh!important}#hpmwManageLayer .hpmw-manage-body{padding:14px!important}.hpmw-admin-overview-grid{grid-template-columns:1fr}#hpmwManageBody .hpmw-role-row{grid-template-columns:1fr}.hpmw-admin-tab{flex:1 1 auto}}
 </style></head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <button class="lux-nav-item" id="adminLaunch" type="button" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Ticket - Admin</span></button>
-<label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
+<label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item" id="toolLaunch" href="https://slytherin01.github.io/muggle-ministry/tool/" target="_blank" rel="noopener noreferrer" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
 <a href="LINK_URL_HIER"><img src="IMAGE_URL_HIER" alt="Beschrijving afbeelding" style="max-width:100%;height:auto;display:block;margin:0 auto;"></a>
 -->
@@ -6935,5 +6935,31 @@ html body main.shell #introView .intro-static-card::after{
   pointer-events:none!important;
 }
 </style>
+
+<script id="hpmw-tool-launch-role-guard">
+(()=>{"use strict";
+ const button=()=>document.getElementById("toolLaunch");
+ let request=0;
+ async function refresh(){
+  const b=button();if(!b)return;
+  const current=++request;
+  const identity=window.HpmwForumotionIdentity||{id:Number(window._userdata?.user_id||0),logged:Number(window._userdata?.session_logged_in||0)>0};
+  const forumId=Number(identity.id||0);
+  let allowed=false;
+  if(identity.logged&&forumId>0){
+   try{
+    const access=window.HpmwPortalAccess;
+    const client=await access?.ensureClient?.();
+    if(client){const {data,error}=await client.rpc("has_tool_access_forumotion",{p_forumotion_user_id:forumId});if(error)throw error;allowed=data===true;}
+   }catch(error){console.warn("[Hpmw] Tool-toegang kon niet worden gecontroleerd:",error?.message||error);}
+  }
+  if(current!==request)return;
+  b.hidden=!allowed;b.setAttribute("aria-hidden",String(!allowed));b.style.setProperty("display",allowed?"inline-flex":"none","important");
+ }
+ ["hpmw:forumotion-identity","hpmw:portal-access-updated","hpmw:portal-role"].forEach(name=>document.addEventListener(name,refresh));
+ document.addEventListener("DOMContentLoaded",refresh);window.addEventListener("pageshow",refresh);
+ refresh();
+})();
+</script>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
