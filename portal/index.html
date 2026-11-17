@@ -8934,3 +8934,132 @@ html.hpmw-portal-focus .hpmw-banner-page-sub{
  html.hpmw-portal-focus .hpmw-banner-page-sub{font-size:10px!important}
 }
 </style>
+
+
+<style id="hpmw-portal-blue-banner-open-layout-20261117">
+/* Blauwe Ministry-banner en losse, volledig zichtbare onderdelen op support-, FAQ- en ticketpagina's. */
+html.hpmw-portal-focus .hpmw-global-brandbar{
+ height:168px!important;max-height:168px!important;
+ background-color:#123c69!important;background-image:linear-gradient(115deg,rgba(7,35,69,.82),rgba(20,91,151,.42)),url("https://i44.servimg.com/u/f44/11/48/74/42/banner10.png")!important;
+ background-blend-mode:normal,luminosity!important;background-size:cover!important;background-position:center 46%!important;
+ border:1px solid #3c79ad!important;box-shadow:0 10px 28px rgba(0,15,35,.4)!important;
+}
+html.hpmw-portal-focus .hpmw-global-brandbar:before{
+ background:linear-gradient(100deg,rgba(7,38,75,.78),rgba(16,83,139,.40) 62%,rgba(6,30,59,.18))!important;
+}
+html.hpmw-portal-focus .hpmw-banner-page-label{
+ background:linear-gradient(135deg,rgba(8,39,73,.96),rgba(15,69,116,.94))!important;
+ border:1px solid rgba(132,190,235,.55)!important;border-left:4px solid #83c7f4!important;
+ box-shadow:0 8px 24px rgba(0,17,39,.35)!important;
+}
+html.hpmw-portal-focus .hpmw-banner-page-kicker{color:#9ed7ff!important}
+html.hpmw-portal-focus .hpmw-banner-page-sub{color:#d8ecfb!important}
+
+/* Geen grote gezamenlijke kaart rond alle categorieën: elke categorie is een eigen tegel. */
+html.hpmw-portal-focus #homeView .support-categories-panel{
+ width:min(100%,1180px)!important;max-width:1180px!important;
+ padding:0!important;margin:0 auto 24px!important;
+ border:0!important;background:transparent!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus #homeView .support-categories-panel>.panel-head{display:none!important}
+html.hpmw-portal-focus #homeView #categories.categories{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:16px!important;width:100%!important;padding:0!important;margin:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+html.hpmw-portal-focus #homeView #categories .cat{
+ display:flex!important;align-items:center!important;gap:14px!important;
+ width:100%!important;min-width:0!important;min-height:112px!important;
+ padding:18px!important;border:1px solid #314c68!important;border-radius:14px!important;
+ background:linear-gradient(145deg,#14263a,#0e1b2b)!important;
+ box-shadow:0 8px 20px rgba(0,0,0,.18)!important;text-align:left!important;
+}
+html.hpmw-portal-focus #homeView #categories .cat:hover{
+ transform:translateY(-2px)!important;border-color:#68a8d8!important;
+ background:linear-gradient(145deg,#1a3551,#11253a)!important;
+}
+html.hpmw-portal-focus #homeView #categories .cat .round-icon{
+ flex:0 0 44px!important;width:44px!important;height:44px!important;
+ display:grid!important;place-items:center!important;border-radius:12px!important;
+ background:#1d4264!important;color:#b9e0ff!important;
+}
+
+/* Formulier: elk veld staat los in een ruim raster, niet als één smalle kolom. */
+html.hpmw-portal-focus #formView>.panel{
+ padding:24px!important;border:1px solid #304a66!important;
+ background:linear-gradient(145deg,#111f30,#0d1826)!important;
+ border-radius:16px!important;box-shadow:0 12px 30px rgba(0,0,0,.2)!important;
+}
+html.hpmw-portal-focus #formView .form-grid{gap:18px!important}
+html.hpmw-portal-focus #formView .field{
+ min-width:0!important;padding:14px!important;border:1px solid #2c435b!important;
+ border-radius:11px!important;background:#101e2e!important;
+}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #formView input,
+html.hpmw-portal-focus #formView select,
+html.hpmw-portal-focus #formView textarea{width:100%!important;max-width:100%!important}
+
+/* FAQ: categorieën als afzonderlijke kaarten en antwoorden in een eigen breed paneel. */
+html.hpmw-portal-focus #faqView>.panel{
+ width:min(100%,1180px)!important;max-width:1180px!important;
+ padding:0!important;border:0!important;background:transparent!important;
+ box-shadow:none!important;overflow:visible!important;
+}
+html.hpmw-portal-focus #faqView .page-head{
+ padding:0 0 12px!important;border-bottom:1px solid #2b4058!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:16px!important;margin:18px 0!important;padding:0!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories .cat{
+ min-height:104px!important;padding:18px!important;border:1px solid #314c68!important;
+ border-radius:14px!important;background:linear-gradient(145deg,#14263a,#0e1b2b)!important;
+ box-shadow:0 8px 20px rgba(0,0,0,.18)!important;
+}
+html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:not(:empty){
+ padding:22px!important;border:1px solid #304a66!important;border-radius:14px!important;
+ background:#101d2c!important;box-shadow:0 10px 24px rgba(0,0,0,.18)!important;
+}
+
+/* Mijn tickets: brede werkruimte, losse tabknoppen en ticketkaarten. */
+html.hpmw-portal-focus #myTicketsView>.panel{
+ width:min(100%,1180px)!important;max-width:1180px!important;
+ padding:0!important;border:0!important;background:transparent!important;
+ box-shadow:none!important;overflow:visible!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-tabs{
+ display:flex!important;flex-wrap:wrap!important;gap:10px!important;
+ padding:0 0 14px!important;border-bottom:1px solid #2b4058!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-tab{
+ min-width:126px!important;min-height:42px!important;padding:10px 16px!important;
+ border:1px solid #3b5876!important;border-radius:10px!important;
+ background:#14263a!important;color:#eaf4ff!important;
+}
+html.hpmw-portal-focus #myTicketsView .ticket-list{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:12px!important;padding:16px 0!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-ticket-row{
+ min-width:0!important;margin:0!important;padding:18px!important;
+ border:1px solid #314c68!important;border-radius:13px!important;
+ background:linear-gradient(145deg,#14263a,#0e1b2b)!important;
+}
+html.hpmw-portal-focus #myTicketsView .member-detail{
+ width:100%!important;margin-top:16px!important;padding:20px!important;
+ border:1px solid #304a66!important;border-radius:14px!important;background:#101d2c!important;
+}
+@media(max-width:900px){
+ html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:650px){
+ html.hpmw-portal-focus .hpmw-global-brandbar{height:140px!important;max-height:140px!important}
+ html.hpmw-portal-focus #homeView #categories.categories,
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+ html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #formView>.panel{padding:12px!important}
+ html.hpmw-portal-focus #formView .field{padding:10px!important}
+}
+</style>
