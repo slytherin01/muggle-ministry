@@ -8738,7 +8738,7 @@ html.hpmw-portal-focus footer.lux-footer{display:none!important}
   ["news","Nieuws","fa-newspaper","newsLaunch","newsView"]
  ];
  function activeView(){
-  return document.querySelector("main.shell>:scope>.view.active")?.id||"";
+  return document.querySelector("main.shell > .view.active")?.id||document.querySelector("main.shell .view.active")?.id||"";
  }
  function ensureRail(){
   if(document.querySelector(".hpmw-portal-rail"))return;
