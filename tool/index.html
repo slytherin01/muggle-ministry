@@ -4619,3 +4619,66 @@ main.shell>.view.active{display:block!important;height:auto!important;min-height
  #adminCmsView .hpmw-auth-user-controls select{grid-column:1/-1!important;width:100%!important}
 }
 </style>
+
+
+<style id="hpmw-ticket-console-redesign">
+/* Eigen Muggle Ministry ticketconsole: geïnspireerd op een overzichtelijke helpdesk, niet gekopieerd. */
+#adminListView,#adminDetail{color:#e7edf6}
+#adminListView .admin-toolbar{margin-bottom:18px}
+#adminListView .admin-search-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px;border:1px solid #2b3d52;border-radius:15px;background:linear-gradient(145deg,#142337,#101b2a);box-shadow:0 12px 28px #0003}
+#adminListView .admin-search-title{grid-column:1/-1;color:#e6edf7;font-size:13px}
+#adminListView .search-input-row{min-width:0}
+#adminListView .search-input-row input,#adminListView .status-filter{height:43px;border:1px solid #344a62;border-radius:10px;background:#0b1522;color:#edf3fb}
+#adminListView .search-main-btn{min-width:112px;background:#27496a;border-color:#416b91}
+#adminListView .stats{gap:12px;margin:0 0 15px}
+#adminListView .stat{min-height:94px;padding:17px 15px 14px 62px;border:1px solid #2d4259;border-radius:14px;background:linear-gradient(145deg,#17283b,#111d2c);transition:border-color .18s,transform .18s}
+#adminListView .stat:hover{border-color:#668bb0;transform:translateY(-2px)}
+#adminListView .stat.dashboard-tab.active{border-color:#78a6d2;box-shadow:inset 0 0 0 1px #78a6d244;background:linear-gradient(145deg,#203a54,#14283b)}
+#adminListView .stat-icon{width:36px;height:36px;left:14px;top:17px;border:1px solid #385777;border-radius:10px;background:#1b3550;color:#a9d1f5}
+#adminListView .stat small{color:#9eb1c5;font-size:9px;letter-spacing:.1em}
+#adminListView .stat strong{font-size:26px;color:#f5f8fc}
+#adminListView .status-index{gap:8px;margin:0 0 15px}
+#adminListView .status-index .status-pill{padding:8px 11px;border-radius:9px;background:#142438;border-color:#344a61}
+#adminListView .ticket-table-wrap{overflow:auto;border:1px solid #2b4056;border-radius:14px;background:#101b29}
+#adminListView .ticket-table{min-width:760px;border-collapse:separate;border-spacing:0}
+#adminListView .ticket-table th{padding:14px 15px;background:#17283b;color:#9fb8d1;border-bottom:1px solid #344a61;font-size:9px;letter-spacing:.1em}
+#adminListView .ticket-table td{padding:15px;border-bottom:1px solid #24364a;color:#cbd7e5;font-size:12px}
+#adminListView .ticket-table tbody tr{background:#111e2d;transition:background .15s}
+#adminListView .ticket-table tbody tr:nth-child(even){background:#132235}
+#adminListView .ticket-table tbody tr:hover{background:#20364d}
+#adminListView .ticket-id{color:#a9d2f5!important}
+#adminListView .ticket-subject{color:#f0f5fb!important}
+#adminListView .ticket-state{border-radius:7px}
+#adminDetail .detail-head{padding:22px 24px;background:linear-gradient(135deg,#1b3049,#142337);border:1px solid #30465e;border-radius:15px 15px 0 0}
+#adminDetail .detail-kicker{color:#a9c9e8;letter-spacing:.14em}
+#adminDetail .detail-title{color:#f3f7fc;font-size:22px}
+#adminDetail .detail-facts{gap:9px}
+#adminDetail .detail-facts>div{padding:12px;border:1px solid #30465d;border-radius:10px;background:#102033}
+#adminDetail .detail-facts small{color:#91a9c1}
+#adminDetail .detail-facts strong{color:#e7eff8}
+#adminDetail .detail-workspace{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;padding:17px;background:#0f1a27;border:1px solid #2b4056;border-top:0;border-radius:0 0 15px 15px;align-items:start}
+#adminDetail .detail-conversation-column{min-width:0}
+#adminDetail .detail-sidebar{position:sticky;top:84px;min-width:0}
+#adminDetail .moderation-nav{padding:15px;border:1px solid #30465d;border-radius:13px;background:linear-gradient(155deg,#17283b,#101c2b)}
+#adminDetail .moderation-heading{margin-bottom:13px;color:#c7d9eb;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+#adminDetail .internal-tools{padding:0;border:0;background:transparent}
+#adminDetail .internal-title,#adminDetail .moderation-actions-title{margin:0 0 9px;color:#9fb5cb;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+#adminDetail .internal-status-group .internal-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#adminDetail .internal-status-group .status-pill{justify-content:center;min-height:36px;padding:7px 8px;font-size:10px}
+#adminDetail .assign-block{margin-top:16px}
+#adminDetail .assign-label{color:#a9bfd4}
+#adminDetail .assign-select-wrap select{min-height:40px;border:1px solid #344a61;border-radius:9px;background:#0c1724;color:#edf3fb}
+#adminDetail .moderation-actions-title{margin-top:15px;padding-top:14px;border-top:1px solid #2b4056}
+#adminDetail .moderation-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#adminDetail .moderation-actions .btn{justify-content:center;min-height:38px;padding:7px;font-size:10px}
+#adminDetail .reply-box{margin:14px 0;padding:17px;border:1px solid #2d435a;border-radius:13px;background:#142235}
+#adminDetail .reply-box h3{color:#eaf1f8}
+#adminDetail .reply-box textarea{border:1px solid #344b63;border-radius:10px;background:#0b1521;color:#eef4fb}
+#adminDetail .chat-thread{max-height:680px;border:1px solid #2b4056;border-radius:13px;background:#0b1623}
+#adminDetail .chat-bubble{border-color:#344a61;background:#1a2c40;color:#e5edf6}
+#adminDetail .chat-msg.mine .chat-bubble{border-color:#47668b;background:#203c5a}
+#adminDetail .chat-meta{color:#b9cde0}
+#adminDetail .chat-time{color:#8ca1b7}
+@media(max-width:900px){#adminDetail .detail-workspace{grid-template-columns:1fr}#adminDetail .detail-sidebar{position:static;grid-row:1}#adminDetail .detail-conversation-column{grid-row:2}}
+@media(max-width:600px){#adminListView .admin-search-box{grid-template-columns:1fr}#adminListView .admin-search-title{grid-column:1}#adminListView .search-main-btn{width:100%}#adminListView .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-head{padding:16px}#adminDetail .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminDetail .detail-workspace{padding:10px}#adminDetail .moderation-actions{grid-template-columns:1fr 1fr}}
+</style>
