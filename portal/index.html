@@ -6726,6 +6726,8 @@ html body{padding-top:70px!important}
   set("myTicketsLaunch",forumId>0);
  };
  document.addEventListener("hpmw:portal-role",refresh);
+ document.addEventListener("hpmw:forumotion-identity",refresh);
+ document.addEventListener("hpmw:portal-access-updated",refresh);
  document.addEventListener("DOMContentLoaded",refresh);
  window.addEventListener("pageshow",refresh);
  refresh();let n=0;const timer=setInterval(()=>{refresh();if(++n>=60)clearInterval(timer)},500);
