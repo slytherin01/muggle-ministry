@@ -2110,7 +2110,8 @@ window.addEventListener("message",event=>{
  const data=event.data;
  if(!data||data.protocol!=="hpmw-forum-bridge-v1")return;
  if(data.type==="ready"){hpmwForumBridgeReady?.resolve();return;}
- if(data.type==="response"){const p=hpmwForumBridgePending.get(data.id);if(!p)return;hpmwForumBridgePending.delete(data.id);clearTimeout(p.timer);data.ok?p.resolve(p.raw?{html:data.html,status:data.status,url:data.url}:data.html):p.reject(new Error(data.error||"Forumotion-aanvraag mislukt"));}
+ if(data.type==="accepted"){const p=hpmwForumBridgePending.get(data.id);if(p){p.accepted=true;clearTimeout(p.ackTimer);}return;}
+ if(data.type==="response"){const p=hpmwForumBridgePending.get(data.id);if(!p)return;hpmwForumBridgePending.delete(data.id);clearTimeout(p.timer);clearTimeout(p.ackTimer);data.ok?p.resolve(p.raw?{html:data.html,status:data.status,url:data.url}:data.html):p.reject(new Error(data.error||"Forumotion-aanvraag mislukt"));}
 });
 function hpmwBridgeReady(){
  if(hpmwForumBridgeFrame)return hpmwForumBridgeReady.promise;
@@ -2132,8 +2133,9 @@ async function hpmwBridgeFetch(url,timeout=10000){
  const id=++hpmwForumBridgeCounter;
  return new Promise((resolve,reject)=>{
   // Forumotion-requests worden bewust gespreid; bij meerdere categorieën kan een request in de wachtrij staan.
-  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);reject(new Error("Forumotion reageert niet binnen de wachttijd (wachtrij/verbinding)."));},Math.max(90000,timeout*3+25000));
-  hpmwForumBridgePending.set(id,{resolve,reject,timer,raw:false});
+  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);clearTimeout(ackTimer);reject(new Error("Het portaal heeft de aanvraag ontvangen, maar Forumotion gaf geen antwoord binnen 120 seconden."));},120000);
+  const ackTimer=setTimeout(()=>{const p=hpmwForumBridgePending.get(id);if(p&&!p.accepted){hpmwForumBridgePending.delete(id);clearTimeout(p.timer);reject(new Error("De portalpagina is geladen, maar de ticket-bridge ontvangt geen aanvragen. Controleer of /h3-dev-portaal de nieuwste portal-loader gebruikt."));}},12000);
+  hpmwForumBridgePending.set(id,{resolve,reject,timer,ackTimer,raw:false,accepted:false});
   hpmwForumBridgeFrame.contentWindow.postMessage({protocol:"hpmw-forum-bridge-v1",type:"get",id,url,timeout},HPMW_FORUM_BRIDGE_ORIGIN);
  });
 }
