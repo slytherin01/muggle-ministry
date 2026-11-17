@@ -1990,11 +1990,11 @@ const loginButton=$("#loginLaunch"),registerButton=$("#registerLaunch");
 const fid=closed?catObj.closed:catObj.id;
 const page=closed?catObj.closedUrl:catObj.openUrl;
 const found=[],seen=new Set(),queue=[new URL(page,BASE).href],visited=new Set();
-while(queue.length&&visited.size<80){
+while(queue.length&&visited.size<3){
 const current=queue.shift();
 if(visited.has(current))continue;
 visited.add(current);
-const html=await fetchText(current,10000);
+const html=await fetchText(current,8000);
 const doc=new DOMParser().parseFromString(html,"text/html");
 const add=(id,title,url,meta)=>{
 if(!id||seen.has(id))return;
