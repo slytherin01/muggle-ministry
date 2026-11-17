@@ -2511,6 +2511,77 @@ html body #introView #hpmwHomeLayout > .hpmw-home-right{grid-column:3!important;
  }
 }
 </style>
+<style id="hpmw-tool-fullscreen-leftnav-20261117">
+/* Full-screen Ministry Tool with a persistent left navigation rail. */
+html.hpmw-tool-focus,html.hpmw-tool-focus body{height:100%!important;min-height:100%!important;overflow:hidden!important}
+html.hpmw-tool-focus body{padding:0!important}
+html.hpmw-tool-focus #adminTopbar{
+ position:fixed!important;top:0!important;left:0!important;right:0!important;
+ width:100%!important;height:66px!important;min-height:66px!important;
+ z-index:10000!important;margin:0!important;transform:none!important;
+}
+html.hpmw-tool-focus .hpmw-tool-sidebar{
+ position:fixed!important;z-index:9999!important;left:0!important;top:66px!important;bottom:0!important;
+ width:244px!important;padding:20px 14px!important;display:flex!important;flex-direction:column!important;
+ gap:8px!important;overflow-y:auto!important;background:#0c1726!important;
+ border-right:1px solid #2b3e56!important;box-sizing:border-box!important;
+}
+html.hpmw-tool-focus .hpmw-tool-sidebar .side-caption{
+ padding:9px 10px 5px!important;color:#8195af!important;font-size:10px!important;
+ font-weight:850!important;letter-spacing:.14em!important;text-transform:uppercase!important
+}
+html.hpmw-tool-focus .hpmw-tool-sidebar button{
+ display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;
+ min-height:44px!important;padding:11px 13px!important;border:1px solid transparent!important;
+ border-radius:11px!important;background:transparent!important;color:#c9d6e7!important;
+ text-align:left!important;font-size:13px!important;font-weight:720!important;cursor:pointer!important
+}
+html.hpmw-tool-focus .hpmw-tool-sidebar button i{width:18px!important;color:#d7b878!important;text-align:center!important}
+html.hpmw-tool-focus .hpmw-tool-sidebar button:hover{background:#17263a!important;border-color:#52627b!important}
+html.hpmw-tool-focus .hpmw-tool-sidebar button.active{background:#29284a!important;border-color:#8274c9!important;color:#fff!important}
+html.hpmw-tool-focus .hpmw-tool-sidebar .side-spacer{flex:1 1 auto!important;min-height:18px!important}
+html.hpmw-tool-focus main.shell{
+ position:fixed!important;left:244px!important;right:0!important;top:66px!important;bottom:0!important;
+ width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;
+ margin:0!important;padding:24px clamp(18px,2.4vw,38px) 28px!important;
+ overflow:hidden!important;box-sizing:border-box!important
+}
+html.hpmw-tool-focus main.shell>.view{display:none!important}
+html.hpmw-tool-focus main.shell>.view.active{
+ display:block!important;visibility:visible!important;width:100%!important;height:100%!important;
+ max-height:100%!important;max-width:none!important;margin:0!important;
+ overflow-y:auto!important;overflow-x:hidden!important;padding:0 4px 32px 0!important;
+ box-sizing:border-box!important
+}
+html.hpmw-tool-focus #toolView .hpmw-tool-layout{display:block!important;width:100%!important;max-width:none!important}
+html.hpmw-tool-focus #toolView .hpmw-tool-menu,
+html.hpmw-tool-focus #toolView #toolHomePanel,
+html.hpmw-tool-focus #toolView #toolModulePanel{display:none!important}
+html.hpmw-tool-focus .hpmw-tool-return{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+ min-height:40px!important;margin:0 0 16px!important;padding:9px 14px!important;
+ border:1px solid #52627b!important;border-radius:10px!important;
+ background:#17263a!important;color:#edf3fb!important;font-weight:750!important;cursor:pointer!important
+}
+html.hpmw-tool-focus .hpmw-tool-return:hover{border-color:#d7b878!important;background:#22364e!important}
+html.hpmw-tool-focus #toolView>.page-head{display:none!important}
+html.hpmw-tool-focus #newSettingsView .page-head .translation-bluebar-actions,
+html.hpmw-tool-focus #newTranslationsView .page-head .translation-bluebar-actions{display:flex!important}
+@media(max-width:900px){
+ html.hpmw-tool-focus .hpmw-tool-sidebar{width:68px!important;padding:14px 7px!important}
+ html.hpmw-tool-focus .hpmw-tool-sidebar .side-caption,
+ html.hpmw-tool-focus .hpmw-tool-sidebar button span{display:none!important}
+ html.hpmw-tool-focus .hpmw-tool-sidebar button{justify-content:center!important;padding:12px 5px!important}
+ html.hpmw-tool-focus .hpmw-tool-sidebar button i{width:auto!important;font-size:17px!important}
+ html.hpmw-tool-focus main.shell{left:68px!important;padding:18px 14px 24px!important}
+}
+@media(max-width:620px){
+ html.hpmw-tool-focus #adminTopbar{height:58px!important;min-height:58px!important}
+ html.hpmw-tool-focus .hpmw-tool-sidebar{top:58px!important;width:56px!important;padding:10px 5px!important}
+ html.hpmw-tool-focus main.shell{left:56px!important;top:58px!important;padding:12px 9px 20px!important}
+ html.hpmw-tool-focus .hpmw-tool-return{min-height:36px!important;padding:7px 10px!important;font-size:12px!important}
+}
+</style>
 </head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
@@ -8175,7 +8246,68 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
-</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script></body></html>
+</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script><script id="hpmw-tool-navigation-and-back-buttons-20261117">
+(()=>{
+ const items=[
+  ["/tool","fa-house","Startpagina"],
+  ["/tool/ticketadmin","fa-ticket","Ticketbeheer"],
+  ["/tool/settings","fa-sliders","Weergave / Instellingen"],
+  ["/tool/team","fa-users","Team"],
+  ["/tool/translations","fa-language","Vertalingen"],
+  ["/tool/authorizations","fa-shield-halved","Autorisaties"],
+  ["/tool/news","fa-newspaper","Nieuwsbeheer"],
+  ["/tool/faq","fa-circle-question","FAQ-beheer"]
+ ];
+ const isToolPath=()=>location.hash.startsWith("#/tool");
+ function makeSidebar(){
+  if(document.querySelector(".hpmw-tool-sidebar"))return;
+  const nav=document.createElement("aside");
+  nav.className="hpmw-tool-sidebar";
+  nav.setAttribute("aria-label","Ministry Tool navigatie");
+  nav.innerHTML='<div class="side-caption">Ministry Tool</div>'+
+   items.map(([path,icon,label])=>'<button type="button" data-tool-route="'+path+'"><i class="fa-solid '+icon+'"></i><span>'+label+'</span></button>').join("")+
+   '<div class="side-spacer"></div><div class="side-caption">Portaal</div><button type="button" data-tool-exit><i class="fa-solid fa-arrow-left"></i><span>Terug naar portaal</span></button>';
+  document.body.appendChild(nav);
+  nav.addEventListener("click",e=>{
+   const exit=e.target.closest("[data-tool-exit]");
+   if(exit){e.preventDefault();document.getElementById("toolBackPortal")?.click();return;}
+   const b=e.target.closest("[data-tool-route]");
+   if(b){e.preventDefault();window.hpmwRouteTool?.(b.dataset.toolRoute);}
+  });
+ }
+ function addBackButtons(){
+  const targets=["newSettingsView","newTranslationsView","hpmwModteamAdmin","adminView","newsManagementView","vacancyAdminView"];
+  targets.forEach(id=>{
+   const view=document.getElementById(id);
+   if(!view||view.querySelector(":scope > .hpmw-tool-return"))return;
+   const b=document.createElement("button");
+   b.type="button";b.className="hpmw-tool-return";
+   b.innerHTML='<i class="fa-solid fa-arrow-left"></i> Terug naar tool';
+   b.addEventListener("click",()=>window.hpmwRouteTool?.("/tool"));
+   view.insertBefore(b,view.firstChild);
+  });
+ }
+ function sync(){
+  const active=isToolPath()||document.documentElement.classList.contains("hpmw-tool-focus");
+  if(active){makeSidebar();addBackButtons();}
+  const nav=document.querySelector(".hpmw-tool-sidebar");
+  if(nav)nav.style.display=active?"flex":"none";
+  const path=location.hash.startsWith("#/tool")?location.hash.slice(1):"/tool";
+  nav?.querySelectorAll("[data-tool-route]").forEach(b=>b.classList.toggle("active",b.dataset.toolRoute===path));
+ }
+ document.addEventListener("click",e=>{
+  if(e.target.closest("#toolBackPortal"))setTimeout(sync,0);
+  if(e.target.closest("[data-tool-route]"))setTimeout(sync,0);
+ });
+ window.addEventListener("hashchange",sync);
+ window.addEventListener("popstate",sync);
+ const observer=new MutationObserver(sync);
+ observer.observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});else sync();
+ setTimeout(sync,250);
+})();
+</script>
+</body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
 <style id="hpmw-nav-scrollbar-hidden">header.topbar.luxury-nav-v2 nav.top-actions{scrollbar-width:none!important;-ms-overflow-style:none!important}header.topbar.luxury-nav-v2 nav.top-actions::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}</style>
