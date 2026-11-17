@@ -1443,6 +1443,41 @@ body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important
 @media(max-width:1000px){#adminView .tb-overview{display:block}#adminView .tb-filterbar{width:100%;margin-top:14px}#adminView .tb-layout{grid-template-columns:170px minmax(0,1fr)}#adminView .tb-main{padding:16px}}
 @media(max-width:760px){#adminView{padding:10px!important}#adminView .tb-top{display:block;padding:17px}#adminView .tb-top-actions{margin-top:13px}#adminView .tb-layout{grid-template-columns:1fr}#adminView .tb-rail{display:flex;gap:8px;align-items:center;padding:9px;border-right:0;border-bottom:1px solid #2c4158}#adminView .tb-rail-label,#adminView .tb-rail-note{display:none}#adminView .tb-rail-current,#adminView .tb-rail-link{margin:0;flex:1}#adminView .tb-main{padding:11px}#adminView .tb-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#adminView .tb-filterbar{grid-template-columns:1fr}#adminView .tb-detail-grid{grid-template-columns:1fr}#adminView .tb-ticket-facts{grid-template-columns:repeat(2,minmax(0,1fr))}#adminView .tb-detail-top{align-items:flex-start;flex-direction:column}}
 </style>
+<style id="hpmw-ticketdesk-reference-layout">
+#adminView.shell{width:min(1420px,calc(100% - 28px))!important;max-width:none!important;margin:18px auto 38px!important}
+#adminView{background:#091321!important}
+#adminView .tb-shell{width:100%!important;max-width:none!important}
+#adminView .tb-top{padding:18px 24px!important}
+#adminView .tb-heading h1{font-size:24px!important}
+#adminView .tb-layout{grid-template-columns:190px minmax(0,1fr)!important}
+#adminView .tb-main{padding:20px!important}
+#adminView .tb-overview{align-items:center!important}
+#adminView .tb-metrics{gap:8px!important}
+#adminView .tb-metric{min-height:78px!important;padding:10px 12px!important;grid-template-columns:34px 1fr!important;column-gap:8px!important}
+#adminView .tb-metric-icon{width:31px!important;height:31px!important}
+#adminView .tb-metric strong{font-size:21px!important}
+#adminView .tb-ticket-panel{border-radius:8px!important}
+#adminView .tb-panel-heading{padding:12px 15px!important}
+#adminView .tb-ticket-table-wrap{overflow:auto!important}
+#adminView .tb-detail-grid{grid-template-columns:270px minmax(0,1fr)!important}
+#adminView .tb-moderation{grid-column:1!important;grid-row:1!important}
+#adminView .tb-conversation{grid-column:2!important;grid-row:1!important}
+#adminView .tb-ticket-heading{padding:16px!important}
+#adminView .tb-ticket-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#adminView .tb-conversation .helpdesk-chat{min-height:280px!important}
+@media(max-width:900px){
+ #adminView .tb-overview{display:block!important}
+ #adminView .tb-filterbar{width:100%!important;margin-top:12px!important}
+ #adminView .tb-detail-grid{grid-template-columns:1fr!important}
+ #adminView .tb-moderation{grid-column:1!important;grid-row:1!important}
+ #adminView .tb-conversation{grid-column:1!important;grid-row:2!important}
+}
+@media(max-width:760px){
+ #adminView.shell{width:calc(100% - 12px)!important;margin:8px auto 22px!important}
+ #adminView .tb-layout{grid-template-columns:1fr!important}
+ #adminView .tb-main{padding:11px!important}
+}
+</style>
 </head>
 <body>
 <div id="supabaseAuthGate" role="dialog" aria-modal="true" aria-labelledby="supabaseAuthTitle">
@@ -2140,6 +2175,7 @@ return found;
 async function loadTickets(){
  window.hpmwRefreshTickets=loadTickets;
  const list=$("#ticketList");
+ list.querySelectorAll(".notice").forEach(node=>node.remove());
  updateAdminTicketCount();
  if(!list.querySelector(".ticket-table-wrap"))list.innerHTML='<div class="ticket-table-wrap"><table class="ticket-table"><thead><tr><th>Ticket ID</th><th>Onderwerp</th><th>Categorie</th><th>Status</th><th>Auteur</th><th>Toegewezen aan</th></tr></thead><tbody id="ticketRows"></tbody></table></div>';
  const errors=[];
