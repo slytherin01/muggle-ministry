@@ -2832,7 +2832,7 @@ function loadTicketAdminIds(){return [...new Set([1,3,...Object.keys(loadTicketR
 let ADMINS=loadTicketAdminIds(),NEWS_VIEWERS=[];let user={id:0,name:"",logged:false}, all=[], currentTab="open", selected=null, activeCat=null;
 function refreshTicketModerators(){ADMINS.splice(0,ADMINS.length,...loadTicketAdminIds());if(typeof paintUser==="function")paintUser()}
 async function refreshNewsModerators(){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/news_moderators?select=forumotion_user_id&enabled=eq.true&can_view_news=eq.true",{headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx"},cache:"no-store"});if(!r.ok)throw Error("news permissions unavailable");const rows=await r.json();NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length,...rows.map(x=>Number(x.forumotion_user_id)).filter(x=>Number.isInteger(x)&&x>0));if(typeof paintUser==="function")paintUser()}catch(e){NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length);if(typeof paintUser==="function")paintUser();console.warn("[Hpmw] Nieuwspaginarechten niet geladen.",e)}}
-refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");const isToolView=id==="toolView"||id==="adminView";document.documentElement.classList.toggle("hpmw-tool-focus",isToolView);document.documentElement.classList.toggle("hpmw-portal-focus",id!=="introView"&&!isToolView);if(id==="faqView"){const cats=$("#hpmwFaqCategories");if(cats)cats.hidden=false;const intro=$("#hpmwFaqIntro");if(intro)intro.hidden=true;}const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));const activeView=document.getElementById(id);if(activeView)activeView.scrollTop=0;const shell=document.querySelector("main.shell");if(shell)shell.scrollTop=0;scrollTo({top:0,behavior:"instant"});}function hpmwRouteTool(path,write){
+refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");const isToolView=id==="toolView"||id==="adminView";document.documentElement.classList.toggle("hpmw-tool-focus",isToolView);document.documentElement.classList.toggle("hpmw-portal-focus",id!=="introView"&&!isToolView);if(id==="faqView"){const cats=$("#hpmwFaqCategories");if(cats)cats.hidden=false;const intro=$("#hpmwFaqIntro");if(intro)intro.hidden=true;}const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));const activeView=document.getElementById(id);if(activeView)activeView.scrollTop=0;const shell=document.querySelector("main.shell");if(shell)shell.scrollTop=0;scrollTo({top:0,behavior:"instant"});window.hpmwSyncPortalWorkspace?.();}function hpmwRouteTool(path,write){
  const known=["/tool","/tool/ticketadmin","/tool/settings","/tool/team","/tool/translations","/tool/authorizations","/tool/news","/tool/faq"];
  if(!known.includes(path))path="/tool";
  if(typeof isAdmin==="function"&&!isAdmin())return;
@@ -9191,4 +9191,94 @@ html.hpmw-portal-focus #myTicketsView .member-detail{width:100%!important;box-si
  html.hpmw-portal-focus #formView .field textarea{min-height:220px!important;height:220px!important}
  html.hpmw-portal-focus #formView .actions{padding:12px 14px 16px!important}
 }
+</style>
+
+
+<script id="hpmw-portal-main-workspace-sync-20261117">
+(()=>{"use strict";
+ const navItems=[
+  ["tickets","Ticket Support","fa-ticket","ticketSupportLaunch","homeView"],
+  ["mytickets","Mijn tickets","fa-envelope","myTicketsLaunch","myTicketsView"],
+  ["faq","FAQ","fa-circle-question","faqLaunch","faqView"]
+ ];
+ const getActive=()=>document.querySelector("main.shell > .view.active")||document.querySelector("main.shell .view.active");
+ function sync(){
+  const active=getActive(),id=active?.id||"";
+  const enabled=!!id&&id!=="introView"&&id!=="toolView"&&id!=="adminView";
+  document.documentElement.classList.toggle("hpmw-portal-focus",enabled);
+  if(!enabled){document.querySelector(".hpmw-portal-rail")?.remove();return}
+  let rail=document.querySelector(".hpmw-portal-rail");
+  if(!rail){
+   rail=document.createElement("aside");rail.className="hpmw-portal-rail";
+   rail.setAttribute("aria-label","Portaalnavigatie");
+   rail.innerHTML='<div class="hpmw-portal-rail-brand"><span class="hpmw-portal-rail-mark">M</span><span><strong>MINISTRY</strong><small>PORTAAL</small></span></div><div class="hpmw-portal-rail-caption">WERKRUIMTE</div>'+
+    navItems.map(([key,label,icon])=>'<button type="button" class="hpmw-portal-rail-link" data-portal-item="'+key+'"><i class="fa-solid '+icon+'"></i><span>'+label+'</span></button>').join("")+
+    '<div class="hpmw-portal-rail-spacer"></div><div class="hpmw-portal-rail-note">Een veilige plek voor alle dreuzels</div>';
+   document.body.appendChild(rail);
+   rail.addEventListener("click",e=>{
+    const b=e.target.closest("[data-portal-item]");if(!b)return;
+    const item=navItems.find(x=>x[0]===b.dataset.portalItem);
+    document.getElementById(item?.[3])?.click();
+    requestAnimationFrame(sync);
+   });
+  }
+  navItems.forEach(([key,, , ,view])=>rail.querySelector('[data-portal-item="'+key+'"]')?.classList.toggle("active",view===id||(id==="formView"&&key==="tickets")));
+  const shell=document.querySelector("main.shell");
+  if(active){active.scrollTop=0;if(shell)shell.scrollTop=0}
+ }
+ window.hpmwSyncPortalWorkspace=sync;
+ const shell=document.querySelector("main.shell");
+ if(shell)new MutationObserver(()=>requestAnimationFrame(sync)).observe(shell,{subtree:true,attributes:true,attributeFilter:["class"]});
+ document.addEventListener("click",()=>requestAnimationFrame(sync),true);
+ window.addEventListener("pageshow",sync);window.addEventListener("popstate",sync);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});else sync();
+ setTimeout(sync,100);setTimeout(sync,500);
+})();
+</script>
+<style id="hpmw-portal-main-tool-width-20261117">
+html.hpmw-portal-focus,html.hpmw-portal-focus body{height:100%!important;min-height:100%!important;overflow:hidden!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2{position:fixed!important;z-index:10060!important;top:0!important;left:0!important;right:0!important;height:66px!important;min-height:66px!important;margin:0!important;padding:6px 18px!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{display:flex!important;align-items:center!important;gap:10px!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #newsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{display:none!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #accountLink{margin-left:auto!important}
+html.hpmw-portal-focus .hpmw-portal-rail{position:fixed!important;z-index:10050!important;left:0!important;top:66px!important;bottom:0!important;width:244px!important;padding:20px 14px!important;display:flex!important;flex-direction:column!important;gap:8px!important;overflow-y:auto!important;background:#0c1726!important;border-right:1px solid #2b3e56!important;box-sizing:border-box!important}
+html.hpmw-portal-focus .hpmw-portal-rail-brand{display:flex!important;align-items:center!important;gap:11px!important;padding:5px 9px 20px!important;border-bottom:1px solid #26384d!important;margin-bottom:12px!important}
+html.hpmw-portal-focus .hpmw-portal-rail-mark{display:grid!important;place-items:center!important;width:38px!important;height:38px!important;border:1px solid #8d754b!important;border-radius:11px!important;background:linear-gradient(145deg,#45371f,#17263a)!important;color:#f0d39a!important;font:700 24px Georgia,serif!important}
+html.hpmw-portal-focus .hpmw-portal-rail-brand strong{display:block!important;color:#f3f6fb!important;font-size:12px!important;letter-spacing:.14em!important}
+html.hpmw-portal-focus .hpmw-portal-rail-brand small{display:block!important;color:#92a7bf!important;font-size:9px!important;letter-spacing:.2em!important;margin-top:3px!important}
+html.hpmw-portal-focus .hpmw-portal-rail-caption{padding:9px 10px 5px!important;color:#8195af!important;font-size:10px!important;font-weight:850!important;letter-spacing:.14em!important}
+html.hpmw-portal-focus .hpmw-portal-rail-link{display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;min-height:46px!important;padding:11px 13px!important;border:1px solid transparent!important;border-radius:11px!important;background:transparent!important;color:#c9d6e7!important;text-align:left!important;font-size:13px!important;font-weight:720!important;cursor:pointer!important}
+html.hpmw-portal-focus .hpmw-portal-rail-link i{width:18px!important;color:#d7b878!important;text-align:center!important}
+html.hpmw-portal-focus .hpmw-portal-rail-link:hover{background:#17263a!important;border-color:#52627b!important}
+html.hpmw-portal-focus .hpmw-portal-rail-link.active{background:#203b58!important;border-color:#6486a7!important;color:#fff!important;box-shadow:inset 3px 0 #83c7f4!important}
+html.hpmw-portal-focus .hpmw-portal-rail-spacer{flex:1 1 auto!important;min-height:18px!important}
+html.hpmw-portal-focus .hpmw-portal-rail-note{padding:14px 10px 4px!important;border-top:1px solid #26384d!important;color:#8ea3ba!important;font-size:10px!important;line-height:1.5!important}
+html.hpmw-portal-focus .hpmw-global-brandbar{position:fixed!important;z-index:10030!important;top:66px!important;left:244px!important;right:0!important;width:auto!important;max-width:none!important;height:174px!important;min-height:0!important;max-height:none!important;margin:0!important;border-radius:0 0 14px 14px!important;background-color:#123c69!important;background-size:cover!important;background-position:center 46%!important;border:1px solid #3c79ad!important;box-shadow:0 10px 28px #0005!important}
+html.hpmw-portal-focus .hpmw-global-brandbar:before{background:linear-gradient(100deg,rgba(7,38,75,.62),rgba(16,83,139,.22) 62%,rgba(6,30,59,.12))!important}
+html.hpmw-portal-focus .hpmw-banner-page-label{left:22px!important;bottom:14px!important;background:linear-gradient(135deg,rgba(8,39,73,.96),rgba(15,69,116,.94))!important;border:1px solid rgba(132,190,235,.55)!important;border-left:4px solid #83c7f4!important}
+html.hpmw-portal-focus main.shell{position:fixed!important;z-index:2!important;left:244px!important;right:0!important;top:240px!important;bottom:0!important;width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;margin:0!important;padding:24px clamp(22px,2.5vw,44px) 32px!important;overflow:hidden!important;box-sizing:border-box!important}
+html.hpmw-portal-focus main.shell>.view{display:none!important}
+html.hpmw-portal-focus main.shell>.view.active{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:100%!important;min-height:0!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0 4px 36px 0!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important;scrollbar-width:thin!important;scrollbar-color:#466789 transparent!important}
+html.hpmw-portal-focus main.shell>.view.active::-webkit-scrollbar{width:9px!important}
+html.hpmw-portal-focus main.shell>.view.active::-webkit-scrollbar-thumb{background:#3a5a78!important;border-radius:10px!important}
+html.hpmw-portal-focus #homeView>.page-head,html.hpmw-portal-focus #formView>.new-ticket-head,html.hpmw-portal-focus #myTicketsView>.page-head,html.hpmw-portal-focus #faqView .page-head{width:100%!important;max-width:none!important;margin:0 0 20px!important}
+html.hpmw-portal-focus #homeView .support-categories-panel,html.hpmw-portal-focus #formView>.panel,html.hpmw-portal-focus #myTicketsView>.panel,html.hpmw-portal-focus #faqView>.panel{width:100%!important;max-width:none!important;margin:0 0 26px!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #homeView #categories.categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;width:100%!important;padding:0!important;margin:0!important}
+html.hpmw-portal-focus #homeView #categories .cat{display:flex!important;width:100%!important;min-width:0!important;min-height:112px!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #formView>.panel{display:block!important;width:100%!important;max-width:none!important;min-height:0!important;padding:0!important;overflow:visible!important;border:1px solid #355574!important;border-radius:16px!important;background:linear-gradient(145deg,#12243a,#0d1a2a)!important}
+html.hpmw-portal-focus #formView .form-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px!important;padding:28px!important;width:100%!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #formView .field{display:block!important;min-width:0!important;width:100%!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #formView .field label{display:block!important;margin:0 0 9px!important;color:#d9e9f8!important;font-size:12px!important;font-weight:800!important}
+html.hpmw-portal-focus #formView .field input,html.hpmw-portal-focus #formView .field select,html.hpmw-portal-focus #formView .field textarea{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:50px!important;box-sizing:border-box!important;padding:13px 15px!important;border:1px solid #496783!important;border-radius:10px!important;background:#091a2c!important;color:#f0f6ff!important;font:inherit!important;font-size:14px!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+html.hpmw-portal-focus #formView .field textarea{height:280px!important;min-height:280px!important;resize:vertical!important}
+html.hpmw-portal-focus #formView .actions{display:flex!important;justify-content:flex-end!important;gap:12px!important;flex-wrap:wrap!important;padding:16px 28px 28px!important;border-top:1px solid #2b435c!important}
+html.hpmw-portal-focus #faqView>.panel,html.hpmw-portal-focus #myTicketsView>.panel{width:100%!important;max-width:none!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,html.hpmw-portal-focus #myTicketsView .ticket-list{width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:900px){html.hpmw-portal-focus .hpmw-portal-rail{width:68px!important;padding:14px 7px!important}html.hpmw-portal-focus .hpmw-portal-rail-brand{justify-content:center!important;padding:4px 0 16px!important}html.hpmw-portal-focus .hpmw-portal-rail-brand>span:last-child,html.hpmw-portal-focus .hpmw-portal-rail-caption,html.hpmw-portal-focus .hpmw-portal-rail-link span,html.hpmw-portal-focus .hpmw-portal-rail-note{display:none!important}html.hpmw-portal-focus .hpmw-portal-rail-link{justify-content:center!important;padding:11px 4px!important}html.hpmw-portal-focus .hpmw-global-brandbar{left:68px!important}html.hpmw-portal-focus main.shell{left:68px!important;padding:18px 16px 26px!important}}
+@media(max-width:620px){html.hpmw-portal-focus header.topbar.luxury-nav-v2{height:58px!important;min-height:58px!important}html.hpmw-portal-focus .hpmw-portal-rail{top:58px!important;width:54px!important;padding:10px 4px!important}html.hpmw-portal-focus .hpmw-global-brandbar{left:54px!important;top:58px!important;height:124px!important}html.hpmw-portal-focus main.shell{left:54px!important;top:182px!important;padding:12px 9px 20px!important}html.hpmw-portal-focus #homeView #categories.categories,html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,html.hpmw-portal-focus #myTicketsView .ticket-list,html.hpmw-portal-focus #formView .form-grid{grid-template-columns:1fr!important}html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}}
 </style>
