@@ -2131,7 +2131,8 @@ async function hpmwBridgeFetch(url,timeout=10000){
  await hpmwBridgeReady();
  const id=++hpmwForumBridgeCounter;
  return new Promise((resolve,reject)=>{
-  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);reject(new Error("Forumotion reageert niet via het portaal."));},timeout+3000);
+  // Forumotion-requests worden bewust gespreid; bij meerdere categorieën kan een request in de wachtrij staan.
+  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);reject(new Error("Forumotion reageert niet binnen de wachttijd (wachtrij/verbinding)."));},Math.max(90000,timeout*3+25000));
   hpmwForumBridgePending.set(id,{resolve,reject,timer,raw:false});
   hpmwForumBridgeFrame.contentWindow.postMessage({protocol:"hpmw-forum-bridge-v1",type:"get",id,url,timeout},HPMW_FORUM_BRIDGE_ORIGIN);
  });
