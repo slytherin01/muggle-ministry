@@ -8571,6 +8571,52 @@ html body .hpmw-global-brandbar:after{
 }
 </style>
 
+
+<style id="hpmw-banner-ticket-support-only-final-20261117">
+/* De banner hoort uitsluitend bij Ticket Support (homeView), niet bij andere pagina's. */
+html body .hpmw-global-brandbar{
+  display:none!important;
+}
+html body.hpmw-ticket-support-active .hpmw-global-brandbar{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:relative!important;
+  width:min(1120px,calc(100% - 36px))!important;
+  max-width:1120px!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:1134 / 163!important;
+  margin:14px auto 18px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  background-color:#102b4a!important;
+  background-image:url("https://i44.servimg.com/u/f44/11/48/74/42/normaa11.png")!important;
+  background-repeat:no-repeat!important;
+  background-position:center center!important;
+  background-size:100% 100%!important;
+  border:1px solid #315b82!important;
+  border-radius:13px!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.3)!important;
+}
+html body.hpmw-ticket-support-active .hpmw-global-brandbar:before,
+html body.hpmw-ticket-support-active .hpmw-global-brandbar:after,
+html body.hpmw-ticket-support-active .hpmw-global-brandbar .hpmw-banner-page-label{
+  display:none!important;
+  visibility:hidden!important;
+  content:none!important;
+}
+@media(max-width:700px){
+  html body.hpmw-ticket-support-active .hpmw-global-brandbar{
+    width:calc(100% - 20px)!important;
+    margin:10px auto 14px!important;
+    border-radius:9px!important;
+  }
+}
+</style>
+
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
