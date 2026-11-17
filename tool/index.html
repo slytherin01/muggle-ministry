@@ -2209,7 +2209,7 @@ async function loadTickets(){
     const discovered=new Map();
     const batches=await Promise.all(jobs);
     batches.flat().forEach(ticket=>{
-     if(ticket&&/^\\d+$/.test(String(ticket.id))&&!discovered.has(String(ticket.id)))discovered.set(String(ticket.id),ticket);
+     if(ticket&&/^\d+$/.test(String(ticket.id))&&!discovered.has(String(ticket.id)))discovered.set(String(ticket.id),ticket);
     });
     if(discovered.size&&window.HpmwTicketStore&&typeof window.HpmwTicketStore.sync==="function"){
      const result=await window.HpmwTicketStore.sync(Array.from(discovered.values()));
