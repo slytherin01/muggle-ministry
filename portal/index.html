@@ -9577,3 +9577,55 @@ html.hpmw-portal-focus main.shell{
  window.addEventListener("hashchange",clean);
 })();
 </script>
+
+
+<style id="hpmw-public-pages-no-workspace-rail-final-20261117">
+/* Public pages: no left-hand workspace, use the full viewport. */
+html.hpmw-portal-focus body .hpmw-portal-rail,
+html.hpmw-portal-focus body .hpmw-tool-sidebar,
+html.hpmw-portal-focus body [aria-label="Portaal navigatie"],
+html.hpmw-portal-focus body [aria-label="Ministry Tool navigatie"]{
+ display:none!important;visibility:hidden!important;opacity:0!important;
+ pointer-events:none!important;position:absolute!important;left:-10000px!important;
+ width:0!important;min-width:0!important;max-width:0!important;
+}
+html.hpmw-portal-focus .hpmw-global-brandbar{
+ position:fixed!important;top:66px!important;left:0!important;right:0!important;
+ width:100vw!important;max-width:none!important;margin:0!important;
+ height:168px!important;min-height:168px!important;max-height:168px!important;
+ border-radius:0 0 14px 14px!important;
+}
+html.hpmw-portal-focus main.shell{
+ position:fixed!important;top:234px!important;left:0!important;right:0!important;bottom:0!important;
+ width:100vw!important;max-width:none!important;margin:0!important;
+ padding:22px clamp(14px,2.5vw,38px) 30px!important;
+}
+html.hpmw-portal-focus main.shell>.view.active{
+ width:100%!important;max-width:none!important;min-width:0!important;
+}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #newsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{
+ display:inline-flex!important;visibility:visible!important;opacity:1!important;
+}
+@media(max-width:620px){
+ html.hpmw-portal-focus .hpmw-global-brandbar{top:58px!important;height:124px!important;min-height:124px!important;max-height:124px!important}
+ html.hpmw-portal-focus main.shell{top:182px!important;padding:12px 9px 20px!important}
+}
+</style>
+<script id="hpmw-public-pages-remove-generated-rail-final-20261117">
+(()=>{"use strict";
+ const removeRail=()=>{
+  if(!document.documentElement.classList.contains("hpmw-portal-focus"))return;
+  document.querySelectorAll(".hpmw-portal-rail,.hpmw-tool-sidebar,[aria-label='Portaal navigatie'],[aria-label='Ministry Tool navigatie']").forEach(el=>el.remove());
+ };
+ removeRail();
+ const observer=new MutationObserver(removeRail);
+ if(document.body)observer.observe(document.body,{childList:true,subtree:true});
+ new MutationObserver(removeRail).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+ window.addEventListener("hashchange",removeRail);
+ document.addEventListener("click",()=>requestAnimationFrame(removeRail),true);
+})();
+</script>
