@@ -7003,7 +7003,7 @@ html body main.shell #introView .intro-static-card::after{
   const reply=(ok,html,error,status,url)=>event.source.postMessage({protocol,type:"response",id:msg.id,ok,html,error,status,url},event.origin);
   let target;
   try{target=new URL(msg.url,location.origin);}catch(_){reply(false,"","Ongeldige forumlink.");return;}
-  if(target.origin!==location.origin||!/^\/(?:$|forum(?:\/|$)|f\d+(?:[-/]|$)|t\d+(?:[-/]|$)|u\d+(?:[-/]|$)|modcp(?:\/|$)|post(?:\/|\?|$)|privmsg(?:\/|\?|$))/i.test(target.pathname+target.search)){
+  if(target.origin!==location.origin||!/^\/(?:$|forum(?:\/|$)|f\d+(?:[-/]|$)|t\d+(?:[-/]|$)|u\d+(?:[-/]|$)|modcp(?:[/?]|$)|post(?:\/|\?|$)|privmsg(?:\/|\?|$))/i.test(target.pathname+target.search)){
    reply(false,"","Deze forumlink is niet toegestaan.");return;
   }
   queue=queue.then(()=>run(event,msg,reply,target)).catch(error=>reply(false,"",error?.message||"Forumotion-aanvraag mislukt"));
