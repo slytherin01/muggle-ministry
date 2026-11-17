@@ -10,9 +10,9 @@
     console.error("Supabase JS kon niet worden geladen.");
     return;
   }
-  const db = window.supabase.createClient(URL, KEY, {
+  const db = window.HpmwSupabaseClient || (window.HpmwSupabaseClient = window.supabase.createClient(URL, KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
+  }));
 
   async function authorizedUser() {
     const result = await db.auth.getUser();
