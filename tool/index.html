@@ -2177,7 +2177,7 @@ const pagination=doc.querySelectorAll('a[href*="start="],a[rel="next"],.paginati
 pagination.forEach(a=>{
 try{
 const u=new URL(a.getAttribute("href"),current);
-if(u.origin!==new URL(BASE).origin||!new RegExp("^/f"+fid+"(?:p\d+)?(?:-|$)","i").test(u.pathname))return;
+if(u.origin!==new URL(BASE).origin||!new RegExp("^/f"+fid+"(?:p\\d+)?(?:-|$)","i").test(u.pathname))return;
 if(!visited.has(u.href)&&!queue.includes(u.href))queue.push(u.href);
 }catch(_){}
 });
@@ -2196,14 +2196,13 @@ async function loadTickets(){
   // Eenmalige import van bestaande Forumotion-topics. Forumotion blijft de bron
   // voor tickets; Supabase bewaart alleen workflowmetadata en moderatiegegevens.
   if(!window.__hpmwForumBackfillDone){
-   window.__hpmwForumBackfillDone=true;
    try{
-    const jobs=[],closedForums=new Set();
+    const jobs=[],closedForums=new Set(),forumErrors=[];
     for(const category of CATS){
-     jobs.push(readForum(category,false).catch(error=>{console.warn("Open supportforum kon niet worden ingelezen:",category.name,error);return [];}));
+     jobs.push(readForum(category,false).catch(error=>{forumErrors.push(category.name+" (open): "+(error?.message||error));console.warn("Open supportforum kon niet worden ingelezen:",category.name,error);return [];}));
      if(!closedForums.has(category.closed)){
       closedForums.add(category.closed);
-      jobs.push(readForum(category,true).catch(error=>{console.warn("Gesloten supportforum kon niet worden ingelezen:",category.name,error);return [];}));
+      jobs.push(readForum(category,true).catch(error=>{forumErrors.push(category.name+" (gesloten): "+(error?.message||error));console.warn("Gesloten supportforum kon niet worden ingelezen:",category.name,error);return [];}));
      }
     }
     const discovered=new Map();
@@ -2213,10 +2212,17 @@ async function loadTickets(){
     });
     if(discovered.size&&window.HpmwTicketStore&&typeof window.HpmwTicketStore.sync==="function"){
      const result=await window.HpmwTicketStore.sync(Array.from(discovered.values()));
-     console.info("[Hpmw] Forumotion-ticketimport voltooid:",result);
+     window.__hpmwForumBackfillDone=true;
+     console.info("[Hpmw] Forumotion-ticketimport voltooid:",{gevonden:discovered.size,...result});
+    }else if(forumErrors.length){
+     errors.push("Forumotion kon de supportforums niet uitlezen: "+forumErrors.slice(0,3).join(" · ")+". Klik op Vernieuwen om opnieuw te proberen.");
+    }else{
+     console.warn("[Hpmw] Forumotion-scan leverde 0 topics op; volgende verversing probeert opnieuw.");
+     errors.push("De Forumotion-koppeling reageerde, maar er zijn geen topics gevonden. Controleer de forumverbinding en klik op Vernieuwen.");
     }
    }catch(importError){
     console.warn("[Hpmw] Bestaande Forumotion-tickets konden niet volledig worden gesynchroniseerd:",importError);
+    errors.push("Forumotion-import mislukt: "+(importError?.message||importError)+". Klik op Vernieuwen om opnieuw te proberen.");
    }
   }
   const rows=await window.HpmwTicketStore.list();
