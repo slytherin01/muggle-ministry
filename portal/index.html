@@ -8734,55 +8734,7 @@ html.hpmw-portal-focus footer.lux-footer{display:none!important}
 </style>
 
 
-<script id="hpmw-portal-tool-shell-20261117">
-(()=>{"use strict";
- const navItems=[
-  ["tickets","Ticket Support","fa-ticket","ticketSupportLaunch","homeView"],
-  ["mytickets","Mijn tickets","fa-envelope","myTicketsLaunch","myTicketsView"],
-  ["faq","Veelgestelde vragen","fa-circle-question","faqLaunch","faqView"],
-  ["news","Nieuws","fa-newspaper","newsLaunch","newsView"]
- ];
- function activeView(){
-  return document.querySelector("main.shell > .view.active")?.id||document.querySelector("main.shell .view.active")?.id||"";
- }
- function ensureRail(){
-  if(document.querySelector(".hpmw-portal-rail"))return;
-  const rail=document.createElement("aside");
-  rail.className="hpmw-portal-rail";
-  rail.setAttribute("aria-label","Portaalnavigatie");
-  rail.innerHTML='<div class="hpmw-portal-rail-brand"><span class="hpmw-portal-rail-mark">M</span><span><strong>MINISTRY</strong><small>PORTAAL</small></span></div><div class="hpmw-portal-rail-caption">WERKRUIMTE</div>'+
-   navItems.map(([key,label,icon])=>'<button type="button" class="hpmw-portal-rail-link" data-portal-item="'+key+'"><i class="fa-solid '+icon+'"></i><span>'+label+'</span></button>').join("")+
-   '<div class="hpmw-portal-rail-spacer"></div><div class="hpmw-portal-rail-note"><i class="fa-solid fa-shield-halved"></i><span>Een veilige plek voor alle dreuzels</span></div>';
-  document.body.appendChild(rail);
-  rail.addEventListener("click",e=>{
-   const b=e.target.closest("[data-portal-item]");if(!b)return;
-   const item=navItems.find(x=>x[0]===b.dataset.portalItem);if(!item)return;
-   const trigger=document.getElementById(item[3]);trigger?.click();
-   requestAnimationFrame(sync);
-  });
- }
- function sync(){
-  const id=activeView();
-  const focus=!!id&&id!=="introView"&&id!=="toolView"&&id!=="adminView";
-  document.documentElement.classList.toggle("hpmw-portal-focus",focus);
-  if(focus)ensureRail();
-  const rail=document.querySelector(".hpmw-portal-rail");
-  if(rail)rail.style.display=focus?"flex":"none";
-  navItems.forEach(([key,, , ,view])=>{
-   rail?.querySelector('[data-portal-item="'+key+'"]')?.classList.toggle("active",view===id||(id==="formView"&&key==="tickets"));
-  });
-  const shell=document.querySelector("main.shell");
-  const active=shell?.querySelector(":scope>.view.active");
-  if(active&&focus){active.scrollTop=0;shell.scrollTop=0;}
- }
- const shell=document.querySelector("main.shell");
- if(shell)new MutationObserver(sync).observe(shell,{subtree:true,attributes:true,attributeFilter:["class"]});
- document.addEventListener("click",()=>requestAnimationFrame(sync),true);
- window.addEventListener("hashchange",sync);window.addEventListener("popstate",sync);
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});else sync();
- setTimeout(sync,200);setTimeout(sync,800);
-})();
-</script>
+<!-- hpmw-portal-tool-shell-20261117 removed: retain original top navigation -->
 <style id="hpmw-portal-tool-shell-style-20261117">
 /* Portal uses the same fixed left-rail workspace as Ministry Tool. */
 html.hpmw-portal-focus,html.hpmw-portal-focus body{height:100%!important;min-height:100%!important;overflow:hidden!important}
@@ -9199,47 +9151,7 @@ html.hpmw-portal-focus #myTicketsView .member-detail{width:100%!important;box-si
 </style>
 
 
-<script id="hpmw-portal-main-workspace-sync-20261117">
-(()=>{"use strict";
- const navItems=[
-  ["tickets","Ticket Support","fa-ticket","ticketSupportLaunch","homeView"],
-  ["mytickets","Mijn tickets","fa-envelope","myTicketsLaunch","myTicketsView"],
-  ["faq","FAQ","fa-circle-question","faqLaunch","faqView"]
- ];
- const getActive=()=>document.querySelector("main.shell > .view.active")||document.querySelector("main.shell .view.active");
- function sync(){
-  const active=getActive(),id=active?.id||"";
-  const enabled=!!id&&id!=="introView"&&id!=="toolView"&&id!=="adminView";
-  document.documentElement.classList.toggle("hpmw-portal-focus",enabled);
-  if(!enabled){document.querySelector(".hpmw-portal-rail")?.remove();return}
-  let rail=document.querySelector(".hpmw-portal-rail");
-  if(!rail){
-   rail=document.createElement("aside");rail.className="hpmw-portal-rail";
-   rail.setAttribute("aria-label","Portaalnavigatie");
-   rail.innerHTML='<div class="hpmw-portal-rail-brand"><span class="hpmw-portal-rail-mark">M</span><span><strong>MINISTRY</strong><small>PORTAAL</small></span></div><div class="hpmw-portal-rail-caption">WERKRUIMTE</div>'+
-    navItems.map(([key,label,icon])=>'<button type="button" class="hpmw-portal-rail-link" data-portal-item="'+key+'"><i class="fa-solid '+icon+'"></i><span>'+label+'</span></button>').join("")+
-    '<div class="hpmw-portal-rail-spacer"></div><div class="hpmw-portal-rail-note">Een veilige plek voor alle dreuzels</div>';
-   document.body.appendChild(rail);
-   rail.addEventListener("click",e=>{
-    const b=e.target.closest("[data-portal-item]");if(!b)return;
-    const item=navItems.find(x=>x[0]===b.dataset.portalItem);
-    document.getElementById(item?.[3])?.click();
-    requestAnimationFrame(sync);
-   });
-  }
-  navItems.forEach(([key,, , ,view])=>rail.querySelector('[data-portal-item="'+key+'"]')?.classList.toggle("active",view===id||(id==="formView"&&key==="tickets")));
-  const shell=document.querySelector("main.shell");
-  if(active){active.scrollTop=0;if(shell)shell.scrollTop=0}
- }
- window.hpmwSyncPortalWorkspace=sync;
- const shell=document.querySelector("main.shell");
- if(shell)new MutationObserver(()=>requestAnimationFrame(sync)).observe(shell,{subtree:true,attributes:true,attributeFilter:["class"]});
- document.addEventListener("click",()=>requestAnimationFrame(sync),true);
- window.addEventListener("pageshow",sync);window.addEventListener("popstate",sync);
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});else sync();
- setTimeout(sync,100);setTimeout(sync,500);
-})();
-</script>
+<!-- hpmw-portal-main-workspace-sync-20261117 removed: retain original top navigation -->
 <style id="hpmw-portal-main-tool-width-20261117">
 html.hpmw-portal-focus,html.hpmw-portal-focus body{height:100%!important;min-height:100%!important;overflow:hidden!important}
 html.hpmw-portal-focus header.topbar.luxury-nav-v2{position:fixed!important;z-index:10060!important;top:0!important;left:0!important;right:0!important;height:66px!important;min-height:66px!important;margin:0!important;padding:6px 18px!important}
@@ -9606,3 +9518,32 @@ html.hpmw-portal-focus footer.lux-footer{display:block!important;width:100%!impo
 <script id="hpmw-remove-secondary-workspace-rail-20261117">
 (()=>{const remove=()=>document.querySelectorAll(".hpmw-portal-rail").forEach(x=>x.remove());remove();const obs=new MutationObserver(remove);if(document.body)obs.observe(document.body,{childList:true});})();
 </script>
+
+
+<style id="hpmw-original-nav-full-width-browser-layout-20261117">
+/* Original portal top navigation; normal responsive full-width page layout. */
+html.hpmw-portal-focus{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
+html.hpmw-portal-focus body{height:auto!important;min-height:100vh!important;overflow-x:hidden!important;overflow-y:visible!important}
+html.hpmw-portal-focus .hpmw-portal-rail{display:none!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;min-height:54px!important;margin:0!important;padding:6px clamp(8px,2vw,24px)!important;box-sizing:border-box!important;z-index:10060!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{display:flex!important;visibility:visible!important;position:relative!important;width:100%!important;max-width:none!important;height:auto!important;min-height:42px!important;flex-flow:row wrap!important;justify-content:center!important;align-items:center!important;gap:6px!important;margin:0 auto!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #newsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #accountLink,
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{display:inline-flex!important;visibility:visible!important;position:relative!important}
+html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions #accountLink{margin-left:auto!important}
+html.hpmw-portal-focus .hpmw-global-brandbar{display:block!important;position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;height:clamp(118px,18vw,190px)!important;min-height:118px!important;max-height:190px!important;margin:0!important;box-sizing:border-box!important;border-radius:0 0 12px 12px!important;background-size:cover!important;background-position:center center!important}
+html.hpmw-portal-focus main.shell{display:block!important;position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:clamp(12px,2vw,28px)!important;overflow:visible!important;box-sizing:border-box!important}
+html.hpmw-portal-focus main.shell>.view{width:100%!important;max-width:none!important;min-width:0!important}
+html.hpmw-portal-focus main.shell>.view.active{display:block!important;position:relative!important;visibility:visible!important;opacity:1!important;width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0 0 28px!important;overflow:visible!important;box-sizing:border-box!important}
+html.hpmw-portal-focus main.shell>.view.active>*{max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #homeView>.page-head,html.hpmw-portal-focus #formView>.new-ticket-head,html.hpmw-portal-focus #faqView .page-head,html.hpmw-portal-focus #myTicketsView>.page-head,html.hpmw-portal-focus #homeView .support-categories-panel,html.hpmw-portal-focus #formView>.panel,html.hpmw-portal-focus #faqView>.panel,html.hpmw-portal-focus #myTicketsView>.panel{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html.hpmw-portal-focus #formView .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html.hpmw-portal-focus footer.lux-footer{display:block!important;position:relative!important;width:100%!important;max-width:none!important}
+@media(max-width:900px){html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{justify-content:flex-start!important}html.hpmw-portal-focus main.shell{padding:16px!important}html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){html.hpmw-portal-focus header.topbar.luxury-nav-v2{padding:5px 7px!important}html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{justify-content:center!important;gap:4px!important}html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-item{padding:5px 7px!important;font-size:11px!important}html.hpmw-portal-focus .hpmw-global-brandbar{height:112px!important;min-height:112px!important}html.hpmw-portal-focus main.shell{padding:10px 8px!important}html.hpmw-portal-focus #homeView #categories.categories,html.hpmw-portal-focus #formView .form-grid,html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:1fr!important}html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}}
+</style>
