@@ -2701,6 +2701,7 @@ async function refreshNewsModerators(){try{const r=await fetch("https://vuaajsjj
 refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");if(id==="toolView"||id==="adminView")document.documentElement.classList.add("hpmw-tool-focus");else document.documentElement.classList.remove("hpmw-tool-focus");const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));scrollTo({top:0,behavior:"smooth"});}function hpmwRouteTool(path,write){
  const known=["/tool","/tool/ticketadmin","/tool/settings","/tool/team","/tool/translations","/tool/authorizations","/tool/news","/tool/faq"];
  if(!known.includes(path))path="/tool";
+ if(typeof isAdmin==="function"&&!isAdmin())return;
  if(write!==false)history.pushState({},"",location.pathname+"#"+path);
  document.documentElement.classList.add("hpmw-tool-focus");
  const shell=document.querySelector("main.shell");
@@ -2734,12 +2735,11 @@ refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>docu
   if(news){
    activateTop("newsManagementView");
    const manager=news.querySelector("#faqManager");
-   const content=news.querySelector('[data-main-panel="news"]');
+   const faqGrid=news.querySelector('[data-main-panel="news"] .cms-grid');
    if(manager)manager.hidden=path!=="/tool/faq";
-   if(content)content.hidden=path==="/tool/faq";
+   if(faqGrid)faqGrid.hidden=path==="/tool/faq";
    const rights=news.querySelector('[data-main-panel="newsRights"]');
    if(rights)rights.hidden=true;
-   if(path==="/tool/news")news.querySelector('[data-news-tab="content"]')?.click();
   }else activateTop("toolView");
  }
  document.querySelectorAll("[data-tool-route]").forEach(b=>b.classList.toggle("active",b.dataset.toolRoute===path));
