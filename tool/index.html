@@ -1935,15 +1935,13 @@ const uid=Number(window._userdata.user_id)||0;user={id:uid,name:uid===3?"Test Ac
 }
 for(const path of ["/","/forum"]){
 try{
-const response=await fetch(BASE+path,{credentials:"include",cache:"no-store"});
-if(!response.ok)continue;
-const html=await response.text(),found=readForumotionUserFromHtml(html);
+const html=await fetchText(BASE+path,8000),found=readForumotionUserFromHtml(html);
 if(found){
 let avatar="";
-try{const profile=await fetch(BASE+"/u"+found.id,{credentials:"include",cache:"no-store"});const profileHtml=await profile.text();const pd=new DOMParser().parseFromString(profileHtml,"text/html");const img=pd.querySelector(".avatar img,.profile-avatar img,.postprofile img,img[src*=avatar],meta[property=og:image]");avatar=img?.content||img?.src||"";}catch(e){}
+try{const profileHtml=await fetchText(BASE+"/u"+found.id,6000);const pd=new DOMParser().parseFromString(profileHtml,"text/html");const img=pd.querySelector(".avatar img,.profile-avatar img,.postprofile img,img[src*=avatar],meta[property=og:image]");avatar=img?.content||img?.src||"";}catch(e){}
 user={...found,name:Number(found.id)===3?"Test Account 2":found.name,avatar};paintUser();return;
 }
-}catch(e){}
+}catch(e){console.warn("Forumotion-gebruiker ophalen via portaal mislukt:",e.message)}
 }
 user={id:0,name:"",logged:false};paintUser();
 }catch(e){user={id:0,name:"",logged:false};paintUser();}
@@ -2022,7 +2020,7 @@ async function hpmwBridgeFetch(url,timeout=10000){
   hpmwForumBridgeFrame.contentWindow.postMessage({protocol:"hpmw-forum-bridge-v1",type:"get",id,url,timeout},HPMW_FORUM_BRIDGE_ORIGIN);
  });
 }
-function fetchText(url,timeout=10000){const target=new URL(url,BASE);if(target.origin!==BASE)throw Error("Onverwachte externe forumlink.");return hpmwBridgeFetch(target.href,timeout);}async function readForum(catObj,closed){
+function fetchText(url,timeout=10000){const target=new URL(url,BASE),baseUrl=new URL(BASE);if(target.protocol!=="https:"||target.hostname.replace(/^www\\./i,"").toLowerCase()!==baseUrl.hostname.replace(/^www\\./i,"").toLowerCase())throw Error("Onverwachte externe forumlink: "+target.origin);const safeUrl=new URL(target.pathname+target.search+target.hash,BASE);return hpmwBridgeFetch(safeUrl.href,timeout);}async function readForum(catObj,closed){
 const fid=closed?catObj.closed:catObj.id;
 const page=closed?catObj.closedUrl:catObj.openUrl;
 const found=[],seen=new Set(),queue=[new URL(page,BASE).href],visited=new Set();
