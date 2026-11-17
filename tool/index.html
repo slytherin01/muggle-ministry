@@ -2141,7 +2141,7 @@ async function hpmwBridgePost(url,formData,timeout=10000){
  const id=++hpmwForumBridgeCounter;
  const fields=Array.from(formData.entries()).map(([name,value])=>[String(name),String(value)]);
  return new Promise((resolve,reject)=>{
-  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);reject(new Error("Forumotion reageert niet via het portaal."));},timeout+5000);
+  const timer=setTimeout(()=>{hpmwForumBridgePending.delete(id);reject(new Error("Forumotion reageert niet via het portaal."));},timeout*3+20000);
   hpmwForumBridgePending.set(id,{resolve,reject,timer,raw:true});
   hpmwForumBridgeFrame.contentWindow.postMessage({protocol:"hpmw-forum-bridge-v1",type:"post",id,url,timeout,fields},HPMW_FORUM_BRIDGE_ORIGIN);
  });
@@ -2400,6 +2400,16 @@ const panel=new DOMParser().parseFromString(html,"text/html");
 if(/login|inloggen|connexion|sign in/i.test(html)&&!/modcp/i.test(html))throw Error("Je Forumotion-sessie is verlopen. Log opnieuw in.");
 if(panel.querySelector('form[name="login"],form[action*="login"]'))throw Error("Forumotion vraagt om opnieuw in te loggen.");
 if(type==="close"||type==="reopen"){
+const confirmForm=[...panel.forms].find(f=>f.querySelector('input[name="tid"],input[name="confirm"],button[name="confirm"],input[name="confirm"]'));
+if(confirmForm){
+ const confirmData=new FormData(confirmForm);
+ if(!confirmData.has("tid"))confirmData.set("tid",tid);
+ if(!confirmData.has("t"))confirmData.set("t",topicId);
+ const submit=confirmForm.querySelector('button[type="submit"],input[type="submit"],button[name="confirm"],input[name="confirm"]');
+ if(submit&&submit.name)confirmData.set(submit.name,submit.value||submit.textContent||"Yes");
+ const confirmUrl=new URL(confirmForm.getAttribute("action")||modUrl.href,BASE).href;
+ await hpmwBridgePost(confirmUrl,confirmData,12000);
+}
 const checkRaw=await fetchText(topicUrl.href,7000);
 const checkDoc=new DOMParser().parseFromString(checkRaw,"text/html");
 const locked=!!checkDoc.querySelector('img[src*="lock" i],img[alt*="gesloten" i],img[alt*="locked" i],.topic_locked,.locked');
