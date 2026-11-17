@@ -9547,3 +9547,33 @@ html.hpmw-portal-focus footer.lux-footer{display:block!important;position:relati
 @media(max-width:900px){html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{justify-content:flex-start!important}html.hpmw-portal-focus main.shell{padding:16px!important}html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:620px){html.hpmw-portal-focus header.topbar.luxury-nav-v2{padding:5px 7px!important}html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions{justify-content:center!important;gap:4px!important}html.hpmw-portal-focus header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-item{padding:5px 7px!important;font-size:11px!important}html.hpmw-portal-focus .hpmw-global-brandbar{height:112px!important;min-height:112px!important}html.hpmw-portal-focus main.shell{padding:10px 8px!important}html.hpmw-portal-focus #homeView #categories.categories,html.hpmw-portal-focus #formView .form-grid,html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,html.hpmw-portal-focus #myTicketsView .ticket-list{grid-template-columns:1fr!important}html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}}
 </style>
+
+
+<style id="hpmw-hide-any-left-workspace-on-portal-pages-20261117">
+/* The public portal pages must never show a left workspace rail. */
+html.hpmw-portal-focus body>.hpmw-portal-rail,
+html.hpmw-portal-focus body>.hpmw-tool-sidebar,
+html.hpmw-portal-focus .hpmw-portal-rail,
+html.hpmw-portal-focus .hpmw-tool-sidebar{
+ display:none!important;visibility:hidden!important;pointer-events:none!important;
+ width:0!important;min-width:0!important;max-width:0!important;
+}
+html.hpmw-portal-focus main.shell{
+ left:0!important;right:0!important;width:100%!important;max-width:none!important;
+ margin-left:0!important;padding-left:clamp(12px,2vw,28px)!important;
+}
+</style>
+<script id="hpmw-remove-left-rail-on-public-portal-pages-20261117">
+(()=>{"use strict";
+ const clean=()=>{
+  if(!document.documentElement.classList.contains("hpmw-portal-focus"))return;
+  document.querySelectorAll("body>.hpmw-portal-rail,body>.hpmw-tool-sidebar,.hpmw-portal-rail,.hpmw-tool-sidebar").forEach(el=>el.remove());
+ };
+ clean();
+ const observer=new MutationObserver(clean);
+ if(document.body)observer.observe(document.body,{childList:true,subtree:true});
+ new MutationObserver(clean).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+ document.addEventListener("click",()=>requestAnimationFrame(clean),true);
+ window.addEventListener("hashchange",clean);
+})();
+</script>
