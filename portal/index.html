@@ -2247,6 +2247,8 @@ function loadForumotionNativeLogin(){
  </form>`;
 }
 function paintUser(){
+window.HpmwForumotionIdentity={id:Number(user.id||0),name:String(user.name||""),logged:!!user.logged};
+document.dispatchEvent(new CustomEvent("hpmw:forumotion-identity",{detail:window.HpmwForumotionIdentity}));
 document.documentElement.classList.add("hpmw-user-ready");
 const nameEl=$("#username"),account=$("#accountLink"),avatarSlot=account?.querySelector(".lux-nav-icon"),guestLogin=$("#forumotionGuestLogin");
 document.documentElement.classList.toggle("member-login-ready",!!user.logged);document.documentElement.classList.toggle("guest-login-ready",!user.logged);if(guestLogin){guestLogin.style.display=user.logged?"none":"block";if(!user.logged)loadForumotionNativeLogin();}
@@ -4811,13 +4813,28 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
  const canApproveNews=()=>!!session?.user&&permissions.can_approve_news===true;
  const canSupport=()=>permissions.can_use_tickets===true;
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ function forumotionIdentity(){
+  const d=window._userdata||{};
+  if(Number(d.session_logged_in)>0&&Number(d.user_id)>0)return {logged:true,id:Number(d.user_id)};
+  try{const saved=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null");if(saved?.logged&&Number(saved.id)>0&&Date.now()-Number(saved.savedAt)<15*60*1000)return {logged:true,id:Number(saved.id)}}catch(e){}
+  return {logged:false,id:0};
+ }
  async function getRole(){
   await ensureClient();
-  if(!session?.user){role="guest"}
-  else{const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(error)throw error;role=data?.role||"user"}
+  if(session?.user){
+   const {data,error}=await client.from("tool_access_roles").select("role").eq("user_id",session.user.id).maybeSingle();
+   if(error)throw error;
+   role=data?.role||"user";
+  }else{
+   // Forumotion-login bepaalt uitsluitend de standaardweergave; nooit een extra/beheerdersrol.
+   role=forumotionIdentity().logged?"user":"guest";
+  }
   const {data:permissionRow,error:permissionError}=await client.from("portal_role_permissions").select("*").eq("role",role).maybeSingle();
-  if(permissionError)throw permissionError;permissions=permissionRow||{};
-  applyPortalVisibility();return role
+  if(permissionError)throw permissionError;
+  if(!permissionRow)throw new Error("Standaardrechten voor rol '"+role+"' ontbreken.");
+  permissions=permissionRow;
+  applyPortalVisibility();
+  return role;
  }
  async function headers(){await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;const token=data.session?.access_token;if(!token)throw new Error("Log eerst in met je portaalaccount.");return {apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation"}}
  window.HpmwPortalAccess={get role(){return role},get session(){return session},get permissions(){return permissions},canViewPortal,canViewNews,canViewFaq,canViewTickets,canViewMyTickets,canViewSortingHat,canViewVacancies,canViewModteam,canViewAwards,canUseTickets,canNews,canDeleteNews,canApproveNews,canSupport,client,headers,ensureClient}; 
@@ -4942,8 +4959,21 @@ document.addEventListener("click",function(event){const button=event.target?.clo
  document.addEventListener("hpmw:news-rendered",decorateNews);
  const observer=new MutationObserver(decorateNews);observer.observe(document.body,{childList:true,subtree:true});
  const actionStyle=document.createElement("style");actionStyle.textContent=".hpmw-news-page .hpmw-cms-create,.hpmw-news-page .hpmw-cms-manage,.hpmw-news-page .hpmw-cms-icon-btn{display:inline-grid!important;visibility:visible!important;opacity:1!important}.hpmw-news-page .hpmw-cms-manage{display:flex!important;align-items:center!important;gap:7px!important}.hpmw-news-page .hpmw-cms-create{display:inline-grid!important;place-items:center!important}.hpmw-news-page .hpmw-cms-icon-btn{display:inline-grid!important;place-items:center!important}";document.head.append(actionStyle);
- ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{session=next;if(next){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()})).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
- (async()=>{try{await ensureClient();const {data}=await client.auth.getSession();session=data.session;if(session){try{await getRole()}catch(_){role="user";permissions={}}}else{role="guest";permissions={}};document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()}catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}})();
+ const publishRole=()=>{document.dispatchEvent(new CustomEvent("hpmw:portal-role",{detail:{role}}));decorateNews()};
+ ensureClient().then(c=>c.auth.onAuthStateChange(async(_event,next)=>{
+  session=next;
+  try{await getRole()}catch(error){console.error("[Hpmw] Rollen konden niet worden geladen:",error)}
+  publishRole();
+ })).catch(error=>console.error("[Hpmw] Supabase initialisatie mislukt:",error));
+ (async()=>{
+  try{await ensureClient();const {data,error}=await client.auth.getSession();if(error)throw error;session=data.session;
+   try{await getRole()}catch(roleError){console.error("[Hpmw] Standaardrechten konden niet worden geladen:",roleError)}
+   publishRole();
+  }catch(error){console.error("[Hpmw] Supabase initialisatie mislukt:",error)}
+ })();
+ document.addEventListener("hpmw:forumotion-identity",async()=>{
+  if(!session?.user){try{await getRole();publishRole()}catch(error){console.error("[Hpmw] Forumotion-standaardrechten konden niet worden geladen:",error)}}
+ });
 })();
 </script>
 
