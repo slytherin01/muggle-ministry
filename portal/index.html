@@ -2372,10 +2372,13 @@ async function loadTickets(){
  host.innerHTML='<div class="ticket-table-wrap"><table class="ticket-table"><thead><tr><th>Ticket ID</th><th>Onderwerp</th><th>Categorie</th><th>Status</th><th>Auteur</th><th>Toegewezen aan</th></tr></thead><tbody id="ticketRows"><tr><td colspan="6" class="loading-cell">Forumotion-tickets laden...</td></tr></tbody></table></div>';
  const errors=[],jobs=[],closedForums=new Set();
  for(const category of CATS){
-  jobs.push(readForum(category,false).catch(e=>{errors.push(category.name+" (open): "+(e?.message||e));return [];}));
-  if(!closedForums.has(category.closed)){closedForums.add(category.closed);jobs.push(readForum(category,true).catch(e=>{errors.push(category.name+" (gesloten): "+(e?.message||e));return [];}));}
+  jobs.push(()=>readForum(category,false).catch(e=>{errors.push(category.name+" (open): "+(e?.message||e));return [];}));
+  if(!closedForums.has(category.closed)){closedForums.add(category.closed);jobs.push(()=>readForum(category,true).catch(e=>{errors.push(category.name+" (gesloten): "+(e?.message||e));return [];}));}
  }
- const batches=await Promise.all(jobs),unique=new Map();
+ // Beperk gelijktijdige Forumotion-verzoeken om rate-limits en time-outs te voorkomen.
+ const batches=new Array(jobs.length);let nextJob=0;
+ await Promise.all(Array.from({length:Math.min(3,jobs.length)},async()=>{while(nextJob<jobs.length){const index=nextJob++;batches[index]=await jobs[index]();}}));
+ const unique=new Map();
  batches.flat().forEach(ticket=>{if(ticket&&/^\d+$/.test(String(ticket.id))&&!unique.has(String(ticket.id)))unique.set(String(ticket.id),ticket);});
  const discovered=[...unique.values()];
  let metadata=[];
