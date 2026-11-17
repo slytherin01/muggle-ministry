@@ -3081,7 +3081,7 @@ async function loadMyTickets(){
  try{
   const access=window.HpmwPortalAccess;await access.ensureClient();const db=access.client;
   const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;
-  if(!session?.user)throw new Error("Log in met je portaalaccount om je tickets te bekijken.");
+  if(!session?.user)throw new Error("Je bent wel ingelogd op het forum, maar nog niet met een portaalaccount. Mijn tickets gebruikt een aparte beveiligde Supabase-inlogsessie. Meld je aan met het gekoppelde portaalaccount en open Mijn tickets opnieuw.");
   const {data:tickets,error}=await db.from("support_tickets").select("id,ticket_number,category,department,subject,status,priority,created_at,updated_at").eq("created_by",session.user.id).order("created_at",{ascending:false});
   if(error)throw error;
   if(!tickets?.length){host.innerHTML='<div class="member-empty">Je hebt nog geen supporttickets aangemaakt.</div>';return}
@@ -6032,7 +6032,7 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
  }
  function renderArticles(){
   const target=out();if(!target)return;
-  const rows=articles.filter(a=>a.faq_category_id===selected);
+  const rows=articles.filter(a=>String(a.faq_category_id||"")===String(selected||""));
   target.style.display="block";
   target.innerHTML=rows.length?rows.map(a=>'<article class="hpmw-cms-card"><h3 class="hpmw-cms-title">'+esc(a.title)+'</h3><p class="hpmw-cms-body">'+esc(a.body).replace(/\n/g,"<br>")+'</p></article>').join(""):'<div class="empty">In deze categorie staan nog geen gepubliceerde vragen.</div>';
   host()?.querySelectorAll("[data-faq-category]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.faqCategory===selected)));
