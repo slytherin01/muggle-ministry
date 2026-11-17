@@ -1916,6 +1916,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 #hpmwManageBody .hpmw-role-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #2b4058}
 @media(max-width:700px){#hpmwManageLayer .hpmw-manage-card{width:98vw!important;max-width:98vw!important;height:94vh!important;max-height:94vh!important}#hpmwManageLayer .hpmw-manage-body{padding:14px!important}.hpmw-admin-overview-grid{grid-template-columns:1fr}#hpmwManageBody .hpmw-role-row{grid-template-columns:1fr}.hpmw-admin-tab{flex:1 1 auto}}
 </style><style id="hpmw-tool-center-style">.hpmw-tool-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}.hpmw-tool-menu,.hpmw-tool-panel{background:rgba(12,22,36,.95);border:1px solid rgba(185,154,104,.3);border-radius:14px;padding:18px}.hpmw-tool-menu{display:grid;gap:9px;align-content:start}.hpmw-tool-menu button{padding:12px;text-align:left;border:1px solid #35445a;border-radius:9px;background:#17263a;color:#eef4ff;cursor:pointer}.hpmw-tool-menu button:hover{border-color:#c7a66d}.hpmw-tool-panel[hidden]{display:none!important}@media(max-width:700px){.hpmw-tool-layout{grid-template-columns:1fr}.hpmw-tool-menu{grid-template-columns:repeat(2,minmax(0,1fr))}}</style><style id="restored-supabase-auth-styles">
+body:not(.supabase-authenticated)>:not(#supabaseAuthGate){display:none!important}
 #supabaseAuthGate[hidden]{display:none!important}
 #supabaseAuthGate{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 20%,#302052 0,#100d1b 55%,#09070f 100%);color:#f7f1ff;font-family:inherit}
 #supabaseAuthGate .auth-card{width:min(430px,100%);padding:36px;border:1px solid rgba(211,178,255,.25);border-radius:22px;background:rgba(24,18,39,.96);box-shadow:0 24px 80px #0009}
@@ -1939,7 +1940,7 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 #faqManagementPanel [hidden]{display:none!important}\n#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
 </style>
 <style id="restored-clean-admin-tool">
-#newSettingsView,#homeView,#formView,#myTicketsView{display:none!important}#adminTopbar{display:flex!important}body:not(.supabase-authenticated) #adminTopbar{display:none!important}
+#introView,#newSettingsView,#homeView,#formView,#myTicketsView{display:none!important}#adminTopbar{display:flex!important}body:not(.supabase-authenticated) #adminTopbar{display:none!important}
 #newAdminDashboard.view.active,#newTranslationsView.view.active,#newSettingsView.view.active,#adminView.view.active,#newsManagementView.view.active{display:block!important;visibility:visible!important;opacity:1!important}
 .dash-head{display:flex;justify-content:space-between;align-items:flex-end;margin:18px 0 25px;gap:15px}.dash-head h1{font-size:clamp(28px,4vw,38px);margin:5px 0}.dash-user{color:#b7aaff;font-size:12px}.dash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.dash-card{min-height:205px;padding:25px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#172438,#101827);display:flex;flex-direction:column;align-items:flex-start}.dash-icon{font-size:25px;color:#b7aaff;margin-bottom:15px}.dash-card h2{margin:0 0 7px;font-size:19px}.dash-card p{color:var(--muted);font-size:13px;line-height:1.6}.dash-card button{margin-top:auto}@media(max-width:700px){.dash-grid{grid-template-columns:1fr}.dash-head{align-items:flex-start;flex-direction:column}}
 </style>
@@ -8142,14 +8143,7 @@ document.addEventListener("hpmw:supabase-role",start);
  document.addEventListener("hpmw:supabase-role",async e=>{allowed=e.detail?.role==="administrator"&&await isAdministrator();setNav();if(!$("faqManagementPanel").hidden&&!allowed){$("faqManagementPanel").hidden=true;$("adminListView").hidden=false;}});
  document.addEventListener("DOMContentLoaded",async()=>{allowed=await isAdministrator();setNav();});
 })();
-</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script><style id="hpmw-restore-public-portal-view">
-/* The dev portal must open on the full public Ministry landing page. */
-#introView.view.active{display:block!important;visibility:visible!important;opacity:1!important}
-.view:not(.active){display:none!important}
-#adminView.view:not(.active){display:none!important}
-#supabaseAuthGate{display:none!important;visibility:hidden!important;pointer-events:none!important}
-</style>
-</body></html>
+</script><script src="https://slytherin01.github.io/muggle-ministry/tool/admin-cms.js?v=20261117-02" defer></script></body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
 <style id="hpmw-nav-scrollbar-hidden">header.topbar.luxury-nav-v2 nav.top-actions{scrollbar-width:none!important;-ms-overflow-style:none!important}header.topbar.luxury-nav-v2 nav.top-actions::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}</style>
