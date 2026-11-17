@@ -1923,7 +1923,8 @@ header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:14!importa
 #faqManagementPanel form input[type=checkbox]{width:auto}
 #faqManagementPanel .faq-row-actions{display:flex;gap:6px;flex-wrap:wrap}
 #faqManagementPanel .faq-state{display:inline-flex;padding:4px 8px;border-radius:20px;background:#24364b;color:#d9e7f8;font-size:10px}
-#faqManagementPanel [hidden]{display:none!important}\n#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
+#faqManagementPanel [hidden]{display:none!important}
+#faqManagementPanel tr[draggable=true]{cursor:grab}#faqManagementPanel tr.faq-dragging{opacity:.4}#faqManagementPanel tr.faq-drop-target{outline:2px dashed #9b8cff;outline-offset:-3px}#faqManagementPanel .faq-drag-handle{color:#a99dff;font-size:16px;cursor:grab;padding-right:8px}
 </style>
 <style id="restored-clean-admin-tool">
 #introView,#newSettingsView,#homeView,#formView,#myTicketsView{display:none!important}#adminTopbar{display:flex!important}body:not(.supabase-authenticated) #adminTopbar{display:none!important}
@@ -2601,7 +2602,8 @@ html body #introView:not(.hpmw-home-layout-ready) {
 html body #introView.hpmw-home-layout-ready {
   visibility: visible !important;
 }
-</style>\n</head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
+</style>
+</head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
@@ -4650,7 +4652,8 @@ main.shell>.view#homeView::before{content:none!important;display:none!important;
       #homeView .hpmw-home-maintenance p{margin:0;padding:14px 16px;white-space:pre-wrap;line-height:1.65;color:#333;background:#fff}
       #homeView .hpmw-home-maintenance .hpmw-maintenance-foot{padding:7px 14px;background:#f3f6f9;border-top:1px solid #d5e0e9;color:#718397;font-size:10px}
       @media(max-width:700px){#homeView .hpmw-home-notice{margin:10px 8px;padding:13px 14px}}
-      .hpmw-home-notice{display:none!important}\n      #introView .hpmw-home-notice{display:block!important;display:block!important;position:relative;max-width:840px;margin:14px auto 18px;padding:16px 22px;border-radius:14px;text-align:center;box-shadow:0 12px 32px #0005}
+      .hpmw-home-notice{display:none!important}
+      #introView .hpmw-home-notice{display:block!important;display:block!important;position:relative;max-width:840px;margin:14px auto 18px;padding:16px 22px;border-radius:14px;text-align:center;box-shadow:0 12px 32px #0005}
       #introView .hpmw-home-newyear{border:1px solid #465674;background:linear-gradient(150deg,#101e32 0%,#142943 55%,#0b1728 100%);color:#fff;font:700 clamp(16px,2vw,22px)/1.5 Inter,Arial,sans-serif;box-shadow:0 12px 30px #0005}
       #introView .hpmw-home-maintenance{max-width:840px;margin:16px auto 20px;padding:0;border:1px solid #465674;border-radius:14px;background:linear-gradient(150deg,#101e32 0%,#142943 55%,#0b1728 100%);color:#edf2fa;text-align:left;box-shadow:0 12px 30px #0005;overflow:hidden;font:14px/1.55 Inter,Arial,sans-serif}
       #introView .hpmw-home-maintenance .hpmw-maintenance-head{display:flex;align-items:center;gap:9px;padding:12px 18px;background:rgba(255,255,255,.055);border-bottom:1px solid #465674;color:#fff;font-size:15px;font-weight:800}
@@ -5682,7 +5685,8 @@ html body #introView #hpmwHomeLayout .hpmw-extra-widget>.hpmw-image-only-widget>
 .hpmw-permission-table thead th{background:#192d45;color:#c9dcf1;font-size:10px}
 .hpmw-permission-table tbody th{text-align:left;font-weight:650;color:#e3eaf4}
 .hpmw-permission-table .allowed{color:#9ce0b2;font-weight:900}.hpmw-permission-table .denied{color:#8796a9}
-</style>\n<script id="hpmw-unified-portal-rbac">
+</style>
+<script id="hpmw-unified-portal-rbac">
 (()=>{"use strict";
  const URL="https://vuaajsjjluwgqmneinds.supabase.co";
  const KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
@@ -5908,7 +5912,8 @@ document.addEventListener("click",function(event){const button=event.target?.clo
  window.hpmwManageTranslations=()=>translations[langSelect?.value]||translations.nl;
  langSelect?.addEventListener("change",()=>{const b=document.getElementById("hpmwManageBody");if(b?.closest("#hpmwManageLayer")?.classList.contains("open"))document.getElementById("portalManageLaunch")?.click()});
 })();
-</script>\n<script id="hpmw-unified-helpdesk-session-bridge">
+</script>
+<script id="hpmw-unified-helpdesk-session-bridge">
 (()=>{"use strict";
  const access=window.HpmwPortalAccess;
  if(!access)return;
@@ -6044,7 +6049,8 @@ html body .hpmw-global-brandbar .hpmw-active-banner-image{
 
 
 <style id="hpmw-home-nav-gap-fix-20261114">
-/* Trek de homepage-banner dichter tegen de vaste navigatiebalk aan. */\nbody:has(#introView.active) main.shell{margin-top:24px!important}\nbody:has(#introView.active) #homeView{margin-top:0!important}\n</style>\n
+/* Trek de homepage-banner dichter tegen de vaste navigatiebalk aan. */\nbody:has(#introView.active) main.shell{margin-top:24px!important}
+body:has(#introView.active) #homeView{margin-top:0!important}\n</style>\n
 <style id="hpmw-admin-controls-visibility-fix-20261114">
 /* Portal Admin is an entry point; actual access remains protected by the Supabase role check. */\nhtml.member-login-ready #portalManageLaunch{display:inline-flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}\nhtml.member-login-ready #portalManageLaunch[hidden]{display:none!important}\n.hpmw-cms-manage{display:flex!important;visibility:visible!important;opacity:1!important;gap:6px!important}\n</style>\n
 
@@ -8434,7 +8440,7 @@ html.hpmw-tool-focus .hpmw-tool-brand+ .hpmw-admin-intro{margin-top:0!important}
  apply();
  document.addEventListener("DOMContentLoaded",apply);
  window.addEventListener("hashchange",apply);
- new MutationObserver(()=>{if(isTool())apply()}).observe(document.documentElement,{childList:true,subtree:true});
+ /* Deze script staat na de pagina-inhoud; geen observer nodig die tijdens het renderen opnieuw DOM-mutaties triggert. */
 })();
 </script>
 </body></html>
