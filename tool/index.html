@@ -2178,7 +2178,7 @@ async function loadTickets(){
   note.textContent=errors.length?errors.join(" · "):"Nieuwe supporttickets verschijnen hier automatisch zodra ze via het portaal zijn aangemaakt.";
   list.appendChild(note);
  }
-}const latestPosterCache=new Map(),topicPostsCache=new Map(),latestPosterQueue=[];let latestPosterActive=0;function queueLatestPoster(t){if(latestPosterCache.has(t.id)||latestPosterQueue.some(x=>x.id===t.id)||t._posterQueued)return;t._posterQueued=true;latestPosterQueue.push(t);runLatestPosterQueue()}function runLatestPosterQueue(){while(latestPosterActive<2&&latestPosterQueue.length){const t=latestPosterQueue.shift();latestPosterActive++;const request=loadTopicPosts(t).then(posts=>{topicPostsCache.set(t.id,posts);const latest=posts.length?posts[posts.length-1]:null;latestPosterCache.set(t.id,latest?{author:latest.author||"Onbekend",userId:latest.userId||0}:{author:"Geen reacties",userId:0});return posts});topicPostsCache.set(t.id,request);request.catch(()=>latestPosterCache.set(t.id,{author:"Niet beschikbaar",userId:0})).finally(()=>{latestPosterActive--;t._posterQueued=false;if(document.querySelector("#adminView.active")&&document.querySelector("#adminListView").style.display!=="none")renderList();runLatestPosterQueue()})}}function assignedModerator(t){const id=String(getInternal(t).assignee||"");if(!id)return "Niet toegewezen";const mod=MODS.find(m=>String(m.id)===id);return mod?mod.name:"Onbekend"}function renderList(){updateAdminTicketCount();const q=$("#ticketSearch").value.trim().toLowerCase();let list=currentTab==="open"?all.filter(t=>!t.closed):all.filter(t=>t.closed);const sf=$("#statusFilter")?.value||"all";if(sf!=="all")list=list.filter(t=>getInternal(t).status===sf);if(q)list=list.filter(t=>(t.num+" "+t.id+" "+t.title+" "+t.user+" "+t.cat).toLowerCase().includes(q));$("#statOpen").textContent=all.filter(x=>!x.closed).length;$("#statClosed").textContent=all.filter(x=>x.closed).length;$("#statTotal").textContent=all.length;$("#statResult").textContent=list.length;const counts={pending:0,progress:0,done:0,refused:0};all.forEach(x=>{const st=getInternal(x).status;counts[st]=(counts[st]||0)+1});["pending","progress","done","refused"].forEach(st=>{const el=$("#count"+st.charAt(0).toUpperCase()+st.slice(1));if(el)el.textContent=counts[st]||0});list.forEach(queueLatestPoster);$("#ticketList").innerHTML=list.length?`<div class="ticket-table-wrap">
+}const latestPosterCache=new Map(),topicPostsCache=new Map(),latestPosterQueue=[];let latestPosterActive=0;function queueLatestPoster(t){if(latestPosterCache.has(t.id)||latestPosterQueue.some(x=>x.id===t.id)||t._posterQueued)return;t._posterQueued=true;latestPosterQueue.push(t);runLatestPosterQueue()}function runLatestPosterQueue(){while(latestPosterActive<2&&latestPosterQueue.length){const t=latestPosterQueue.shift();latestPosterActive++;const request=loadTopicPosts(t).then(posts=>{topicPostsCache.set(t.id,posts);const latest=posts.length?posts[posts.length-1]:null;latestPosterCache.set(t.id,latest?{author:latest.author||"Onbekend",userId:latest.userId||0}:{author:"Geen reacties",userId:0});return posts});topicPostsCache.set(t.id,request);request.catch(()=>latestPosterCache.set(t.id,{author:"Niet beschikbaar",userId:0})).finally(()=>{latestPosterActive--;t._posterQueued=false;if(document.querySelector("#adminView.active")&&document.querySelector("#adminListView").style.display!=="none")renderList();runLatestPosterQueue()})}}function assignedModerator(t){const id=String(getInternal(t).assignee||"");if(!id)return "Niet toegewezen";const mod=MODS.find(m=>String(m.id)===id);return mod?mod.name:"Onbekend"}function renderList(){updateAdminTicketCount();const q=$("#ticketSearch").value.trim().toLowerCase();let list=currentTab==="open"?all.filter(t=>!t.closed):all.filter(t=>t.closed);const sf=$("#statusFilter")?.value||"all";if(sf!=="all")list=list.filter(t=>getInternal(t).status===sf);if(q)list=list.filter(t=>(t.num+" "+t.id+" "+t.title+" "+t.user+" "+t.cat).toLowerCase().includes(q));$("#statOpen").textContent=all.filter(x=>!x.closed).length;$("#statClosed").textContent=all.filter(x=>x.closed).length;$("#statTotal").textContent=all.length;$("#statResult").textContent=list.length;const counts={pending:0,progress:0,done:0,refused:0};all.forEach(x=>{const st=getInternal(x).status;counts[st]=(counts[st]||0)+1});["pending","progress","done","refused"].forEach(st=>{const el=$("#count"+st.charAt(0).toUpperCase()+st.slice(1));if(el)el.textContent=counts[st]||0});$("#ticketList").innerHTML=list.length?`<div class="ticket-table-wrap">
 <table class="ticket-table">
 <thead>
 <tr>
@@ -2186,11 +2186,11 @@ async function loadTickets(){
 <th>Onderwerp</th>
 <th>Categorie</th>
 <th>Status</th>
-<th>Laatste poster</th>
+<th>Auteur</th>
 <th>Toegewezen aan</th>
 </tr>
 </thead>
-<tbody>${list.map(t=>{const poster=latestPosterCache.get(t.id);return `<tr data-ticket="${esc(t.id)}" role="button" tabindex="0" onclick="window.hpmwOpenAdminTicket(this.dataset.ticket)">
+<tbody>${list.map(t=>{return `<tr data-ticket="${esc(t.id)}" role="button" tabindex="0" onclick="window.hpmwOpenAdminTicket(this.dataset.ticket)">
 <td class="ticket-id">#${esc(t.num)}</td>
 <td class="ticket-subject">${esc(t.title)}</td>
 <td class="ticket-category">${esc(t.cat)}</td>
@@ -2199,7 +2199,7 @@ async function loadTickets(){
 </td>
 <td class="ticket-last-poster">
 <i class="fa-solid fa-user-clock">
-</i> ${esc(poster?.author||"—")}</td>
+</i> ${esc(t.user||"Onbekend")}</td>
 <td class="ticket-assignee">
 <i class="fa-solid fa-user-check">
 </i> ${esc(assignedModerator(t))}</td>
