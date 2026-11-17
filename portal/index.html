@@ -8299,7 +8299,9 @@ document.addEventListener("hpmw:supabase-role",start);
   });
  }
  function sync(){
-  const active=isToolPath()||document.documentElement.classList.contains("hpmw-tool-focus");
+  const routeActive=isToolPath();
+  document.documentElement.classList.toggle("hpmw-tool-focus",routeActive);
+  const active=routeActive;
   if(active){makeSidebar();addBackButtons();}
   const nav=document.querySelector(".hpmw-tool-sidebar");
   if(nav)nav.style.display=active?"flex":"none";
