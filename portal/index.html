@@ -2638,7 +2638,7 @@ html body #introView.hpmw-home-layout-ready {
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
 <a href="LINK_URL_HIER"><img src="IMAGE_URL_HIER" alt="Beschrijving afbeelding" style="max-width:100%;height:auto;display:block;margin:0 auto;"></a>
 -->
-<div class="new-ticket-head"><div class="new-ticket-icon"><i class="fa-solid fa-file-lines"></i></div><div><h1 id="formTitle">Nieuw ticket</h1><p class="subtitle" id="formSubtitle"></p></div><button class="btn" id="formBack"><span class="fa-button-icon"><i class="fa-solid fa-arrow-left hm-fa"></i></span> Terug</button></div><div class="panel"><div class="form-grid"><div class="field"><label>Gebruikersnaam</label><input id="formUser" readonly=""/></div><div class="field"><label>Categorie</label><input id="formCategory" readonly=""/></div><div class="field"><label>Afdeling <b data-extracted-style="3">*</b></label><select id="formDepartment"><option value="">Kies een afdeling</option><option>Griffoendor</option><option>Zwadderich</option><option>Huffelpuf</option><option>Ravenklauw</option><option>Ongesorteerd</option></select></div><div class="field full"><label>Onderwerp</label><input id="formSubject" maxlength="120" placeholder="Geef je ticket een duidelijk onderwerp"/></div><div class="field full"><label>Beschrijving</label><textarea id="formMessage" placeholder="Beschrijf je probleem of vraag zo duidelijk mogelijk."></textarea><div aria-live="polite" class="character-counter" id="formMessageCounter">60000 tekens beschikbaar</div></div></div><div class="notice" id="formNotice"></div><div class="actions"><button class="btn" id="formCancel"><span class="fa-button-icon"><i class="fa-solid fa-xmark hm-fa"></i></span> Annuleren</button><button class="btn primary" id="formSubmit"><span class="fa-button-icon"><i class="fa-solid fa-paper-plane hm-fa"></i></span> Ticket versturen</button></div></div></section><section class="view" id="myTicketsView"><div class="page-head hpmw-section-title"><div><div class="eyebrow">Persoonlijk overzicht</div><h1>Mijn Tickets</h1><p class="subtitle">Bekijk en volg je supportaanvragen.</p></div></div> 
+<div class="new-ticket-head"><div class="new-ticket-icon"><i class="fa-solid fa-file-lines"></i></div><div><h1 id="formTitle">Nieuw ticket</h1><p class="subtitle" id="formSubtitle"></p></div><button class="btn" id="formBack"><span class="fa-button-icon"><i class="fa-solid fa-arrow-left hm-fa"></i></span> Terug</button></div><div class="panel"><div class="form-grid"><div class="field"><label>Gebruikersnaam</label><input id="formUser" readonly=""/></div><div class="field"><label>Categorie</label><input id="formCategory" readonly=""/></div><div class="field"><label>Afdeling <b data-extracted-style="3">*</b></label><select id="formDepartment" required aria-required="true"><option value="">Kies een afdeling</option><option>Griffoendor</option><option>Zwadderich</option><option>Huffelpuf</option><option>Ravenklauw</option><option>Ongesorteerd</option></select></div><div class="field full"><label>Onderwerp</label><input id="formSubject" type="text" required aria-required="true" minlength="3" maxlength="120" autocomplete="off" placeholder="Geef je ticket een duidelijk onderwerp"/></div><div class="field full"><label>Beschrijving</label><textarea id="formMessage" required aria-required="true" minlength="10" maxlength="59000" placeholder="Beschrijf je probleem of vraag zo duidelijk mogelijk."></textarea><div aria-live="polite" class="character-counter" id="formMessageCounter">60000 tekens beschikbaar</div></div></div><div class="notice" id="formNotice"></div><div class="actions"><button class="btn" id="formCancel"><span class="fa-button-icon"><i class="fa-solid fa-xmark hm-fa"></i></span> Annuleren</button><button class="btn primary" id="formSubmit"><span class="fa-button-icon"><i class="fa-solid fa-paper-plane hm-fa"></i></span> Ticket versturen</button></div></div></section><section class="view" id="myTicketsView"><div class="page-head hpmw-section-title"><div><div class="eyebrow">Persoonlijk overzicht</div><h1>Mijn Tickets</h1><p class="subtitle">Bekijk en volg je supportaanvragen.</p></div></div> 
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
 <a href="LINK_URL_HIER"><img src="IMAGE_URL_HIER" alt="Beschrijving afbeelding" style="max-width:100%;height:auto;display:block;margin:0 auto;"></a>
 -->
@@ -3043,9 +3043,14 @@ document.addEventListener("hpmw:portal-access-updated",()=>{const b=$("#adminLau
 function openForm(k){activeCat=cat(k); if(!activeCat)return;$("#formTitle").textContent=activeCat.name;$("#formSubtitle").textContent=activeCat.desc;$("#formCategory").value=activeCat.name;$("#formUser").value=user.logged?user.name:"Gast";$("#formSubject").value="";$("#formMessage").value="";$("#formDepartment").value="";$("#formNotice").className="notice";updateTicketMessageCounter();show("formView");}async function postTicket(){
  const access=window.HpmwPortalAccess;
  if(!access?.canUseTickets?.()){notify("Je account heeft geen rechten om tickets aan te maken.");return}
- const sub=$("#formSubject").value.trim(),msg=$("#formMessage").value.trim(),department=$("#formDepartment").value,btn=$("#formSubmit");
- if(!department){notify("Kies eerst een afdeling.");return}
- if(!sub||!msg){notify("Vul onderwerp en beschrijving in.");return}
+ const subjectField=$("#formSubject"),messageField=$("#formMessage"),departmentField=$("#formDepartment");
+ const sub=subjectField.value.trim(),msg=messageField.value.trim(),department=departmentField.value,btn=$("#formSubmit");
+ subjectField.setCustomValidity(sub.length<3?"Vul een onderwerp van minimaal 3 tekens in.":"");
+ messageField.setCustomValidity(msg.length<10?"Beschrijf je vraag met minimaal 10 tekens.":"");
+ if(!department){departmentField.setCustomValidity("Kies een afdeling.");departmentField.reportValidity();departmentField.focus();return}
+ departmentField.setCustomValidity("");
+ if(!subjectField.checkValidity()){subjectField.reportValidity();subjectField.focus();return}
+ if(!messageField.checkValidity()){messageField.reportValidity();messageField.focus();return}
  btn.disabled=true;notify("Ticket wordt aangemaakt...","ok");
  try{
   await access.ensureClient();
@@ -9433,5 +9438,97 @@ html body.hpmw-portal-focus #myTicketsView .member-detail{
  html body.hpmw-portal-focus #formView .form-grid{padding:16px!important;gap:16px!important}
  html body.hpmw-portal-focus #formView .field textarea{height:230px!important;min-height:230px!important}
  html body.hpmw-portal-focus #formView .actions{padding:14px 16px 18px!important}
+}
+</style>
+
+
+<script id="hpmw-interface-consistency-and-form-guard-20261117">
+(()=>{"use strict";
+ const byId=id=>document.getElementById(id);
+ const bindForm=()=>{
+  const subject=byId("formSubject"),message=byId("formMessage"),department=byId("formDepartment"),counter=byId("formMessageCounter");
+  if(!subject||!message||!department)return;
+  subject.maxLength=120;subject.required=true;subject.minLength=3;
+  message.required=true;message.minLength=10;
+  department.required=true;
+  const update=()=>{
+   if(counter){
+    const limit=message.maxLength>0?message.maxLength:59000;
+    const left=Math.max(0,limit-message.value.length);
+    counter.textContent=left.toLocaleString("nl-NL")+" tekens beschikbaar";
+    counter.classList.toggle("near-limit",left<=500&&left>0);
+    counter.classList.toggle("at-limit",left===0);
+   }
+  };
+  if(!message.dataset.hpmwCounterBound){
+   message.addEventListener("input",update);
+   subject.addEventListener("input",()=>subject.setCustomValidity(""));
+   message.addEventListener("input",()=>message.setCustomValidity(""));
+   department.addEventListener("change",()=>department.setCustomValidity(""));
+   message.dataset.hpmwCounterBound="1";
+  }
+  update();
+ };
+ const sync=()=>{
+  const active=document.querySelector("main.shell > .view.active");
+  if(!active)return;
+  document.documentElement.classList.toggle("hpmw-portal-focus",!["introView","toolView","adminView"].includes(active.id));
+  if(active.id==="formView")bindForm();
+ };
+ const shell=document.querySelector("main.shell");
+ if(shell)new MutationObserver(()=>requestAnimationFrame(sync)).observe(shell,{subtree:true,attributes:true,attributeFilter:["class"]});
+ document.addEventListener("click",()=>requestAnimationFrame(sync),true);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",sync,{once:true});else sync();
+ setTimeout(sync,200);setTimeout(sync,800);
+})();
+</script>
+<style id="hpmw-final-consistent-interface-20261117">
+html.hpmw-portal-focus,html.hpmw-portal-focus body{width:100%!important;height:100%!important;min-height:100%!important;overflow:hidden!important}
+html.hpmw-portal-focus main.shell{left:244px!important;right:0!important;width:auto!important;max-width:none!important;min-width:0!important;top:240px!important;bottom:0!important;margin:0!important;padding:22px clamp(18px,2.3vw,40px) 30px!important;overflow:hidden!important}
+html.hpmw-portal-focus main.shell>.view.active{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;height:100%!important;max-height:none!important;min-height:0!important;margin:0!important;padding:0 2px 36px 0!important;overflow-x:hidden!important;overflow-y:auto!important;box-sizing:border-box!important}
+html.hpmw-portal-focus main.shell>.view.active>*{max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+html.hpmw-portal-focus main.shell>.view.active>.page-head,
+html.hpmw-portal-focus main.shell>.view.active>.new-ticket-head{width:100%!important;max-width:none!important;margin:0 0 18px!important}
+html.hpmw-portal-focus #homeView .support-categories-panel,
+html.hpmw-portal-focus #formView>.panel,
+html.hpmw-portal-focus #faqView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel{width:100%!important;max-width:none!important;min-width:0!important;margin:0 0 22px!important;box-sizing:border-box!important}
+html.hpmw-portal-focus #homeView .support-categories-panel{padding:16px!important;border:1px solid #315a7d!important;border-radius:16px!important;background:linear-gradient(145deg,#10243a,#0c1928)!important}
+html.hpmw-portal-focus #homeView #categories.categories{width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;padding:0!important}
+html.hpmw-portal-focus #homeView #categories .cat{width:100%!important;min-width:0!important;min-height:100px!important;border:1px solid #345674!important;border-radius:13px!important}
+html.hpmw-portal-focus #formView{width:100%!important;max-width:none!important;min-width:0!important}
+html.hpmw-portal-focus #formView>.panel{overflow:visible!important;padding:0!important;border:1px solid #3b668a!important;border-radius:16px!important;background:#0e1d2e!important;box-shadow:0 14px 34px #0004!important}
+html.hpmw-portal-focus #formView .form-grid{display:grid!important;width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:20px!important;padding:clamp(16px,2vw,28px)!important}
+html.hpmw-portal-focus #formView .field{width:100%!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important}
+html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+html.hpmw-portal-focus #formView .field label{display:block!important;margin:0 0 8px!important;color:#dcecff!important;font-size:12px!important;font-weight:750!important}
+html.hpmw-portal-focus #formView .field input,
+html.hpmw-portal-focus #formView .field select,
+html.hpmw-portal-focus #formView .field textarea{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:48px!important;padding:12px 14px!important;border:1px solid #476987!important;border-radius:10px!important;background:#081729!important;color:#f4f8ff!important;box-sizing:border-box!important;pointer-events:auto!important;opacity:1!important}
+html.hpmw-portal-focus #formView .field textarea{height:280px!important;min-height:220px!important;resize:vertical!important;line-height:1.6!important}
+html.hpmw-portal-focus #formView .field input:focus,
+html.hpmw-portal-focus #formView .field select:focus,
+html.hpmw-portal-focus #formView .field textarea:focus{outline:0!important;border-color:#91cfff!important;box-shadow:0 0 0 3px #55a9e533!important}
+html.hpmw-portal-focus #formView .notice{margin:0 24px 14px!important}
+html.hpmw-portal-focus #formView .actions{display:flex!important;justify-content:flex-end!important;flex-wrap:wrap!important;gap:12px!important;padding:16px 24px 24px!important;border-top:1px solid #29445f!important}
+html.hpmw-portal-focus #faqView>.panel,
+html.hpmw-portal-focus #myTicketsView>.panel{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+html.hpmw-portal-focus #myTicketsView .ticket-list{width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:not(:empty),
+html.hpmw-portal-focus #myTicketsView .member-detail{width:100%!important;max-width:none!important;box-sizing:border-box!important;border:1px solid #345674!important;border-radius:14px!important;background:#0e1d2e!important}
+html.hpmw-portal-focus footer.lux-footer{display:none!important}
+@media(max-width:900px){
+ html.hpmw-portal-focus main.shell{left:68px!important;padding:16px 14px 24px!important}
+ html.hpmw-portal-focus #homeView #categories.categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:620px){
+ html.hpmw-portal-focus main.shell{left:54px!important;top:182px!important;padding:12px 9px 20px!important}
+ html.hpmw-portal-focus #homeView #categories.categories,
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories,
+ html.hpmw-portal-focus #myTicketsView .ticket-list,
+ html.hpmw-portal-focus #formView .form-grid{grid-template-columns:1fr!important}
+ html.hpmw-portal-focus #formView .field.full{grid-column:1/-1!important}
+ html.hpmw-portal-focus #formView .actions{padding:14px!important}
 }
 </style>
