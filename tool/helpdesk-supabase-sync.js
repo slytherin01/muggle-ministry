@@ -145,5 +145,21 @@
     if (eventError) console.warn("Ticket audit event kon niet worden opgeslagen:", eventError.message);
     return row;
   }
-  window.HpmwTicketStore = Object.freeze({ sync, save });
+  async function listTickets() {
+    const db = client();
+    const { data, error } = await db.from(TABLE)
+      .select("ticket_key,forumotion_topic_id,forumotion_forum_id,ticket_number,subject,category,department,status,priority,assignee_forumotion_user_id,assignee_name,internal_note,created_by_forumotion_user_id,created_by_name,created_at,updated_at")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    const local = readLocal();
+    for (const row of data || []) {
+      const id = String(row.forumotion_topic_id || "");
+      if (!/^\\d+$/.test(id)) continue;
+      local[id] = Object.assign({}, local[id] || {}, toInternal(row));
+    }
+    writeLocal(local);
+    return data || [];
+  }
+
+  window.HpmwTicketStore = Object.freeze({ sync, save, list: listTickets });
 })(window);
