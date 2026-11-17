@@ -6974,7 +6974,7 @@ html body main.shell #introView .intro-static-card::after{
   const reply=(ok,html,error)=>event.source.postMessage({protocol,type:"response",id:msg.id,ok,html,error},event.origin);
   let target;
   try{target=new URL(msg.url,location.origin);}catch(_){reply(false,"","Ongeldige forumlink.");return;}
-  if(target.origin!==location.origin||!/^\/(?:f\d+|t\d+)(?:[-/?#]|$)/i.test(target.pathname)){
+  if(target.origin!==location.origin||!/^\/(?:$|forum(?:\/|$)|f\d+(?:[-/]|$)|t\d+(?:[-/]|$)|u\d+(?:[-/]|$)|modcp(?:\/|$))/i.test(target.pathname)){
    reply(false,"","Deze forumlink is niet toegestaan.");return;
   }
   const controller=new AbortController();
