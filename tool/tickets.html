@@ -94,8 +94,24 @@ function renderList(){
 }
 async function loadTickets(silent=false){
  if(!silent)$("ticketList").innerHTML='<div class="empty"><i class="fa-solid fa-spinner fa-spin"></i>Tickets laden...</div>';
- const {data,error}=await client().from("support_tickets").select("id,ticket_number,created_by,created_by_name,category,department,subject,status,priority,assigned_to,assigned_name,created_at,updated_at,last_message_at").order("last_message_at",{ascending:false});
- if(error)throw error;tickets=data||[];renderStats();renderList();
+ // Supabase retourneert standaard maximaal een beperkt aantal rijen.
+ // Haal daarom alle pagina's op in vaste batches, totdat de laatste batch
+ // minder records bevat dan de ingestelde paginagrootte.
+ const PAGE_SIZE=500;
+ const allTickets=[];
+ for(let offset=0;;offset+=PAGE_SIZE){
+  const {data,error}=await client()
+   .from("support_tickets")
+   .select("id,ticket_number,created_by,created_by_name,category,department,subject,status,priority,assigned_to,assigned_name,created_at,updated_at,last_message_at")
+   .order("last_message_at",{ascending:false,nullsFirst:false})
+   .order("created_at",{ascending:false})
+   .range(offset,offset+PAGE_SIZE-1);
+  if(error)throw error;
+  const batch=data||[];
+  allTickets.push(...batch);
+  if(batch.length<PAGE_SIZE)break;
+ }
+ tickets=allTickets;renderStats();renderList();
  if(selected&&tickets.some(t=>t.id===selected))await openTicket(selected);else if(selected){selected=null;showEmpty()}
 }
 function showEmpty(){$("detailHeading").textContent="Selecteer een ticket";$("detailNumber").textContent="";$("detail").innerHTML='<div class="detail-empty"><div><i class="fa-regular fa-envelope-open"></i><br>Selecteer een ticket om de reacties en moderatie te bekijken.</div></div>'}
