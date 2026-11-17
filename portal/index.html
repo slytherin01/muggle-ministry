@@ -2290,9 +2290,11 @@ function openForm(k){activeCat=cat(k); if(!activeCat)return;$("#formTitle").text
    p_forumotion_user_id:Number(user.id)||null
   });
   if(error)throw error;
+  const createdTicket=Array.isArray(ticket)?ticket[0]:ticket;
+  if(!createdTicket?.ticket_number)throw new Error("Ticket aangemaakt, maar het ticketnummer kon niet worden teruggelezen.");
   $("#formSubject").value="";$("#formMessage").value="";$("#formDepartment").value="";
   btn.disabled=false;
-  notify("Ticket #"+ticket.ticket_number+" is aangemaakt.","ok");
+  notify("Ticket #"+createdTicket.ticket_number+" is aangemaakt.","ok");
   if(typeof loadMyTickets==="function")await loadMyTickets();
   setTimeout(()=>show("homeView"),900);
  }catch(e){
