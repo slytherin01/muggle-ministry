@@ -2742,7 +2742,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 }
 </style>
 
-</head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button class="lux-nav-item" id="newsLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-newspaper"></i></span><span class="lux-nav-label">Nieuws</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
+</head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
 <!-- EIGEN AFBEELDING VOOR DEZE PAGINA: vervang IMAGE_URL_HIER en LINK_URL_HIER.
@@ -11164,3 +11164,33 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
+
+<style id="hpmw-navbar-requested-order-20261118">
+/* Links: Forum, Portaal, Ticket Support, FAQ. Rechts: Mijn tickets, Tool, account, taal. */
+html body header.topbar.luxury-nav-v2 nav.top-actions{
+ display:flex!important;align-items:center!important;flex-wrap:nowrap!important;
+ justify-content:flex-start!important;gap:8px!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions a[href*="/forum"]{order:1!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions a[href*="h3-portaal"]{order:2!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch{order:3!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch{order:4!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch{
+ order:10!important;margin-left:auto!important;flex:0 0 auto!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions #adminLaunch,
+html body header.topbar.luxury-nav-v2 nav.top-actions #portalManageLaunch{
+ order:11!important;margin-left:0!important;flex:0 0 auto!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink{
+ order:12!important;margin-left:0!important;flex:0 0 auto!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap,
+html body header.topbar.luxury-nav-v2 nav.top-actions #hpmwGlobeButton{
+ order:13!important;margin-left:0!important;flex:0 0 auto!important;
+}
+@media(max-width:760px){
+ html body header.topbar.luxury-nav-v2 nav.top-actions{justify-content:flex-start!important;gap:5px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch{margin-left:auto!important}
+}
+</style>
