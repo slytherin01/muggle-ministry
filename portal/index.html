@@ -12004,3 +12004,67 @@ html body #introView:not(.hpmw-home-layout-ready){visibility:visible!important;o
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
+
+
+<style id="hpmw-mobile-navbar-grid-repair-20261118">
+/* Mobiele navigatie: twee compacte rijen, zonder overlappende knoppen. */
+@media(max-width:600px){
+ html body{padding-top:108px!important}
+ html body header.topbar.luxury-nav-v2{
+  position:fixed!important;inset:0 0 auto!important;z-index:120!important;
+  display:block!important;width:100%!important;height:auto!important;min-height:0!important;
+  padding:6px 7px!important;box-sizing:border-box!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;
+  align-items:center!important;justify-content:stretch!important;
+  gap:4px!important;width:100%!important;min-width:0!important;max-width:none!important;
+  margin:0!important;padding:0!important;overflow:visible!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item{
+  display:flex!important;flex:initial!important;min-width:0!important;width:100%!important;
+  min-height:36px!important;height:36px!important;padding:4px 3px!important;
+  margin:0!important;gap:4px!important;justify-content:center!important;
+  border:1px solid rgba(137,174,214,.18)!important;border-radius:8px!important;
+  font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;
+  overflow:hidden!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item .lux-nav-label{
+  display:inline!important;min-width:0!important;max-width:100%!important;
+  font-size:10px!important;line-height:1.1!important;overflow:hidden!important;
+  text-overflow:ellipsis!important;white-space:nowrap!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item .lux-nav-icon{
+  display:grid!important;flex:0 0 20px!important;width:20px!important;height:20px!important;
+  min-width:20px!important;border-radius:6px!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item .lux-nav-icon i{font-size:11px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch,
+ html body header.topbar.luxury-nav-v2 nav.top-actions #adminLaunch,
+ html body header.topbar.luxury-nav-v2 nav.top-actions #portalManageLaunch{margin:0!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink{
+  grid-column:span 2!important;margin:0!important;min-width:0!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink .lux-nav-usertext{
+  min-width:0!important;overflow:hidden!important;text-align:left!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink .lux-nav-usertext small{font-size:8px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink .lux-nav-usertext strong{
+  display:block!important;max-width:100%!important;font-size:10px!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap,
+ html body header.topbar.luxury-nav-v2 nav.top-actions #hpmwGlobeButton{
+  width:100%!important;min-width:0!important;min-height:36px!important;height:36px!important;
+  margin:0!important;padding:4px!important;justify-self:stretch!important;
+ }
+ html body header.topbar.luxury-nav-v2 nav.top-actions #hpmwGlobeButton{font-size:16px!important}
+}
+@media(max-width:380px){
+ html body header.topbar.luxury-nav-v2 nav.top-actions{gap:3px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item{font-size:9px!important;padding:3px 2px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item .lux-nav-label{font-size:9px!important}
+}
+</style>
