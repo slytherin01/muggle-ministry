@@ -12274,16 +12274,16 @@ html body main.shell .hpmw-side-card a,html body main.shell .hpmw-side-card [rol
 
 <!-- HPMW FINAL VIEWPORT-BOUNDED HOMEPAGE GRID 2026-11-18 -->
 <style id="hpmw-final-viewport-home-grid-20261118">
-/* Deze regel staat als laatste: alle homepagekolommen blijven binnen de viewport. */
+/* Laatste globale layoutlaag: alle portalpagina's en widgets delen dezelfde bredere container. */
 html body main.shell{
- width:min(1120px,calc(100vw - 32px))!important;
- max-width:1120px!important;min-width:0!important;
+ width:min(1160px,calc(100vw - 32px))!important;
+ max-width:1160px!important;min-width:0!important;
  margin-left:auto!important;margin-right:auto!important;
  box-sizing:border-box!important;
 }
 html body #introView #hpmwHomeLayout{
  display:grid!important;
- grid-template-columns:minmax(150px,190px) minmax(0,1fr) minmax(150px,190px)!important;
+ grid-template-columns:minmax(160px,200px) minmax(0,1fr) minmax(160px,200px)!important;
  column-gap:14px!important;row-gap:14px!important;
  width:100%!important;max-width:100%!important;min-width:0!important;
  margin:0 auto!important;padding:0!important;
@@ -12325,5 +12325,10 @@ html body #introView #hpmwHomeNews{width:100%!important;max-width:100%!important
  html body #introView #hpmwHomeLayout>.hpmw-home-main,
  html body #introView #hpmwHomeLayout>.hpmw-home-left,
  html body #introView #hpmwHomeLayout>.hpmw-home-right{width:100%!important;max-width:100%!important}
+}
+
+/* Banner volgt de bredere contentbreedte; mobiele marges blijven behouden. */
+html body .hpmw-global-brandbar{
+ width:min(1160px,calc(100vw - 32px))!important;max-width:1160px!important;
 }
 </style>
