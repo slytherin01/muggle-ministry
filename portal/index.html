@@ -11372,7 +11372,8 @@ html body #adminLaunch:not([hidden]){
  "use strict";
  const $=s=>document.querySelector(s);
  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- const readKey=()=> "hpmw_supabase_ticket_reads_"+String(window.HpmwPortalAccess?.session?.user?.id||"guest");
+ let ownUserId="guest";
+ const readKey=()=> "hpmw_supabase_ticket_reads_"+ownUserId;
  const readMap=()=>{try{return JSON.parse(localStorage.getItem(readKey())||"{}")||{}}catch(_){return {}}};
  const writeRead=(id,msgId)=>{const m=readMap();m[String(id)]=String(msgId||"");localStorage.setItem(readKey(),JSON.stringify(m))};
  let ownTickets=[];
@@ -11396,6 +11397,7 @@ html body #adminLaunch:not([hidden]){
    const access=window.HpmwPortalAccess;if(!access)return;
    await access.ensureClient();const db=access.client;
    const {data:{session}}=await db.auth.getSession();if(!session?.user)return;
+   ownUserId=String(session.user.id);
    const {data:tickets,error}=await db.from("support_tickets")
     .select("id,status,created_by").eq("created_by",session.user.id);
    if(error)throw error;
@@ -11416,6 +11418,7 @@ html body #adminLaunch:not([hidden]){
    const {data:{session},error:sessionError}=await db.auth.getSession();
    if(sessionError)throw sessionError;
    if(!session?.user)throw Error("Log eerst in met je gekoppelde portaalaccount. Je forumlogin alleen is niet voldoende om beveiligde tickets te bekijken.");
+   ownUserId=String(session.user.id);
    const {data,error}=await db.from("support_tickets")
     .select("id,ticket_number,category,department,subject,status,priority,created_at,updated_at")
     .eq("created_by",session.user.id).order("created_at",{ascending:false});
@@ -11458,7 +11461,7 @@ html body #adminLaunch:not([hidden]){
  const oldAdminCount=window.updateAdminTicketCount;
  window.updateAdminTicketCount=function(){
   const el=$("#adminTicketsCount");if(!el)return;
-  const n=Array.isArray(window.all)?window.all.filter(t=>!t.closed&&!!t._unreadMessage).length:0;
+  const n=typeof all!=="undefined"&&Array.isArray(all)?all.filter(t=>!t.closed&&!!t._unreadMessage).length:0;
   paintCount("adminTicketsCount",n);
  };
  document.addEventListener("hpmw:user-ready",()=>window.hpmwRefreshOwnTicketCount?.());
