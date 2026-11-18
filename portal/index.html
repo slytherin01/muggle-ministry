@@ -8810,6 +8810,82 @@ html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar{
 }
 </style>
 
+
+<style id="hpmw-final-home-banner-height-and-unified-navigation-20261118">
+/* Ticket Support: dezelfde zichtbare bannerhoogte als de homepage (270px). */
+html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar{
+  display:block!important;
+  width:min(1120px,calc(100% - 36px))!important;
+  max-width:1120px!important;
+  height:270px!important;
+  min-height:270px!important;
+  max-height:270px!important;
+  aspect-ratio:auto!important;
+  margin:18px auto 20px!important;
+  padding:0!important;
+  background-size:100% 100%!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+}
+@media(max-width:760px){
+  html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar{
+    width:calc(100% - 20px)!important;
+    height:160px!important;min-height:160px!important;max-height:160px!important;
+    margin:10px auto 14px!important;
+  }
+}
+@media(max-width:420px){
+  html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar{
+    height:124px!important;min-height:124px!important;max-height:124px!important;
+  }
+}
+/* Eén vaste navigatiebalk: dezelfde hoogte, volgorde en uitlijning op iedere view. */
+html body header.topbar.luxury-nav-v2{
+  position:fixed!important;inset:0 0 auto 0!important;z-index:1000!important;
+  display:flex!important;align-items:center!important;
+  width:100%!important;height:48px!important;min-height:48px!important;max-height:48px!important;
+  padding:4px 16px!important;box-sizing:border-box!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  flex-wrap:nowrap!important;gap:8px!important;
+  width:min(1180px,100%)!important;max-width:1180px!important;
+  height:40px!important;min-width:0!important;margin:0 auto!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  scrollbar-width:none!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions::-webkit-scrollbar{display:none!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-item{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;min-height:34px!important;height:34px!important;
+  padding:4px 8px!important;margin:0!important;gap:6px!important;
+  font-size:12px!important;line-height:1.1!important;white-space:nowrap!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-label{
+  display:inline!important;font-size:12px!important;line-height:1.1!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-icon{
+  display:grid!important;flex:0 0 26px!important;width:26px!important;height:26px!important;
+  min-width:26px!important;min-height:26px!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions #newsLaunch{order:1!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions a[href*="/forum"]{order:2!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions a[href*="h3-portaal"]{order:3!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #ticketSupportLaunch{order:4!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #faqLaunch{order:5!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch{order:6!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #adminLaunch,
+html body header.topbar.luxury-nav-v2 nav.top-actions #portalManageLaunch{order:7!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #accountLink{order:8!important;margin-left:0!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions #hpmwGlobeButton,
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:9!important;margin-left:0!important}
+@media(max-width:760px){
+  html body header.topbar.luxury-nav-v2{padding:4px 8px!important}
+  html body header.topbar.luxury-nav-v2 nav.top-actions{justify-content:flex-start!important;gap:6px!important}
+  html body header.topbar.luxury-nav-v2 nav.top-actions .lux-nav-item{padding:4px 6px!important}
+}
+</style>
+
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
