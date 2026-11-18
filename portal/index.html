@@ -12241,6 +12241,94 @@ html body main.shell .hpmw-news-page-list{
 }
 </style>
 
+
+<!-- HPMW unified interaction + centered homepage repair 2026-11-18 -->
+<style id="hpmw-unified-home-layout-20261118">
+/* Houd de volledige homepage binnen de gecentreerde shell; geen grid dat buiten de container steekt. */
+html body main.shell{width:min(1480px,calc(100% - 36px))!important;max-width:1480px!important;margin-left:auto!important;margin-right:auto!important}
+html body #introView #hpmwHomeLayout{
+ display:grid!important;
+ grid-template-columns:minmax(170px,220px) minmax(0,1fr) minmax(170px,220px)!important;
+ gap:18px!important;width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0 auto!important;position:relative!important;inset:auto!important;transform:none!important;
+ justify-self:stretch!important;box-sizing:border-box!important;align-items:start!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-left,
+html body #introView #hpmwHomeLayout>.hpmw-home-main,
+html body #introView #hpmwHomeLayout>.hpmw-home-right{
+ min-width:0!important;width:100%!important;max-width:100%!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:2!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:3!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout button,
+html body #introView #hpmwHomeLayout [role="button"],
+html body header.topbar.luxury-nav-v2 .lux-nav-item{
+ pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;
+}
+html body #introView #hpmwHomeLayout img{pointer-events:none!important}
+@media(max-width:1050px){
+ html body #introView #hpmwHomeLayout{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;width:100%!important;gap:14px!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:2!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:700px){
+ html body main.shell{width:calc(100% - 20px)!important;padding:10px!important}
+ html body #introView #hpmwHomeLayout{
+  display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;gap:12px!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main,
+ html body #introView #hpmwHomeLayout>.hpmw-home-left,
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{display:flex!important;flex-direction:column!important;width:100%!important}
+}
+</style>
+<script id="hpmw-unified-interaction-dispatcher-20261118">
+(()=>{"use strict";
+ if(window.__hpmwUnifiedInteractionDispatcher)return;
+ window.__hpmwUnifiedInteractionDispatcher=true;
+ const route=id=>{
+  if(typeof window.hpmwShowPortalView==="function")return window.hpmwShowPortalView(id);
+  const views=[...document.querySelectorAll("main.shell>.view")];
+  const target=document.getElementById(id);if(!target)return false;
+  views.forEach(v=>{const active=v===target;v.classList.toggle("active",active);v.hidden=!active;v.style.setProperty("display",active?"block":"none","important")});
+  return true;
+ };
+ const dispatch=event=>{
+  const target=event.target instanceof Element?event.target:null;if(!target)return;
+  let action=null;
+  if(target.closest("#ticketSupportLaunch,[data-home-action='tickets']"))action=()=>route("homeView");
+  else if(target.closest("#faqLaunch,[data-home-action='faq']"))action=()=>route("faqView");
+  else if(target.closest("#newsLaunch,#newsQuickLink"))action=()=>route("newsView");
+  else if(target.closest("#newsBack,#faqBack,#sortingHatBack,#vacanciesBack,#modteamBack,#awardsBack"))action=()=>route("introView");
+  else if(target.closest("[data-open-sorting-hat]"))action=()=>route("sortingHatView");
+  else if(target.closest("[data-open-vacancies]"))action=()=>route("vacanciesView");
+  else if(target.closest("[data-open-modteam]"))action=()=>route("modteamView");
+  else if(target.closest("[data-open-awards]"))action=()=>route("awardsView");
+  else if(target.closest("#myTicketsLaunch"))action=()=>{if(typeof window.showMyTickets==="function")window.showMyTickets();};
+  else if(target.closest(".hpmw-global-brandbar"))action=()=>route("introView");
+  else {
+   const portal=target.closest('header.topbar.luxury-nav-v2 nav.top-actions a[href*="h3-portaal"]');
+   if(portal)action=()=>route("introView");
+  }
+  if(!action)return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  try{action()}catch(error){console.error("[Hpmw] Portalactie mislukt:",error)}
+ };
+ window.addEventListener("click",dispatch,true);
+ document.addEventListener("keydown",event=>{
+  if(event.key!=="Enter"&&event.key!==" ")return;
+  const t=event.target instanceof Element?event.target:null;if(!t)return;
+  if(t.matches("[data-open-sorting-hat],[data-open-vacancies],[data-open-modteam],[data-open-awards]")){
+   event.preventDefault();t.click();
+  }
+ });
+})();
+</script>
+
 <!-- HPMW herstel: navigatie en HP Nieuws -->
 <style id="hpmw-navigation-news-recovery-20261118">
 /* Nieuwsweergave blijft een zelfstandig, volledig scrollbaar portaalonderdeel. */
