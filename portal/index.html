@@ -11789,3 +11789,32 @@ html body #adminLaunch:not([hidden]){
  document.addEventListener("DOMContentLoaded",()=>{window.hpmwRefreshOwnTicketCount?.()});
 })();
 </script>
+
+
+<style id="hpmw-exclusive-top-level-view-20261118">
+/* Zorg dat uitsluitend de geselecteerde hoofdweergave zichtbaar is.
+   Oudere herstelregels maakten meerdere portalviews tegelijk zichtbaar. */
+html body main.shell>section.view:not(.active){
+ display:none!important;
+ visibility:hidden!important;
+ opacity:0!important;
+ pointer-events:none!important;
+}
+html body main.shell>section.view.active{
+ visibility:visible!important;
+ opacity:1!important;
+ pointer-events:auto!important;
+}
+@media(min-width:901px){
+ html.hpmw-portal-focus main.shell>section.view.active{
+  z-index:2!important;
+ }
+ html.hpmw-portal-focus main.shell>section.view:not(.active){
+  position:absolute!important;
+  inset:auto!important;
+  width:0!important;
+  height:0!important;
+  overflow:hidden!important;
+ }
+}
+</style>
