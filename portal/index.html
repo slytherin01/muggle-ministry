@@ -9499,6 +9499,63 @@ html body main.shell .empty,html body main.shell .loading{padding:48px 24px;line
  html body main.shell .ticket-table-wrap,html body main.shell .member-table-wrap{max-width:100%;overflow-x:auto}
 }
 </style>
+
+<!-- HPMW homepage grid hardening after video review 2026-11-18 -->
+<style id="hpmw-home-grid-hardening-20261118">
+/* Prevent the welcome card from shrinking to a few characters when the side panels reflow. */
+html body #introView #hpmwHomeLayout{
+ display:grid!important;
+ grid-template-columns:minmax(170px,200px) minmax(0,1fr) minmax(170px,200px)!important;
+ align-items:start!important;justify-items:stretch!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ gap:14px!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-left,
+html body #introView #hpmwHomeLayout>.hpmw-home-main,
+html body #introView #hpmwHomeLayout>.hpmw-home-right{
+ display:flex!important;flex-direction:column!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ justify-self:stretch!important;align-self:start!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-main{min-width:0!important;align-items:stretch!important}
+html body #introView #hpmwHomeLayout .intro-login-layout{
+ display:block!important;position:relative!important;
+ width:100%!important;min-width:0!important;max-width:none!important;
+ margin:0!important;padding:0!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout .intro-static-card{
+ display:block!important;width:100%!important;min-width:0!important;max-width:none!important;
+ margin:0!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout .center-message{
+ display:block!important;position:relative!important;inset:auto!important;transform:none!important;
+ width:100%!important;min-width:0!important;max-width:none!important;
+ margin:0!important;box-sizing:border-box!important;
+ white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+}
+html body #introView #hpmwHomeLayout .center-message h1,
+html body #introView #hpmwHomeLayout .center-message p{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-home-main>*{flex:0 0 auto!important}
+@media(max-width:1050px){
+ html body #introView #hpmwHomeLayout{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:2!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:700px){
+ html body #introView #hpmwHomeLayout{
+  display:flex!important;flex-direction:column!important;gap:12px!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main,
+ html body #introView #hpmwHomeLayout>.hpmw-home-left,
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{width:100%!important;max-width:100%!important}
+}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
