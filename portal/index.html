@@ -11818,3 +11818,85 @@ html body main.shell>section.view.active{
  }
 }
 </style>
+
+
+<style id="hpmw-form-single-viewport-final-20261118">
+/* Formulieren: één actieve pagina, met alle velden en knoppen binnen het werkvlak. */
+html body main.shell>#introView.view:not(.active),
+html body main.shell>#homeView.view:not(.active),
+html body main.shell>#formView.view:not(.active),
+html body main.shell>#myTicketsView.view:not(.active),
+html body main.shell>#sortingHatView.view:not(.active),
+html body main.shell>#newsView.view:not(.active),
+html body main.shell>#vacanciesView.view:not(.active),
+html body main.shell>#modteamView.view:not(.active),
+html body main.shell>#awardsView.view:not(.active),
+html body main.shell>#faqView.view:not(.active),
+html body main.shell>#toolView.view:not(.active),
+html body main.shell>#newAdminDashboard.view:not(.active),
+html body main.shell>#newSettingsView.view:not(.active),
+html body main.shell>#newTranslationsView.view:not(.active),
+html body main.shell>#hpmwModteamAdmin.view:not(.active),
+html body main.shell>#adminView.view:not(.active),
+html body main.shell>#vacancyAdminView.view:not(.active){
+ display:none!important;visibility:hidden!important;opacity:0!important;
+ pointer-events:none!important;position:absolute!important;
+ width:0!important;height:0!important;max-height:0!important;
+ overflow:hidden!important;inset:auto!important;
+}
+@media(min-width:901px){
+ html.hpmw-portal-focus main.shell>#formView.view.active{
+  position:absolute!important;inset:0!important;z-index:5!important;
+  display:flex!important;flex-direction:column!important;
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:0 4px!important;overflow:hidden!important;
+  box-sizing:border-box!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active>.new-ticket-head{
+  flex:0 0 auto!important;min-height:42px!important;height:auto!important;
+  margin:0 0 8px!important;padding:0 0 6px!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active>.panel{
+  display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+  width:100%!important;height:0!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active>.panel>.form-grid{
+  display:grid!important;flex:1 1 auto!important;min-height:0!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  align-content:stretch!important;gap:7px 12px!important;
+  padding:10px 14px 4px!important;overflow:hidden!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .field{
+  min-width:0!important;margin:0!important;padding:0!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .field:has(#formSubject){grid-column:1/-1!important}
+ html.hpmw-portal-focus main.shell>#formView.view.active .field:has(#formMessage){
+  grid-column:1/-1!important;min-height:0!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .field label{
+  display:block!important;margin:0 0 3px!important;font-size:11px!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .field input,
+ html.hpmw-portal-focus main.shell>#formView.view.active .field select{
+  width:100%!important;height:36px!important;min-height:36px!important;
+  padding:6px 10px!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active #formMessage{
+  display:block!important;width:100%!important;height:clamp(72px,13vh,124px)!important;
+  min-height:72px!important;max-height:124px!important;padding:8px 10px!important;
+  resize:none!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .character-counter{
+  margin:2px 0 0!important;font-size:9px!important;line-height:1.2!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .notice{
+  flex:0 0 auto!important;margin:3px 14px 5px!important;
+ }
+ html.hpmw-portal-focus main.shell>#formView.view.active .actions{
+  display:flex!important;flex:0 0 auto!important;justify-content:flex-end!important;
+  margin:0!important;padding:6px 14px 10px!important;
+ }
+}
+</style>
