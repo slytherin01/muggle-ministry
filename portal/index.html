@@ -12149,186 +12149,109 @@ html body header.topbar.luxury-nav-v2 nav.top-actions>a{
  }
 }
 </style>
-<script id="hpmw-reliable-top-navigation-actions-20261118">
-(()=>{"use strict";
- if(window.__hpmwReliableTopNav)return;window.__hpmwReliableTopNav=true;
- window.addEventListener("click",event=>{
-  const target=event.target instanceof Element?event.target:null;if(!target)return;
-  const button=target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch");
-  if(!button)return;
-  event.preventDefault();event.stopImmediatePropagation();
-  if(button.id==="ticketSupportLaunch"){
-   if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("homeView");
-  }else if(button.id==="faqLaunch"){
-   if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("faqView");
-  }else if(button.id==="myTicketsLaunch"){
-   if(typeof window.showMyTickets==="function")window.showMyTickets();
-   else if(typeof showMyTickets==="function")showMyTickets();
-  }
- },true);
-})();
 </script>
 
 <!-- HPMW layout normalisatie 2026-11-18: laatste consistente layoutlaag -->
 <style id="hpmw-layout-normalization-20261118">
-/* Hef conflicterende fixed/absolute offsets uit oudere layoutpatches op. */
-html,html body{
- width:100%!important;min-width:0!important;height:auto!important;min-height:100%!important;
- overflow-x:hidden!important;overflow-y:auto!important;
-}
+/* Eén consistente documentflow: geen oude absolute offsets of vaste hoogtes. */
+html,body{width:100%!important;min-width:0!important;min-height:100%!important;height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}
 html body{padding-top:48px!important;box-sizing:border-box!important}
 html body header.topbar.luxury-nav-v2{
- position:fixed!important;inset:0 0 auto 0!important;left:0!important;right:0!important;
- width:100%!important;height:48px!important;min-height:48px!important;max-height:48px!important;
- transform:none!important;margin:0!important;z-index:1200!important;
+ position:fixed!important;inset:0 0 auto!important;width:100%!important;height:48px!important;
+ min-height:48px!important;max-height:48px!important;margin:0!important;transform:none!important;z-index:1200!important
 }
 html body header.topbar.luxury-nav-v2 nav.top-actions{
- width:min(1180px,100%)!important;max-width:1180px!important;height:40px!important;
- margin:0 auto!important;position:relative!important;left:auto!important;right:auto!important;
- transform:none!important;display:flex!important;align-items:center!important;
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ width:min(1180px,calc(100% - 20px))!important;max-width:1180px!important;height:48px!important;
+ margin:0 auto!important;position:relative!important;inset:auto!important;transform:none!important;
+ flex-wrap:nowrap!important;gap:8px!important;pointer-events:auto!important
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions>*,
+html body header.topbar.luxury-nav-v2 nav.top-actions a,
+html body header.topbar.luxury-nav-v2 nav.top-actions button{
+ position:relative!important;pointer-events:auto!important;visibility:visible!important;opacity:1!important;
+ touch-action:manipulation!important;z-index:1201!important
 }
 html body .hpmw-global-brandbar{
- display:block!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;
- transform:none!important;float:none!important;flex:none!important;
+ display:block!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
  width:min(1120px,calc(100% - 36px))!important;max-width:1120px!important;
- height:180px!important;min-height:180px!important;max-height:180px!important;
- aspect-ratio:auto!important;margin:18px auto 18px!important;padding:0!important;
- box-sizing:border-box!important;overflow:hidden!important;
+ height:clamp(124px,17vw,180px)!important;min-height:124px!important;max-height:180px!important;
+ margin:18px auto!important;box-sizing:border-box!important;overflow:hidden!important
 }
 html body main.shell,
 html.hpmw-portal-focus body main.shell,
 body.hpmw-ticket-support-active main.shell{
- display:block!important;position:relative!important;inset:auto!important;
- top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
- transform:none!important;float:none!important;
+ display:block!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
  width:min(1120px,calc(100% - 36px))!important;min-width:0!important;max-width:1120px!important;
  height:auto!important;min-height:0!important;max-height:none!important;
- margin:0 auto 32px!important;padding:20px!important;
- box-sizing:border-box!important;overflow:visible!important;
+ margin:0 auto 32px!important;padding:20px!important;box-sizing:border-box!important;overflow:visible!important
 }
 html body main.shell>.view{
- position:relative!important;inset:auto!important;transform:none!important;float:none!important;
- width:100%!important;min-width:0!important;max-width:none!important;
- height:auto!important;min-height:0!important;max-height:none!important;
- margin:0!important;box-sizing:border-box!important;overflow:visible!important;
+ display:none;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;
+ max-height:none!important;margin:0!important;box-sizing:border-box!important;overflow:visible!important
 }
-html body main.shell>.view:not(.active){
- display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
-}
-html body main.shell>.view.active{
- display:block!important;position:relative!important;visibility:visible!important;
- opacity:1!important;transform:none!important;pointer-events:auto!important;
-}
+html body main.shell>.view.active{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+html body main.shell>.view:not(.active){visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 html.hpmw-portal-focus .hpmw-portal-rail{display:none!important}
-html body main.shell .panel,
-html body main.shell .page-head,
-html body main.shell .categories,
-html body main.shell .hpmw-news-page,
-html body main.shell .hpmw-news-page-list{
- max-width:100%!important;min-width:0!important;box-sizing:border-box!important;
-}
-@media(max-width:760px){
- html body .hpmw-global-brandbar{
-  width:calc(100% - 20px)!important;height:124px!important;
-  min-height:124px!important;max-height:124px!important;margin:12px auto!important;
- }
- html body main.shell,
- html.hpmw-portal-focus body main.shell,
- body.hpmw-ticket-support-active main.shell{
-  width:calc(100% - 20px)!important;max-width:none!important;
-  margin:0 auto 20px!important;padding:12px!important;
- }
-}
-</style>
 
-
-<!-- HPMW unified interaction + centered homepage repair 2026-11-18 -->
-<style id="hpmw-unified-home-layout-20261118">
-/* Houd de volledige homepage binnen de gecentreerde shell; geen grid dat buiten de container steekt. */
-html body main.shell{width:min(1480px,calc(100% - 36px))!important;max-width:1480px!important;margin-left:auto!important;margin-right:auto!important}
+/* Homepage: drie leesbare kolommen binnen dezelfde 1120px container. */
 html body #introView #hpmwHomeLayout{
- display:grid!important;
- grid-template-columns:minmax(170px,220px) minmax(0,1fr) minmax(170px,220px)!important;
- gap:18px!important;width:100%!important;max-width:100%!important;min-width:0!important;
+ display:grid!important;grid-template-columns:minmax(170px,205px) minmax(0,1fr) minmax(170px,205px)!important;
+ gap:16px!important;width:100%!important;max-width:100%!important;min-width:0!important;
  margin:0 auto!important;position:relative!important;inset:auto!important;transform:none!important;
- justify-self:stretch!important;box-sizing:border-box!important;align-items:start!important;
+ box-sizing:border-box!important;align-items:start!important
 }
 html body #introView #hpmwHomeLayout>.hpmw-home-left,
 html body #introView #hpmwHomeLayout>.hpmw-home-main,
-html body #introView #hpmwHomeLayout>.hpmw-home-right{
- min-width:0!important;width:100%!important;max-width:100%!important;
-}
-html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:1!important}
-html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:2!important;grid-row:1!important}
-html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:3!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout>.hpmw-home-right{display:flex!important;flex-direction:column!important;gap:14px!important;min-width:0!important;width:100%!important;max-width:100%!important}
+html body #introView #hpmwHomeLayout .hpmw-side-card,
+html body #introView #hpmwHomeLayout .hpmw-home-main>*{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+html body #introView #hpmwHomeLayout img{display:block!important;max-width:100%!important;height:auto!important;object-fit:contain!important}
 html body #introView #hpmwHomeLayout button,
-html body #introView #hpmwHomeLayout [role="button"],
-html body header.topbar.luxury-nav-v2 .lux-nav-item{
- pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;
-}
-html body #introView #hpmwHomeLayout img{pointer-events:none!important}
-@media(max-width:1050px){
- html body #introView #hpmwHomeLayout{
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;width:100%!important;gap:14px!important;
- }
+html body #introView #hpmwHomeLayout [role="button"]{pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
+@media(max-width:1000px){
+ html body #introView #hpmwHomeLayout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:14px!important}
  html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
  html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:2!important}
  html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:2!important;grid-row:2!important}
 }
-@media(max-width:700px){
- html body main.shell{width:calc(100% - 20px)!important;padding:10px!important}
- html body #introView #hpmwHomeLayout{
-  display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;gap:12px!important;
+@media(max-width:650px){
+ html body .hpmw-global-brandbar{width:calc(100% - 20px)!important;height:124px!important;min-height:124px!important;max-height:124px!important;margin:12px auto!important}
+ html body main.shell,html.hpmw-portal-focus body main.shell,body.hpmw-ticket-support-active main.shell{
+  width:calc(100% - 20px)!important;max-width:none!important;margin:0 auto 20px!important;padding:12px!important
  }
+ html body #introView #hpmwHomeLayout{display:flex!important;flex-direction:column!important;width:100%!important;gap:12px!important}
  html body #introView #hpmwHomeLayout>.hpmw-home-main,
  html body #introView #hpmwHomeLayout>.hpmw-home-left,
  html body #introView #hpmwHomeLayout>.hpmw-home-right{display:flex!important;flex-direction:column!important;width:100%!important}
+ html body header.topbar.luxury-nav-v2{height:auto!important;min-height:48px!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions{height:auto!important;min-height:48px!important;flex-wrap:wrap!important;gap:5px!important}
 }
 </style>
-<script id="hpmw-unified-interaction-dispatcher-20261118">
-(()=>{"use strict";
- if(window.__hpmwUnifiedInteractionDispatcher)return;
- window.__hpmwUnifiedInteractionDispatcher=true;
- const route=id=>{
-  if(typeof window.hpmwShowPortalView==="function")return window.hpmwShowPortalView(id);
-  const views=[...document.querySelectorAll("main.shell>.view")];
-  const target=document.getElementById(id);if(!target)return false;
-  views.forEach(v=>{const active=v===target;v.classList.toggle("active",active);v.hidden=!active;v.style.setProperty("display",active?"block":"none","important")});
-  return true;
- };
- const dispatch=event=>{
-  const target=event.target instanceof Element?event.target:null;if(!target)return;
-  let action=null;
-  if(target.closest("#ticketSupportLaunch,[data-home-action='tickets']"))action=()=>route("homeView");
-  else if(target.closest("#faqLaunch,[data-home-action='faq']"))action=()=>route("faqView");
-  else if(target.closest("#newsLaunch,#newsQuickLink"))action=()=>route("newsView");
-  else if(target.closest("#newsBack,#faqBack,#sortingHatBack,#vacanciesBack,#modteamBack,#awardsBack"))action=()=>route("introView");
-  else if(target.closest("[data-open-sorting-hat]"))action=()=>route("sortingHatView");
-  else if(target.closest("[data-open-vacancies]"))action=()=>route("vacanciesView");
-  else if(target.closest("[data-open-modteam]"))action=()=>route("modteamView");
-  else if(target.closest("[data-open-awards]"))action=()=>route("awardsView");
-  else if(target.closest("#myTicketsLaunch"))action=()=>{if(typeof window.showMyTickets==="function")window.showMyTickets();};
-  else if(target.closest(".hpmw-global-brandbar"))action=()=>route("introView");
-  else {
-   const portal=target.closest('header.topbar.luxury-nav-v2 nav.top-actions a[href*="h3-portaal"]');
-   if(portal)action=()=>route("introView");
-  }
-  if(!action)return;
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  try{action()}catch(error){console.error("[Hpmw] Portalactie mislukt:",error)}
- };
- window.addEventListener("click",dispatch,true);
- document.addEventListener("keydown",event=>{
-  if(event.key!=="Enter"&&event.key!==" ")return;
-  const t=event.target instanceof Element?event.target:null;if(!t)return;
-  if(t.matches("[data-open-sorting-hat],[data-open-vacancies],[data-open-modteam],[data-open-awards]")){
-   event.preventDefault();t.click();
-  }
- });
-})();
-</script>
 
+
+<style id="hpmw-forms-and-widgets-usability-20261118">
+/* Formulieren blijven native formulieren; alleen leesbaarheid en bruikbare aanraakdoelen. */
+html body main.shell input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+html body main.shell select,html body main.shell textarea{
+ max-width:100%!important;min-width:0!important;box-sizing:border-box!important;
+ font:inherit!important;font-size:15px!important;line-height:1.45!important
+}
+html body main.shell textarea{min-height:110px!important;resize:vertical!important}
+html body main.shell label{line-height:1.5!important}
+html body main.shell button,html body main.shell input[type=submit],html body main.shell input[type=button]{
+ min-height:38px;touch-action:manipulation
+}
+html body main.shell .panel,html body main.shell .page-head,html body main.shell .categories,
+html body main.shell .hpmw-news-page,html body main.shell .hpmw-news-page-list{
+ max-width:100%!important;min-width:0!important;box-sizing:border-box!important
+}
+html body main.shell .hpmw-side-card{overflow:hidden!important}
+html body main.shell .hpmw-side-card a,html body main.shell .hpmw-side-card [role=button]{
+ cursor:pointer!important;touch-action:manipulation!important
+}
+</style>
 <!-- HPMW herstel: navigatie en HP Nieuws -->
 <style id="hpmw-navigation-news-recovery-20261118">
 /* Nieuwsweergave blijft een zelfstandig, volledig scrollbaar portaalonderdeel. */
