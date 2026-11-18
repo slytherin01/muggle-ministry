@@ -12004,3 +12004,28 @@ html body #introView:not(.hpmw-home-layout-ready){visibility:visible!important;o
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
+
+
+<script id="hpmw-auto-open-ticket-support-on-portal-load-20261118">
+(()=>{
+ "use strict";
+ let opened=false;
+ const openDefault=()=>{
+  if(opened)return;
+  if(new URLSearchParams(location.search).get("adminEmbed")==="1"||location.hash.startsWith("#/tool"))return;
+  const access=window.HpmwPortalAccess;
+  if(!access)return;
+  if(!access.canViewPortal?.()||!access.canViewTickets?.())return;
+  const open=window.hpmwShowPortalView;
+  if(typeof open!=="function")return;
+  opened=true;
+  open("homeView");
+  const button=document.getElementById("ticketSupportLaunch");
+  if(button)button.setAttribute("aria-expanded","true");
+ };
+ document.addEventListener("hpmw:portal-access-updated",openDefault);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",openDefault,{once:true});
+ else openDefault();
+ window.addEventListener("load",openDefault,{once:true});
+})();
+</script>
