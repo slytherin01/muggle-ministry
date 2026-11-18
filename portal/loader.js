@@ -3,7 +3,7 @@
   if (window.__muggleMinistryPortalLoading) return;
   window.__muggleMinistryPortalLoading = true;
 
-  var version = "20261118-057";
+  var version = "20261118-058";
   var sources = [
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/index.html?cachebust=" + version,
     "https://slytherin01.github.io/muggle-ministry/portal/index.html?v=" + version
@@ -13,7 +13,7 @@
     var controller = new AbortController();
     var timer = setTimeout(function () { controller.abort(); }, ms);
     return fetch(url, {
-      cache: "no-store",
+      cache: "reload",
       credentials: "omit",
       mode: "cors",
       signal: controller.signal
