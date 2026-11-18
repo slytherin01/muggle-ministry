@@ -2796,6 +2796,84 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
  #toolView #newAdminDashboard .dash-card{min-height:185px!important}
 }
 </style>
+<style id="hpmw-single-frame-navigation-20261118">
+/* Eén viewport per portaalonderdeel: compacte rasters in plaats van lange verticale pagina's. */
+@media(min-width:900px){
+ html.hpmw-portal-focus,html.hpmw-portal-focus body{height:100%;overflow:hidden!important}
+ html.hpmw-portal-focus main.shell{
+  height:calc(100dvh - 88px)!important;min-height:0!important;max-height:none!important;
+  margin:12px auto 0!important;padding:0!important;overflow:hidden!important;
+  display:block!important
+ }
+ html.hpmw-portal-focus main.shell>.view.active{
+  display:block!important;height:100%!important;max-height:100%!important;min-height:0!important;
+  overflow:auto!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;
+  scrollbar-color:#526b88 transparent!important;padding:0 2px 8px!important
+ }
+ html.hpmw-portal-focus main.shell>.view.active>.panel,
+ html.hpmw-portal-focus main.shell>.view.active>section.panel{max-height:100%!important}
+ /* Startpagina: categorieën compact in drie kolommen. */
+ #homeView .page-head{margin:0 0 10px!important}
+ #homeView .support-categories-panel{overflow:visible!important}
+ #homeView .categories{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;padding:12px!important}
+ #homeView .cat{min-height:76px!important;padding:10px!important}
+ /* Ticketformulier: twee kolommen en een korte beschrijvingszone. */
+ #formView .new-ticket-head{margin:0 0 10px!important;min-height:48px!important}
+ #formView .new-ticket-icon{width:40px!important;height:40px!important;min-width:40px!important}
+ #formView .panel{overflow:visible!important}
+ #formView .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px 12px!important;padding:14px 16px 8px!important}
+ #formView .field{padding:0!important;min-width:0!important}
+ #formView .field.full{grid-column:span 1!important}
+ #formView .field:has(#formMessage){grid-column:1/-1!important}
+ #formView .field label{margin-bottom:4px!important;font-size:11px!important}
+ #formView .field input,#formView .field select{min-height:38px!important;padding:8px 11px!important}
+ #formView #formMessage{min-height:105px!important;height:105px!important;max-height:125px!important;padding:9px 11px!important}
+ #formView .character-counter{font-size:10px!important}
+ #formView .actions{padding:8px 16px 14px!important}
+ #formView .notice:empty{display:none!important}
+ /* Mijn tickets: lijst en geselecteerd ticket naast elkaar. */
+ #myTicketsView>.panel{display:grid!important;grid-template-columns:minmax(250px,.78fr) minmax(0,1.6fr)!important;
+  grid-template-rows:auto minmax(0,1fr)!important;height:calc(100% - 52px)!important;overflow:hidden!important}
+ #myTicketsView .member-tabs{grid-column:1!important;grid-row:1!important;padding:10px 12px 4px!important}
+ #myTicketsView #myTicketsList{grid-column:1!important;grid-row:2!important;min-height:0!important;overflow:auto!important;padding:8px 12px!important}
+ #myTicketsView #memberDetail{grid-column:2!important;grid-row:1/3!important;min-height:0!important;overflow:auto!important;border-left:1px solid var(--line)!important}
+ #myTicketsView .hpmw-my-tickets-page-head{margin:0 0 8px!important}
+ /* Nieuws, vacatures, team en awards gebruiken een raster waar items herhaald worden. */
+ #newsView .hpmw-news-page{height:100%!important;overflow:auto!important;padding:14px!important}
+ #newsView .hpmw-news-page>.page-head{margin:0 0 12px!important}
+ #newsView .hpmw-news-page-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ #vacanciesView .hpmw-vacancies-panel{height:100%!important;overflow:auto!important;padding:14px!important}
+ #vacanciesView .hpmw-vacancies-heading-panel{margin:0 0 12px!important}
+ #vacanciesView #hpmwVacancyList{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ #modteamView .hpmw-modteam-page{height:100%!important;overflow:auto!important;padding:14px!important}
+ #modteamView .hpmw-modteam-page-head{margin:0 0 12px!important}
+ #modteamView .hpmw-modteam-roster{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
+ #awardsView .hpmw-awards-page{height:100%!important;overflow:auto!important;padding:14px!important}
+ #awardsView .hpmw-awards-page-head{margin:0 0 8px!important}
+ #awardsView .hpmw-awards-logo{display:none!important}
+ #awardsView .hpmw-award-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+ #awardsView .hpmw-award{padding:9px!important}
+ /* FAQ: categorieën en antwoorden gebruiken de beschikbare breedte. */
+ #faqView>.panel{height:100%!important;overflow:auto!important;padding:14px!important}
+ #faqView>.panel>.page-head{margin:0 0 12px!important}
+ #faqView .hpmw-faq-categories{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ #faqView .hpmw-faq-category-content{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ /* Sorteerhoed: velden en hulpinformatie compact naast elkaar. */
+ #sortingHatView .hpmw-sorting-ticket-shell{height:100%!important;overflow:auto!important}
+ #sortingHatView .hpmw-sorting-ticket-head{margin:0 0 8px!important}
+ #sortingHatView .hpmw-sorting-quiz-strip{padding:10px 14px!important;margin-bottom:10px!important}
+ #sortingHatView .hpmw-sorting-ticket-panel .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px 12px!important;padding:14px!important}
+ #sortingHatView #sortMessage{min-height:72px!important;height:72px!important}
+ #sortingHatView .hpmw-sort-transfer-field{grid-column:1/-1!important}
+ #sortingHatView .hpmw-sorting-ticket-panel .actions{padding:8px 14px 12px!important}
+}
+/* Kleinere schermen behouden normale documentflow en kunnen natuurlijk scrollen. */
+@media(max-width:899px){
+ html.hpmw-portal-focus,html.hpmw-portal-focus body{height:auto!important;overflow:auto!important}
+ html.hpmw-portal-focus main.shell{height:auto!important;max-height:none!important;overflow:visible!important}
+ html.hpmw-portal-focus main.shell>.view.active{height:auto!important;max-height:none!important;overflow:visible!important}
+}
+</style>
 </head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
