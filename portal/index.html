@@ -9150,10 +9150,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right .hpmw-lang
   let right=$(nav,":scope > .hpmw-nav-right");
   if(!left){left=document.createElement("div");left.className="hpmw-nav-left";left.setAttribute("aria-label","Hoofdnavigatie");}
   if(!right){right=document.createElement("div");right.className="hpmw-nav-right";right.setAttribute("aria-label","Account en hulpmiddelen");}
-  nav.querySelectorAll(".lux-nav-item").forEach(el=>{
-   const label=el.querySelector(".lux-nav-label")?.textContent?.trim().toLowerCase();
-   if(el.id==="newsLaunch"||label==="nieuws")el.remove();
-  });
+  // Nieuws is een vaste portaalbestemming; verwijder deze link niet tijdens het herschikken.
   const take=(selector,parent)=>{
    const el=nav.querySelector(selector);
    if(el&&el!==left&&el!==right&&el.parentElement!==parent)parent.appendChild(el);
@@ -9162,6 +9159,7 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right .hpmw-lang
   take('a[href*="h3-portaal"]',left);
   take("#ticketSupportLaunch",left);
   take("#faqLaunch",left);
+  take("#newsLaunch",left);
   take("#myTicketsLaunch",right);
   take("#adminLaunch",right);
   if(!$(right,"#adminLaunch"))take("#portalManageLaunch",right);
