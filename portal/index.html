@@ -8986,6 +8986,72 @@ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-language-wrap{order:
 })();
 </script>
 
+
+<style id="hpmw-navbar-hard-dom-order-20261118-style">
+html body header.topbar.luxury-nav-v2 nav.top-actions{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ flex-wrap:nowrap!important;width:100%!important;max-width:none!important;min-width:0!important;
+ gap:10px!important;overflow:visible!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-left,
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right{
+ display:flex!important;align-items:center!important;flex:0 0 auto!important;
+ flex-wrap:nowrap!important;gap:8px!important;min-width:0!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right{margin-left:auto!important;justify-content:flex-end!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-left .lux-nav-item,
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right .lux-nav-item{
+ flex:0 0 auto!important;white-space:nowrap!important;margin:0!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right #myTicketsLaunch{margin-left:0!important}
+html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right .hpmw-language-wrap{margin:0!important;flex:0 0 auto!important}
+@media(max-width:760px){
+ html body header.topbar.luxury-nav-v2 nav.top-actions{overflow-x:auto!important;justify-content:flex-start!important}
+ html body header.topbar.luxury-nav-v2 nav.top-actions .hpmw-nav-right{margin-left:auto!important}
+}
+</style>
+<script id="hpmw-navbar-hard-dom-order-20261118">
+(()=>{"use strict";
+ const navSelector="header.topbar.luxury-nav-v2 nav.top-actions";
+ const $=(root,sel)=>root.querySelector(sel);
+ function arrange(){
+  const nav=document.querySelector(navSelector);if(!nav)return;
+  let left=$ (nav,":scope > .hpmw-nav-left");
+  let right=$(nav,":scope > .hpmw-nav-right");
+  if(!left){left=document.createElement("div");left.className="hpmw-nav-left";left.setAttribute("aria-label","Hoofdnavigatie");}
+  if(!right){right=document.createElement("div");right.className="hpmw-nav-right";right.setAttribute("aria-label","Account en hulpmiddelen");}
+  nav.querySelectorAll(".lux-nav-item").forEach(el=>{
+   const label=el.querySelector(".lux-nav-label")?.textContent?.trim().toLowerCase();
+   if(el.id==="newsLaunch"||label==="nieuws")el.remove();
+  });
+  const take=(selector,parent)=>{
+   const el=nav.querySelector(selector);
+   if(el&&el!==left&&el!==right&&el.parentElement!==parent)parent.appendChild(el);
+  };
+  take('a[href*="/forum"]',left);
+  take('a[href*="h3-portaal"]',left);
+  take("#ticketSupportLaunch",left);
+  take("#faqLaunch",left);
+  take("#myTicketsLaunch",right);
+  take("#adminLaunch",right);
+  if(!$(right,"#adminLaunch"))take("#portalManageLaunch",right);
+  take("#accountLink",right);
+  take(".hpmw-language-wrap",right);
+  take("#hpmwGlobeButton",right);
+  if(left.parentElement!==nav)nav.appendChild(left);
+  if(right.parentElement!==nav)nav.appendChild(right);
+ }
+ function start(){
+  arrange();
+  const nav=document.querySelector(navSelector);if(!nav)return;
+  new MutationObserver(()=>arrange()).observe(nav,{childList:true,subtree:true});
+  document.addEventListener("DOMContentLoaded",arrange,{once:true});
+  window.addEventListener("pageshow",arrange);
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
+
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
