@@ -9262,6 +9262,142 @@ html.hpmw-portal-focus #myTicketsView tr{
 })();
 </script>
 
+
+<style id="hpmw-ticket-faq-mytickets-one-frame-20261118">
+/* Ticket Support, FAQ en Mijn Tickets: de geselecteerde inhoud blijft binnen één scherm. */
+@media(min-width:901px){
+ html.hpmw-portal-focus main.shell{overflow:hidden!important}
+ html.hpmw-portal-focus main.shell>.view.active{
+  height:100%!important;max-height:100%!important;min-height:0!important;
+  overflow:hidden!important;padding:0 4px!important;box-sizing:border-box!important;
+ }
+ /* Ticket Support: formulier compact, zonder verticale pagina-scroll. */
+ html.hpmw-portal-focus #formView{
+  display:flex!important;flex-direction:column!important;min-height:0!important;
+ }
+ html.hpmw-portal-focus #formView>.new-ticket-head{flex:0 0 auto!important;margin:0 auto 8px!important}
+ html.hpmw-portal-focus #formView>.panel{
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;height:auto!important;max-height:100%!important;
+  overflow:hidden!important;margin:0 auto!important;
+ }
+ html.hpmw-portal-focus #formView .form-grid{
+  flex:1 1 auto!important;min-height:0!important;align-content:start!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px 12px!important;padding:12px 16px 6px!important;
+ }
+ html.hpmw-portal-focus #formView .field{min-width:0!important}
+ html.hpmw-portal-focus #formView .field:has(#formMessage){grid-column:1/-1!important}
+ html.hpmw-portal-focus #formView #formMessage{
+  height:clamp(76px,12vh,112px)!important;min-height:76px!important;max-height:112px!important;
+  resize:none!important;
+ }
+ html.hpmw-portal-focus #formView .notice{flex:0 0 auto!important;margin:4px 16px 8px!important}
+ html.hpmw-portal-focus #formView .actions{
+  flex:0 0 auto!important;padding:6px 16px 12px!important;
+ }
+ /* FAQ: categorie links, antwoorden rechts; geen scrollende lange FAQ-pagina. */
+ html.hpmw-portal-focus #faqView{min-height:0!important}
+ html.hpmw-portal-focus #faqView>.panel{
+  display:grid!important;grid-template-columns:minmax(190px,.34fr) minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr)!important;gap:10px 18px!important;
+  width:min(100%,1180px)!important;height:100%!important;max-height:100%!important;
+  min-height:0!important;overflow:hidden!important;margin:0 auto!important;padding:14px 18px!important;
+  box-sizing:border-box!important;
+ }
+ html.hpmw-portal-focus #faqView>.panel>.page-head{
+  grid-column:1/-1!important;grid-row:1!important;margin:0!important;padding-bottom:8px!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories.categories{
+  grid-column:1!important;grid-row:2!important;display:flex!important;flex-direction:column!important;
+  align-content:start!important;gap:8px!important;margin:0!important;padding:0!important;
+  min-height:0!important;overflow:hidden!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategories .cat{
+  min-height:58px!important;padding:9px 11px!important;flex:0 0 auto!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent:not(:empty){
+  grid-column:2!important;grid-row:2!important;display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;align-content:start!important;
+  gap:8px!important;min-height:0!important;height:100%!important;max-height:100%!important;
+  overflow:hidden!important;margin:0!important;padding:10px!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent .hpmw-cms-card{
+  min-width:0!important;margin:0!important;padding:10px 12px!important;
+  overflow:hidden!important;border-radius:10px!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent .hpmw-cms-title{
+  margin:0 0 5px!important;font-size:13px!important;line-height:1.3!important;
+ }
+ html.hpmw-portal-focus #faqView #hpmwFaqCategoryContent .hpmw-cms-body{
+  margin:0!important;font-size:11px!important;line-height:1.4!important;
+ }
+ /* Mijn Tickets: lijst links en geopend ticket rechts in dezelfde werkruimte. */
+ html.hpmw-portal-focus #myTicketsView{
+  display:flex!important;flex-direction:column!important;min-height:0!important;
+ }
+ html.hpmw-portal-focus #myTicketsView>.page-head.hpmw-section-title{display:none!important}
+ html.hpmw-portal-focus #myTicketsView>.page-head.hpmw-my-tickets-page-head{
+  flex:0 0 auto!important;margin:0 auto 7px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView>.panel{
+  display:grid!important;flex:1 1 auto!important;min-height:0!important;height:auto!important;
+  max-height:100%!important;grid-template-columns:minmax(250px,.36fr) minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr)!important;gap:0 12px!important;
+  overflow:hidden!important;margin:0 auto!important;padding:10px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView .member-tabs{
+  grid-column:1!important;grid-row:1!important;padding:0 0 8px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #myTicketsList{
+  grid-column:1!important;grid-row:2!important;min-height:0!important;height:100%!important;
+  overflow:auto!important;padding:4px 8px 4px 0!important;border-right:1px solid #30445b!important;
+ }
+ html.hpmw-portal-focus #myTicketsView .member-ticket-row{
+  margin:0 0 7px!important;padding:10px 12px!important;gap:4px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #memberDetail{
+  grid-column:2!important;grid-row:1/3!important;display:block!important;
+  min-width:0!important;min-height:0!important;height:100%!important;max-height:100%!important;
+  overflow:hidden!important;margin:0!important;padding:0 0 0 10px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #memberDetail:not(.active):empty{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #memberPosts,
+ html.hpmw-portal-focus #myTicketsView .member-posts{
+  max-height:clamp(110px,25vh,220px)!important;overflow:auto!important;
+ }
+ html.hpmw-portal-focus #myTicketsView .reply-box,
+ html.hpmw-portal-focus #myTicketsView .close-request{
+  margin:8px 0!important;padding:10px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView .reply-box textarea{
+  min-height:58px!important;height:58px!important;max-height:70px!important;resize:none!important;
+ }
+ /* Alternatieve eigen-ticketdetailweergave die de lijstcontainer hergebruikt. */
+ html.hpmw-portal-focus #myTicketsView #myTicketsList:has(#portalTicketBack){
+  grid-column:1/-1!important;grid-row:1/3!important;border:0!important;padding:0!important;
+  display:grid!important;grid-template-columns:minmax(230px,.38fr) minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr) auto auto!important;gap:8px 14px!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #myTicketsList:has(#portalTicketBack)>#portalTicketBack,
+ html.hpmw-portal-focus #myTicketsView #myTicketsList:has(#portalTicketBack)>h3{
+  grid-column:1/-1!important;margin:0!important;
+ }
+ html.hpmw-portal-focus #myTicketsView .portal-ticket-thread{
+  grid-column:1/-1!important;min-height:0!important;max-height:100%!important;
+  overflow:auto!important;margin:0!important;
+ }
+ html.hpmw-portal-focus #myTicketsView #portalTicketReply{
+  min-height:54px!important;height:54px!important;resize:none!important;
+ }
+}
+@media(max-width:900px){
+ html.hpmw-portal-focus main.shell>.view.active{height:auto!important;max-height:none!important;overflow:visible!important}
+}
+</style>
+
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
