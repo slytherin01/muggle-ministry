@@ -12447,3 +12447,75 @@ html body .hpmw-global-brandbar{
  width:min(1160px,calc(100vw - 32px))!important;max-width:1160px!important;
 }
 </style>
+
+
+<!-- HPMW mobile homepage layout correction 2026-11-18 -->
+<style id="hpmw-mobile-homepage-flow-correction-20261118">
+@media(max-width:700px){
+ html body main.shell #introView #hpmwHomeLayout{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  gap:14px!important;margin:0!important;padding:0!important;
+ }
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-main,
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-left,
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-right{
+  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
+  align-items:stretch!important;order:initial!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  grid-column:auto!important;grid-row:auto!important;
+  position:relative!important;inset:auto!important;transform:none!important;
+  overflow:visible!important;box-sizing:border-box!important;
+ }
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-main{order:0!important}
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-left{order:1!important}
+ html body main.shell #introView #hpmwHomeLayout>.hpmw-home-right{order:2!important}
+ html body main.shell #introView .intro-login-layout{
+  display:block!important;position:relative!important;inset:auto!important;
+  top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+  transform:none!important;float:none!important;z-index:auto!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;
+ }
+ html body main.shell #introView .intro-static-card{
+  display:flex!important;position:relative!important;inset:auto!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:18px 16px!important;
+  overflow:visible!important;box-sizing:border-box!important;
+  align-items:stretch!important;
+ }
+ html body main.shell #introView .center-message,
+ html body main.shell #introView .center-message.hpmw-welcome-box{
+  display:block!important;position:relative!important;inset:auto!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;transform:none!important;
+  writing-mode:horizontal-tb!important;text-orientation:mixed!important;
+  white-space:normal!important;overflow:visible!important;box-sizing:border-box!important;
+ }
+ html body main.shell #introView .intro-static-card *,
+ html body main.shell #introView .hpmw-home-main *{
+  writing-mode:horizontal-tb!important;text-orientation:mixed!important;
+  max-width:100%!important;box-sizing:border-box!important;
+ }
+ html body main.shell #introView .center-message h1,
+ html body main.shell #introView .center-message p{
+  width:100%!important;white-space:normal!important;
+  word-break:normal!important;overflow-wrap:anywhere!important;
+ }
+ html body main.shell #introView #hpmwHomeLayout .hpmw-side-card{
+  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;box-sizing:border-box!important;
+ }
+ html body main.shell #introView #hpmwHomeLayout .hpmw-side-card img{
+  display:block!important;width:auto!important;max-width:100%!important;
+  max-height:180px!important;height:auto!important;object-fit:contain!important;
+  margin-left:auto!important;margin-right:auto!important;
+ }
+}
+</style>
