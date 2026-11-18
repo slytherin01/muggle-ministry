@@ -3470,16 +3470,16 @@ c.querySelectorAll("script,style,form,button,.postprofile,.profile,.post-author,
 return (c.innerText||c.textContent||"").replace(/\u00a0/g," ").replace(/\r/g,"").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
 };
 const parse=(doc)=>{
-let roots=[...doc.querySelectorAll(".post, article.post, .post-wrap, .topic-post, .post-entry")];
-if(!roots.length) roots=[...doc.querySelectorAll(".postbody")].map(x=>x.closest("tr,article,li")||x);
-if(!roots.length) roots=[...doc.querySelectorAll("article,li,tr")].filter(x=>x.querySelector(".postbody,.message-content,.post-content,.content"));
+let roots=[...doc.querySelectorAll(".post, article.post, .post-wrap, .topic-post, .post-entry, .post-container, .post-row, [id^=\"p\"][id*=\"post\"], article[id^=\"p\"]")];
+if(!roots.length) roots=[...doc.querySelectorAll(".postbody,.post-body,.message-content,.post-content,.entry-content")].map(x=>x.closest(".post,article,tr,li,.post-wrap,.topic-post")||x);
+if(!roots.length) roots=[...doc.querySelectorAll("article,li,tr,div")].filter(x=>x.querySelector(".postbody,.post-body,.message-content,.post-content,.entry-content") && x.querySelectorAll(".postbody,.post-body,.message-content,.post-content,.entry-content").length<=2);
 const unique=[...new Set(roots)];
 for(const root of unique){
 const profile=root.querySelector(".postprofile,.poster-profile,.profile");
 const authorLink=[...(profile||root).querySelectorAll("a[href]")].find(a=>/\/u\d+(?:-|$)/i.test(a.getAttribute("href")||""));
 const userId=Number(((authorLink?.getAttribute("href")||"").match(/\/u(\d+)/i)||[])[1]||0);
 const author=(authorLink?.textContent||root.querySelector(".username,.author,.post-author,.name")?.textContent||t.user||"Gebruiker").replace(/\s+/g," ").trim();
-const selectors=[".post-body .content",".post-body .message-content",".post-body .post-content",".post-body .message",".post-body",".postbody .content",".postbody .message-content",".postbody .post-content",".postbody .message",".postbody",".message-content",".entry-content",".content",".post-content"];
+const selectors=[".post-body .content",".post-body .message-content",".post-body .post-content",".post-body .message",".post-body",".postbody .content",".postbody .message-content",".postbody .post-content",".postbody .message",".postbody",".message-content",".entry-content",".post-content",".message",".content"];
 let body=null;
 for(const sel of selectors){const el=root.querySelector(sel);if(el&&textOf(el)){body=el;break;}}
 if(!body && root.matches(".postbody,.message-content,.post-content,.entry-content"))body=root;
@@ -9441,6 +9441,64 @@ html.hpmw-portal-focus #myTicketsView tr{
 }
 </style>
 
+
+<!-- HPMW herstel ticketleesbaarheid en consistente portaalruimte 2026-11-18 -->
+<style id="hpmw-ticket-and-portal-readable-layout-20261118">
+/* Eén rustig ritme voor alle hoofdpagina's; geen vaste hoogtes of overlappende positionering. */
+html body main.shell>.view.active{width:100%;min-width:0;max-width:100%;margin:0 auto 28px!important;padding:0!important;box-sizing:border-box}
+html body main.shell .page-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:0 0 22px!important}
+html body main.shell .page-head h1{line-height:1.25;margin:0 0 6px}
+html body main.shell .panel{margin:0 0 22px!important;border-radius:16px;overflow:hidden}
+html body main.shell .panel-head{padding:20px 24px;gap:16px}
+html body main.shell .categories{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px}
+html body main.shell .cat{min-height:112px;padding:16px;gap:14px;align-items:center}
+html body main.shell .cat>span:last-child{min-width:0;gap:7px}
+html body main.shell .cat strong{font-size:14px;line-height:1.35}
+html body main.shell .cat>span:last-child>span{font-size:12px;line-height:1.55}
+html body main.shell .form-grid{gap:22px;padding:26px}
+html body main.shell .field label{margin-bottom:9px}
+html body main.shell .field input,html body main.shell .field select,html body main.shell .field textarea{min-height:46px;padding:12px 14px}
+html body main.shell .field textarea{min-height:160px}
+html body main.shell .admin-layout{grid-template-columns:230px minmax(0,1fr);min-height:0}
+html body main.shell .admin-nav{padding:20px 16px}
+html body main.shell .admin-main{padding:26px;min-width:0}
+html body main.shell .admin-toolbar{margin:0 0 20px}
+html body main.shell .stats{gap:14px;margin:0 0 20px}
+html body main.shell .stat{min-height:92px;padding-top:17px}
+html body main.shell .ticket-table-wrap,html body main.shell .member-table-wrap{margin:0 0 18px;border-radius:12px}
+html body main.shell .ticket-table th,html body main.shell .member-table th{padding:15px 16px}
+html body main.shell .ticket-table td,html body main.shell .member-table td{padding:15px 16px;line-height:1.5}
+html body main.shell .detail-head{padding:24px;gap:20px}
+html body main.shell .detail-facts{gap:12px;margin-top:18px}
+html body main.shell .detail-facts>div{padding:13px}
+html body main.shell .chat-thread{gap:16px;padding:20px;max-height:65vh}
+html body main.shell .chat-bubble{padding:13px 16px;line-height:1.65}
+html body main.shell .reply-box{margin:20px;padding:22px}
+html body main.shell .reply-box textarea{min-height:150px}
+html body main.shell .member-tabs{gap:10px;padding:20px 22px 0}
+html body main.shell .empty,html body main.shell .loading{padding:48px 24px;line-height:1.6}
+@media(max-width:900px){
+ html body main.shell .admin-layout{grid-template-columns:1fr}
+ html body main.shell .admin-nav{display:flex;flex-wrap:wrap;gap:8px;border-right:0;border-bottom:1px solid var(--line)}
+ html body main.shell .admin-main{padding:20px}
+ html body main.shell .categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+ html body main.shell>.view.active{margin-bottom:18px!important}
+ html body main.shell .page-head{align-items:flex-start;margin-bottom:16px!important}
+ html body main.shell .categories{grid-template-columns:1fr;gap:11px;padding:13px}
+ html body main.shell .cat{min-height:88px;padding:14px}
+ html body main.shell .form-grid{grid-template-columns:minmax(0,1fr);gap:17px;padding:17px}
+ html body main.shell .field.full{grid-column:auto}
+ html body main.shell .admin-main{padding:14px}
+ html body main.shell .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ html body main.shell .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ html body main.shell .detail-head{padding:17px}
+ html body main.shell .chat-thread{padding:13px;max-height:none}
+ html body main.shell .reply-box{margin:13px;padding:15px}
+ html body main.shell .ticket-table-wrap,html body main.shell .member-table-wrap{max-width:100%;overflow-x:auto}
+}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
