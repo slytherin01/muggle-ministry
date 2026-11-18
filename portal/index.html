@@ -12094,6 +12094,81 @@ html body #introView:not(.hpmw-home-layout-ready){visibility:visible!important;o
 
 
 
+
+<!-- HPMW homepage centering and navigation repair 2026-11-18 -->
+<style id="hpmw-homepage-center-and-nav-repair-20261118">
+/* De homepage-grid was expliciet links uitgelijnd; centreer de volledige drie kolommen. */
+html body #introView #hpmwHomeLayout{
+ display:grid!important;
+ grid-template-columns:minmax(190px,240px) minmax(360px,1fr) minmax(190px,240px)!important;
+ gap:18px!important;
+ width:min(1480px,calc(100vw - 48px))!important;
+ max-width:1480px!important;min-width:0!important;
+ margin-left:auto!important;margin-right:auto!important;
+ left:auto!important;right:auto!important;transform:none!important;
+ justify-self:stretch!important;box-sizing:border-box!important;align-items:start!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-left,
+html body #introView #hpmwHomeLayout>.hpmw-home-main,
+html body #introView #hpmwHomeLayout>.hpmw-home-right{
+ min-width:0!important;max-width:none!important;width:100%!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:2!important;grid-row:1!important}
+html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:3!important;grid-row:1!important}
+html body #introView .intro-login-layout{
+ width:100%!important;max-width:none!important;margin:0 auto!important;box-sizing:border-box!important;
+}
+html body header.topbar.luxury-nav-v2,
+html body header.topbar.luxury-nav-v2 nav.top-actions,
+html body header.topbar.luxury-nav-v2 nav.top-actions>*{
+ pointer-events:auto!important;
+}
+html body header.topbar.luxury-nav-v2 nav.top-actions>.lux-nav-item,
+html body header.topbar.luxury-nav-v2 nav.top-actions>a{
+ position:relative!important;z-index:1201!important;pointer-events:auto!important;touch-action:manipulation!important;
+}
+@media(max-width:1050px){
+ html body #introView #hpmwHomeLayout{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  width:min(920px,calc(100vw - 32px))!important;max-width:920px!important;gap:14px!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-left{grid-column:1!important;grid-row:2!important}
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:700px){
+ html body #introView #hpmwHomeLayout{
+  display:flex!important;flex-direction:column!important;width:calc(100vw - 20px)!important;
+  max-width:560px!important;margin:0 auto!important;gap:12px!important;
+ }
+ html body #introView #hpmwHomeLayout>.hpmw-home-main,
+ html body #introView #hpmwHomeLayout>.hpmw-home-left,
+ html body #introView #hpmwHomeLayout>.hpmw-home-right{
+  display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;
+ }
+}
+</style>
+<script id="hpmw-reliable-top-navigation-actions-20261118">
+(()=>{"use strict";
+ if(window.__hpmwReliableTopNav)return;window.__hpmwReliableTopNav=true;
+ window.addEventListener("click",event=>{
+  const target=event.target instanceof Element?event.target:null;if(!target)return;
+  const button=target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch");
+  if(!button)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  if(button.id==="ticketSupportLaunch"){
+   if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("homeView");
+  }else if(button.id==="faqLaunch"){
+   if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("faqView");
+  }else if(button.id==="myTicketsLaunch"){
+   if(typeof window.showMyTickets==="function")window.showMyTickets();
+   else if(typeof showMyTickets==="function")showMyTickets();
+  }
+ },true);
+})();
+</script>
+
 <!-- HPMW layout normalisatie 2026-11-18: laatste consistente layoutlaag -->
 <style id="hpmw-layout-normalization-20261118">
 /* Hef conflicterende fixed/absolute offsets uit oudere layoutpatches op. */
