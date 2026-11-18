@@ -11338,3 +11338,132 @@ html body header.topbar.luxury-nav-v2 nav.top-actions #hpmwGlobeButton{
  html body header.topbar.luxury-nav-v2 nav.top-actions #myTicketsLaunch{margin-left:auto!important}
 }
 </style>
+
+
+
+<!-- HPMW functionele reparatie 2026-11-18: één databron voor eigen tickets en echte berichtentelling. -->
+<style id="hpmw-ticket-interaction-final-fix">
+html body main.shell{pointer-events:auto!important}
+html body main.shell>.view.active,
+html body main.shell>.view.active *{pointer-events:auto!important}
+html body #homeView #categories .cat,
+html body #formView input,html body #formView textarea,
+html body #formView select,html body #formView button,
+html body #myTicketsView button,html body #myTicketsView tr{
+ pointer-events:auto!important;cursor:pointer;
+}
+html body #myTicketsLaunch:not([hidden]),
+html body #adminLaunch:not([hidden]){
+ visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+}
+#myTicketsLaunch .hpmw-unread-count,#adminLaunch .hpmw-unread-count{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ min-width:0!important;height:20px!important;padding:0 7px!important;
+ border-radius:999px!important;background:#a92f43!important;color:#fff!important;
+ font-size:10px!important;font-weight:800!important;white-space:nowrap!important;
+ animation:none!important;box-shadow:none!important;
+}
+#myTicketsLaunch .hpmw-unread-envelope,#adminLaunch .hpmw-unread-envelope{
+ color:#ff9aa8!important;font-size:15px!important;
+}
+</style>
+<script id="hpmw-own-tickets-and-counts-final-fix">
+(()=>{
+ "use strict";
+ const $=s=>document.querySelector(s);
+ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const readKey=()=> "hpmw_supabase_ticket_reads_"+String(window.HpmwPortalAccess?.session?.user?.id||"guest");
+ const readMap=()=>{try{return JSON.parse(localStorage.getItem(readKey())||"{}")||{}}catch(_){return {}}};
+ const writeRead=(id,msgId)=>{const m=readMap();m[String(id)]=String(msgId||"");localStorage.setItem(readKey(),JSON.stringify(m))};
+ let ownTickets=[];
+ function paintCount(id,count){
+  const el=document.getElementById(id);if(!el)return;
+  el.textContent=String(count)+" nieuwe";
+  el.classList.toggle("has-unread",count>0);
+  el.style.setProperty("display","inline-flex","important");
+  el.setAttribute("aria-label",count+" nieuwe berichten");
+  el.title=count+" nieuwe berichten";
+ }
+ async function latestMessage(db,ticketId){
+  const {data,error}=await db.from("support_ticket_messages")
+   .select("id,author_id,created_at").eq("ticket_id",ticketId)
+   .eq("is_internal",false).order("created_at",{ascending:false}).limit(1);
+  if(error)throw error;
+  return data?.[0]||null;
+ }
+ window.hpmwRefreshOwnTicketCount=async function(){
+  try{
+   const access=window.HpmwPortalAccess;if(!access)return;
+   await access.ensureClient();const db=access.client;
+   const {data:{session}}=await db.auth.getSession();if(!session?.user)return;
+   const {data:tickets,error}=await db.from("support_tickets")
+    .select("id,status,created_by").eq("created_by",session.user.id);
+   if(error)throw error;
+   let unread=0;
+   for(const t of tickets||[]){
+    const last=await latestMessage(db,t.id);
+    if(last&&String(last.author_id)!==String(session.user.id)&&readMap()[String(t.id)]!==String(last.id))unread++;
+   }
+   paintCount("myTicketsCount",unread);
+  }catch(e){console.warn("[Hpmw] Eigen ticketmelding kon niet worden bijgewerkt:",e)}
+ };
+ window.loadMyTickets=async function(){
+  const host=$("#myTicketsList");if(!host)return;
+  host.innerHTML='<div class="member-loading"><div class="member-loading-head">Je tickets laden...</div></div>';
+  try{
+   const access=window.HpmwPortalAccess;if(!access)throw Error("Ticketportaal is niet beschikbaar.");
+   await access.ensureClient();const db=access.client;
+   const {data:{session},error:sessionError}=await db.auth.getSession();
+   if(sessionError)throw sessionError;
+   if(!session?.user)throw Error("Log eerst in met je gekoppelde portaalaccount. Je forumlogin alleen is niet voldoende om beveiligde tickets te bekijken.");
+   const {data,error}=await db.from("support_tickets")
+    .select("id,ticket_number,category,department,subject,status,priority,created_at,updated_at")
+    .eq("created_by",session.user.id).order("created_at",{ascending:false});
+   if(error)throw error;
+   ownTickets=data||[];
+   if(!ownTickets.length){
+    host.innerHTML='<div class="member-empty">Je hebt nog geen supporttickets aangemaakt met dit portaalaccount.</div>';
+    await window.hpmwRefreshOwnTicketCount();return;
+   }
+   host.innerHTML=ownTickets.map(t=>'<button type="button" class="member-ticket-row" data-ticket-id="'+esc(t.id)+'"><span><b>#'+esc(t.ticket_number)+'</b> '+esc(t.subject)+'</span><small>'+esc(t.category)+' · '+esc(t.department)+' · '+esc(({pending:"Wachten op antwoord",progress:"In behandeling",done:"Gesloten",refused:"Afgewezen"})[t.status]||t.status)+'</small></button>').join("");
+   host.querySelectorAll("[data-ticket-id]").forEach(b=>b.addEventListener("click",()=>window.hpmwOpenOwnPortalTicket(b.dataset.ticketId,host)));
+   await window.hpmwRefreshOwnTicketCount();
+  }catch(e){host.innerHTML='<div class="member-empty">'+esc(e.message||"Je tickets konden niet worden geladen.")+'</div>'}
+ };
+ window.hpmwOpenOwnPortalTicket=async function(id,host){
+  try{
+   const db=window.HpmwPortalAccess.client;
+   const {data:{session}}=await db.auth.getSession();if(!session?.user)throw Error("Log opnieuw in.");
+   const {data:ticket,error}=await db.from("support_tickets")
+    .select("id,ticket_number,subject,status,category,department").eq("id",id).eq("created_by",session.user.id).single();
+   if(error)throw error;
+   const {data:messages,error:messageError}=await db.from("support_ticket_messages")
+    .select("id,author_id,author_name,body,is_internal,created_at")
+    .eq("ticket_id",id).eq("is_internal",false).order("created_at");
+   if(messageError)throw messageError;
+   const latest=(messages||[]).at(-1);if(latest)writeRead(id,latest.id);
+   host.innerHTML='<button type="button" id="portalTicketBack">← Terug naar mijn tickets</button><h3>#'+esc(ticket.ticket_number)+' — '+esc(ticket.subject)+'</h3><div class="portal-ticket-thread">'+(messages||[]).map(m=>'<article><b>'+esc(m.author_name)+'</b><small>'+esc(new Date(m.created_at).toLocaleString("nl-NL"))+'</small><p>'+esc(m.body).replace(/\n/g,"<br>")+'</p></article>').join("")+'</div>'+(ticket.status==="done"||ticket.status==="refused"?'<p>Dit ticket is gesloten.</p>':'<textarea id="portalTicketReply" placeholder="Schrijf een reactie..."></textarea><button type="button" id="portalTicketSend">Reactie versturen</button>');
+   $("#portalTicketBack").onclick=window.loadMyTickets;
+   $("#portalTicketSend")?.addEventListener("click",async()=>{
+    const body=$("#portalTicketReply").value.trim();if(!body)return;
+    const {error}=await db.from("support_ticket_messages").insert({ticket_id:id,author_id:session.user.id,author_name:window._userdata?.username||session.user.email,body,is_internal:false});
+    if(error){host.insertAdjacentHTML("beforeend",'<p class="member-empty">'+esc(error.message)+'</p>');return}
+    await window.hpmwOpenOwnPortalTicket(id,host);
+   });
+   await window.hpmwRefreshOwnTicketCount();
+  }catch(e){host.innerHTML='<div class="member-empty">'+esc(e.message||"Ticket kon niet worden geopend.")+'</div>'}
+ };
+ // De legacy Forumotion-teller deelde dezelfde globale ticketlijst met de tool.
+ // Houd de tooltelling uitsluitend bij voor de Ticketbeheer-weergave.
+ const oldAdminCount=window.updateAdminTicketCount;
+ window.updateAdminTicketCount=function(){
+  const el=$("#adminTicketsCount");if(!el)return;
+  const n=Array.isArray(window.all)?window.all.filter(t=>!t.closed&&!!t._unreadMessage).length:0;
+  paintCount("adminTicketsCount",n);
+ };
+ document.addEventListener("hpmw:user-ready",()=>window.hpmwRefreshOwnTicketCount?.());
+ document.addEventListener("hpmw:portal-access-updated",()=>window.hpmwRefreshOwnTicketCount?.());
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)window.hpmwRefreshOwnTicketCount?.()});
+ document.addEventListener("DOMContentLoaded",()=>{window.hpmwRefreshOwnTicketCount?.()});
+})();
+</script>
