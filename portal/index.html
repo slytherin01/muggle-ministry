@@ -3309,68 +3309,66 @@ document.addEventListener("hpmw:portal-access-updated",()=>{const b=$("#adminLau
 function openForm(k){activeCat=cat(k); if(!activeCat)return;$("#formTitle").textContent=activeCat.name;$("#formSubtitle").textContent=activeCat.desc;$("#formCategory").value=activeCat.name;$("#formUser").value=user.logged?user.name:"Gast";$("#formSubject").value="";$("#formMessage").value="";$("#formDepartment").value="";$("#formNotice").className="notice";updateTicketMessageCounter();show("formView");}async function postTicket(){
  const access=window.HpmwPortalAccess;
  if(!access?.canUseTickets?.()){notify("Je account heeft geen rechten om tickets aan te maken.");return}
- const subjectField=$("#formSubject"),messageField=$("#formMessage"),departmentField=$("#formDepartment");
- const sub=subjectField.value.trim(),msg=messageField.value.trim(),department=departmentField.value,btn=$("#formSubmit");
+ if(!user.logged||!Number(user.id)){notify("Log eerst in op het forum om een supportticket te versturen.");return}
+ if(!activeCat){notify("Kies eerst een ticketcategorie.");return}
+ const subjectField=$("#formSubject"),messageField=$("#formMessage"),departmentField=$("#formDepartment"),btn=$("#formSubmit");
+ const sub=subjectField.value.trim(),msg=messageField.value.trim(),department=departmentField.value;
  subjectField.setCustomValidity(sub.length<3?"Vul een onderwerp van minimaal 3 tekens in.":"");
  messageField.setCustomValidity(msg.length<10?"Beschrijf je vraag met minimaal 10 tekens.":"");
  if(!department){departmentField.setCustomValidity("Kies een afdeling.");departmentField.reportValidity();departmentField.focus();return}
  departmentField.setCustomValidity("");
  if(!subjectField.checkValidity()){subjectField.reportValidity();subjectField.focus();return}
  if(!messageField.checkValidity()){messageField.reportValidity();messageField.focus();return}
- btn.disabled=true;notify("Ticket wordt aangemaakt...","ok");
+ btn.disabled=true;notify("Ticket wordt veilig via je forumaccount aangemaakt...","ok");
  try{
-  await access.ensureClient();
-  const db=access.client;
-  const {data:{session},error:sessionError}=await db.auth.getSession();
-  if(sessionError)throw sessionError;
-  if(!session?.user)throw new Error("Log eerst in met je portaalaccount en probeer opnieuw.");
-  const {data:ticket,error}=await db.rpc("create_support_ticket",{
-   p_category:activeCat?.name||"Support",
-   p_department:department,
-   p_subject:sub,
-   p_body:msg,
-   p_requester_name:user.name||session.user.email||"Portaalgebruiker",
-   p_forumotion_user_id:Number(user.id)||null
-  });
-  if(error)throw error;
-  const createdTicket=Array.isArray(ticket)?ticket[0]:ticket;
-  if(!createdTicket?.ticket_number)throw new Error("Ticket aangemaakt, maar het ticketnummer kon niet worden teruggelezen.");
+  const forumId=Number(user.id);
+  const formUrl=new URL("/post?f="+encodeURIComponent(activeCat.id)+"&mode=newtopic",location.origin);
+  const formResponse=await fetch(formUrl.href,{method:"GET",credentials:"include",cache:"no-store",headers:{"Accept":"text/html"}});
+  if(!formResponse.ok)throw new Error("Forumotion kon het ticketformulier niet openen (HTTP "+formResponse.status+").");
+  const formDoc=new DOMParser().parseFromString(await formResponse.text(),"text/html");
+  const forumForm=[...formDoc.forms].find(f=>f.querySelector('input[name="subject"],input[name="topic_name"]')&&f.querySelector('textarea[name="message"],textarea#text_editor_textarea'));
+  if(!forumForm){
+   const pageText=(formDoc.body?.innerText||"").toLowerCase();
+   if(/permission|autorisatie|geen toegang|not allowed|must be registered|connectez-vous|vous devez être connecté/.test(pageText))throw new Error("Je forumaccount heeft geen toestemming om in deze ticketcategorie te plaatsen.");
+   throw new Error("Forumotion heeft geen geldig nieuw-topicformulier teruggegeven. Controleer je forumlogin en de rechten van deze categorie.");
+  }
+  const subjectInput=forumForm.querySelector('input[name="subject"],input[name="topic_name"]');
+  const messageInput=forumForm.querySelector('textarea[name="message"],textarea#text_editor_textarea');
+  const payload=new FormData(forumForm);
+  const topicSubject="[Ticket] "+sub;
+  const topicBody="Ticketcategorie: "+activeCat.name+"\nAfdeling: "+department+"\nIngediend door: "+String(user.name||"Forumlid")+" (forumaccount #"+forumId+")\n\n"+msg;
+  payload.set(subjectInput.name,topicSubject);
+  payload.set(messageInput.name,topicBody);
+  const postButton=forumForm.querySelector('input[name="post"],button[name="post"]');
+  if(postButton)payload.set(postButton.name,postButton.value||postButton.textContent||"Versturen");
+  const action=new URL(forumForm.getAttribute("action")||"/post",location.origin).href;
+  const posted=await fetch(action,{method:"POST",body:payload,credentials:"include",cache:"no-store",redirect:"follow"});
+  const postedHtml=await posted.text();
+  const postedDoc=new DOMParser().parseFromString(postedHtml,"text/html");
+  if(!posted.ok)throw new Error("Forumotion kon je ticket niet plaatsen (HTTP "+posted.status+").");
+  const finalUrl=posted.url||"";
+  let topicId=(finalUrl.match(/\/t(\d+)/i)||[])[1]||"";
+  if(!topicId){
+   const link=[...postedDoc.querySelectorAll('a[href]')].find(a=>/\/t\d+(?:-|\/|$)/i.test(a.getAttribute("href")||""));
+   topicId=(link?.getAttribute("href")?.match(/\/t(\d+)/i)||[])[1]||"";
+  }
+  const pageText=postedDoc.body?.innerText||"";
+  if(postedDoc.querySelector(".error,.errorbox,.msg-error,.message-error")||/vous devez entrer un message|you must enter a message|bericht is te kort|bericht is leeg|onderwerp is gesloten|topic is locked|topic fermé/i.test(pageText))throw new Error("Forumotion heeft het ticket geweigerd. Controleer de categorie en probeer opnieuw.");
+  if(!topicId)throw new Error("Forumotion heeft de plaatsing niet bevestigd. Er is geen ticket als succesvol gemeld; controleer je ticketlijst voordat je opnieuw verzendt.");
+  try{
+   const local=internalData();local[topicId]=Object.assign(local[topicId]||{},{status:"pending",priority:"normal",department:department,createdAt:Date.now(),userId:forumId});localStorage.setItem(INTERNAL_KEY,JSON.stringify(local));
+  }catch(storageError){console.warn("[Hpmw] Lokale ticketmetadata kon niet worden bewaard.",storageError)}
   $("#formSubject").value="";$("#formMessage").value="";$("#formDepartment").value="";
-  btn.disabled=false;
-  notify("Ticket #"+createdTicket.ticket_number+" is aangemaakt.","ok");
-  if(typeof loadMyTickets==="function")await loadMyTickets();
-  setTimeout(()=>show("homeView"),900);
+  notify("Je supportticket #"+topicId+" is aangemaakt.","ok");
+  const notice=$("#formNotice");if(notice){const link=document.createElement("a");link.href=finalUrl||("/t"+topicId);link.target="_blank";link.rel="noopener noreferrer";link.textContent=" Bekijk je ticket";link.style.marginLeft="8px";notice.append(link)}
+  if(typeof loadMyTickets==="function")loadMyTickets();
+  setTimeout(()=>show("homeView"),1200);
  }catch(e){
-  btn.disabled=false;
   console.error("Supportticket aanmaken mislukt:",e);
   notify(e.message||"Ticket aanmaken mislukt.");
- }
+ }finally{btn.disabled=false}
 }
-async function loadMyTickets(){
- const host=$("#myTicketsList");if(!host)return;
- host.innerHTML='<div class="member-loading"><div class="member-loading-head">Je tickets laden...</div></div>';
- try{
-  const access=window.HpmwPortalAccess;await access.ensureClient();const db=access.client;
-  const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;
-  if(!session?.user)throw new Error("Je bent wel ingelogd op het forum, maar nog niet met een portaalaccount. Mijn tickets gebruikt een aparte beveiligde Supabase-inlogsessie. Meld je aan met het gekoppelde portaalaccount en open Mijn tickets opnieuw.");
-  const {data:tickets,error}=await db.from("support_tickets").select("id,ticket_number,category,department,subject,status,priority,created_at,updated_at").eq("created_by",session.user.id).order("created_at",{ascending:false});
-  if(error)throw error;
-  if(!tickets?.length){host.innerHTML='<div class="member-empty">Je hebt nog geen supporttickets aangemaakt.</div>';return}
-  host.innerHTML=tickets.map(t=>'<button type="button" class="member-ticket-row" data-ticket-id="'+esc(t.id)+'"><span><b>#'+esc(t.ticket_number)+'</b> '+esc(t.subject)+'</span><small>'+esc(t.category)+' · '+esc(t.department)+' · '+esc(({pending:"Wachten op antwoord",progress:"In behandeling",done:"Gesloten",refused:"Afgewezen"})[t.status]||t.status)+'</small></button>').join("");
-  host.querySelectorAll("[data-ticket-id]").forEach(b=>b.addEventListener("click",()=>openPortalTicket(b.dataset.ticketId,host)));
- }catch(e){host.innerHTML='<div class="member-empty">'+esc(e.message||"Je tickets konden niet worden geladen.")+'</div>'}
-}
-async function openPortalTicket(id,host){
- try{
-  const db=window.HpmwPortalAccess.client;
-  const {data:{session}}=await db.auth.getSession();if(!session?.user)throw new Error("Log opnieuw in.");
-  const {data:ticket,error}=await db.from("support_tickets").select("id,ticket_number,subject,status,category,department").eq("id",id).single();if(error)throw error;
-  const {data:messages,error:messageError}=await db.from("support_ticket_messages").select("id,author_name,body,is_internal,created_at").eq("ticket_id",id).eq("is_internal",false).order("created_at");if(messageError)throw messageError;
-  host.innerHTML='<button type="button" id="portalTicketBack">← Terug naar mijn tickets</button><h3>#'+esc(ticket.ticket_number)+' — '+esc(ticket.subject)+'</h3><div class="portal-ticket-thread">'+(messages||[]).map(m=>'<article><b>'+esc(m.author_name)+'</b><small>'+esc(new Date(m.created_at).toLocaleString("nl-NL"))+'</small><p>'+esc(m.body).replace(/\n/g,"<br>")+'</p></article>').join("")+'</div>'+(ticket.status==="done"||ticket.status==="refused"?'<p>Dit ticket is gesloten.</p>':'<textarea id="portalTicketReply" placeholder="Schrijf een reactie..."></textarea><button type="button" id="portalTicketSend">Reactie versturen</button>');
-  $("#portalTicketBack").onclick=loadMyTickets;
-  $("#portalTicketSend")?.addEventListener("click",async()=>{const body=$("#portalTicketReply").value.trim();if(!body)return;const {error}=await db.from("support_ticket_messages").insert({ticket_id:id,author_id:session.user.id,author_name:user.name||session.user.email,body,is_internal:false});if(error){notify(error.message);return}await openPortalTicket(id,host)});
- }catch(e){host.innerHTML='<div class="member-empty">'+esc(e.message||"Ticket kon niet worden geopend.")+'</div>'}
-}function fetchText(url,timeout=10000){
+function fetchText(url,timeout=10000){
  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout),target=new URL(url,BASE);
  if(target.origin!==BASE){
   if(!/^\/(?:t\d+|f\d+)(?:[-/?#]|$)/i.test(target.pathname))throw Error("Externe forumlink geblokkeerd.");
