@@ -11900,3 +11900,46 @@ html body main.shell>#vacancyAdminView.view:not(.active){
  }
 }
 </style>
+
+
+<style id="hpmw-one-active-view-runtime-20261118">
+/* Fallback voor oudere portalregels die meerdere secties tegelijk tonen. */
+html.hpmw-portal-focus body main.shell{height:calc(100dvh - 88px)!important;min-height:0!important;max-height:calc(100dvh - 88px)!important;overflow:hidden!important}
+html.hpmw-portal-focus body main.shell>.view{box-sizing:border-box!important}
+@media(min-width:901px){
+ html.hpmw-portal-focus body main.shell>.view.active{
+  height:100%!important;max-height:100%!important;min-height:0!important;
+  overflow:hidden!important;
+ }
+}
+</style>
+<script id="hpmw-enforce-single-active-view-runtime-20261118">
+(()=>{
+ "use strict";
+ const ids=["introView","homeView","formView","myTicketsView","sortingHatView","newsView","vacanciesView","modteamView","awardsView","faqView","toolView","newAdminDashboard","newSettingsView","newTranslationsView","hpmwModteamAdmin","adminView","vacancyAdminView"];
+ const apply=(wanted)=>{
+  const shell=document.querySelector("main.shell");if(!shell)return;
+  const views=ids.map(id=>document.getElementById(id)).filter(el=>el&&shell.contains(el));
+  let target=views.find(el=>el.id===wanted)||views.find(el=>el.classList.contains("active"));
+  if(!target)return;
+  views.forEach(el=>{
+   const on=el===target;
+   el.classList.toggle("active",on);
+   el.style.setProperty("display",on?(el.id==="formView"?"flex":"block"):"none","important");
+   el.style.setProperty("visibility",on?"visible":"hidden","important");
+   el.style.setProperty("opacity",on?"1":"0","important");
+   el.style.setProperty("pointer-events",on?"auto":"none","important");
+   if(!on){el.style.setProperty("position","absolute","important");el.style.setProperty("width","0","important");el.style.setProperty("height","0","important");el.style.setProperty("overflow","hidden","important")}
+   else {el.style.removeProperty("position");el.style.removeProperty("width");el.style.removeProperty("height");el.style.removeProperty("overflow")}
+  });
+ };
+ const original=window.show;
+ if(typeof original==="function"&&!original.__hpmwSingleView){
+  const wrapped=function(id){const result=original.apply(this,arguments);apply(id);return result};
+  wrapped.__hpmwSingleView=true;window.show=wrapped;
+ }
+ const run=()=>{const active=ids.map(id=>document.getElementById(id)).find(el=>el&&el.classList.contains("active"));if(active)apply(active.id)};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true});else run();
+ document.addEventListener("click",()=>{const active=ids.map(id=>document.getElementById(id)).find(el=>el&&el.classList.contains("active"));if(active)apply(active.id)},true);
+})();
+</script>
