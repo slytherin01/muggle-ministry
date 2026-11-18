@@ -11938,3 +11938,69 @@ html body main.shell>.view.active{
  }
 }
 </style>
+
+
+<style id="hpmw-normal-website-load-and-refresh-20261118">
+/* Bij een normale paginalaadbeurt gedraagt het portaal zich als een volledige website:
+   natuurlijke documenthoogte, normale scroll en de complete startpagina zichtbaar. */
+html,html body{
+ height:auto!important;min-height:100%!important;
+ overflow-x:hidden!important;overflow-y:auto!important;
+}
+html body main.shell{
+ position:relative!important;inset:auto!important;transform:none!important;float:none!important;
+ display:block!important;width:min(1480px,calc(100% - 32px))!important;
+ max-width:1480px!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:18px auto 32px!important;padding:20px!important;overflow:visible!important;
+}
+html body main.shell>#introView.view.active{
+ display:block!important;position:relative!important;inset:auto!important;
+ width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:0 0 48px!important;overflow:visible!important;
+ visibility:visible!important;opacity:1!important;transform:none!important;
+}
+html body main.shell>.view:not(.active){
+ display:none!important;visibility:hidden!important;pointer-events:none!important;
+}
+html body .hpmw-global-brandbar{
+ position:relative!important;inset:auto!important;transform:none!important;
+ display:block!important;width:min(1180px,calc(100% - 32px))!important;
+ max-width:1180px!important;height:auto!important;min-height:0!important;max-height:none!important;
+ aspect-ratio:3.2/1!important;margin:14px auto 20px!important;
+}
+@media(max-width:700px){
+ html body main.shell{width:calc(100% - 16px)!important;margin:10px auto 22px!important;padding:12px!important}
+ html body .hpmw-global-brandbar{width:calc(100% - 16px)!important;margin:8px auto 14px!important}
+}
+/* Startpagina is al bruikbaar terwijl de aanvullende nieuws-/CMS-widgets laden. */
+html body #introView:not(.hpmw-home-layout-ready){visibility:visible!important;opacity:1!important}
+</style>
+<script id="hpmw-normal-website-initial-state-20261118">
+(()=>{
+ "use strict";
+ const boot=()=>{
+  if(new URLSearchParams(location.search).get("adminEmbed")==="1"||location.hash.startsWith("#/tool"))return;
+  const root=document.documentElement;
+  root.classList.remove("hpmw-portal-focus","hpmw-tool-focus");
+  const shell=document.querySelector("main.shell");
+  if(!shell)return;
+  const intro=document.getElementById("introView");
+  if(!intro)return;
+  shell.querySelectorAll(":scope > .view").forEach(view=>{
+   const active=view===intro;
+   view.classList.toggle("active",active);
+   if(view===intro){
+    ["position","inset","width","height","max-height","min-height","overflow","visibility","opacity","transform"].forEach(p=>view.style.removeProperty(p));
+   }
+  });
+  intro.style.setProperty("display","block","important");
+  intro.style.setProperty("visibility","visible","important");
+  intro.style.setProperty("opacity","1","important");
+  shell.style.removeProperty("position");
+  shell.style.removeProperty("height");
+  shell.style.removeProperty("max-height");
+  shell.style.removeProperty("overflow");
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+})();
+</script>
