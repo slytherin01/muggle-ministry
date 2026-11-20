@@ -12887,4 +12887,12 @@ html body.hpmw-ticket-support-active #homeView .categories .cat>span:not(.round-
 }
 html body[data-hpmw-route="support"] #homeView .categories .cat .round-icon,
 html body.hpmw-ticket-support-active #homeView .categories .cat .round-icon{display:flex!important;flex:0 0 46px!important;width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important}
+</style><style id="hpmw-support-category-structure-global-fix-20261120">
+/* Route-independent repair: the support category cards use nested spans. */
+#homeView .categories .cat{display:flex!important;flex-direction:row!important;align-items:center!important;gap:12px!important;text-align:left!important}
+#homeView .categories .cat>span.round-icon{display:grid!important;flex:0 0 46px!important;width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;place-items:center!important}
+#homeView .categories .cat>span:last-child{display:flex!important;position:static!important;flex:1 1 auto!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:4px!important;width:auto!important;min-width:0!important;height:auto!important;max-height:none!important;transform:none!important;float:none!important;writing-mode:horizontal-tb!important}
+#homeView .categories .cat>span:last-child>strong{display:block!important;position:static!important;flex:0 0 auto!important;width:100%!important;height:auto!important;margin:0!important;font-size:14px!important;font-weight:700!important;line-height:1.3!important;white-space:normal!important}
+#homeView .categories .cat>span:last-child>span{display:block!important;position:static!important;flex:0 0 auto!important;width:100%!important;height:auto!important;margin:0!important;font-size:12px!important;line-height:1.45!important;white-space:normal!important;opacity:.85!important}
+#homeView .categories .cat>span:last-child *{position:static!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;text-orientation:mixed!important;max-width:100%!important}
 </style>
