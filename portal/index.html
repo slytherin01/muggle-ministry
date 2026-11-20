@@ -9559,15 +9559,8 @@ html body #introView #hpmwHomeLayout .hpmw-home-main>*{flex:0 0 auto!important}
 
 <script id="hpmw-global-internal-urls-20261120">
 (()=>{"use strict";
-const routes={"/": "introView","/support":"homeView","/faq":"faqView","/mijntickets":"myTicketsView","/tool":"toolView"};
-const originalShow=window.hpmwShowPortalView;
-if(typeof originalShow==="function"&&!originalShow.__hpmwUrlWrapped){
- const wrapped=function(viewId,...args){
-  if(viewId==="introView"&&location.hash){history.replaceState({},"",location.pathname+location.search);}
-  return originalShow.call(this,viewId,...args);
- };
- wrapped.__hpmwUrlWrapped=true;window.hpmwShowPortalView=wrapped;
-}
+const pathForView={"introView":"/","homeView":"/support","faqView":"/faq","myTicketsView":"/mijntickets","toolView":"/tool"};
+function syncUrl(path,replace){const url=location.pathname+location.search+(path==="/"?"":"#"+path);if(location.href!==location.origin+url){(replace?history.replaceState:history.pushState).call(history,{},"",url)}}
 function route(){
  const p=location.hash.slice(1)||"/";
  if(p==="/")window.hpmwShowPortalView?.("introView");
@@ -9579,28 +9572,36 @@ function route(){
  else window.hpmwShowPortalView?.("introView");
  document.body.dataset.hpmwRoute=p;
 }
-function go(p){
- if(!p||p==="/"){history.pushState({},"",location.pathname+location.search);route();return}
- if(p.startsWith("/tool/")||Object.prototype.hasOwnProperty.call(routes,p)){history.pushState({},"",location.pathname+location.search+"#"+p);route()}
+function wrapViewFunction(){
+ const fn=window.hpmwShowPortalView;
+ if(typeof fn!=="function"||fn.__hpmwUrlWrapped)return false;
+ const wrapped=function(viewId,...args){
+  const result=fn.call(this,viewId,...args);
+  const p=pathForView[viewId];
+  if(p!==undefined&&!window.__hpmwRoutingFromUrl)syncUrl(p,false);
+  return result;
+ };
+ wrapped.__hpmwUrlWrapped=true;window.hpmwShowPortalView=wrapped;return true;
 }
+function go(p){if(!p||p==="/"){syncUrl("/",false);route();return}
+ if(p.startsWith("/tool/")||["/support","/faq","/mijntickets","/tool"].includes(p)){syncUrl(p,false);route()}}
 document.addEventListener("click",e=>{
  const target=e.target instanceof Element?e.target:null;if(!target)return;
  const launch=target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");
  if(launch){e.preventDefault();e.stopImmediatePropagation();go(launch.id==="ticketSupportLaunch"?"/support":launch.id==="faqLaunch"?"/faq":launch.id==="myTicketsLaunch"?"/mijntickets":"/tool");return}
  const routeLink=target.closest("[data-hpmw-route]");
  if(routeLink){e.preventDefault();e.stopImmediatePropagation();go(routeLink.dataset.hpmwRoute);return}
- const portalReturn=target.closest("#toolBackPortal,#faqBack,#formBack,#formCancel,#myTicketsBack,#adminBack,#portalBack,#homeBack,#newsBack");
- if(portalReturn){e.preventDefault();e.stopImmediatePropagation();go("/");return}
- // Interne links die naar de portal/home wijzen, ook vanuit subpagina's.
+ const back=target.closest("#toolBackPortal,#faqBack,#formBack,#formCancel,#myTicketsBack,#adminBack,#portalBack,#homeBack,#newsBack");
+ if(back){e.preventDefault();e.stopImmediatePropagation();go("/");return}
  const anchor=target.closest("a[href]");
  if(anchor){const href=anchor.getAttribute("href")||"";
-  if(/(?:h3-dev-portaal|h3-portaal)(?:[?#].*)?$/.test(href)||href==="/"||href==="#/"){
-   e.preventDefault();e.stopImmediatePropagation();go("/");return;
-  }
+  if(/(?:h3-dev-portaal|h3-portaal)(?:[?#].*)?$/.test(href)||href==="/"||href==="#/"){e.preventDefault();e.stopImmediatePropagation();go("/");}
  }
 },true);
 window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",route,{once:true});else route();
+const boot=()=>{wrapViewFunction();route();};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+const retry=()=>wrapViewFunction();setTimeout(retry,0);setTimeout(retry,250);setTimeout(retry,1000);
 window.hpmwNavigate=go;window.hpmwRouteInternal=route;
 })();
 </script>
