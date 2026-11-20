@@ -4,28 +4,17 @@
 const SUPABASE_URL="https://vuaajsjjluwgqmneinds.supabase.co";
 const SUPABASE_KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
 function detectForumotion(){
- let stored=null;try{stored=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null")}catch(_){}
- const candidates=[window._userdata,window.userdata,window.ForumotionIdentity,window.forumotionUser,window.ForumotionUser].filter(Boolean);
- let u=candidates[0]||{};
- const get=(obj,keys)=>{for(const k of keys){if(obj&&obj[k]!=null&&obj[k]!=="")return obj[k]}return null};
- let id=Number((stored&&stored.id)||get(u,["user_id","USER_ID","id","userid","userId"])||0);
- let name=String((stored&&stored.name)||get(u,["username","USERNAME","name","user_name","USER_NAME"])||"").trim();
- let level=Number(get(u,["user_level","USER_LEVEL","level","userlevel"])||0);
- let avatar=(stored&&stored.avatar)||get(u,["user_avatar","USER_AVATAR","avatar"])||"";
- const logout=document.querySelector('a[href*="logout"],a[href*="log_out"],a#logout,[id*="logout"],.logout');
- if(!id){
-   for(const a of Array.from(document.querySelectorAll('a[href*="/u"],a[href*="profile?"]'))){
-     const m=(a.getAttribute("href")||"").match(/(?:\/u|user_id=)(\d+)/i);
-     if(m){id=Number(m[1]);if(!name)name=(a.textContent||"").trim();break}
-   }
- }
- if(!name&&id){const p=document.querySelector('a[href*="/u'+id+'"]');if(p)name=(p.textContent||"").trim()}
- if(!avatar){const img=document.querySelector('.user-avatar img,.avatar img,#avatar img,a[href*="/u'+id+'"] img');if(img)avatar=img.src}
- const logged=Boolean((stored&&stored.logged)||id>0&&name&&(logout||get(u,["session_logged_in","SESSION_LOGGED_IN"])===1||get(u,["session_logged_in","SESSION_LOGGED_IN"])==="1"||get(u,["logged","is_logged","logged_in"])===true));
- return {id,name,logged,level,avatar};
+ let stored=null;try{stored=JSON.parse(sessionStorage.getItem('hpmw_forumotion_session')||'null')}catch(_){}
+ const candidates=[window._userdata,window.userdata,window.ForumotionIdentity,window.forumotionUser,window.ForumotionUser,window.HpmwForumIdentity].filter(Boolean);let u=candidates[0]||{};
+ const get=(obj,keys)=>{for(const k of keys){if(obj&&obj[k]!=null&&obj[k]!=='')return obj[k]}return null};
+ let id=Number((stored&&stored.id)||get(u,['user_id','USER_ID','id','userid','userId'])||0),name=String((stored&&stored.name)||get(u,['username','USERNAME','name','user_name','USER_NAME'])||'').trim(),level=Number(get(u,['user_level','USER_LEVEL','level','userlevel'])||0),avatar=(stored&&stored.avatar)||get(u,['user_avatar','USER_AVATAR','avatar'])||'';
+ const logout=document.querySelector('a[href*="logout"],a[href*="log_out"],a#logout,[id*="logout"],.logout'),login=document.querySelector('a[href="/login"],a[href*="/login?"],a[href*="login?"]');
+ if(!id){for(const sel of ['#fa_welcome a[href^="/u"]','.navbar a[href^="/u"]','a.mainmenu[href^="/u"]','a[href^="/u"]']){for(const a of document.querySelectorAll(sel)){const m=(a.getAttribute('href')||'').match(/\\/u(\\d+)/i);if(m){id=Number(m[1]);if(!name)name=(a.textContent||'').trim();break}}if(id)break}}
+ if(!name&&id){const p=document.querySelector('a[href*="/u'+id+'"]');if(p)name=(p.textContent||'').trim()}
+ if(!avatar&&id){const im=document.querySelector('.user-avatar img,.avatar img,#avatar img,a[href*="/u'+id+'"] img');if(im)avatar=im.src}
+ const flag=get(u,['session_logged_in','SESSION_LOGGED_IN']),logged=Boolean((stored&&stored.logged)||get(u,['logged','is_logged','logged_in'])===true||flag===1||flag==='1'||(id>0&&name&&(logout||!login)));return{id,name,logged,level,avatar};
 }
-let forum=detectForumotion();
-let fmLogged=!!(forum.logged&&forum.id>0&&forum.name);
+async function resolveForumotionFromForum(){if(fmLogged)return forum;try{const response=await fetch(location.origin+'/',{credentials:'include',cache:'no-store'});if(!response.ok)return forum;const html=await response.text(),doc=new DOMParser().parseFromString(html,'text/html');const login=doc.querySelector('a[href="/login"],a[href^="/login?"],a[href*="login?"]'),logout=doc.querySelector('a[href*="logout"],a[href*="log_out"],a#logout');let id=0,name='',avatar='';for(const sel of ['#fa_welcome a[href^="/u"]','.navbar a[href^="/u"]','a.mainmenu[href^="/u"]','a[href^="/u"]']){for(const a of doc.querySelectorAll(sel)){const m=(a.getAttribute('href')||'').match(/\\/u(\\d+)/i);if(m){id=Number(m[1]);name=(a.textContent||'').trim();const im=a.querySelector('img');avatar=im?im.src:'';break}}if(id)break}if(id&&name&&(logout||!login)){forum={id,name,logged:true,level:0,avatar};fmLogged=true;try{sessionStorage.setItem('hpmw_forumotion_session',JSON.stringify({id,name,logged:true,avatar}))}catch(_){}refreshAccount()}}catch(err){console.warn('Forumotion identity check failed',err)}return forum;}
 function forumToken(){if(!fmLogged)return null;const key="mm_forum_ticket_token_"+forum.id;let token=localStorage.getItem(key);if(!token){const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);token=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");localStorage.setItem(key,token)}return token;}
 
 let db=null,user=null,activeTicket=null;
@@ -46,6 +35,7 @@ function setup(){
  db.auth.getSession().then(({data})=>{user=data.session?.user||null;refreshAccount()}).catch(console.error);
  db.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;refreshAccount()});
  renderNewsPreview();
+ resolveForumotionFromForum();
 }
 function refreshAccount(){
  const name=$(".account-nav .usertext strong"),small=$(".account-nav .usertext small");
@@ -75,7 +65,8 @@ function openFor(text){
 }
 function systems(){open("Portaalsystemen",'<div class="pa-grid">'+["Ticket Support","Mijn tickets","Nieuws","FAQ","Account","Beheer","Reglement","Modteam","Mijn afdeling","Vacatures","Awards","Sorteerhoed"].map(x=>'<button class="pa-tile" data-go="'+esc(x.toLowerCase())+'">'+esc(x)+'</button>').join("")+'</div>');$("#pa-content").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openFor(b.dataset.go))}
 function account(){open("Mijn account",'<div class="pa-note"><b>Forumotion-account</b><br>'+(fmLogged?esc(forum.name)+' · gebruikers-ID '+esc(forum.id)+(forum.avatar?'<br><img class="pa-avatar" src="'+esc(forum.avatar)+'" alt="">':''):'Geen actieve Forumotion-sessie herkend. Open dit portaal vanuit het forum.')+'</div><p>Je portaal gebruikt je Forumotion-account. Er is geen afzonderlijke gebruikerslogin.</p>')}
-function ticketForm(){
+async function ticketForm(){
+ await resolveForumotionFromForum();
  const fields='<form class="pa-form" id="pa-ticket"><label>Categorie<select name="category" required><option value="">Selecteer…</option><option>Technische ondersteuning</option><option>Account / toegang</option><option>Vraag over het forum</option><option>Moderatie</option><option>Overig</option></select></label><label>Afdeling<select name="department"><option>Algemeen</option><option>Technisch team</option><option>Moderatie</option><option>Administratie</option></select></label><label>Onderwerp<input name="subject" required maxlength="180"></label><label>Bericht<textarea name="body" required minlength="10" rows="5"></textarea></label><button class="pa-btn pa-primary">Ticket indienen</button></form>';
  open("Ticket Support",fields);
  const form=$("#pa-ticket");if(!fmLogged){form.querySelector("button").disabled=true;form.insertAdjacentHTML("beforebegin",'<div class="pa-error">Forumotion-sessie niet gevonden. Log in op het forum zelf; er is geen portaal-login.</div>');return}
