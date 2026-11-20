@@ -12634,6 +12634,47 @@ body:has(#homeView.active) main.shell>#homeView .support-categories-panel{displa
 body:has(#homeView.active) main.shell>#homeView #categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
 @media(max-width:700px){body:has(#homeView.active) main.shell>#homeView #categories{grid-template-columns:1fr!important}}
 </style>
+<style id="hpmw-ticket-support-mode-direct-20261120">
+body.hpmw-ticket-support-mode #introView,
+body.hpmw-ticket-support-mode .hpmw-global-brandbar,
+body.hpmw-ticket-support-mode #hpmwHomeLayout,
+body.hpmw-ticket-support-mode .hpmw-home-side,
+body.hpmw-ticket-support-mode .hpmw-side-card,
+body.hpmw-ticket-support-mode [class*="widget"],
+body.hpmw-ticket-support-mode [id*="Widget"],
+body.hpmw-ticket-support-mode .topbar{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+body.hpmw-ticket-support-mode main.shell{display:block!important;visibility:visible!important;width:min(1180px,calc(100vw - 24px))!important;max-width:1180px!important;margin:12px auto!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
+body.hpmw-ticket-support-mode main.shell>.view:not(.active){display:none!important}
+body.hpmw-ticket-support-mode main.shell>#homeView.active,
+body.hpmw-ticket-support-mode main.shell>#formView.active{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;inset:auto!important;transform:none!important;float:none!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
+body.hpmw-ticket-support-mode #homeView.active .support-categories-panel{display:block!important}
+body.hpmw-ticket-support-mode #homeView.active #categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important}
+@media(max-width:700px){body.hpmw-ticket-support-mode #homeView.active #categories{grid-template-columns:1fr!important}}
+</style>
 <script id="hpmw-ticket-support-force-open-20261120">
-(()=>{function force(){const b=document.getElementById("ticketSupportLaunch");if(!b)return; if(!b.__hpmwForceTicket){b.__hpmwForceTicket=true;b.addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation();if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("homeView");else{const intro=document.getElementById("introView"),home=document.getElementById("homeView");if(intro)intro.classList.remove("active");if(home)home.classList.add("active");document.documentElement.classList.add("hpmw-portal-focus");}b.setAttribute("aria-expanded","true");},true)}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",force);else force();setTimeout(force,300);setTimeout(force,1200);})();
+(()=>{"use strict";
+function activateHome(){
+ document.body.classList.add("hpmw-ticket-support-mode");
+ const intro=document.getElementById("introView"),home=document.getElementById("homeView");
+ document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important");});
+ if(intro){intro.classList.remove("active");intro.style.setProperty("display","none","important");}
+ if(home){home.classList.add("active");home.style.setProperty("display","block","important");home.style.removeProperty("visibility");}
+ document.documentElement.classList.add("hpmw-portal-focus");
+ document.querySelectorAll(".hpmw-global-brandbar,#hpmwHomeLayout,.hpmw-home-side,.hpmw-side-card,[class*='widget'],[id*='Widget']").forEach(el=>el.style.setProperty("display","none","important"));
+ window.scrollTo(0,0);
+}
+function bind(){
+ document.addEventListener("click",e=>{
+  const btn=e.target?.closest?.("#ticketSupportLaunch");
+  if(!btn)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  activateHome();btn.setAttribute("aria-expanded","true");
+ },true);
+ const b=document.getElementById("ticketSupportLaunch");
+ if(b)b.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();activateHome();},true);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
+setTimeout(bind,250);setTimeout(bind,1000);
+window.hpmwForceTicketSupport=activateHome;
+})();
 </script>
