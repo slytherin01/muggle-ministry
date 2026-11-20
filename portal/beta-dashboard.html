@@ -70,5 +70,34 @@ function closeModal(){modal.classList.remove('open')}
 document.getElementById('close').onclick=closeModal;document.getElementById('modalOk').onclick=closeModal;modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
-</script>
+\n
+/* Forumotion identity display: the loader stores verified _userdata session data. */
+(function(){
+  var raw=null;
+  try { raw=sessionStorage.getItem("hpmw_forumotion_session"); } catch(e){}
+  var identity=null;
+  try { identity=raw?JSON.parse(raw):null; } catch(e){}
+  var logged=!!(identity && identity.logged && Number(identity.id)>0 && identity.name);
+  var account=document.querySelector(".account-nav .usertext strong");
+  var accountSmall=document.querySelector(".account-nav .usertext small");
+  if(account) account.textContent=logged?identity.name:"Niet ingelogd";
+  if(accountSmall) accountSmall.textContent=logged?"FORUMACCOUNT":"ACCOUNT";
+  var welcome=document.querySelector(".welcome");
+  if(welcome && logged){
+    var greet=document.createElement("p");
+    greet.textContent="Welkom, "+identity.name+"!";
+    greet.style.margin="0";
+    greet.style.color="var(--muted)";
+    welcome.prepend(greet);
+  }
+  document.querySelectorAll('[data-legacy]').forEach(function(el){
+    el.addEventListener('click',function(ev){
+      if(!logged && !el.href){
+        ev.preventDefault();
+        alert("Log eerst in op het Forumotion-forum om dit onderdeel te gebruiken.");
+      }
+    });
+  });
+})();
+\n</script>
 </body></html>
