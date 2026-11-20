@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ministerie van Dreuzels — Dashboard test</title>
+<style>
+:root{--bg:#08111e;--shell:#0e1b2c;--surface:#14243a;--surface2:#192d46;--line:#29415d;--ink:#edf5ff;--muted:#9db0c8;--blue:#60a5fa;--gold:#e8b65c;--mint:#5ad6b0}
+*{box-sizing:border-box}body{margin:0;padding:clamp(8px,2vw,24px);background:radial-gradient(ellipse at 15% 0%,#16375a 0,transparent 38%),radial-gradient(ellipse at 90% 10%,#2a2451 0,transparent 30%),var(--bg);font:15px/1.5 Inter,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+a{color:inherit;text-decoration:none}.wrap{max-width:1420px;margin:auto;border:1px solid #28425f;border-radius:22px;overflow:hidden;background:var(--shell);box-shadow:0 24px 70px #0007}
+.header{padding:clamp(22px,4vw,42px);background:linear-gradient(120deg,#124d83,#172b54 58%,#302657);display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden}
+.header:after{content:"";position:absolute;width:340px;height:340px;border:1px solid #ffffff15;border-radius:50%;right:-95px;top:-170px;box-shadow:0 0 0 35px #ffffff08,0 0 0 70px #ffffff05}
+.brand{position:relative;z-index:1}.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:#b9d8ff;font-weight:800}.brand h1{margin:5px 0 0;font-size:clamp(24px,4vw,38px);letter-spacing:-.03em}.brand p{margin:5px 0 0;color:#d0e1f5;font-size:14px}
+.account{position:relative;z-index:1;padding:11px 15px;border:1px solid #ffffff2b;border-radius:999px;background:#ffffff12;white-space:nowrap;color:#eaf4ff;font-size:13px}
+.nav{display:flex;gap:5px;overflow:auto;padding:12px 18px;background:#0b1727;border-bottom:1px solid var(--line)}.nav a{white-space:nowrap;padding:9px 13px;border-radius:10px;color:var(--muted);font-size:13px}.nav a:hover,.nav a.active{background:#1c3553;color:#fff}
+.crumb{padding:10px 25px;background:#e6b454;color:#182334;font-size:12px;font-weight:800}
+.main{padding:clamp(18px,3vw,34px)}.welcome{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:24px}.welcome h2{font-size:clamp(22px,3vw,30px);margin:0;letter-spacing:-.025em}.welcome p{margin:6px 0 0;color:var(--muted)}.tag{border:1px solid #355170;color:#bbd8f7;background:#12243a;padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.widget{display:flex;gap:15px;align-items:center;min-height:136px;padding:20px;background:linear-gradient(145deg,var(--surface),#102035);border:1px solid var(--line);border-radius:16px;transition:transform .18s,border-color .18s,background .18s;cursor:pointer}.widget:hover{transform:translateY(-3px);border-color:#5a91ce;background:var(--surface2);box-shadow:0 12px 26px #0003}.icon{flex:0 0 50px;width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:#1d3857;color:#9bc8ff;font-size:21px}.widget h3{margin:0 0 5px;font-size:15px}.widget p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.arrow{margin-left:auto;color:#7897b9;align-self:flex-start;font-size:17px}
+.panel{margin-top:26px;border:1px solid var(--line);border-radius:16px;background:#102035;overflow:hidden}.panel-head{padding:18px 20px 0}.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line)}.tab{padding:12px 3px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;font-weight:700;font-size:13px}.tab.active{color:#9bc8ff;border-color:var(--blue)}.empty{padding:28px 20px;color:var(--muted);font-size:13px}.empty strong{display:block;color:var(--ink);margin-bottom:4px}
+.modal-bg{display:none;position:fixed;inset:0;padding:20px;background:#020712bb;backdrop-filter:blur(5px);z-index:10;align-items:center;justify-content:center}.modal-bg.open{display:flex}.modal{max-width:460px;width:100%;padding:25px;border:1px solid #3b5b7d;border-radius:18px;background:#14243a;box-shadow:0 25px 70px #0008}.modal h2{margin:0 0 8px}.modal p{color:var(--muted);margin:0 0 20px}.modal-actions{display:flex;justify-content:flex-end;gap:9px}.btn{border:1px solid #395674;background:#1c3552;color:#eaf4ff;padding:10px 15px;border-radius:10px;font-weight:700;cursor:pointer}.btn.primary{background:#347cc0;border-color:#347cc0}
+.footer{padding:16px 24px;border-top:1px solid var(--line);color:#8299b4;font-size:11px;display:flex;justify-content:space-between;gap:10px}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){body{padding:7px}.wrap{border-radius:14px}.header{align-items:flex-start;flex-direction:column}.account{font-size:12px}.welcome{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.widget{min-height:112px}.footer{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="header"><div class="brand"><div class="eyebrow">Hogwarts · community portal</div><h1>Ministerie van Dreuzels</h1><p>Jouw persoonlijke portaal, overzichtelijk op één plek.</p></div><div class="account">👤 Mijn account</div></header>
+<nav class="nav"><a class="active" href="#">Dashboard</a><a href="#">Profiel</a><a href="#">Berichten</a><a href="#">Mijn activiteiten</a><a href="#">Instellingen</a></nav>
+<div class="crumb">Home <span>›</span> Dashboard</div>
+<main class="main">
+<div class="welcome"><div><h2>Welkom in jouw dashboard</h2><p>Kies een onderdeel om verder te gaan.</p></div><span class="tag">NIEUW PORTAAL · TESTVERSIE</span></div>
+<section class="grid" aria-label="Dashboard widgets">
+<div class="widget" data-title="Ticket Support" data-description="Hier testen we de nieuwe Ticket Support-integratie. De bestaande ticketfunctie wordt hier netjes ingebouwd, zonder de dashboard-layout te veranderen."><div class="icon">✉</div><div><h3>Ticket Support</h3><p>Stel een vraag of bekijk je supportverzoeken.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Mijn profiel" data-description="Profielinformatie en accountinstellingen worden hier gekoppeld."><div class="icon">♙</div><div><h3>Mijn profiel</h3><p>Bekijk en beheer je persoonlijke gegevens.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Mijn berichten" data-description="De berichtenfunctie wordt hier geïntegreerd."><div class="icon">▤</div><div><h3>Mijn berichten</h3><p>Jouw inbox en persoonlijke berichten.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Activiteiten" data-description="Activiteiten en updates worden hier verzameld."><div class="icon">◷</div><div><h3>Activiteiten</h3><p>Een overzicht van recente activiteit.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Favorieten" data-description="Favoriete onderdelen en links komen hier."><div class="icon">☆</div><div><h3>Favorieten</h3><p>Bewaar jouw favoriete pagina’s.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Notificaties" data-description="Meldingen worden hier overzichtelijk getoond."><div class="icon">♧</div><div><h3>Notificaties</h3><p>Mis geen belangrijke updates.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Community" data-description="Community-onderdelen worden hier gekoppeld."><div class="icon">⌘</div><div><h3>Community</h3><p>Ga snel naar belangrijke community-pagina’s.</p></div><span class="arrow">↗</span></div>
+<div class="widget" data-title="Help & informatie" data-description="Hulp, uitleg en handige informatie komen hier."><div class="icon">?</div><div><h3>Help & informatie</h3><p>Vind antwoorden en praktische uitleg.</p></div><span class="arrow">↗</span></div>
+</section>
+<section class="panel"><div class="panel-head"><div class="tabs"><div class="tab active" data-tab="overview">Mijn overzicht</div><div class="tab" data-tab="favorites">Mijn favorieten</div></div></div><div id="overview" class="empty"><strong>Jouw overzicht verschijnt hier</strong>We koppelen bestaande gegevens zodra de nieuwe onderdelen worden ingebouwd.</div><div id="favorites" class="empty" style="display:none"><strong>Je favorieten</strong>Favoriete onderdelen verschijnen hier zodra de functie is aangesloten.</div></section>
+</main>
+<footer class="footer"><span>Ministerie van Dreuzels · Nieuw dashboard</span><span>Afgeschermde test · live portaal blijft ongemoeid</span></footer>
+</div>
+<div class="modal-bg" id="modal"><div class="modal"><h2 id="modalTitle"></h2><p id="modalText"></p><div class="modal-actions"><button class="btn" id="close">Sluiten</button><button class="btn primary" id="modalOk">Begrepen</button></div></div></div>
+<script>
+const modal=document.getElementById('modal');
+document.querySelectorAll('.widget').forEach(w=>w.addEventListener('click',()=>{document.getElementById('modalTitle').textContent=w.dataset.title;document.getElementById('modalText').textContent=w.dataset.description;modal.classList.add('open')}));
+function closeModal(){modal.classList.remove('open')}
+document.getElementById('close').onclick=closeModal;document.getElementById('modalOk').onclick=closeModal;modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));document.querySelectorAll('.empty').forEach(x=>x.style.display=x.id===t.dataset.tab?'block':'none')}));
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
+</script>
+</body></html>
