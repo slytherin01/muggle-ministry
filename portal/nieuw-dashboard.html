@@ -2897,6 +2897,87 @@ body:has(#introView.active) main.shell{width:min(1450px,calc(100% - 32px))!impor
 #introView .intro-login-layout{margin-top:24px!important}
 @media(max-width:1000px){#introView .hpmw-ref-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){body:has(#introView.active) main.shell{width:calc(100% - 12px)!important;margin:8px auto!important}#introView .hpmw-ref-header{padding:20px 16px;min-height:88px}#introView .hpmw-ref-header h1{font-size:23px!important}#introView .hpmw-ref-tabs{padding:8px;gap:2px}#introView .hpmw-ref-tabs button,#introView .hpmw-ref-tabs a{padding:10px 9px;font-size:12px}#introView .hpmw-ref-content{padding:20px 12px}#introView .hpmw-ref-cards{grid-template-columns:1fr;gap:10px}#introView .hpmw-ref-card{min-height:90px;padding:14px}#introView .hpmw-ref-banner{width:calc(100% - 16px);aspect-ratio:3.6/1;margin:12px auto}}
+</style><style id="hpmw-portal-layout-cleanup-20261120">
+/* Portal: remove duplicate dashboard mockup and keep the real intro/news in the center */
+#introView .hpmw-reference-dashboard{display:none!important}
+html body #introView #hpmwHomeLayout{
+  display:grid!important;
+  grid-template-columns:minmax(165px,205px) minmax(0,1fr) minmax(165px,205px)!important;
+  gap:12px!important;
+  width:min(1320px,calc(100% - 24px))!important;
+  max-width:1320px!important;
+  margin:12px auto 22px!important;
+  align-items:start!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-home-main{
+  display:flex!important;flex-direction:column!important;gap:12px!important;
+  min-width:0!important;
+}
+html body #introView #hpmwHomeLayout .intro-login-layout{
+  margin:0!important;width:100%!important;max-width:none!important;
+}
+html body #introView #hpmwHomeLayout .intro-static-card{
+  margin:0!important;width:100%!important;max-width:none!important;
+  padding:20px 22px!important;box-sizing:border-box!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-welcome-box{
+  padding:0!important;margin:0!important;text-align:center!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-welcome-box h1{
+  font-size:clamp(20px,2vw,28px)!important;line-height:1.25!important;margin:0 0 12px!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-welcome-box p{
+  max-width:760px!important;margin:0 auto 10px!important;line-height:1.55!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-intro-quicklinks{
+  display:flex!important;justify-content:center!important;flex-wrap:wrap!important;gap:7px!important;margin-top:12px!important;
+}
+html body #introView #hpmwHomeLayout #hpmwHomeNews{
+  width:100%!important;max-width:none!important;margin:0!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-home-side{
+  display:flex!important;flex-direction:column!important;gap:10px!important;min-width:0!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-side-card{
+  padding:10px!important;border-radius:11px!important;margin:0!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-side-heading{
+  margin:-10px -10px 8px!important;padding:8px 10px!important;font-size:10px!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-side-card img{
+  max-width:100%!important;object-fit:contain!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-side-card.hpmw-sorting-hat-widget > button.hpmw-sorting-hat-link,
+html body #introView #hpmwHomeLayout .hpmw-side-card.hpmw-sorting-hat-widget > .hpmw-sorting-hat-link{
+  height:145px!important;min-height:145px!important;max-height:145px!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-side-card.hpmw-sorting-hat-widget > button.hpmw-sorting-hat-link img,
+html body #introView #hpmwHomeLayout .hpmw-side-card.hpmw-sorting-hat-widget > .hpmw-sorting-hat-link img{
+  width:132px!important;height:132px!important;min-width:0!important;min-height:0!important;max-width:132px!important;max-height:132px!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-image-only-widget{
+  min-height:132px!important;height:132px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+}
+html body #introView #hpmwHomeLayout .hpmw-image-only-widget img{
+  width:132px!important;height:132px!important;max-height:132px!important;
+}
+@media(max-width:950px){
+ html body #introView #hpmwHomeLayout{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;width:calc(100% - 20px)!important;gap:10px!important;
+ }
+ html body #introView #hpmwHomeLayout .hpmw-home-main{grid-column:1/-1!important;grid-row:1!important}
+ html body #introView #hpmwHomeLayout .hpmw-home-left{grid-column:1!important;grid-row:2!important}
+ html body #introView #hpmwHomeLayout .hpmw-home-right{grid-column:2!important;grid-row:2!important}
+}
+@media(max-width:620px){
+ html body #introView #hpmwHomeLayout{display:flex!important;flex-direction:column!important;width:calc(100% - 14px)!important;gap:10px!important}
+ html body #introView #hpmwHomeLayout .hpmw-home-main,
+ html body #introView #hpmwHomeLayout .hpmw-home-left,
+ html body #introView #hpmwHomeLayout .hpmw-home-right{width:100%!important}
+ html body #introView #hpmwHomeLayout .hpmw-home-left,
+ html body #introView #hpmwHomeLayout .hpmw-home-right{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ html body #introView #hpmwHomeLayout .hpmw-side-card{min-width:0!important}
+}
 </style></head><body><header class="topbar luxury-nav-v2"><nav aria-label="Support navigatie" class="top-actions"><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/forum" rel="noopener noreferrer" target="_blank"><span class="lux-nav-icon"><i class="fa-solid fa-comments"></i></span><span class="lux-nav-label">Forum</span></a><a class="lux-nav-item" href="https://testforumjoost.forumactie.com/h3-portaal" target="_self"><span class="lux-nav-icon"><i class="fa-solid fa-house"></i></span><span class="lux-nav-label">Portaal</span></a><button aria-expanded="false" aria-haspopup="dialog" class="lux-nav-item" id="faqLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="lux-nav-label">FAQ</span></button><button aria-expanded="false" class="lux-nav-item" id="ticketSupportLaunch" type="button"><span class="lux-nav-icon"><i class="fa-solid fa-ticket"></i></span><span class="lux-nav-label">Ticket Support</span></button>
 <a class="lux-nav-item" id="adminLaunch" href="https://testforumjoost.forumactie.com/h3-dev-portaal#/tool" target="_blank" rel="noopener" hidden aria-hidden="true" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span><span class="lux-nav-label">Tool</span></a>
 <label aria-label="Taal kiezen" class="hpmw-language-wrap" for="hpmwLanguage"><i aria-hidden="true" class="fa-solid fa-language"></i><select id="hpmwLanguage"><option selected="" value="nl">Nederlands</option><option value="en">English</option><option value="pt">Português</option></select></label><button class="lux-nav-item" data-extracted-style="2" id="myTicketsLaunch" style="display:none"><span class="lux-nav-icon"><i class="fa-solid fa-envelope"></i></span><span class="lux-nav-label">Mijn tickets</span><b class="count-badge" id="myTicketsCount">0</b></button><a class="lux-nav-item lux-user" href="/login" id="accountLink"><span class="lux-nav-icon"><i class="fa-solid fa-user"></i></span><span class="lux-nav-usertext"><small>INGELOGD ALS</small><strong id="username">Gast</strong></span></a></nav></header><div class="hpmw-global-brandbar" role="banner" aria-label="Muggle Ministry"></div><main class="shell"><section class="view active" id="introView">
