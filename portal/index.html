@@ -9557,16 +9557,52 @@ html body #introView #hpmwHomeLayout .hpmw-home-main>*{flex:0 0 auto!important}
 }
 </style>
 
-<script id="hpmw-clean-portal-routes-20261120">
+<script id="hpmw-global-internal-urls-20261120">
 (()=>{"use strict";
-const baseView=()=>window.hpmwShowPortalView?.("introView");
-const routes={"/":baseView,"/support":()=>window.hpmwShowPortalView?.("homeView"),"/faq":()=>window.hpmwShowPortalView?.("faqView"),"/mijntickets":()=>{const b=document.getElementById("myTicketsLaunch");if(typeof b?.onclick==="function")b.onclick.call(b);else window.hpmwShowPortalView?.("myTicketsView")},"/tool":()=>window.hpmwRouteTool?.("/tool",false)};
-function route(){const p=location.hash.slice(1)||"/";if(routes[p]){routes[p]();document.body.dataset.hpmwRoute=p;return true}if(p.startsWith("/tool/")){window.hpmwRouteTool?.(p,false);document.body.dataset.hpmwRoute=p;return true}baseView();document.body.dataset.hpmwRoute="/";return false}
-function go(p){if(!routes[p]&&!p.startsWith("/tool/"))return;if(p==="/"){if(location.hash)history.pushState({},"",location.pathname+location.search);route();return}if(location.hash!=="#"+p)history.pushState({},"",location.pathname+location.search+"#"+p);route()}
-document.addEventListener("click",e=>{const b=e.target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");if(b){const p=b.id==="ticketSupportLaunch"?"/support":b.id==="faqLaunch"?"/faq":b.id==="myTicketsLaunch"?"/mijntickets":"/tool";e.preventDefault();e.stopImmediatePropagation();go(p);return}
-const back=e.target.closest("#toolBackPortal,#faqBack,#formBack,#formCancel,#myTicketsBack,#adminBack,#portalBack,#homeBack");if(back){e.preventDefault();e.stopImmediatePropagation();go("/");return}
-const l=e.target.closest("[data-hpmw-route]");if(l){e.preventDefault();go(l.dataset.hpmwRoute)}},true);
-window.addEventListener("hashchange",route);window.addEventListener("popstate",route);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",route,{once:true});else route();window.hpmwNavigate=go})();
+const routes={"/": "introView","/support":"homeView","/faq":"faqView","/mijntickets":"myTicketsView","/tool":"toolView"};
+const originalShow=window.hpmwShowPortalView;
+if(typeof originalShow==="function"&&!originalShow.__hpmwUrlWrapped){
+ const wrapped=function(viewId,...args){
+  if(viewId==="introView"&&location.hash){history.replaceState({},"",location.pathname+location.search);}
+  return originalShow.call(this,viewId,...args);
+ };
+ wrapped.__hpmwUrlWrapped=true;window.hpmwShowPortalView=wrapped;
+}
+function route(){
+ const p=location.hash.slice(1)||"/";
+ if(p==="/")window.hpmwShowPortalView?.("introView");
+ else if(p==="/support")window.hpmwShowPortalView?.("homeView");
+ else if(p==="/faq")window.hpmwShowPortalView?.("faqView");
+ else if(p==="/mijntickets"){const b=document.getElementById("myTicketsLaunch");if(b)b.click();else window.hpmwShowPortalView?.("myTicketsView")}
+ else if(p==="/tool")window.hpmwRouteTool?.("/tool",false);
+ else if(p.startsWith("/tool/"))window.hpmwRouteTool?.(p,false);
+ else window.hpmwShowPortalView?.("introView");
+ document.body.dataset.hpmwRoute=p;
+}
+function go(p){
+ if(!p||p==="/"){history.pushState({},"",location.pathname+location.search);route();return}
+ if(p.startsWith("/tool/")||Object.prototype.hasOwnProperty.call(routes,p)){history.pushState({},"",location.pathname+location.search+"#"+p);route()}
+}
+document.addEventListener("click",e=>{
+ const target=e.target instanceof Element?e.target:null;if(!target)return;
+ const launch=target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");
+ if(launch){e.preventDefault();e.stopImmediatePropagation();go(launch.id==="ticketSupportLaunch"?"/support":launch.id==="faqLaunch"?"/faq":launch.id==="myTicketsLaunch"?"/mijntickets":"/tool");return}
+ const routeLink=target.closest("[data-hpmw-route]");
+ if(routeLink){e.preventDefault();e.stopImmediatePropagation();go(routeLink.dataset.hpmwRoute);return}
+ const portalReturn=target.closest("#toolBackPortal,#faqBack,#formBack,#formCancel,#myTicketsBack,#adminBack,#portalBack,#homeBack,#newsBack");
+ if(portalReturn){e.preventDefault();e.stopImmediatePropagation();go("/");return}
+ // Interne links die naar de portal/home wijzen, ook vanuit subpagina's.
+ const anchor=target.closest("a[href]");
+ if(anchor){const href=anchor.getAttribute("href")||"";
+  if(/(?:h3-dev-portaal|h3-portaal)(?:[?#].*)?$/.test(href)||href==="/"||href==="#/"){
+   e.preventDefault();e.stopImmediatePropagation();go("/");return;
+  }
+ }
+},true);
+window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",route,{once:true});else route();
+window.hpmwNavigate=go;window.hpmwRouteInternal=route;
+})();
 </script>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
