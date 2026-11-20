@@ -12617,3 +12617,23 @@ html body:has(main.shell>#formView.active) [class*="widget"]{display:none!import
 html body:has(main.shell>#homeView.active) main.shell,
 html body:has(main.shell>#formView.active) main.shell{margin-top:12px!important;}
 </style>
+
+<style id="hpmw-ticket-support-force-category-only-20261120">
+/* Ticket Support states are isolated: active categories OR active form, nothing from intro/home widgets. */
+body:has(#homeView.active) #introView,body:has(#formView.active) #introView,
+body:has(#homeView.active) .hpmw-global-brandbar,body:has(#formView.active) .hpmw-global-brandbar,
+body:has(#homeView.active) #hpmwHomeLayout,body:has(#formView.active) #hpmwHomeLayout,
+body:has(#homeView.active) .hpmw-home-side,body:has(#formView.active) .hpmw-home-side,
+body:has(#homeView.active) .hpmw-side-card,body:has(#formView.active) .hpmw-side-card,
+body:has(#homeView.active) .hpmw-home-widget,body:has(#formView.active) .hpmw-home-widget,
+body:has(#homeView.active) [id*="Widget"],body:has(#formView.active) [id*="Widget"],
+body:has(#homeView.active) [class*="widget"],body:has(#formView.active) [class*="widget"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+body:has(#homeView.active) main.shell>.view:not(#homeView),body:has(#formView.active) main.shell>.view:not(#formView){display:none!important;}
+body:has(#homeView.active) main.shell>#homeView,body:has(#formView.active) main.shell>#formView{display:block!important;visibility:visible!important;opacity:1!important;position:static!important;transform:none!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
+body:has(#homeView.active) main.shell>#homeView .support-categories-panel{display:block!important;}
+body:has(#homeView.active) main.shell>#homeView #categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+@media(max-width:700px){body:has(#homeView.active) main.shell>#homeView #categories{grid-template-columns:1fr!important}}
+</style>
+<script id="hpmw-ticket-support-force-open-20261120">
+(()=>{function force(){const b=document.getElementById("ticketSupportLaunch");if(!b)return; if(!b.__hpmwForceTicket){b.__hpmwForceTicket=true;b.addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation();if(typeof window.hpmwShowPortalView==="function")window.hpmwShowPortalView("homeView");else{const intro=document.getElementById("introView"),home=document.getElementById("homeView");if(intro)intro.classList.remove("active");if(home)home.classList.add("active");document.documentElement.classList.add("hpmw-portal-focus");}b.setAttribute("aria-expanded","true");},true)}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",force);else force();setTimeout(force,300);setTimeout(force,1200);})();
+</script>
