@@ -79,4 +79,26 @@ document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{if
 
 \n</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js?v=no-email-popup-20261120d" crossorigin="anonymous"></script>
+<script>
+(function(){
+  function removeEmailLoginPrompt(){
+    var phrase="Om persoonlijke tickets veilig op te slaan";
+    var phrase2="Stuur beveiligde inloglink";
+    document.querySelectorAll("body *").forEach(function(el){
+      if(el.children.length>4) return;
+      var txt=(el.innerText||el.textContent||"").trim();
+      if(txt && (txt.indexOf(phrase)!==-1 || txt.indexOf(phrase2)!==-1)){
+        var target=el;
+        for(var i=0;i<5 && target.parentElement;i++){
+          if(target.matches("[role=dialog],.modal,.pa-modal,.modal-content")||target.parentElement.matches("[role=dialog],.modal,.pa-modal,.modal-content")){target=target.parentElement;break;}
+          target=target.parentElement;
+        }
+        target.remove();
+      }
+    });
+  }
+  removeEmailLoginPrompt();
+  new MutationObserver(removeEmailLoginPrompt).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
