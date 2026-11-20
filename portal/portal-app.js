@@ -21,7 +21,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 function setup(){
  const root=document.createElement("div");root.id="portal-app-modal";root.innerHTML='<div class="pa-backdrop"><section class="pa-window"><header><h2 id="pa-title">Portaal</h2><button class="pa-close" aria-label="Sluiten">×</button></header><div class="pa-content" id="pa-content"></div></section></div>';
  if(!document.body){document.addEventListener("DOMContentLoaded",setup,{once:true});return}
- if(!document.getElementById("portal-app-modal"))document.body.appendChild(root);
+ if(!document.getElementById("portal-app-modal")){const portalMount=document.getElementById("hpmw-portal-mount");(portalMount||document.body).appendChild(root);}
  const modalRoot=$("#portal-app-modal");
  modalRoot.querySelector(".pa-close").onclick=close;
  modalRoot.querySelector(".pa-backdrop").addEventListener("click",e=>{if(e.target.classList.contains("pa-backdrop"))close()});
