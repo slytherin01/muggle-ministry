@@ -12599,3 +12599,21 @@ html body main.shell>#formView.view.active{display:block!important;visibility:vi
 html body main.shell>#formView.view.active~.view{display:none!important;}
 @media(max-width:700px){html body main.shell>#homeView.view.active .categories{grid-template-columns:minmax(0,1fr)!important;}}
 </style>
+
+<style id="hpmw-ticket-support-hide-all-external-widgets-20261120">
+/* When Ticket Support or its form is active, remove portal chrome/widgets outside the requested content. */
+html body:has(main.shell>#homeView.active) .topbar,
+html body:has(main.shell>#formView.active) .topbar,
+html body:has(main.shell>#homeView.active) .hpmw-global-brandbar,
+html body:has(main.shell>#formView.active) .hpmw-global-brandbar,
+html body:has(main.shell>#homeView.active) #introView,
+html body:has(main.shell>#formView.active) #introView,
+html body:has(main.shell>#homeView.active) .hpmw-home-side,
+html body:has(main.shell>#formView.active) .hpmw-home-side,
+html body:has(main.shell>#homeView.active) .hpmw-side-card,
+html body:has(main.shell>#formView.active) .hpmw-side-card,
+html body:has(main.shell>#homeView.active) [class*="widget"],
+html body:has(main.shell>#formView.active) [class*="widget"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;height:0!important;max-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;}
+html body:has(main.shell>#homeView.active) main.shell,
+html body:has(main.shell>#formView.active) main.shell{margin-top:12px!important;}
+</style>
