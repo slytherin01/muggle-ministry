@@ -61,5 +61,5 @@ async function content(title,page){open(title,'<div id="pa-list">Inhoud laden…
 async function admin(){open("Beheer",user?'<p>Beheertools laden…</p>':authBox());authEvents();if(!user)return;try{const {data,error}=await db.from("tool_access_roles").select("role").eq("user_id",user.id);if(error)throw error;const roles=(data||[]).map(x=>x.role);if(!roles.includes("administrator")&&!roles.includes("support_moderator")&&!roles.includes("supervisor_support_team")){open("Beheer",'<p>Je account heeft geen beheerdersrechten.</p>');return}open("Beheer",'<p>Beheerdersrollen: '+esc(roles.join(", "))+'</p><button class="pa-btn" id="pa-tickets">Support tickets beheren/bekijken</button><button class="pa-btn" id="pa-news">Nieuws bekijken</button><button class="pa-btn" id="pa-faq">FAQ bekijken</button>');$("#pa-tickets").onclick=adminTickets;$("#pa-news").onclick=news;$("#pa-faq").onclick=faq}catch(e){showError(e)}}
 function showError(e){const msg=e?.message||String(e);$("#pa-content").innerHTML='<div class="pa-error"><b>Actie niet gelukt</b><p>'+esc(msg)+'</p><p>Controleer je accounttoegang en probeer opnieuw.</p></div>'}
 window.HpmwPortalApp={open:openFor};
-document.addEventListener("DOMContentLoaded",setup);
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
 })();
