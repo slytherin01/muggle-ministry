@@ -9,17 +9,18 @@ let db=null,user=null,activeTicket=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function setup(){
- if(!window.supabase?.createClient){console.warn("Supabase client ontbreekt");return}
- db=window.HpmwSupabaseClient||window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
- db.auth.getSession().then(({data})=>{user=data.session?.user||null;refreshAccount()});
- db.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;refreshAccount()});
  const root=document.createElement("div");root.id="portal-app-modal";root.innerHTML='<div class="pa-backdrop"><section class="pa-window"><header><h2 id="pa-title">Portaal</h2><button class="pa-close" aria-label="Sluiten">×</button></header><div class="pa-content" id="pa-content"></div></section></div>';
- document.body.appendChild(root);
- document.querySelector(".pa-close").onclick=close;
- root.querySelector(".pa-backdrop").addEventListener("click",e=>{if(e.target.classList.contains("pa-backdrop"))close()});
+ if(!document.body){document.addEventListener("DOMContentLoaded",setup,{once:true});return}
+ if(!document.getElementById("portal-app-modal"))document.body.appendChild(root);
+ const modalRoot=$("#portal-app-modal");
+ modalRoot.querySelector(".pa-close").onclick=close;
+ modalRoot.querySelector(".pa-backdrop").addEventListener("click",e=>{if(e.target.classList.contains("pa-backdrop"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
- document.querySelectorAll("[data-legacy]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();const text=(el.textContent||"").toLowerCase();openFor(text)}));
-
+ document.querySelectorAll("[data-legacy]").forEach(el=>{el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openFor((el.textContent||"").trim().toLowerCase())})});
+ if(!window.supabase?.createClient){console.error("Supabase JS library niet geladen; portal UI is wel actief.");db=null;return}
+ db=window.HpmwSupabaseClient||window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ db.auth.getSession().then(({data})=>{user=data.session?.user||null;refreshAccount()}).catch(console.error);
+ db.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;refreshAccount()});
  renderNewsPreview();
 }
 function refreshAccount(){
