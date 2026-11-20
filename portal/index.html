@@ -12796,4 +12796,76 @@ html body.hpmw-ticket-support-active footer.lux-footer{
 @media(max-width:380px){
  html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:1fr!important}
 }
+</style><style id="hpmw-support-match-faq-layout-20261120">
+/* Ticket Support mirrors FAQ's working panel/view layout; undo legacy focus-mode geometry. */
+html body[data-hpmw-route="support"] main.shell,
+html body.hpmw-ticket-support-active main.shell{
+ width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ margin:18px auto 28px!important;padding:0!important;overflow:visible!important;
+ position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ display:block!important;
+}
+html body[data-hpmw-route="support"] main.shell>.view,
+html body.hpmw-ticket-support-active main.shell>.view{
+ display:none!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+}
+html body[data-hpmw-route="support"] main.shell>#homeView,
+html body.hpmw-ticket-support-active main.shell>#homeView{
+ display:block!important;width:100%!important;height:auto!important;max-height:none!important;min-height:0!important;
+ margin:0!important;padding:0!important;overflow:visible!important;
+}
+html body[data-hpmw-route="support"] #homeView .page-head,
+html body.hpmw-ticket-support-active #homeView .page-head{display:flex!important;position:relative!important;flex-flow:row wrap!important;align-items:center!important;width:100%!important;height:auto!important;margin:0 0 14px!important;padding:16px!important}
+html body[data-hpmw-route="support"] #homeView .support-categories-panel,
+html body.hpmw-ticket-support-active #homeView .support-categories-panel{
+ display:block!important;position:relative!important;width:100%!important;max-width:none!important;min-width:0!important;
+ height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+ margin:0!important;padding:16px!important;
+}
+html body[data-hpmw-route="support"] #homeView .support-categories-panel .panel-head,
+html body.hpmw-ticket-support-active #homeView .support-categories-panel .panel-head{display:none!important}
+html body[data-hpmw-route="support"] #homeView .categories,
+html body.hpmw-ticket-support-active #homeView .categories{
+ display:grid!important;position:relative!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-items:stretch!important;gap:12px!important;width:100%!important;max-width:none!important;min-width:0!important;
+ height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;
+ overflow:visible!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat,
+html body.hpmw-ticket-support-active #homeView .categories .cat{
+ display:flex!important;position:relative!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;
+ width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;min-height:88px!important;max-height:none!important;
+ margin:0!important;padding:14px!important;overflow:visible!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat *,
+html body.hpmw-ticket-support-active #homeView .categories .cat *{
+ display:initial!important;position:static!important;float:none!important;transform:none!important;
+ width:auto!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+ writing-mode:horizontal-tb!important;text-orientation:mixed!important;white-space:normal!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat .round-icon,
+html body.hpmw-ticket-support-active #homeView .categories .cat .round-icon{
+ display:flex!important;flex:0 0 46px!important;align-items:center!important;justify-content:center!important;
+ width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;
+ margin:0 12px 0 0!important;
+}
+html body[data-hpmw-route="support"] .hpmw-global-brandbar,
+html body.hpmw-ticket-support-active .hpmw-global-brandbar{
+ display:block!important;position:relative!important;float:none!important;transform:none!important;
+ width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:1134/163!important;
+ margin:64px auto 18px!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;
+}
+html body[data-hpmw-route="support"] footer.lux-footer,
+html body.hpmw-ticket-support-active footer.lux-footer{display:block!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:auto!important;min-height:0!important;margin:28px 0 0!important}
+@media(max-width:850px){
+ html body[data-hpmw-route="support"] main.shell,html body.hpmw-ticket-support-active main.shell{width:calc(100% - 20px)!important}
+ html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:480px){
+ html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:1fr!important}
+}
 </style>
