@@ -3098,7 +3098,7 @@ function loadTicketAdminIds(){return [...new Set([1,3,...Object.keys(loadTicketR
 let ADMINS=loadTicketAdminIds(),NEWS_VIEWERS=[];let user={id:0,name:"",logged:false}, all=[], currentTab="open", selected=null, activeCat=null;
 function refreshTicketModerators(){ADMINS.splice(0,ADMINS.length,...loadTicketAdminIds());if(typeof paintUser==="function")paintUser()}
 async function refreshNewsModerators(){try{const r=await fetch("https://vuaajsjjluwgqmneinds.supabase.co/rest/v1/news_moderators?select=forumotion_user_id&enabled=eq.true&can_view_news=eq.true",{headers:{apikey:"sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",Authorization:"Bearer sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx"},cache:"no-store"});if(!r.ok)throw Error("news permissions unavailable");const rows=await r.json();NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length,...rows.map(x=>Number(x.forumotion_user_id)).filter(x=>Number.isInteger(x)&&x>0));if(typeof paintUser==="function")paintUser()}catch(e){NEWS_VIEWERS.splice(0,NEWS_VIEWERS.length);if(typeof paintUser==="function")paintUser();console.warn("[Hpmw] Nieuwspaginarechten niet geladen.",e)}}
-refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");const isToolView=id==="toolView"||id==="adminView";document.documentElement.classList.toggle("hpmw-tool-focus",isToolView);document.documentElement.classList.toggle("hpmw-portal-focus",id!=="introView"&&!isToolView);if(id==="faqView"){const cats=$("#hpmwFaqCategories");if(cats)cats.hidden=false;const intro=$("#hpmwFaqIntro");if(intro)intro.hidden=true;}const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));const activeView=document.getElementById(id);if(activeView)activeView.scrollTop=0;const shell=document.querySelector("main.shell");if(shell)shell.scrollTop=0;scrollTo({top:0,behavior:"instant"});window.hpmwSyncPortalWorkspace?.();}function hpmwRouteTool(path,write){
+refreshNewsModerators();setInterval(refreshNewsModerators,60000);const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':"&quot;","'":"&#39;"}[c]));function show(id){const access=window.HpmwPortalAccess;if(id!=="introView"&&!access?.canViewPortal?.())return;if(id==="homeView"&&!access?.canViewTickets?.())return;if(id==="formView"&&!access?.canUseTickets?.())return;if(id==="faqView"&&!access?.canViewFaq?.())return;if(id==="newsView"&&!access?.canViewNews?.())return;if(id==="myTicketsView"&&!access?.canViewMyTickets?.())return;if(id==="sortingHatView"&&!access?.canViewSortingHat?.())return;if(id==="vacanciesView"&&!access?.canViewVacancies?.())return;if(id==="modteamView"&&!access?.canViewModteam?.())return;if(id==="awardsView"&&!access?.canViewAwards?.())return;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");const isToolView=id==="toolView"||id==="adminView";document.documentElement.classList.toggle("hpmw-tool-focus",isToolView);document.documentElement.classList.toggle("hpmw-portal-focus",id!=="introView"&&!isToolView&&id!=="homeView"&&id!=="formView");if(id==="faqView"){const cats=$("#hpmwFaqCategories");if(cats)cats.hidden=false;const intro=$("#hpmwFaqIntro");if(intro)intro.hidden=true;}const b=$("#ticketSupportLaunch");if(b)b.setAttribute("aria-expanded",String(id==="homeView"));const activeView=document.getElementById(id);if(activeView)activeView.scrollTop=0;const shell=document.querySelector("main.shell");if(shell)shell.scrollTop=0;scrollTo({top:0,behavior:"instant"});window.hpmwSyncPortalWorkspace?.();}function hpmwRouteTool(path,write){
  const known=["/tool","/tool/ticketadmin","/tool/settings","/tool/team","/tool/translations","/tool/authorizations","/tool/news","/tool/faq"];
  if(!known.includes(path))path="/tool";
  if(typeof isAdmin==="function"&&!isAdmin())return;
@@ -9596,6 +9596,33 @@ setTimeout(wrapViewFunction,0);setTimeout(wrapViewFunction,250);setTimeout(wrapV
 window.hpmwNavigate=go;window.hpmwRouteInternal=route;
 })();
 </script>
+
+<style id="hpmw-ticket-support-shell-restored-20261120">
+/* Ticket Support uses the normal site shell. Keep logo/banner/nav/footer visible and clickable. */
+html body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2,
+html body:has(main.shell>#formView.active) header.topbar.luxury-nav-v2,
+html body:has(main.shell>#homeView.active) .hpmw-global-brandbar,
+html body:has(main.shell>#formView.active) .hpmw-global-brandbar,
+html body:has(main.shell>#homeView.active) footer.lux-footer,
+html body:has(main.shell>#formView.active) footer.lux-footer{
+ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;max-height:none!important;
+}
+html body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:100500!important;}
+html body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2 nav.top-actions,
+html body:has(main.shell>#formView.active) header.topbar.luxury-nav-v2 nav.top-actions{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+}
+html body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2 nav.top-actions>*,
+html body:has(main.shell>#formView.active) header.topbar.luxury-nav-v2 nav.top-actions>*{pointer-events:auto!important;}
+html body:has(main.shell>#homeView.active) .hpmw-global-brandbar,
+html body:has(main.shell>#formView.active) .hpmw-global-brandbar{position:relative!important;top:auto!important;left:auto!important;right:auto!important;z-index:1!important;margin:72px auto 18px!important;width:min(1120px,calc(100% - 36px))!important;}
+html body:has(main.shell>#homeView.active) main.shell,
+html body:has(main.shell>#formView.active) main.shell{margin:0 auto 24px!important;padding-top:0!important;}
+html body:has(main.shell>#homeView.active) main.shell>#homeView,
+html body:has(main.shell>#formView.active) main.shell>#formView{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
+html body:has(main.shell>#homeView.active) main.shell>#homeView *,
+html body:has(main.shell>#formView.active) main.shell>#formView *{pointer-events:auto!important;}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
@@ -12600,81 +12627,8 @@ html body main.shell>#formView.view.active~.view{display:none!important;}
 @media(max-width:700px){html body main.shell>#homeView.view.active .categories{grid-template-columns:minmax(0,1fr)!important;}}
 </style>
 
-<style id="hpmw-ticket-support-hide-all-external-widgets-20261120">
-/* When Ticket Support or its form is active, remove portal chrome/widgets outside the requested content. */
-html body:has(main.shell>#homeView.active) .topbar,
-html body:has(main.shell>#formView.active) .topbar,
-html body:has(main.shell>#homeView.active) .hpmw-global-brandbar,
-html body:has(main.shell>#formView.active) .hpmw-global-brandbar,
-html body:has(main.shell>#homeView.active) #introView,
-html body:has(main.shell>#formView.active) #introView,
-html body:has(main.shell>#homeView.active) .hpmw-home-side,
-html body:has(main.shell>#formView.active) .hpmw-home-side,
-html body:has(main.shell>#homeView.active) .hpmw-side-card,
-html body:has(main.shell>#formView.active) .hpmw-side-card,
-html body:has(main.shell>#homeView.active) [class*="widget"],
-html body:has(main.shell>#formView.active) [class*="widget"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;height:0!important;max-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;}
-html body:has(main.shell>#homeView.active) main.shell,
-html body:has(main.shell>#formView.active) main.shell{margin-top:12px!important;}
-</style>
 
-<style id="hpmw-ticket-support-force-category-only-20261120">
-/* Ticket Support states are isolated: active categories OR active form, nothing from intro/home widgets. */
-body:has(#homeView.active) #introView,body:has(#formView.active) #introView,
-body:has(#homeView.active) .hpmw-global-brandbar,body:has(#formView.active) .hpmw-global-brandbar,
-body:has(#homeView.active) #hpmwHomeLayout,body:has(#formView.active) #hpmwHomeLayout,
-body:has(#homeView.active) .hpmw-home-side,body:has(#formView.active) .hpmw-home-side,
-body:has(#homeView.active) .hpmw-side-card,body:has(#formView.active) .hpmw-side-card,
-body:has(#homeView.active) .hpmw-home-widget,body:has(#formView.active) .hpmw-home-widget,
-body:has(#homeView.active) [id*="Widget"],body:has(#formView.active) [id*="Widget"],
-body:has(#homeView.active) [class*="widget"],body:has(#formView.active) [class*="widget"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
-body:has(#homeView.active) main.shell>.view:not(#homeView),body:has(#formView.active) main.shell>.view:not(#formView){display:none!important;}
-body:has(#homeView.active) main.shell>#homeView,body:has(#formView.active) main.shell>#formView{display:block!important;visibility:visible!important;opacity:1!important;position:static!important;transform:none!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
-body:has(#homeView.active) main.shell>#homeView .support-categories-panel{display:block!important;}
-body:has(#homeView.active) main.shell>#homeView #categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;}
-@media(max-width:700px){body:has(#homeView.active) main.shell>#homeView #categories{grid-template-columns:1fr!important}}
-</style>
-<style id="hpmw-ticket-support-mode-direct-20261120">
-body.hpmw-ticket-support-mode #introView,
-body.hpmw-ticket-support-mode .hpmw-global-brandbar,
-body.hpmw-ticket-support-mode #hpmwHomeLayout,
-body.hpmw-ticket-support-mode .hpmw-home-side,
-body.hpmw-ticket-support-mode .hpmw-side-card,
-body.hpmw-ticket-support-mode [class*="widget"],
-body.hpmw-ticket-support-mode [id*="Widget"],
-body.hpmw-ticket-support-mode .topbar{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
-body.hpmw-ticket-support-mode main.shell{display:block!important;visibility:visible!important;width:min(1180px,calc(100vw - 24px))!important;max-width:1180px!important;margin:12px auto!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
-body.hpmw-ticket-support-mode main.shell>.view:not(.active){display:none!important}
-body.hpmw-ticket-support-mode main.shell>#homeView.active,
-body.hpmw-ticket-support-mode main.shell>#formView.active{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;inset:auto!important;transform:none!important;float:none!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
-body.hpmw-ticket-support-mode #homeView.active .support-categories-panel{display:block!important}
-body.hpmw-ticket-support-mode #homeView.active #categories{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important}
-@media(max-width:700px){body.hpmw-ticket-support-mode #homeView.active #categories{grid-template-columns:1fr!important}}
-</style>
-<script id="hpmw-ticket-support-force-open-20261120">
-(()=>{"use strict";
-function activateHome(){
- document.body.classList.add("hpmw-ticket-support-mode");
- const intro=document.getElementById("introView"),home=document.getElementById("homeView");
- document.querySelectorAll("main.shell>.view").forEach(v=>{v.classList.remove("active");v.style.setProperty("display","none","important");});
- if(intro){intro.classList.remove("active");intro.style.setProperty("display","none","important");}
- if(home){home.classList.add("active");home.style.setProperty("display","block","important");home.style.removeProperty("visibility");}
- document.documentElement.classList.add("hpmw-portal-focus");
- document.querySelectorAll(".hpmw-global-brandbar,#hpmwHomeLayout,.hpmw-home-side,.hpmw-side-card,[class*='widget'],[id*='Widget']").forEach(el=>el.style.setProperty("display","none","important"));
- window.scrollTo(0,0);
-}
-function bind(){
- document.addEventListener("click",e=>{
-  const btn=e.target?.closest?.("#ticketSupportLaunch");
-  if(!btn)return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  activateHome();btn.setAttribute("aria-expanded","true");
- },true);
- const b=document.getElementById("ticketSupportLaunch");
- if(b)b.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();activateHome();},true);
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
-setTimeout(bind,250);setTimeout(bind,1000);
-window.hpmwForceTicketSupport=activateHome;
-})();
-</script>
+
+
+
+
