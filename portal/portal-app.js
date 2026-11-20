@@ -5,11 +5,24 @@ const SUPABASE_URL="https://vuaajsjjluwgqmneinds.supabase.co";
 const SUPABASE_KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
 function detectForumotion(){
  let stored=null;try{stored=JSON.parse(sessionStorage.getItem("hpmw_forumotion_session")||"null")}catch(_){}
- const u=window._userdata||window.ForumotionIdentity||window.forumotionUser||{};
- const id=Number(stored&&stored.id||u.user_id||u.id||window.ForumotionIdentity?.id||0);
- const name=String(stored&&stored.name||u.username||u.name||window.ForumotionIdentity?.name||"").trim();
- const logged=Boolean((stored&&stored.logged)||u.session_logged_in===1||u.session_logged_in==="1"||u.logged===true||id>0&&name);
- return {id,name,logged,avatar:stored&&stored.avatar||u.user_avatar||u.avatar||""};
+ const candidates=[window._userdata,window.userdata,window.ForumotionIdentity,window.forumotionUser,window.ForumotionUser].filter(Boolean);
+ let u=candidates[0]||{};
+ const get=(obj,keys)=>{for(const k of keys){if(obj&&obj[k]!=null&&obj[k]!=="")return obj[k]}return null};
+ let id=Number((stored&&stored.id)||get(u,["user_id","USER_ID","id","userid","userId"])||0);
+ let name=String((stored&&stored.name)||get(u,["username","USERNAME","name","user_name","USER_NAME"])||"").trim();
+ let level=Number(get(u,["user_level","USER_LEVEL","level","userlevel"])||0);
+ let avatar=(stored&&stored.avatar)||get(u,["user_avatar","USER_AVATAR","avatar"])||"";
+ const logout=document.querySelector('a[href*="logout"],a[href*="log_out"],a#logout,[id*="logout"],.logout');
+ if(!id){
+   for(const a of Array.from(document.querySelectorAll('a[href*="/u"],a[href*="profile?"]'))){
+     const m=(a.getAttribute("href")||"").match(/(?:\/u|user_id=)(\d+)/i);
+     if(m){id=Number(m[1]);if(!name)name=(a.textContent||"").trim();break}
+   }
+ }
+ if(!name&&id){const p=document.querySelector('a[href*="/u'+id+'"]');if(p)name=(p.textContent||"").trim()}
+ if(!avatar){const img=document.querySelector('.user-avatar img,.avatar img,#avatar img,a[href*="/u'+id+'"] img');if(img)avatar=img.src}
+ const logged=Boolean((stored&&stored.logged)||id>0&&name&&(logout||get(u,["session_logged_in","SESSION_LOGGED_IN"])===1||get(u,["session_logged_in","SESSION_LOGGED_IN"])==="1"||get(u,["logged","is_logged","logged_in"])===true));
+ return {id,name,logged,level,avatar};
 }
 let forum=detectForumotion();
 let fmLogged=!!(forum.logged&&forum.id>0&&forum.name);
@@ -26,7 +39,7 @@ function setup(){
  modalRoot.querySelector(".pa-close").onclick=close;
  modalRoot.querySelector(".pa-backdrop").addEventListener("click",e=>{if(e.target.classList.contains("pa-backdrop"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
- document.querySelectorAll("[data-legacy]").forEach(el=>{el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();openFor((el.textContent||"").trim().toLowerCase())})});
+ document.addEventListener("click",e=>{const el=e.target.closest("[data-legacy]");if(!el)return;e.preventDefault();e.stopPropagation();openFor((el.textContent||el.getAttribute("aria-label")||"").trim().toLowerCase())});
  if(!window.supabase?.createClient){console.error("Supabase JS library niet geladen; portal UI is wel actief.");db=null;return}
  db=window.HpmwSupabaseClient||window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  forum=detectForumotion();fmLogged=!!(forum.logged&&forum.id>0&&forum.name);
