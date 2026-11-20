@@ -19,7 +19,7 @@ function setup(){
  root.querySelector(".pa-backdrop").addEventListener("click",e=>{if(e.target.classList.contains("pa-backdrop"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
  document.querySelectorAll("[data-legacy]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();const text=(el.textContent||"").toLowerCase();openFor(text)}));
- document.querySelectorAll(".system-card").forEach(el=>{if(el.hasAttribute("data-legacy"))el.addEventListener("click",e=>{e.preventDefault();openFor((el.textContent||"").toLowerCase())})});
+
  renderNewsPreview();
 }
 function refreshAccount(){
