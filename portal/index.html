@@ -12868,4 +12868,23 @@ html body.hpmw-ticket-support-active footer.lux-footer{display:block!important;p
 @media(max-width:480px){
  html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:1fr!important}
 }
+</style><style id="hpmw-support-category-text-fix-20261120">
+/* Fix category typography: keep title and description stacked, readable, and separated. */
+html body[data-hpmw-route="support"] #homeView .categories .cat,
+html body.hpmw-ticket-support-active #homeView .categories .cat{gap:12px!important;text-align:left!important}
+html body[data-hpmw-route="support"] #homeView .categories .cat>span:not(.round-icon),
+html body.hpmw-ticket-support-active #homeView .categories .cat>span:not(.round-icon){
+ display:flex!important;flex:1 1 auto!important;flex-direction:column!important;align-items:flex-start!important;
+ justify-content:center!important;gap:4px!important;min-width:0!important;line-height:1.4!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat>span:not(.round-icon)>strong,
+html body.hpmw-ticket-support-active #homeView .categories .cat>span:not(.round-icon)>strong{
+ display:block!important;position:static!important;width:100%!important;font-size:14px!important;font-weight:700!important;line-height:1.25!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat>span:not(.round-icon)>span,
+html body.hpmw-ticket-support-active #homeView .categories .cat>span:not(.round-icon)>span{
+ display:block!important;position:static!important;width:100%!important;font-size:12px!important;line-height:1.45!important;opacity:.82!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat .round-icon,
+html body.hpmw-ticket-support-active #homeView .categories .cat .round-icon{display:flex!important;flex:0 0 46px!important;width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important}
 </style>
