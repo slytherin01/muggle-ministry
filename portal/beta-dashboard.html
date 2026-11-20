@@ -75,8 +75,6 @@ function closeModal(){modal.classList.remove('open')}
 document.getElementById('close').onclick=closeModal;document.getElementById('modalOk').onclick=closeModal;modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{if(a.hasAttribute('data-legacy')||a.getAttribute('href')==='#'){e.preventDefault();document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}}));
-\n
-
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://slytherin01.github.io/muggle-ministry/portal/portal-app.js?v=pagesfix20261120f" crossorigin="anonymous"></script>
