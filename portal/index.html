@@ -9558,10 +9558,13 @@ html body #introView #hpmwHomeLayout .hpmw-home-main>*{flex:0 0 auto!important}
 </style>
 
 <script id="hpmw-clean-portal-routes-20261120">
-(()=>{"use strict";const routes={"/support":()=>window.hpmwShowPortalView?.("homeView"),"/faq":()=>window.hpmwShowPortalView?.("faqView"),"/mijntickets":()=>{const b=document.getElementById("myTicketsLaunch");if(typeof b?.onclick==="function")b.onclick.call(b);else window.hpmwShowPortalView?.("myTicketsView")},"/tool":()=>window.hpmwRouteTool?.("/tool",false)};
-function route(){const p=location.hash.slice(1);if(routes[p]){routes[p]();document.body.dataset.hpmwRoute=p;return true}if(p.startsWith("/tool/")){window.hpmwRouteTool?.(p,false);document.body.dataset.hpmwRoute=p;return true}document.body.dataset.hpmwRoute="/";return false}
-function go(p){if(!routes[p]&&!p.startsWith("/tool/"))return;if(location.hash!=="#"+p)history.pushState({},"",location.pathname+location.search+"#"+p);route()}
-document.addEventListener("click",e=>{const b=e.target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");if(!b)return;const p=b.id==="ticketSupportLaunch"?"/support":b.id==="faqLaunch"?"/faq":b.id==="myTicketsLaunch"?"/mijntickets":"/tool";e.preventDefault();e.stopImmediatePropagation();go(p)},true);
+(()=>{"use strict";
+const baseView=()=>window.hpmwShowPortalView?.("introView");
+const routes={"/":baseView,"/support":()=>window.hpmwShowPortalView?.("homeView"),"/faq":()=>window.hpmwShowPortalView?.("faqView"),"/mijntickets":()=>{const b=document.getElementById("myTicketsLaunch");if(typeof b?.onclick==="function")b.onclick.call(b);else window.hpmwShowPortalView?.("myTicketsView")},"/tool":()=>window.hpmwRouteTool?.("/tool",false)};
+function route(){const p=location.hash.slice(1)||"/";if(routes[p]){routes[p]();document.body.dataset.hpmwRoute=p;return true}if(p.startsWith("/tool/")){window.hpmwRouteTool?.(p,false);document.body.dataset.hpmwRoute=p;return true}baseView();document.body.dataset.hpmwRoute="/";return false}
+function go(p){if(!routes[p]&&!p.startsWith("/tool/"))return;if(p==="/"){if(location.hash)history.pushState({},"",location.pathname+location.search);route();return}if(location.hash!=="#"+p)history.pushState({},"",location.pathname+location.search+"#"+p);route()}
+document.addEventListener("click",e=>{const b=e.target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");if(b){const p=b.id==="ticketSupportLaunch"?"/support":b.id==="faqLaunch"?"/faq":b.id==="myTicketsLaunch"?"/mijntickets":"/tool";e.preventDefault();e.stopImmediatePropagation();go(p);return}
+const back=e.target.closest("#toolBackPortal");if(back){e.preventDefault();e.stopImmediatePropagation();go("/");return}},true);
 document.addEventListener("click",e=>{const l=e.target.closest("[data-hpmw-route]");if(l){e.preventDefault();go(l.dataset.hpmwRoute)}},true);
 window.addEventListener("hashchange",route);window.addEventListener("popstate",route);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",route,{once:true});else route();window.hpmwNavigate=go})();
 </script>
