@@ -9559,15 +9559,15 @@ html body #introView #hpmwHomeLayout .hpmw-home-main>*{flex:0 0 auto!important}
 
 <script id="hpmw-global-internal-urls-20261120">
 (()=>{"use strict";
-const pathForView={"introView":"/","homeView":"/support","faqView":"/faq","myTicketsView":"/mijntickets","toolView":"/tool"};
-function syncUrl(path,replace){const url=location.pathname+location.search+(path==="/"?"":"#"+path);if(location.href!==location.origin+url){(replace?history.replaceState:history.pushState).call(history,{},"",url)}}
+const routeForView={"introView":"","homeView":"support","faqView":"faq","myTicketsView":"mijntickets","toolView":"tool"};
+function syncUrl(view,replace){const u=new URL(location.href);if(view)u.searchParams.set("portal",view);else u.searchParams.delete("portal");u.hash="";const next=u.pathname+u.search;(replace?history.replaceState:history.pushState).call(history,{},"",next)}
 function route(){
- const p=location.hash.slice(1)||"/";
- if(p==="/")window.hpmwShowPortalView?.("introView");
- else if(p==="/support")window.hpmwShowPortalView?.("homeView");
- else if(p==="/faq")window.hpmwShowPortalView?.("faqView");
- else if(p==="/mijntickets"){const b=document.getElementById("myTicketsLaunch");if(b)b.click();else window.hpmwShowPortalView?.("myTicketsView")}
- else if(p==="/tool")window.hpmwRouteTool?.("/tool",false);
+ const p=new URL(location.href).searchParams.get("portal")||location.hash.slice(1)||"/";
+ if(p===""||p==="/")window.hpmwShowPortalView?.("introView");
+ else if(p==="support"||p==="/support")window.hpmwShowPortalView?.("homeView");
+ else if(p==="faq"||p==="/faq")window.hpmwShowPortalView?.("faqView");
+ else if(p==="mijntickets"||p==="/mijntickets"){const b=document.getElementById("myTicketsLaunch");if(b)b.click();else window.hpmwShowPortalView?.("myTicketsView")}
+ else if(p==="tool"||p==="/tool")window.hpmwRouteTool?.("/tool",false);
  else if(p.startsWith("/tool/"))window.hpmwRouteTool?.(p,false);
  else window.hpmwShowPortalView?.("introView");
  document.body.dataset.hpmwRoute=p;
@@ -9575,33 +9575,24 @@ function route(){
 function wrapViewFunction(){
  const fn=window.hpmwShowPortalView;
  if(typeof fn!=="function"||fn.__hpmwUrlWrapped)return false;
- const wrapped=function(viewId,...args){
-  const result=fn.call(this,viewId,...args);
-  const p=pathForView[viewId];
-  if(p!==undefined&&!window.__hpmwRoutingFromUrl)syncUrl(p,false);
-  return result;
- };
+ const wrapped=function(viewId,...args){const result=fn.call(this,viewId,...args);const p=routeForView[viewId];if(p!==undefined&&!window.__hpmwRoutingFromUrl)syncUrl(p,false);return result;};
  wrapped.__hpmwUrlWrapped=true;window.hpmwShowPortalView=wrapped;return true;
 }
-function go(p){if(!p||p==="/"){syncUrl("/",false);route();return}
- if(p.startsWith("/tool/")||["/support","/faq","/mijntickets","/tool"].includes(p)){syncUrl(p,false);route()}}
+function go(p){const v=p==="/"?"":p.replace(/^\//,"");if(["","support","faq","mijntickets","tool"].includes(v)||v.startsWith("tool/")){syncUrl(v,false);route()}}
 document.addEventListener("click",e=>{
  const target=e.target instanceof Element?e.target:null;if(!target)return;
  const launch=target.closest("#ticketSupportLaunch,#faqLaunch,#myTicketsLaunch,#adminLaunch");
- if(launch){e.preventDefault();e.stopImmediatePropagation();go(launch.id==="ticketSupportLaunch"?"/support":launch.id==="faqLaunch"?"/faq":launch.id==="myTicketsLaunch"?"/mijntickets":"/tool");return}
+ if(launch){e.preventDefault();e.stopImmediatePropagation();go(launch.id==="ticketSupportLaunch"?"support":launch.id==="faqLaunch"?"faq":launch.id==="myTicketsLaunch"?"mijntickets":"tool");return}
  const routeLink=target.closest("[data-hpmw-route]");
  if(routeLink){e.preventDefault();e.stopImmediatePropagation();go(routeLink.dataset.hpmwRoute);return}
  const back=target.closest("#toolBackPortal,#faqBack,#formBack,#formCancel,#myTicketsBack,#adminBack,#portalBack,#homeBack,#newsBack");
  if(back){e.preventDefault();e.stopImmediatePropagation();go("/");return}
  const anchor=target.closest("a[href]");
- if(anchor){const href=anchor.getAttribute("href")||"";
-  if(/(?:h3-dev-portaal|h3-portaal)(?:[?#].*)?$/.test(href)||href==="/"||href==="#/"){e.preventDefault();e.stopImmediatePropagation();go("/");}
- }
+ if(anchor){const href=anchor.getAttribute("href")||"";if(/(?:h3-dev-portaal|h3-portaal)(?:[?#].*)?$/.test(href)||href==="/"||href==="#/"){e.preventDefault();e.stopImmediatePropagation();go("/");}}
 },true);
 window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
-const boot=()=>{wrapViewFunction();route();};
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
-const retry=()=>wrapViewFunction();setTimeout(retry,0);setTimeout(retry,250);setTimeout(retry,1000);
+const boot=()=>{wrapViewFunction();route();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+setTimeout(wrapViewFunction,0);setTimeout(wrapViewFunction,250);setTimeout(wrapViewFunction,1000);
 window.hpmwNavigate=go;window.hpmwRouteInternal=route;
 })();
 </script>
