@@ -30,7 +30,7 @@ a{color:inherit;text-decoration:none}.wrap{max-width:1420px;margin:auto;border:1
 <body>
 <div class="wrap">
 
-<nav class="nav" aria-label="Portaal navigatie"><a class="active" href="#"><span class="nav-icon"><i class="fa-solid fa-house"></i></span>Dashboard</a><a href="https://testforumjoost.forumactie.com/forum" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span>Forum</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-circle-question"></i></span>FAQ</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-ticket"></i></span>Ticket Support</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span>Mijn tickets</a><a class="account-nav" href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-user"></i></span><span class="usertext"><small>MIJN ACCOUNT</small><strong>Account</strong></span></a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-shield-halved"></i></span>Ticketbeheer</a></nav>
+<nav class="nav" aria-label="Portaal navigatie"><a class="active" href="#"><span class="nav-icon"><i class="fa-solid fa-house"></i></span>Dashboard</a><a href="https://testforumjoost.forumactie.com/forum" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span>Forum</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-circle-question"></i></span>FAQ</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-ticket"></i></span>Ticket Support</a><a href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span>Mijn tickets</a><a class="account-nav" href="https://testforumjoost.forumactie.com/login" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-user"></i></span><span class="usertext"><small>MIJN ACCOUNT</small><strong>Account</strong></span></a><a href="https://testforumjoost.forumactie.com/h3-dev-portaal?adminEmbed=1" target="_blank" rel="noopener"><span class="nav-icon"><i class="fa-solid fa-shield-halved"></i></span>Ticketbeheer</a></nav>
 <div class="crumb">Home <span>›</span> Dashboard</div>
 <main class="main">
 <div class="welcome"><span class="tag">NIEUW PORTAAL · TESTVERSIE</span></div>
@@ -47,7 +47,7 @@ a{color:inherit;text-decoration:none}.wrap{max-width:1420px;margin:auto;border:1
 <a class="system-card" href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><div class="icon">✉️</div><div><h3>Mijn tickets</h3><p>Eigen tickets en reacties</p></div></a>
 <button class="system-card" type="button" data-legacy><div class="icon">📰</div><div><h3>Nieuwsberichten</h3><p>Nieuwsfeed en aankondigingen</p></div></button>
 <button class="system-card" type="button" data-legacy><div class="icon">❓</div><div><h3>FAQ</h3><p>Veelgestelde vragen</p></div></button>
-<a class="system-card" href="https://testforumjoost.forumactie.com/h3-portaal" target="_blank" rel="noopener"><div class="icon">⚙️</div><div><h3>Ticketbeheer</h3><p>Tickets beheren, status en toewijzing</p></div></a>
+<a class="system-card" href="https://testforumjoost.forumactie.com/h3-dev-portaal?adminEmbed=1" target="_blank" rel="noopener"><div class="icon">⚙️</div><div><h3>Ticketbeheer</h3><p>Tickets beheren, status en toewijzing</p></div></a>
 <button class="system-card" type="button" data-legacy><div class="icon">🧰</div><div><h3>Alle systemen</h3><p>Open het bestaande portaal</p></div></button>
 </section>
 <section class="community-links" aria-label="Community links"><div class="community-links-head"><h2><i class="fa-solid fa-users"></i> Community links</h2><span class="tag">COMMUNITY</span></div><div class="community-links-body"><div class="community-buttons"><a class="system-card" href="https://testforumjoost.forumactie.com/forum" target="_blank" rel="noopener"><div class="icon">💬</div><div><h3>Forum</h3><p>Ga naar het forum</p></div></a><a class="system-card" href="#" data-legacy><div class="icon">📜</div><div><h3>Reglement</h3><p>Bekijk de communityregels</p></div></a><a class="system-card" href="#" data-legacy><div class="icon">📰</div><div><h3>Community nieuws</h3><p>Lees nieuws uit de community</p></div></a></div></div></section>
@@ -74,34 +74,7 @@ document.getElementById('close').onclick=closeModal;document.getElementById('mod
 
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
 \n
-/* Forumotion identity display: the loader stores verified _userdata session data. */
-(function(){
-  var raw=null;
-  try { raw=sessionStorage.getItem("hpmw_forumotion_session"); } catch(e){}
-  var identity=null;
-  try { identity=raw?JSON.parse(raw):null; } catch(e){}
-  var logged=!!(identity && identity.logged && Number(identity.id)>0 && identity.name);
-  var account=document.querySelector(".account-nav .usertext strong");
-  var accountSmall=document.querySelector(".account-nav .usertext small");
-  if(account) account.textContent=logged?identity.name:"Niet ingelogd";
-  if(accountSmall) accountSmall.textContent=logged?"FORUMACCOUNT":"ACCOUNT";
-  var welcome=document.querySelector(".welcome");
-  if(welcome && logged){
-    var greet=document.createElement("p");
-    greet.textContent="Welkom, "+identity.name+"!";
-    greet.style.margin="0";
-    greet.style.color="var(--muted)";
-    welcome.prepend(greet);
-  }
-  document.querySelectorAll('[data-legacy]').forEach(function(el){
-    el.addEventListener('click',function(ev){
-      if(!logged && !el.href){
-        ev.preventDefault();
-        alert("Log eerst in op het Forumotion-forum om dit onderdeel te gebruiken.");
-      }
-    });
-  });
-})();
+
 \n</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js"></script>
 </body></html>
