@@ -9672,6 +9672,56 @@ html.hpmw-portal-focus body.hpmw-ticket-support-mode footer.lux-footer .lux-foot
  html.hpmw-portal-focus body.hpmw-ticket-support-mode main.shell{width:calc(100% - 20px)!important;margin:0 auto 18px!important;}
 }
 </style>
+
+<style id="hpmw-portal-focus-layout-actual-class-fix-20261120">
+/* Correct selectors: portal focus is on HTML; support mode uses ticket-support-active on BODY. */
+html.hpmw-portal-focus body.hpmw-ticket-support-active,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active){
+ padding:0!important;min-height:100vh!important;overflow-x:hidden!important;overflow-y:auto!important;
+}
+html.hpmw-portal-focus body.hpmw-ticket-support-active header.topbar.luxury-nav-v2,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+ position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:100%!important;height:auto!important;min-height:56px!important;max-height:none!important;margin:0!important;padding:6px 12px!important;
+ z-index:10060!important;box-sizing:border-box!important;
+}
+html.hpmw-portal-focus body.hpmw-ticket-support-active header.topbar.luxury-nav-v2 nav.top-actions,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active) header.topbar.luxury-nav-v2 nav.top-actions{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+ position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;height:auto!important;min-height:42px!important;
+ flex-flow:row wrap!important;justify-content:flex-start!important;align-items:center!important;gap:6px!important;margin:0 auto!important;
+}
+html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active) .hpmw-global-brandbar{
+ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+ position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;height:clamp(130px,18vw,190px)!important;
+ min-height:130px!important;max-height:190px!important;aspect-ratio:auto!important;margin:12px auto 18px!important;padding:0!important;
+ box-sizing:border-box!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;
+ border:1px solid #344454!important;border-radius:12px!important;box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+html.hpmw-portal-focus body.hpmw-ticket-support-active main.shell,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active) main.shell{
+ display:block!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;margin:0 auto 24px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+}
+html.hpmw-portal-focus body.hpmw-ticket-support-active footer.lux-footer,
+html.hpmw-portal-focus body:has(main.shell>#homeView.active) footer.lux-footer{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+ position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+ width:100%!important;height:auto!important;min-height:54px!important;margin:24px 0 0!important;z-index:1!important;
+}
+@media(max-width:700px){
+ html.hpmw-portal-focus body.hpmw-ticket-support-active .hpmw-global-brandbar,
+ html.hpmw-portal-focus body:has(main.shell>#homeView.active) .hpmw-global-brandbar{
+ width:calc(100% - 20px)!important;height:112px!important;min-height:112px!important;max-height:112px!important;margin:10px auto 14px!important;
+ }
+ html.hpmw-portal-focus body.hpmw-ticket-support-active main.shell,
+ html.hpmw-portal-focus body:has(main.shell>#homeView.active) main.shell{width:calc(100% - 20px)!important;margin:0 auto 18px!important;}
+}
+</style>
 </body></html>
 <style id="hpmw-guest-avatar-visible-fix">#accountLink .lux-nav-icon{display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}#accountLink .lux-nav-icon i{display:inline-flex!important;visibility:visible!important;font-size:18px!important;line-height:1!important}@media(max-width:600px){#accountLink .lux-nav-icon{display:grid!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important}}</style>
 
