@@ -12731,3 +12731,69 @@ html.hpmw-portal-focus body footer.lux-footer *{writing-mode:horizontal-tb!impor
  html.hpmw-portal-focus body #homeView .categories{grid-template-columns:1fr!important}
 }
 </style>
+<style id="hpmw-support-final-override-20261120">
+/* Final Support-only page: suppress the intro dashboard/widgets and restore a clean ticket page. */
+html body[data-hpmw-route="support"] #introView,
+html body[data-hpmw-route="/support"] #introView,
+html body.hpmw-ticket-support-active #introView{display:none!important}
+html body[data-hpmw-route="support"] #homeView,
+html body[data-hpmw-route="/support"] #homeView,
+html body.hpmw-ticket-support-active #homeView{display:block!important;visibility:visible!important;opacity:1!important}
+html body[data-hpmw-route="support"] #introView .intro-login-layout,
+html body[data-hpmw-route="support"] #introView #hpmwHomeLayout,
+html body[data-hpmw-route="support"] #introView .hpmw-home-layout,
+html body.hpmw-ticket-support-active #introView #hpmwHomeLayout,
+html body.hpmw-ticket-support-active #introView .hpmw-home-layout{display:none!important}
+html body[data-hpmw-route="support"] main.shell,
+html body.hpmw-ticket-support-active main.shell{
+  width:min(1120px,calc(100% - 28px))!important;max-width:1120px!important;
+  min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0 auto 82px!important;padding:16px!important;overflow:visible!important;
+  position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+}
+html body[data-hpmw-route="support"] main.shell>.view,
+html body.hpmw-ticket-support-active main.shell>.view{
+  display:none!important;position:relative!important;inset:auto!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;transform:none!important;float:none!important;
+}
+html body[data-hpmw-route="support"] main.shell>#homeView,
+html body.hpmw-ticket-support-active main.shell>#homeView{display:block!important}
+html body[data-hpmw-route="support"] #homeView .categories,
+html body.hpmw-ticket-support-active #homeView .categories{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;width:100%!important;min-width:0!important;padding:0!important;margin:0!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat,
+html body.hpmw-ticket-support-active #homeView .categories .cat{
+  width:100%!important;min-width:0!important;min-height:82px!important;height:auto!important;
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  padding:12px!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;
+}
+html body[data-hpmw-route="support"] #homeView .categories .cat *,
+html body.hpmw-ticket-support-active #homeView .categories .cat *{
+  writing-mode:horizontal-tb!important;white-space:normal!important;
+}
+html body[data-hpmw-route="support"] .hpmw-global-brandbar,
+html body.hpmw-ticket-support-active .hpmw-global-brandbar{
+  display:block!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;
+  width:min(1120px,calc(100% - 28px))!important;max-width:1120px!important;
+  height:clamp(120px,22vw,220px)!important;min-height:120px!important;max-height:220px!important;
+  margin:62px auto 16px!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;
+}
+html body[data-hpmw-route="support"] footer.lux-footer,
+html body.hpmw-ticket-support-active footer.lux-footer{
+  position:relative!important;inset:auto!important;display:block!important;
+  width:100%!important;height:auto!important;min-height:0!important;margin:24px 0 0!important;
+}
+@media(max-width:760px){
+ html body[data-hpmw-route="support"] main.shell,html body.hpmw-ticket-support-active main.shell{width:calc(100% - 16px)!important;padding:10px!important}
+ html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ html body[data-hpmw-route="support"] #homeView .categories .cat,html body.hpmw-ticket-support-active #homeView .categories .cat{min-height:68px!important;padding:9px!important}
+ html body[data-hpmw-route="support"] .hpmw-global-brandbar,html body.hpmw-ticket-support-active .hpmw-global-brandbar{width:calc(100% - 16px)!important;height:124px!important;min-height:124px!important;margin:58px auto 12px!important}
+}
+@media(max-width:380px){
+ html body[data-hpmw-route="support"] #homeView .categories,html body.hpmw-ticket-support-active #homeView .categories{grid-template-columns:1fr!important}
+}
+</style>
