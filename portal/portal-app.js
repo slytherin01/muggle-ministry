@@ -10,7 +10,7 @@ function detectForumotion(){
  const level=Number(raw.user_level||raw.USER_LEVEL||raw.level||raw.userlevel||0);
  let avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
  const links=Array.from(document.querySelectorAll('a[href]')).map(a=>({a,href:a.getAttribute("href")||"",text:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim()}));
- const profile=links.map(x=>({...x,match:x.href.match(/(?:^|\\/)u(\\d+)(?:[/?#]|$)/i)})).find(x=>x.match);
+ const profile=links.map(x=>({...x,match:x.href.match(/(?:^|\/)u(\d+)(?:[/?#]|$)/i)})).find(x=>x.match);
  const logout=links.some(x=>/logout|log_out|deconnexion|uitloggen/i.test(x.href+" "+x.text))||!!document.querySelector("#logout,.logout,[id*='logout']");
  const login=links.some(x=>/login|log_in|connexion|inloggen/i.test(x.href+" "+x.text));
  // Forumotion _userdata has user_id=-1 for guests. Positive IDs mean a member.
