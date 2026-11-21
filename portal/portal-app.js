@@ -51,7 +51,14 @@ function close(){const m=$("#portal-app-modal");if(m)m.classList.remove("open")}
 function open(title,html){$("#pa-title").textContent=title;$("#pa-content").innerHTML=html;$("#portal-app-modal").classList.add("open")}
 function authBox(){return '<div class="pa-note">Geen aparte portaal-login vereist.</div>'}
 function authEvents(){}
-async function loadPortalRoles(){let roles=["guest"],permissions={};if(user){const {data,error}=await db.from("user_roles").select("role").eq("user_id",user.id);if(error)throw error;roles=(data||[]).map(x=>x.role);if(!roles.length)roles=["user"];const {data:p,error:pe}=await db.from("portal_role_permissions").select("*").in("role",roles);if(pe)throw pe;(p||[]).forEach(row=>Object.keys(row).forEach(k=>{if(typeof row[k]==="boolean")permissions[k]=permissions[k]||row[k]}));}return {roles,permissions}}
+async function loadPortalRoles(){
+ let roles=[fmLogged?"user":"guest"],permissions={};
+ if(fmLogged){const {data:m,error:me}=await db.from("forumotion_portal_role_map").select("role").eq("forum_user_id",forum.id).maybeSingle();if(me)throw me;if(m?.role)roles=[m.role];}
+ else if(user){const {data,error}=await db.from("user_roles").select("role").eq("user_id",user.id);if(error)throw error;roles=(data||[]).map(x=>x.role);if(!roles.length)roles=["user"];}
+ const {data:p,error:pe}=await db.from("portal_role_permissions").select("*").in("role",roles);if(pe)throw pe;
+ (p||[]).forEach(row=>Object.keys(row).forEach(k=>{if(typeof row[k]==="boolean")permissions[k]=permissions[k]||row[k]}));
+ return {roles,permissions};
+}
 function openFor(text){
  if(text.includes("ticket support")||text.includes("supportvraag"))ticketForm();
  else if(text.includes("mijn tickets"))myTickets();
