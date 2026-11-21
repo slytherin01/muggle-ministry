@@ -45,6 +45,17 @@ html,body{background:#0e1b2c!important;}
 body{padding:0!important;}
 .wrap{max-width:1420px!important;width:calc(100% - 32px)!important;margin:20px auto!important;border:1px solid #29415d!important;border-radius:22px!important;box-shadow:0 18px 55px rgba(0,0,0,.38)!important;}
 @media(max-width:700px){.wrap{width:100%!important;margin:0!important;border-radius:0!important;}}
+
+/* Final frame + footer correction */
+html,body{margin:0!important;padding:0!important;border:0!important;outline:0!important;background:#08111e!important;}
+.wrap{box-sizing:border-box!important;width:100%!important;max-width:1420px!important;margin:0 auto!important;border:1px solid #29415d!important;border-radius:18px!important;overflow:hidden!important;box-shadow:none!important;}
+.footer{background:#091321!important;border-top:1px solid #273d59!important;color:#b9cce2!important;padding:24px 18px!important;}
+.footer-inner,.footer-meta{color:#b9cce2!important;}
+.footer-meta span{color:#b9cce2!important;}
+.footer strong{color:#f1f6ff!important;}
+.footer a{color:#8fc7ff!important;}
+.footer-line{background:#344b69!important;height:1px!important;}
+@media(max-width:700px){.wrap{width:100%!important;border-radius:0!important;}}
 </style>
 <style id="portal-app-styles">
 #portal-app-modal{display:none}#portal-app-modal.open{display:block}.pa-backdrop{position:fixed;inset:0;z-index:99999;background:#020711d9;backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:14px}.pa-window{width:min(900px,100%);max-height:92vh;display:flex;flex-direction:column;background:#101e30;border:1px solid #355170;border-radius:18px;box-shadow:0 30px 80px #0009;overflow:hidden}.pa-window header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#203650;border-bottom:1px solid #355170}.pa-window header h2{margin:0;font-size:20px}.pa-close{border:0;background:transparent;color:white;font-size:28px;cursor:pointer}.pa-content{padding:20px;overflow:auto}.pa-form{display:grid;gap:13px;margin:16px 0}.pa-form label{display:grid;gap:6px;color:#c8d9ed;font-weight:650;font-size:13px}.pa-form input,.pa-form textarea,.pa-form select,.pa-search{width:100%;padding:11px 12px;background:#0a1625;color:#eef6ff;border:1px solid #34506d;border-radius:9px;font:inherit}.pa-btn{margin:5px 5px 5px 0;padding:10px 14px;border:1px solid #395674;border-radius:9px;background:#1b3552;color:#eef6ff;font-weight:700;cursor:pointer}.pa-primary{background:#347cc0;border-color:#347cc0}.pa-note{margin:10px 0;padding:13px;border:1px solid #34506d;border-radius:10px;background:#13253b;color:#c8d9ed;font-size:13px}.pa-error{padding:14px;background:#4b202b;border:1px solid #8d4255;border-radius:10px}.pa-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.pa-tile,.pa-ticket{display:block;width:100%;text-align:left;padding:13px;border:1px solid #34506d;border-radius:10px;background:#142941;color:#edf5ff;cursor:pointer}.pa-ticket{margin:7px 0}.pa-ticket span{display:block;color:#9db0c8;font-size:12px;margin-top:5px}.pa-article,.pa-messages article{padding:14px;margin:10px 0;background:#13253b;border:1px solid #2b4664;border-radius:10px}.pa-article h3{margin:0 0 5px}.pa-article small,.pa-messages small{color:#9db0c8}.pa-article p,.pa-messages p{margin:8px 0;white-space:normal}.pa-faq{margin:8px 0;border:1px solid #34506d;border-radius:10px;padding:12px;background:#13253b}.pa-faq summary{cursor:pointer;font-weight:700}.pa-faq div{padding-top:10px;color:#c8d9ed}.pa-avatar{max-width:80px;max-height:80px;border-radius:50%;margin-top:10px}.pa-actions{margin-top:10px}@media(max-width:600px){.pa-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pa-content{padding:14px}.pa-window header{padding:12px 15px}}
@@ -90,18 +101,7 @@ body{padding:0!important;}
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://slytherin01.github.io/muggle-ministry/portal/portal-app.js?v=readabilityfix20261121" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://slytherin01.github.io/muggle-ministry/portal/portal-app.js?v=framefooterfix20261121" crossorigin="anonymous"></script>
 
-<script>
-(function(){
- function run(){
-  var box=document.createElement('div');box.style.cssText='position:fixed;right:16px;bottom:16px;z-index:999999;background:#17283d;color:#fff;border:1px solid #5b7898;padding:12px;border-radius:10px;font:13px Arial;max-width:90vw';
-  var btn=document.createElement('button');btn.textContent='Forumlogin diagnose';btn.style.cssText='background:#294767;color:white;padding:9px 12px;border:1px solid #789;border-radius:7px;cursor:pointer';
-  var pre=document.createElement('pre');pre.style.cssText='display:none;white-space:pre-wrap;max-height:60vh;overflow:auto;margin-top:10px';
-  btn.onclick=function(){pre.style.display=pre.style.display==='none'?'block':'none';try{var u=window._userdata||window.userdata||{};var links=[].slice.call(document.querySelectorAll('a[href]')).map(function(a){return {href:a.getAttribute('href'),text:(a.innerText||a.title||'').trim()}}).filter(function(x){return /\\/u\\d+/i.test(x.href||'')||/logout|uitloggen/i.test(x.href+' '+x.text)}).slice(0,15);pre.textContent=JSON.stringify({page:location.href,origin:location.origin,topFrame:window.top===window,_userdata:u,userdataKeys:window.userdata?Object.keys(window.userdata):null,my_userid:window.my_userid,my_username:window.my_username,links:links},null,2)}catch(e){pre.textContent='Diagnostic error: '+e}};
-  box.appendChild(btn);box.appendChild(pre);document.body.appendChild(box);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-})();
-</script>
+
 </body></html>
