@@ -95,7 +95,7 @@ function refreshAccount(){
  }
 }
 function close(){const m=$("#portal-app-modal");if(m)m.classList.remove("open")}
-function open(title,html){$("#pa-title").textContent=title;$("#pa-content").innerHTML=html;$("#portal-app-modal").classList.add("open")}
+function open(title,html){const modal=$("#portal-app-modal"),win=modal.querySelector(".pa-window");$("#pa-title").textContent=title;$("#pa-content").innerHTML=html;const full=["ticket support","mijn tickets","beheer","ticketbeheer"].includes(String(title).toLowerCase());win.classList.toggle("pa-fullscreen",full);modal.classList.add("open")}
 function authBox(){return '<div class="pa-note">Geen aparte portaal-login vereist.</div>'}
 function authEvents(){}
 async function loadPortalRoles(){
