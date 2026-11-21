@@ -6,8 +6,8 @@
 
   const FORUM_URL = location.origin + "/";
 const DASHBOARD_URLS = [
-    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?v=96018f1",
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=96018f1",
+    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?v=5cc92ed",
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=5cc92ed",
     "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cachebust=96018f1"
   ];
   const EXPECTED_APP_VERSION = "7f3fb1c";
@@ -432,8 +432,8 @@ const DASHBOARD_URLS = [
 
     if (dashboardWrap) {
       dashboardWrap.style.setProperty("width", "100%", "important");
-      dashboardWrap.style.setProperty("max-width", "1420px", "important");
-      dashboardWrap.style.setProperty("margin", "0 auto", "important");
+      dashboardWrap.style.setProperty("max-width", "none", "important");
+      dashboardWrap.style.setProperty("margin", "0", "important");
       dashboardWrap.style.setProperty("box-sizing", "border-box", "important");
     }
 
@@ -491,9 +491,10 @@ const DASHBOARD_URLS = [
       }
 
       #hpmw-portal-mount .wrap {
-        width: calc(100% - 32px) !important;
-        max-width: 1320px !important;
-        margin: 12px auto !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
         box-sizing: border-box !important;
       }
 
@@ -551,8 +552,8 @@ const DASHBOARD_URLS = [
 
       @media (max-width: 900px) {
         #hpmw-portal-mount .wrap {
-          width: calc(100% - 16px) !important;
-          margin: 8px auto !important;
+          width: 100% !important;
+          margin: 0 !important;
         }
       }
 
