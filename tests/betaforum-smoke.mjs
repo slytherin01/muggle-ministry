@@ -28,7 +28,9 @@ assert.ok(app.includes("betaforum_admins"), "Staff access must be checked agains
 assert.ok(app.includes("const esc="), "User-provided HTML must be escaped");
 assert.ok(app.includes("const nl="), "Ticket messages must render escaped text with line breaks");
 assert.ok(app.includes("betaforum-forum-identity"), "Forum identity message contract must be present");
-assert.ok(app.includes("admin_content"), "News must connect to the existing portal news table");\nassert.ok(app.includes(".eq(\"published\",true)"), "BetaForum must only display published portal news");\nassert.ok(app.includes("renderNewsPreview"), "Dashboard news preview must be implemented");
+assert.ok(app.includes("admin_content"), "News must connect to the existing portal news table");
+assert.ok(app.includes(".eq(\"published\",true)"), "BetaForum must only display published portal news");
+assert.ok(app.includes("renderNewsPreview"), "Dashboard news preview must be implemented");
 assert.ok(app.includes("forumactie.com"), "Incoming identity messages must validate Forumotion origin");
 assert.ok(!/service[_-]?role/i.test(app), "Service-role credentials must never be present in frontend code");
 
