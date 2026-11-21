@@ -26,3 +26,13 @@ The current ticket conversation source is still Forumotion. Some ticket metadata
 This is groundwork, not a live portal integration yet. The helper deliberately fails closed until both a Supabase project URL/anon key and a real Supabase Auth access-token provider are configured. A Forumotion login/session is not a Supabase Auth token and must not be trusted as one. Only users present in the existing `translation_admins` table can access these moderator-only tables through RLS. Never put a Supabase `service_role` key in browser code.
 
 The new migration has been committed to GitHub but has **not** been run in Supabase. Run it only after reviewing it and taking a fresh database backup. Existing Forumotion tickets and conversations are untouched.
+## Forumotion testforum beta dashboard (active embed)
+- `portal/beta-dashboard.html` — dashboard shell for the testforum portaal.
+- `portal/portal-app.js` — application logic; the dashboard pins its cache version.
+- `portal/forumotion-beta-loader.js` — resilient Forumotion loader. It checks the expected dashboard/app version and falls back from GitHub Pages to raw GitHub, plus CDN fallback for Supabase JS.
+- Embed on the Forumactif `h3-portaal` page:
+  ```html
+  <div id="hpmw-portal-mount"></div>
+  <script src="https://slytherin01.github.io/muggle-ministry/portal/forumotion-beta-loader.js?v=92102c5"></script>
+  ```
+- Ticketbeheer requires both Forumotion administrator ID (1 or 3) and a signed-in Supabase account assigned the `administrator` role or listed in `translation_admins`. The database RPCs reject anonymous callers.
