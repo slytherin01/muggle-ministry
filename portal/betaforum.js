@@ -3,8 +3,7 @@ const URL="https://efqnlbhrtofkjmxfbcck.supabase.co",KEY="sb_publishable_-Qsc8zl
 const db=window.supabase.createClient(URL,KEY),root=document.getElementById("app");
 let session=null,isStaff=false,page="home",ticketId=null,faqSearch="",notice="",busy=false,adminText="",adminStatus="",heightObserver=null;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const nl=v=>esc(v).replace(/
-/g,"<br>");
+const nl=v=>esc(v).replace(/\n/g,"<br>");
 const statuses={open:"Open",in_progress:"In behandeling",waiting_user:"Wacht op gebruiker",resolved:"Opgelost",closed:"Gesloten"};
 const categories=["Forumfouten & Bugs","Account","Autorisaties","Leerlingenkamer","Forumwinkel & Galjoenen","Donatiesysteem","Klachten","Roep een Modje","Overige"];
 const categoryLinks={"Forumfouten & Bugs":"https://testforumjoost.forumactie.com/f36-forumfouten-bugs-support","Account":"https://testforumjoost.forumactie.com/f14-account-support","Autorisaties":"https://testforumjoost.forumactie.com/f11-autorisaties-support","Leerlingenkamer":"https://testforumjoost.forumactie.com/f13-leerlingenkamer-support","Forumwinkel & Galjoenen":"https://testforumjoost.forumactie.com/f17-forumwinkel-galjoenen-support","Donatiesysteem":"https://testforumjoost.forumactie.com/f15-donatiesysteem-support","Klachten":"https://testforumjoost.forumactie.com/f18-klachten-support","Roep een Modje":"https://testforumjoost.forumactie.com/f16-roep-een-modje-support","Overige":"https://testforumjoost.forumactie.com/f37-overige-support"};
