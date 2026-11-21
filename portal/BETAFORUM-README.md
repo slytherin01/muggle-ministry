@@ -5,14 +5,27 @@ The rebuilt portal is isolated from the legacy portal and uses the same dark hom
 ## Pages and features
 - Dashboard
 - FAQ search
-- Ticket Support with the 9 requested support categories and direct links to each Forumotion support forum\n- Forumotion username and numeric user ID are detected from the forum page and passed as ticket metadata (no manual ID field)
+- Ticket Support with the 9 requested support categories and direct links to each Forumotion support forum
+- Forumotion username and numeric user ID are detected from the forum page and passed as ticket metadata (no manual ID field)
 - Mijn tickets and conversation view
 - Staff ticketbeheer, status changes, responses
 - FAQ management: create, edit, publish/unpublish, delete
 - Email/password authentication
 - Responsive layout and iframe CSS isolation
 
-## Support categories\n\n- Forumfouten & Bugs → https://testforumjoost.forumactie.com/f36-forumfouten-bugs-support\n- Account → https://testforumjoost.forumactie.com/f14-account-support\n- Autorisaties → https://testforumjoost.forumactie.com/f11-autorisaties-support\n- Leerlingenkamer → https://testforumjoost.forumactie.com/f13-leerlingenkamer-support\n- Forumwinkel & Galjoenen → https://testforumjoost.forumactie.com/f17-forumwinkel-galjoenen-support\n- Donatiesysteem → https://testforumjoost.forumactie.com/f15-donatiesysteem-support\n- Klachten → https://testforumjoost.forumactie.com/f18-klachten-support\n- Roep een Modje → https://testforumjoost.forumactie.com/f16-roep-een-modje-support\n- Overige → https://testforumjoost.forumactie.com/f37-overige-support\n\n## Hosting
+## Support categories
+
+- Forumfouten & Bugs → https://testforumjoost.forumactie.com/f36-forumfouten-bugs-support
+- Account → https://testforumjoost.forumactie.com/f14-account-support
+- Autorisaties → https://testforumjoost.forumactie.com/f11-autorisaties-support
+- Leerlingenkamer → https://testforumjoost.forumactie.com/f13-leerlingenkamer-support
+- Forumwinkel & Galjoenen → https://testforumjoost.forumactie.com/f17-forumwinkel-galjoenen-support
+- Donatiesysteem → https://testforumjoost.forumactie.com/f15-donatiesysteem-support
+- Klachten → https://testforumjoost.forumactie.com/f18-klachten-support
+- Roep een Modje → https://testforumjoost.forumactie.com/f16-roep-een-modje-support
+- Overige → https://testforumjoost.forumactie.com/f37-overige-support
+
+## Hosting
 Once merged into `main`, GitHub Pages serves:
 `https://slytherin01.github.io/muggle-ministry/portal/betaforum.html`
 
@@ -24,7 +37,11 @@ Paste the following into the Forumotion page:
 ```
 The embed creates an isolated iframe and adjusts its height based on the portal content.
 
-## Forumotion identity note\n\nThe embed script reads Forumotion's available page user data (`_userdata`) or visible profile links and sends username/user ID to the embedded BetaForum frame. This is metadata for ticket identification only; it does not create a secure Forumotion single-sign-on session. BetaForum authentication is still required until a verified server-side SSO bridge is implemented.\n\n## Supabase
+## Forumotion identity note
+
+The embed script reads Forumotion's available page user data (`_userdata`) or visible profile links and sends username/user ID to the embedded BetaForum frame. This is metadata for ticket identification only; it does not create a secure Forumotion single-sign-on session. BetaForum authentication is still required until a verified server-side SSO bridge is implemented.
+
+## Supabase
 Project: `efqnlbhrtofkjmxfbcck`
 The frontend uses the publishable key only. Never put a service-role key in client-side code.
 
