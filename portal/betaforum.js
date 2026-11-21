@@ -6,7 +6,7 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const nl=v=>esc(v).replace(/\n/g,"<br>");
 const statuses={open:"Open",in_progress:"In behandeling",waiting_user:"Wacht op gebruiker",resolved:"Opgelost",closed:"Gesloten"};
 const categories=["Forumfouten & Bugs","Account","Autorisaties","Leerlingenkamer","Forumwinkel & Galjoenen","Donatiesysteem","Klachten","Roep een modje","Overige Support","Sorteerhoed"];
-const img={logo:"https://i44.servimg.com/u/f44/11/48/74/42/normaa10.png",forum:"https://i44.servimg.com/u/f44/11/48/74/42/hetfor11.png",mod:"https://i44.servimg.com/u/f44/11/48/74/42/modtea10.png",vac:"https://slytherin01.github.io/muggle-ministry/portal/images/vacatures.png",awards:"https://i44.serving.com/u/f44/11/48/74/42/awards10.png"};
+const img={logo:"https://i44.servimg.com/u/f44/11/48/74/42/normaa10.png",forum:"https://i44.servimg.com/u/f44/11/48/74/42/hetfor11.png",mod:"https://i44.servimg.com/u/f44/11/48/74/42/modtea10.png",vac:"https://slytherin01.github.io/muggle-ministry/portal/images/vacatures.png",awards:"https://i44.servimg.com/u/f44/11/48/74/42/awards10.png"};
 const toast=s=>{notice=s;setTimeout(()=>{notice="";render()},4500)};
 async function init(){try{let {data,error}=await db.auth.getSession();if(error)throw error;session=data.session;await checkStaff();render();db.auth.onAuthStateChange((_event,s)=>{session=s;setTimeout(async()=>{await checkStaff();render()},0)});}catch(e){root.innerHTML=errorBox("Starten mislukt",e.message)}}
 async function checkStaff(){isStaff=false;if(!session)return;const {data,error}=await db.from("betaforum_admins").select("role").eq("user_id",session.user.id).maybeSingle();if(error)console.warn("Staff check",error);isStaff=!!data}
