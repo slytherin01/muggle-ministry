@@ -25,7 +25,7 @@ try{
  document.head.appendChild(fix);
  function load(src,onDone,onFail){var s=document.createElement("script");s.src=src;s.onload=onDone;s.onerror=onFail;document.head.appendChild(s);}
  load("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",function(){
-  load("https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js",function(){var st=mount.querySelector("div");if(st&&st.textContent.indexOf("Portaal wordt gestart")===0)st.remove();},function(){show("FOUT: portal-app.js kan niet laden");});
+  load("https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js",function(){var st=mount.querySelector("div");if(st&&st.textContent.indexOf("Portaal wordt gestart")===0)st.remove();},function(){load("https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js",function(){var st=mount.querySelector("div");if(st&&st.textContent.indexOf("Portaal wordt gestart")===0)st.remove();},function(){show("FOUT: portal-app.js kan niet laden via jsDelivr én GitHub Raw");});});
  },function(){load("https://unpkg.com/@supabase/supabase-js@2",function(){load("https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js",function(){status.remove();},function(){show("FOUT: portal-app.js kan niet laden");});},function(){show("FOUT: Supabase-library kan niet laden");});});
  function show(msg){status.textContent=msg;status.style.border="1px solid #b44";status.style.background="#101b2b";status.style.color="#fff";if(!mount.contains(status))mount.prepend(status);}
 }catch(e){show("PORTAL INIT FOUT: "+e.message);}
