@@ -6,6 +6,7 @@ const app = await read("portal/betaforum.js");
 const embed = await read("portal/betaforum-embed.js");
 const html = await read("portal/betaforum.html");
 const sql = await read("supabase/migrations/20261121000400_betaforum_atomic_ticket_creation_and_rate_limit.sql");
+const hardening = await read("supabase/migrations/20261121000500_betaforum_category_and_staff_rpc_hardening.sql");
 
 const categories = [
   "Forumfouten & Bugs",
@@ -45,5 +46,8 @@ assert.ok(sql.includes("auth.uid()"), "Ticket creation RPC must require an authe
 assert.ok(sql.includes("pg_advisory_xact_lock"), "Rate limiting must serialize concurrent ticket creation");
 assert.ok(sql.includes("grant execute on function public.betaforum_create_ticket"), "RPC execute must be granted only to authenticated users");
 assert.ok(sql.includes("revoke all on function public.betaforum_create_ticket"), "RPC must revoke default/public execution");
+assert.ok(hardening.includes("Kies een geldige supportcategorie"), "Ticket RPC must whitelist categories");
+assert.ok(hardening.includes("revoke all on function public.betaforum_is_staff() from public, anon"), "Staff helper must not be publicly executable");
+assert.ok(hardening.includes("anon read published FAQ"), "Anonymous FAQ reads must not require the staff helper");
 
 console.log("BetaForum smoke checks passed.");
