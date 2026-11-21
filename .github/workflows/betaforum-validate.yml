@@ -1,0 +1,17 @@
+name: BetaForum syntax validation
+on:
+  push:
+    branches: [main, betaforum-release-candidate]
+    paths:
+      - 'portal/betaforum.js'
+      - 'portal/betaforum-embed.js'
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node --check portal/betaforum.js
+      - run: node --check portal/betaforum-embed.js
