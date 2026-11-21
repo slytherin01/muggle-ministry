@@ -4,23 +4,22 @@
 const SUPABASE_URL="https://vuaajsjjluwgqmneinds.supabase.co";
 const SUPABASE_KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
 function detectForumotion(){
- let stored=null;try{stored=JSON.parse(sessionStorage.getItem('hpmw_forumotion_session')||'null')}catch(_){}
- const candidates=[window._userdata,window.userdata,window.ForumotionIdentity,window.forumotionUser,window.ForumotionUser,window.HpmwForumIdentity].filter(Boolean);let u=candidates[0]||{};
- const get=(obj,keys)=>{for(const k of keys){if(obj&&obj[k]!=null&&obj[k]!=='')return obj[k]}return null};
- let id=Number((stored&&stored.id)||get(u,['user_id','USER_ID','id','userid','userId'])||0),name=String((stored&&stored.name)||get(u,['username','USERNAME','name','user_name','USER_NAME'])||'').trim(),level=Number(get(u,['user_level','USER_LEVEL','level','userlevel'])||0),avatar=(stored&&stored.avatar)||get(u,['user_avatar','USER_AVATAR','avatar'])||'';
- const profileLinks=Array.from(document.querySelectorAll('a[href]')).map(a=>({a,match:(a.getAttribute('href')||'').match(/(?:^|\/)u(\d+)(?:[/?#]|$)/i)})).filter(x=>x.match);
- let profileLink=null;
- if(!id&&profileLinks.length){id=Number(profileLinks[0].match[1]);profileLink=profileLinks[0].a}
- else profileLink=profileLinks.find(x=>Number(x.match[1])===id)?.a||null;
- if(profileLink){if(!name)name=(profileLink.textContent||profileLink.getAttribute('title')||profileLink.getAttribute('aria-label')||profileLink.querySelector('img')?.alt||'').trim();if(!avatar){const im=profileLink.querySelector('img');if(im)avatar=im.src}}
- if(!name&&id){const p=document.querySelector('a[href*="/u'+id+'"]');if(p)name=(p.textContent||p.getAttribute('title')||p.getAttribute('aria-label')||'').trim()}
- if(!avatar&&id){const im=document.querySelector('.user-avatar img,.avatar img,#avatar img,a[href*="/u'+id+'"] img');if(im)avatar=im.src}
+ const raw=window._userdata||window.userdata||window.ForumotionIdentity||window.forumotionUser||window.ForumotionUser||window.HpmwForumIdentity||{};
+ const id=Number(raw.user_id||raw.USER_ID||raw.id||raw.userid||raw.userId||0);
+ const name=String(raw.username||raw.USERNAME||raw.name||raw.user_name||raw.USER_NAME||"").trim();
+ const level=Number(raw.user_level||raw.USER_LEVEL||raw.level||raw.userlevel||0);
+ const avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
  const logout=document.querySelector('a[href*="logout"],a[href*="log_out"],a#logout,[id*="logout"],.logout');
  const login=document.querySelector('a[href="/login"],a[href^="/login?"],a[href*="login?"]');
- const logged=Boolean((stored&&stored.logged)||(get(u,['logged','is_logged','logged_in'])===true)||get(u,['session_logged_in','SESSION_LOGGED_IN'])===1||get(u,['session_logged_in','SESSION_LOGGED_IN'])==='1'||(id>0&&name&&(profileLink||logout||!login)));
- return{id,name,logged,level,avatar};
+ const logged=Boolean(id>0&&name&&(raw.session_logged_in===1||raw.session_logged_in==="1"||raw.logged===true||raw.is_logged===true||logout||!login));
+ return{id,name,logged,level,avatar,source:raw.user_id||raw.USER_ID?"Forumotion _userdata":"unknown"};
 }
-async function resolveForumotionFromForum(){if(fmLogged)return forum;try{const response=await fetch(location.origin+'/',{credentials:'include',cache:'no-store'});if(!response.ok)return forum;const html=await response.text(),doc=new DOMParser().parseFromString(html,'text/html');let id=0,name='',avatar='';for(const a of doc.querySelectorAll('a[href]')){const m=(a.getAttribute('href')||'').match(/(?:^|\/)u(\d+)(?:[/?#]|$)/i);if(m){id=Number(m[1]);name=(a.textContent||a.getAttribute('title')||a.getAttribute('aria-label')||a.querySelector('img')?.alt||'').trim();const im=a.querySelector('img');avatar=im?im.src:'';break}}const login=doc.querySelector('a[href="/login"],a[href^="/login?"],a[href*="login?"]'),logout=doc.querySelector('a[href*="logout"],a[href*="log_out"],a#logout');if(id&&name&&(logout||!login||doc.querySelector('a[href="/u'+id+'"]'))){forum={id,name,logged:true,level:0,avatar};fmLogged=true;try{sessionStorage.setItem('hpmw_forumotion_session',JSON.stringify({id,name,logged:true,avatar}))}catch(_){}refreshAccount()}}catch(err){console.warn('Forumotion identity check failed',err)}return forum;}
+async function resolveForumotionFromForum(){
+ forum=detectForumotion();fmLogged=Boolean(forum.logged&&forum.id>0&&forum.name);
+ if(fmLogged){try{sessionStorage.setItem("hpmw_forumotion_session",JSON.stringify({id:forum.id,name:forum.name,logged:true,avatar:forum.avatar,level:forum.level}))}catch(_){}}
+ else{try{sessionStorage.removeItem("hpmw_forumotion_session")}catch(_){}}
+ refreshAccount();return forum;
+}
 function forumToken(){if(!fmLogged)return null;const key="mm_forum_ticket_token_"+forum.id;let token=localStorage.getItem(key);if(!token){const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);token=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");localStorage.setItem(key,token)}return token;}
 
 let db=null,user=null,activeTicket=null,forum={id:0,name:"",logged:false,level:0,avatar:""},fmLogged=false;
