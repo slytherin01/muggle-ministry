@@ -17,7 +17,7 @@ function detectForumotion(){
 async function resolveForumotionFromForum(){if(fmLogged)return forum;try{const response=await fetch(location.origin+'/',{credentials:'include',cache:'no-store'});if(!response.ok)return forum;const html=await response.text(),doc=new DOMParser().parseFromString(html,'text/html');const login=doc.querySelector('a[href="/login"],a[href^="/login?"],a[href*="login?"]'),logout=doc.querySelector('a[href*="logout"],a[href*="log_out"],a#logout');let id=0,name='',avatar='';for(const sel of ['#fa_welcome a[href^="/u"]','.navbar a[href^="/u"]','a.mainmenu[href^="/u"]','a[href^="/u"]']){for(const a of doc.querySelectorAll(sel)){const m=(a.getAttribute('href')||'').match(/\\/u(\\d+)/i);if(m){id=Number(m[1]);name=(a.textContent||'').trim();const im=a.querySelector('img');avatar=im?im.src:'';break}}if(id)break}if(id&&name&&(logout||!login)){forum={id,name,logged:true,level:0,avatar};fmLogged=true;try{sessionStorage.setItem('hpmw_forumotion_session',JSON.stringify({id,name,logged:true,avatar}))}catch(_){}refreshAccount()}}catch(err){console.warn('Forumotion identity check failed',err)}return forum;}
 function forumToken(){if(!fmLogged)return null;const key="mm_forum_ticket_token_"+forum.id;let token=localStorage.getItem(key);if(!token){const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);token=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");localStorage.setItem(key,token)}return token;}
 
-let db=null,user=null,activeTicket=null;
+let db=null,user=null,activeTicket=null,forum={id:0,name:"",logged:false,level:0,avatar:""},fmLogged=false;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function setup(){
