@@ -1,18 +1,35 @@
-name: BetaForum syntax validation
+name: BetaForum validation
 on:
   push:
+    branches: [betaforum-release-candidate, betaforum-hardening]
+    paths:
+      - 'portal/betaforum.js'
+      - 'portal/betaforum-embed.js'
+      - 'portal/betaforum.html'
+      - 'portal/betaforum.css'
+      - 'supabase/migrations/**betaforum**.sql'
+      - 'tests/betaforum-smoke.mjs'
+      - '.github/workflows/betaforum-validate.yml'
+  pull_request:
     branches: [betaforum-release-candidate]
     paths:
       - 'portal/betaforum.js'
       - 'portal/betaforum-embed.js'
+      - 'portal/betaforum.html'
+      - 'portal/betaforum.css'
+      - 'supabase/migrations/**betaforum**.sql'
+      - 'tests/betaforum-smoke.mjs'
       - '.github/workflows/betaforum-validate.yml'
 jobs:
-  syntax:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - run: node --check portal/betaforum.js
       - run: node --check portal/betaforum-embed.js
+      - run: node --check tests/betaforum-smoke.mjs
+      - run: test -s portal/betaforum.html && test -s portal/betaforum.css
+      - run: node tests/betaforum-smoke.mjs
