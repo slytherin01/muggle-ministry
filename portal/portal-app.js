@@ -10,22 +10,57 @@ function detectForumotion(){
  const level=Number(raw.user_level||raw.USER_LEVEL||raw.level||raw.userlevel||0);
  let avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
  const links=Array.from(document.querySelectorAll('a[href]')).map(a=>({a,href:a.getAttribute("href")||"",text:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim()}));
- const profile=links.map(x=>({...x,match:x.href.match(/(?:^|\/)u(\d+)(?:[/?#]|$)/i)})).find(x=>x.match);
+ const profiles=links.map(x=>({...x,match:x.href.match(/\\/u(\\d+)(?:[/?#]|$)/i)})).filter(x=>x.match);
  const logout=links.some(x=>/logout|log_out|deconnexion|uitloggen/i.test(x.href+" "+x.text))||!!document.querySelector("#logout,.logout,[id*='logout']");
  const login=links.some(x=>/login|log_in|connexion|inloggen/i.test(x.href+" "+x.text));
- // Forumotion _userdata has user_id=-1 for guests. Positive IDs mean a member.
+ const profile=profiles.find(x=>name&&x.text.toLowerCase()===name.toLowerCase())||profiles[0];
  if(id<=0&&profile&&logout){id=Number(profile.match[1]);name=name||profile.text}
  if(!name&&id>0&&profile)name=profile.text;
  if(!avatar&&profile)avatar=profile.a.querySelector("img")?.src||"";
- const guest= id<=0 || /guest|gast|anonymous|anon/i.test(name);
+ const guest=id<=0||/guest|gast|anonymous|anon/i.test(name);
  const logged=Boolean(!guest&&id>0&&name&&(logout||raw.user_id||raw.USER_ID||window.my_userid));
- return{id,name,logged,level,avatar,source:raw.user_id||raw.USER_ID?"_userdata":profile?"profile-link":"unknown",loginVisible:login,logoutVisible:logout};
+ return{id,name,logged,level,avatar,source:raw.user_id||raw.USER_ID?"_userdata":"page-profile",loginVisible:login,logoutVisible:logout};
 }
 async function resolveForumotionFromForum(){
- forum=detectForumotion();fmLogged=Boolean(forum.logged&&forum.id>0&&forum.name);
- if(fmLogged){try{sessionStorage.setItem("hpmw_forumotion_session",JSON.stringify({id:forum.id,name:forum.name,logged:true,avatar:forum.avatar,level:forum.level}))}catch(_){}}
- else{try{sessionStorage.removeItem("hpmw_forumotion_session")}catch(_){}}
- refreshAccount();return forum;
+ forum=detectForumotion();
+ fmLogged=Boolean(forum.logged&&forum.id>0&&forum.name);
+ if(!fmLogged){
+  try{
+   const response=await fetch(location.origin+"/",{credentials:"include",cache:"no-store"});
+   if(response.ok){
+    const html=await response.text();
+    const doc=new DOMParser().parseFromString(html,"text/html");
+    const links=Array.from(doc.querySelectorAll("a[href]"));
+    const logoutLink=links.find(a=>/logout|uitloggen|deconnexion/i.test((a.textContent||"")+" "+(a.getAttribute("href")||"")));
+    let username="";
+    if(logoutLink){
+     const text=(logoutLink.textContent||"").trim();
+     const match=text.match(/\\[\\s*([^\\]]+?)\\s*\\]/);
+     username=match?match[1].trim():text.replace(/logout|uitloggen|deconnexion/ig,"").trim();
+    }
+    const profiles=links.map(a=>{
+     const href=a.getAttribute("href")||"";
+     const match=href.match(/\\/u(\\d+)(?:[/?#]|$)/i);
+     return{id:match?Number(match[1]):0,name:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim(),avatar:a.querySelector("img")?.src||"",href};
+    }).filter(p=>p.id>0);
+    const n=username.toLowerCase().replace(/\\s+/g," ").trim();
+    let profile=profiles.find(p=>p.name.toLowerCase().replace(/\\s+/g," ").trim()===n);
+    if(!profile&&n)profile=profiles.find(p=>p.name.toLowerCase().includes(n)||n.includes(p.name.toLowerCase()));
+    if(logoutLink&&profile&&username){
+     forum={id:profile.id,name:username,logged:true,level:0,avatar:profile.avatar,source:"forum-homepage-session",loginVisible:false,logoutVisible:true};
+     fmLogged=true;
+    }
+   }
+  }catch(error){console.warn("[HPMW] Forumotion homepage lookup failed:",error)}
+ }
+ if(fmLogged&&forum.id>0&&forum.name){
+  try{sessionStorage.setItem("hpmw_forumotion_session",JSON.stringify({id:forum.id,name:forum.name,logged:true,avatar:forum.avatar,level:forum.level,source:forum.source}))}catch(_){}
+ }else{
+  try{sessionStorage.removeItem("hpmw_forumotion_session")}catch(_){}
+ }
+ refreshAccount();
+ console.log("[HPMW] Forumotion identity resolved:",{id:forum.id,name:forum.name,logged:fmLogged,source:forum.source});
+ return forum;
 }
 function forumToken(){if(!fmLogged)return null;const key="mm_forum_ticket_token_"+forum.id;let token=localStorage.getItem(key);if(!token){const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);token=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");localStorage.setItem(key,token)}return token;}
 
