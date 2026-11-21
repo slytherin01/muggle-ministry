@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BetaForum</title>
 <meta name="theme-color" content="#091321">
-<link rel="stylesheet" href="./betaforum.css?v=rc-70fda254">
+<link rel="stylesheet" href="./betaforum.css?v=rc-b43c64f">
 </head>
 <body>
 <div id="app"><div class="loading">BetaForum wordt geladen…</div></div>
@@ -21,7 +21,7 @@
       try{await load("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",9000);}
       catch(e){await load("https://unpkg.com/@supabase/supabase-js@2",9000);}
       if(!window.supabase?.createClient)throw new Error("Supabase-client ontbreekt na het laden.");
-      await load("./betaforum.js?v=rc-0e7ef7b",12000);
+      await load("./betaforum.js?v=rc-4d85c553",12000);
     }catch(e){showError("BetaForum kon niet starten",e.message+" — controleer internet/CDN-toegang en probeer opnieuw.");}
   })();
 })();
