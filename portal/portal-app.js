@@ -87,7 +87,7 @@ function setup(){
 function refreshAccount(){
  const name=$(".account-nav .usertext strong"),small=$(".account-nav .usertext small"),accountLink=$(".account-nav");
  if(name)name.textContent=fmLogged?forum.name:(user?.email||"Niet ingelogd");
- if(small)small.textContent=fmLogged?"FORUMACCOUNT":"ACCOUNT";
+ if(small)small.textContent=fmLogged?"INGELOGD ALS":"LOGINSTATUS";
  if(accountLink){
   accountLink.href=fmLogged&&forum.id>0?location.origin+"/u"+forum.id:location.origin+"/login";
   accountLink.removeAttribute("data-legacy");
