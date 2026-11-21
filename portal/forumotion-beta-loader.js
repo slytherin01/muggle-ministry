@@ -4,7 +4,7 @@
   if (!mount) return;
 
   const DASHBOARD_VERSION = "main";
-  const APP_VERSION = "7f3fb1c";
+  const APP_VERSION = "c340d8a";
   const SOURCES = [
     "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?cb=" + Date.now(),
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cb=" + Date.now(),
