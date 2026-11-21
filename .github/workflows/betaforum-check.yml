@@ -1,7 +1,7 @@
 name: BetaForum checks
 on:
   push:
-    branches: [betaforum-rebuild]
+    branches: [betaforum-rebuild, main]
     paths:
       - 'portal/betaforum.js'
       - 'portal/betaforum.css'
