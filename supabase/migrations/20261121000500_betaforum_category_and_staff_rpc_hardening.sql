@@ -118,7 +118,7 @@ with check (
   and exists (
     select 1
     from public.betaforum_tickets t
-    where t.id = ticket_id
+    where t.id = public.betaforum_ticket_messages.ticket_id
       and t.user_id = auth.uid()
       and t.status <> 'closed'
   )
