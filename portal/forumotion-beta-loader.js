@@ -6,9 +6,9 @@
   const DASHBOARD_VERSION = "main";
   const APP_VERSION = "main";
   const SOURCES = [
-    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?cb=" + Date.now(),
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cb=" + Date.now(),
-    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cb=" + Date.now()
+    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cb=" + Date.now(),
+    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?cb=" + Date.now()
   ];
   const APP_FALLBACKS = [
     "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js?cb=" + Date.now(),
