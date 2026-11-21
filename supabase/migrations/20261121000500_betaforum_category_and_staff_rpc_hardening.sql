@@ -108,6 +108,22 @@ revoke insert on public.betaforum_tickets from anon, authenticated;
 drop policy if exists "users create own tickets" on public.betaforum_tickets;
 revoke all on public.betaforum_ticket_rate_limit from anon, authenticated;
 
+drop policy if exists "users send own ticket messages" on public.betaforum_ticket_messages;
+create policy "users send own open ticket messages"
+on public.betaforum_ticket_messages
+for insert to authenticated
+with check (
+  author_user_id = auth.uid()
+  and is_staff = false
+  and exists (
+    select 1
+    from public.betaforum_tickets t
+    where t.id = ticket_id
+      and t.user_id = auth.uid()
+      and t.status <> 'closed'
+  )
+);
+
 create or replace function public.betaforum_is_staff()
 returns boolean
 language sql
