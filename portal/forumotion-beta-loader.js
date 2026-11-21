@@ -7,7 +7,8 @@
   const FORUM_URL = location.origin + "/";
 const DASHBOARD_URLS = [
     "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?v=96018f1",
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=96018f1"
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=96018f1",
+    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cachebust=96018f1"
   ];
   const EXPECTED_APP_VERSION = "7f3fb1c";
 
@@ -340,6 +341,7 @@ const DASHBOARD_URLS = [
       candidates.push("https://unpkg.com/@supabase/supabase-js@2");
     } else if (src.includes("/portal/portal-app.js")) {
       candidates.push("https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js?cachebust=" + EXPECTED_APP_VERSION);
+      candidates.push("https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js?cachebust=" + EXPECTED_APP_VERSION);
     }
 
     return new Promise((resolve, reject) => {
