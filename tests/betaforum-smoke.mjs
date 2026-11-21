@@ -49,5 +49,7 @@ assert.ok(sql.includes("revoke all on function public.betaforum_create_ticket"),
 assert.ok(hardening.includes("Kies een geldige supportcategorie"), "Ticket RPC must whitelist categories");
 assert.ok(hardening.includes("revoke all on function public.betaforum_is_staff() from public, anon"), "Staff helper must not be publicly executable");
 assert.ok(hardening.includes("anon read published FAQ"), "Anonymous FAQ reads must not require the staff helper");
+assert.ok(hardening.includes("revoke insert on public.betaforum_tickets from anon, authenticated"), "Ticket creation must be forced through the rate-limited RPC");
+assert.ok(hardening.includes("drop policy if exists \"users create own tickets\""), "Direct ticket insert policy must be removed");
 
 console.log("BetaForum smoke checks passed.");
