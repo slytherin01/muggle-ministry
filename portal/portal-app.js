@@ -136,14 +136,54 @@ async function account(){
  const diag='<details open class="pa-note"><summary><b>Diagnose forumlogin (tijdelijk)</b></summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">'+esc(JSON.stringify({page:{origin:location.origin,href:location.href,frame:window.top===window},windowSignals:candidate,profileLinksOnPortal:profileLinks,forumHomepageFetch:rootCheck},null,2))+'</pre></details>';
  open("Mijn account",'<div class="pa-note"><b>Forumotion-account</b><br>'+(fmLogged?esc(forum.name)+' · gebruikers-ID '+esc(forum.id)+(forum.avatar?'<br><img class="pa-avatar" src="'+esc(forum.avatar)+'" alt="">':''):'Niet ingelogd op het forum.')+'</div><div class="pa-note"><b>Portalrol:</b> '+esc(roleNames)+'<br><b>Tickettoegang:</b> '+(permissions.can_use_tickets?'ja':'nee')+'<br><b>Nieuwsbeheer:</b> '+(permissions.can_manage_news?'ja':'nee')+'<br><b>FAQ-beheer:</b> '+(permissions.can_manage_faq?'ja':'nee')+'<br><b>Rolbeheer:</b> '+(permissions.can_manage_roles?'ja':'nee')+'</div>'+diag+'<p>Diagnose toont alleen openbare login-indicatoren; geen wachtwoorden of cookies.</p>');
 }
-async function ticketForm(){
- await resolveForumotionFromForum();
- const fields='<form class="pa-form" id="pa-ticket"><label>Categorie<select name="category" required><option value="">Selecteer…</option><option>Technische ondersteuning</option><option>Account / toegang</option><option>Vraag over het forum</option><option>Moderatie</option><option>Overig</option></select></label><label>Afdeling<select name="department"><option>Algemeen</option><option>Technisch team</option><option>Moderatie</option><option>Administratie</option></select></label><label>Onderwerp<input name="subject" required maxlength="180"></label><label>Bericht<textarea name="body" required minlength="10" rows="5"></textarea></label><button class="pa-btn pa-primary">Ticket indienen</button></form>';
- open("Ticket Support",fields);
- const form=$("#pa-ticket");if(!fmLogged){form.querySelector("button").disabled=true;form.insertAdjacentHTML("beforebegin",'<div class="pa-error">Forumotion-sessie niet gevonden. Log in op het forum zelf; er is geen portaal-login.</div>');return}
- form.onsubmit=async e=>{e.preventDefault();const fd=new FormData(form);const values={category:fd.get("category"),department:fd.get("department"),subject:fd.get("subject"),body:fd.get("body")};const btn=form.querySelector("button");btn.disabled=true;btn.textContent="Ticket indienen…";
- try{const {data,error}=await db.rpc("forumotion_portal_create_ticket",{p_forum_id:forum.id,p_forum_name:forum.name,p_token:forumToken(),p_category:values.category,p_department:values.department,p_subject:values.subject,p_body:values.body});if(error)throw error;const ticket=data;open("Ticket aangemaakt",'<div class="pa-note">Ticket <b>#'+esc(ticket.ticket_number)+'</b> is aangemaakt en gekoppeld aan je Forumotion-account.</div><button class="pa-btn pa-primary" id="pa-my">Mijn tickets</button>');$("#pa-my").onclick=myTickets}catch(err){showError(err);btn.disabled=false;btn.textContent="Ticket indienen"}
+const SUPPORT_CATEGORIES=[
+ {key:"forumfouten",name:"Forumfouten & Bugs",icon:"fa-bug",desc:"Fouten, bugs en technische problemen."},
+ {key:"account",name:"Account",icon:"fa-user",desc:"Account-, profiel- en inlogproblemen."},
+ {key:"autorisaties",name:"Autorisaties",icon:"fa-key",desc:"Rechten, toegang en autorisaties."},
+ {key:"leerlingenkamer",name:"Leerlingenkamer",icon:"fa-graduation-cap",desc:"Problemen rond de leerlingenkamers."},
+ {key:"forumwinkel",name:"Forumwinkel & Galjoenen",icon:"fa-coins",desc:"Forumwinkel, galjoenen en aankopen."},
+ {key:"donatiesysteem",name:"Donatiesysteem",icon:"fa-heart",desc:"Donaties en het donatiesysteem."},
+ {key:"klachten",name:"Klachten",icon:"fa-comment-dots",desc:"Klachten en situaties die besproken moeten worden."},
+ {key:"roepmodje",name:"Roep een modje",icon:"fa-bell",desc:"Vraag hulp van een moderator."},
+ {key:"overige",name:"Overige Support",icon:"fa-circle-question",desc:"Alles wat niet in een andere categorie past."},
+ {key:"sorteerhoed",name:"Sorteerhoed",icon:"fa-hat-wizard",desc:"Sorteerhoed- en afdelingsaanvragen."}
+];
+const SUPPORT_DEPARTMENTS=["Griffoendor","Zwadderich","Huffelpuf","Ravenklauw","Ongesorteerd"];
+function supportStyle(){if($("#pa-support-style"))return;const s=document.createElement("style");s.id="pa-support-style";s.textContent=`
+#pa-content .pa-support-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#pa-content .pa-support-cat{display:flex;align-items:center;gap:12px;text-align:left;min-height:86px;padding:14px;border:1px solid #2b405b;border-radius:14px;background:linear-gradient(145deg,#172a40,#101d2d);color:#eaf2fb;cursor:pointer}
+#pa-content .pa-support-cat:hover{border-color:#9b8cff;transform:translateY(-1px)}
+#pa-content .pa-support-icon{display:grid;place-items:center;min-width:42px;width:42px;height:42px;border-radius:12px;background:#263e59;color:#b8d5f5;font-size:17px}
+#pa-content .pa-support-cat strong{display:block;font-size:13px}
+#pa-content .pa-support-cat small{display:block;color:#9eafc4;font-size:11px;line-height:1.45;margin-top:3px}
+#pa-content .pa-support-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;border:1px solid #2b405b;border-radius:14px;background:#101d2d}
+#pa-content .pa-support-form label{display:block;font-size:11px;font-weight:750;color:#b7c4d8}
+#pa-content .pa-support-form label.full{grid-column:1/-1}
+#pa-content .pa-support-form input,#pa-content .pa-support-form select,#pa-content .pa-support-form textarea{display:block;width:100%;margin-top:6px;padding:11px 12px;border-radius:9px;border:1px solid #304158;background:#0b1421;color:#edf2fa;font:inherit}
+#pa-content .pa-support-form textarea{min-height:170px;resize:vertical}
+#pa-content .pa-support-form input[readonly]{color:#9eacc0}
+#pa-content .pa-support-form .pa-support-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+#pa-content .pa-support-count{grid-column:1/-1;text-align:right;color:#94a7bd;font-size:10px;margin-top:-7px}
+@media(max-width:650px){#pa-content .pa-support-grid{grid-template-columns:1fr}#pa-content .pa-support-form{grid-template-columns:1fr}#pa-content .pa-support-form label.full,#pa-content .pa-support-form .pa-support-actions{grid-column:auto}}
+`;document.head.appendChild(s)}
+async function ticketForm(categoryKey){
+ await resolveForumotionFromForum();supportStyle();
+ if(!fmLogged){open("Ticket Support",'<div class="pa-error">Je moet ingelogd zijn op het forum om support aan te vragen.</div><p><a class="pa-btn" href="/login">Inloggen</a></p>');return}
+ const cats=SUPPORT_CATEGORIES;
+ if(!categoryKey){
+  open("Ticket Support — Waar kunnen we mee helpen?",'<p class="pa-muted">Kies de supportsectie die het beste bij je vraag past.</p><div class="pa-support-grid">'+cats.map(c=>'<button class="pa-support-cat" data-support-cat="'+esc(c.key)+'"><span class="pa-support-icon"><i class="fa-solid '+esc(c.icon)+'"></i></span><span><strong>'+esc(c.name)+'</strong><small>'+esc(c.desc)+'</small></span></button>').join("")+'</div>');
+  $("#pa-content").querySelectorAll("[data-support-cat]").forEach(b=>b.onclick=()=>ticketForm(b.dataset.supportCat));
+  return;
  }
+ const cat=cats.find(c=>c.key===categoryKey);if(!cat)return ticketForm();
+ const departments=SUPPORT_DEPARTMENTS.map(d=>'<option value="'+esc(d)+'">'+esc(d)+'</option>').join("");
+ open("Ticket Support — "+cat.name,'<p class="pa-muted">'+esc(cat.desc)+'</p><form class="pa-support-form" id="pa-ticket"><label>Gebruikersnaam<input name="username" value="'+esc(forum.name)+'" readonly></label><label>Categorie<input name="category" value="'+esc(cat.name)+'" readonly></label><label>Afdeling<select name="department" required><option value="">Kies een afdeling</option>'+departments+'</select></label><label>Onderwerp<input name="subject" required minlength="3" maxlength="180" placeholder="Waar gaat je vraag over?"></label><label class="full">Beschrijving<textarea name="body" required minlength="10" maxlength="60000" placeholder="Beschrijf je vraag zo duidelijk mogelijk…"></textarea></label><div class="pa-support-count" id="pa-support-count">60000 tekens beschikbaar</div><div class="pa-support-actions"><button class="pa-btn" type="button" id="pa-support-back">Terug naar secties</button><button class="pa-btn pa-primary" type="submit">Ticket versturen</button></div></form>');
+ const form=$("#pa-ticket"),body=form.querySelector('[name="body"]'),counter=$("#pa-support-count");
+ body.addEventListener("input",()=>counter.textContent=(60000-body.value.length).toLocaleString("nl-NL")+" tekens beschikbaar");
+ $("#pa-support-back").onclick=()=>ticketForm();
+ form.onsubmit=async e=>{e.preventDefault();if(!form.reportValidity())return;const fd=new FormData(form),btn=form.querySelector('[type="submit"]');btn.disabled=true;btn.textContent="Ticket versturen…";
+ try{const {data,error}=await db.rpc("forumotion_portal_create_ticket",{p_forum_id:forum.id,p_forum_name:forum.name,p_token:forumToken(),p_category:cat.name,p_department:fd.get("department"),p_subject:fd.get("subject"),p_body:fd.get("body")});if(error)throw error;open("Ticket aangemaakt",'<div class="pa-note">Je ticket <b>#'+esc(data.ticket_number)+'</b> is aangemaakt in Supabase en gekoppeld aan je Forumotion-account.</div><button class="pa-btn pa-primary" id="pa-my">Mijn tickets bekijken</button><button class="pa-btn" id="pa-another">Nieuw ticket</button>');$("#pa-my").onclick=myTickets;$("#pa-another").onclick=()=>ticketForm();}catch(err){showError(err);btn.disabled=false;btn.textContent="Ticket versturen"}
+ };
 }
 async function adminTickets(){open("Ticketbeheer",'<p>Tickets ophalen…</p>');try{const {data,error}=await db.from("forumotion_portal_tickets").select("*").order("updated_at",{ascending:false});if(error)throw error;const rows=data||[];moduleContent().innerHTML=rows.length?rows.map(t=>'<button class="pa-ticket" data-id="'+esc(t.id)+'"><b>#'+esc(t.ticket_number)+' · '+esc(t.subject)+'</b><span>'+esc(t.forumotion_username)+' (#'+esc(t.forumotion_user_id)+') · '+esc(t.status)+' · '+esc(t.priority)+' · '+esc(t.category)+'</span></button>').join(""):'<p>Er zijn nog geen Forumotion-tickets.</p>';$("#pa-content").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>adminTicketDetail(b.dataset.id))}catch(e){showError(e)}}
 async function adminTicketDetail(id){open("Ticketbeheer",'<p>Ticket laden…</p>');try{const {data:t,error}=await db.from("forumotion_portal_tickets").select("*").eq("id",id).single();if(error)throw error;const {data:m,error:me}=await db.from("forumotion_portal_ticket_messages").select("*").eq("ticket_id",id).order("created_at");if(me)throw me;moduleContent().innerHTML='<div class="pa-note"><b>#'+esc(t.ticket_number)+' '+esc(t.subject)+'</b><br>Gebruiker: '+esc(t.forumotion_username)+' (#'+esc(t.forumotion_user_id)+')<br>Status: '+esc(t.status)+' · Prioriteit: '+esc(t.priority)+'</div><div class="pa-messages">'+(m||[]).map(x=>'<article><b>'+esc(x.author_name)+(x.is_staff?' · Ministerie':'')+'</b><small>'+new Date(x.created_at).toLocaleString("nl-NL")+'</small><p>'+esc(x.body).replace(/\n/g,"<br>")+'</p></article>').join("")+'</div><form class="pa-form" id="pa-admin-reply"><label>Reactie namens Ministerie<textarea name="body" rows="4" required></textarea></label><label>Status<select name="status"><option>open</option><option>in_progress</option><option>waiting</option><option>closed</option></select></label><button class="pa-btn pa-primary">Opslaan en reageren</button></form><button class="pa-btn" id="pa-admin-back">Terug</button>';$("#pa-admin-reply").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);try{const {error:msgErr}=await db.from("forumotion_portal_ticket_messages").insert({ticket_id:id,author_name:"Ministerie",body:fd.get("body"),is_staff:true});if(msgErr)throw msgErr;const {error:updErr}=await db.from("forumotion_portal_tickets").update({status:fd.get("status"),updated_at:new Date().toISOString()}).eq("id",id);if(updErr)throw updErr;adminTicketDetail(id)}catch(err){showError(err)}};$("#pa-admin-back").onclick=adminTickets}catch(e){showError(e)}}
