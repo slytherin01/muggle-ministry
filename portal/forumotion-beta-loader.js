@@ -6,8 +6,8 @@
 
   const FORUM_URL = location.origin + "/";
 const DASHBOARD_URLS = [
-    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?v=5cc92ed",
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=5cc92ed",
+    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?v=84ca4f3",
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cachebust=84ca4f3",
     "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cachebust=96018f1"
   ];
   const EXPECTED_APP_VERSION = "7f3fb1c";
