@@ -1,6 +1,7 @@
 (()=>{"use strict";
 const URL="https://efqnlbhrtofkjmxfbcck.supabase.co",KEY="sb_publishable_-Qsc8zliUquGK6GXm511sw_IBQ4ikrU";
-const db=window.supabase.createClient(URL,KEY),root=document.getElementById("app");\nconst portalNewsDb=window.supabase.createClient("https://vuaajsjjluwgqmneinds.supabase.co","sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+const db=window.supabase.createClient(URL,KEY),root=document.getElementById("app");
+const portalNewsDb=window.supabase.createClient("https://vuaajsjjluwgqmneinds.supabase.co","sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx",{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 let session=null,isStaff=false,page="home",ticketId=null,faqSearch="",notice="",busy=false,adminText="",adminStatus="",heightObserver=null;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const nl=v=>esc(v).replace(/\n/g,"<br>");
