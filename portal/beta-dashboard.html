@@ -202,6 +202,28 @@ html,body{margin:0!important;padding:0!important;width:100%!important;overflow-x
 @media(max-width:900px){.dashboard-center{gap:12px!important}.left-side,.right-side{align-content:start!important}}
 @media(max-width:620px){.dashboard-center{gap:10px!important}.intro-card{padding:14px!important}.intro-card h2{font-size:18px!important}.intro-card p{font-size:12px!important}.community-links-body{padding:12px!important}}
 </style>
+
+<style id="hpmw-layout-refine-v2">
+/* Wider central dashboard, lighter side columns */
+.dashboard-columns{grid-template-columns:minmax(150px,185px) minmax(0,1fr) minmax(150px,185px)!important;gap:14px!important;align-items:start!important}
+.dashboard-center{min-width:0!important;gap:14px!important}
+.left-side,.right-side{gap:11px!important}
+.left-side .side-card,.right-side .side-card{height:194px!important;min-height:194px!important}
+.side-heading{height:36px!important;min-height:36px!important;padding:8px 11px!important;font-size:10px!important}
+.side-art{min-height:0!important;height:158px!important;padding:6px!important}
+.side-art img{max-height:150px!important;width:100%!important;object-fit:contain!important}
+.side-placeholder{min-height:0!important;height:158px!important;padding:8px!important}
+.intro-card{padding:18px 20px!important}
+.intro-card .brand-logo{width:min(100%,720px)!important}
+.systems-grid{gap:11px!important}
+.system-card{padding:15px!important;min-height:68px!important}
+.community-links-body{padding:14px!important}
+.community-buttons{gap:11px!important}
+.news-card{margin-top:0!important}
+@media(min-width:1500px){.dashboard-columns{grid-template-columns:190px minmax(0,1fr) 190px!important;gap:16px!important}}
+@media(max-width:1050px){.dashboard-columns{grid-template-columns:160px minmax(0,1fr)!important;gap:12px!important}.right-side{grid-column:1/-1!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}.left-side .side-card,.right-side .side-card{height:180px!important;min-height:180px!important}.side-art,.side-placeholder{height:144px!important}}
+@media(max-width:620px){.dashboard-columns{grid-template-columns:1fr!important;gap:10px!important}.left-side,.right-side{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}.left-side .side-card,.right-side .side-card{height:150px!important;min-height:150px!important}.side-heading{height:32px!important;min-height:32px!important;font-size:9px!important;padding:6px!important}.side-art,.side-placeholder{height:118px!important;min-height:118px!important;padding:4px!important}.side-art img{max-height:112px!important}.dashboard-center{gap:10px!important}}
+</style>
 </head>
 <body>
 <div class="wrap">
