@@ -120,6 +120,39 @@ function open(title,html){
  '<footer class="lux-footer"><div class="lux-footer-inner"><div class="lux-footer-meta"><span>© 2026 Hpmagicworld</span><span class="footer-separator">|</span><span>Versie: Beta 1.0</span><span class="footer-separator">|</span><span>Host: <a href="https://www.actieforum.com" target="_blank" rel="noopener">Actieforum.com</a></span><span class="footer-separator">|</span><span>Onofficiële fancommunity.</span><span class="footer-rights">Alle rechten voorbehouden</span></div></div></footer></div>';
  $("#pa-content").innerHTML=shell;
  if(!document.getElementById("pa-unified-shell-style")){const st=document.createElement("style");st.id="pa-unified-shell-style";st.textContent='.portal-unified-shell{width:100%;min-height:100vh;background:transparent}.portal-unified-shell .portal-nav-spacer{flex:1;min-width:12px}.portal-unified-shell .dashboard-center{min-width:0;width:100%}.portal-unified-shell .portal-page-hero{padding:16px 18px!important}.portal-unified-shell .portal-page-hero .brand-logo{width:min(100%,850px);max-height:190px;object-fit:contain;margin:0 auto 10px!important}.portal-unified-shell .portal-page-hero p{margin:6px 0 0}.portal-unified-shell .portal-page-content{width:100%;min-width:0;padding:18px;background:#0e1b2b;border:1px solid #29415d;border-radius:16px;box-sizing:border-box;overflow-wrap:anywhere}.portal-unified-shell .portal-page-content>*{max-width:100%;box-sizing:border-box}.portal-unified-shell .side-column{min-width:0}.portal-unified-shell .side-art img{max-width:100%}@media(max-width:1050px){.portal-unified-shell .dashboard-columns{grid-template-columns:minmax(0,1fr)!important}.portal-unified-shell .side-column{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}';document.head.appendChild(st)}
+ if(!document.getElementById("pa-home-match-style")){
+  const unified=document.createElement("style");unified.id="pa-home-match-style";
+  unified.textContent=`
+   #portal-app-modal.open .pa-backdrop{padding:0!important;background:#08111e!important;backdrop-filter:none!important}
+   #portal-app-modal.open .pa-window{width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;border:0!important;border-radius:0!important;background:#08111e!important;box-shadow:none!important}
+   #portal-app-modal.open .pa-content{padding:0!important;overflow:auto!important;background:#08111e!important}
+   #portal-app-modal .portal-unified-shell{width:100%!important;max-width:none!important;min-height:100dvh!important;background:#08111e!important}
+   #portal-app-modal .portal-unified-shell .topbar.luxury-nav-v2{min-height:70px!important;padding:10px 18px!important;background:#0c1320ed!important;border-bottom:1px solid #29415d!important}
+   #portal-app-modal .portal-unified-shell .top-actions{width:100%!important;max-width:none!important;margin:0!important;display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:nowrap!important;overflow-x:auto!important;white-space:nowrap!important}
+   #portal-app-modal .portal-unified-shell .lux-nav-item{flex:0 0 auto!important;min-height:38px!important;padding:7px 10px!important;border:1px solid #29415d!important;border-radius:11px!important;background:#14243a!important;color:#edf5ff!important;font-size:13px!important}
+   #portal-app-modal .portal-unified-shell .lux-nav-icon{width:28px!important;height:28px!important;border-radius:9px!important;background:#243e5b!important;display:grid!important;place-items:center!important;color:#9bc8ff!important}
+   #portal-app-modal .portal-unified-shell .portal-nav-spacer{flex:1 1 auto!important;min-width:12px!important}
+   #portal-app-modal .portal-unified-shell .main{width:100%!important;max-width:none!important;margin:0!important;padding:clamp(12px,1.5vw,22px)!important}
+   #portal-app-modal .portal-unified-shell .dashboard-columns{display:grid!important;grid-template-columns:minmax(155px,210px) minmax(0,1fr) minmax(155px,210px)!important;gap:12px!important;align-items:start!important;width:100%!important}
+   #portal-app-modal .portal-unified-shell .dashboard-center{min-width:0!important;width:100%!important}
+   #portal-app-modal .portal-unified-shell .side-column{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;min-width:0!important}
+   #portal-app-modal .portal-unified-shell .side-card{height:auto!important;min-height:175px!important;width:100%!important;overflow:hidden!important}
+   #portal-app-modal .portal-unified-shell .side-heading{height:40px!important;min-height:40px!important}
+   #portal-app-modal .portal-unified-shell .side-art{height:135px!important;min-height:135px!important;padding:8px!important}
+   #portal-app-modal .portal-unified-shell .side-art img{width:100%!important;height:100%!important;max-height:125px!important;object-fit:contain!important}
+   #portal-app-modal .portal-unified-shell .portal-page-hero{padding:18px!important;margin:0 0 12px!important;text-align:center!important}
+   #portal-app-modal .portal-unified-shell .portal-page-hero .brand-logo{width:min(100%,850px)!important;max-height:190px!important;object-fit:contain!important;margin:0 auto 10px!important}
+   #portal-app-modal .portal-unified-shell .portal-page-content{width:100%!important;max-width:none!important;min-width:0!important;padding:18px!important;background:#0e1b2c!important;border:1px solid #29415d!important;border-radius:16px!important;overflow-wrap:anywhere!important}
+   #portal-app-modal .portal-unified-shell .portal-page-content .brand-logo,#portal-app-modal .portal-unified-shell .portal-page-content .portal-page-hero{display:none!important}
+   #portal-app-modal .portal-unified-shell .portal-page-content>*{max-width:100%!important;box-sizing:border-box!important}
+   #portal-app-modal .portal-unified-shell .lux-footer{margin-top:auto!important;width:100%!important}
+   #portal-app-modal .portal-unified-shell .lux-footer-inner{width:100%!important;max-width:none!important;padding:12px 18px!important;justify-content:center!important}
+   @media(max-width:1050px){#portal-app-modal .portal-unified-shell .dashboard-columns{grid-template-columns:minmax(0,1fr)!important}#portal-app-modal .portal-unified-shell .dashboard-center{grid-row:1!important}#portal-app-modal .portal-unified-shell .left-side,#portal-app-modal .portal-unified-shell .right-side{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))!important}}
+   @media(max-width:700px){#portal-app-modal .portal-unified-shell .main{padding:8px!important}#portal-app-modal .portal-unified-shell .topbar.luxury-nav-v2{padding:8px!important}#portal-app-modal .portal-unified-shell .portal-page-content{padding:12px!important}#portal-app-modal .portal-unified-shell .left-side,#portal-app-modal .portal-unified-shell .right-side{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+   @media(max-width:450px){#portal-app-modal .portal-unified-shell .left-side,#portal-app-modal .portal-unified-shell .right-side{grid-template-columns:1fr!important}}
+  `;
+  document.head.appendChild(unified);
+ }
  win.classList.add("pa-fullscreen");modal.classList.add("open");
  modal.querySelectorAll("[data-appnav]").forEach(b=>{const target=b.getAttribute("data-appnav");if(target==="ticketbeheer")b.style.display=(fmLogged&&[1,3].includes(Number(forum.id)))?"":"none";b.onclick=()=>{if(target==="dashboard")close();else if(target==="forum")window.open(location.origin+"/forum","_blank","noopener");else openFor(target)}});
 }function authBox(){return '<div class="pa-note">Geen aparte portaal-login vereist.</div>'}
