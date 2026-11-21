@@ -302,7 +302,7 @@ const DASHBOARD_URLS = [
      3. CSS LADEN
      ===================================================== */
 
-  function loadDashboardStyles(doc) {
+  function loadDashboardStyles(doc, dashboardSourceUrl) {
     doc.querySelectorAll("style").forEach(original => {
       const style = document.createElement("style");
 
@@ -318,7 +318,7 @@ const DASHBOARD_URLS = [
       link.rel = "stylesheet";
       link.href = new URL(
         original.getAttribute("href"),
-        DASHBOARD_URL
+        dashboardSourceUrl
       ).href;
 
       link.setAttribute(
@@ -378,6 +378,7 @@ const DASHBOARD_URLS = [
     await detectForumotionIdentity();
 
     let html = "";
+    let dashboardSourceUrl = "";
     let lastDashboardError = null;
 
     for (const source of DASHBOARD_URLS) {
@@ -397,6 +398,7 @@ const DASHBOARD_URLS = [
           throw new Error("Verouderde dashboardbron; vereiste portal-app versie " + EXPECTED_APP_VERSION);
         }
         html = candidate;
+        dashboardSourceUrl = source;
         console.info("[HPMW] Dashboardbron actueel:", source);
         break;
       } catch (error) {
@@ -410,7 +412,7 @@ const DASHBOARD_URLS = [
     const dashboardDocument =
       new DOMParser().parseFromString(html, "text/html");
 
-    loadDashboardStyles(dashboardDocument);
+    loadDashboardStyles(dashboardDocument, dashboardSourceUrl);
 
     const content = document.createElement("div");
     content.innerHTML = dashboardDocument.body.innerHTML;
