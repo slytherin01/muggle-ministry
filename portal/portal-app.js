@@ -10,7 +10,7 @@ function detectForumotion(){
  const level=Number(raw.user_level||raw.USER_LEVEL||raw.level||raw.userlevel||0);
  let avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
  const links=Array.from(document.querySelectorAll('a[href]')).map(a=>({a,href:a.getAttribute("href")||"",text:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim()}));
- const profiles=links.map(x=>({...x,match:x.href.match(/\\/u(\\d+)(?:[/?#]|$)/i)})).filter(x=>x.match);
+ const profiles=links.map(x=>({...x,match:x.href.match(new RegExp("/u([0-9]+)(?:[/?#]|$)","i"))})).filter(x=>x.match);
  const logout=links.some(x=>/logout|log_out|deconnexion|uitloggen/i.test(x.href+" "+x.text))||!!document.querySelector("#logout,.logout,[id*='logout']");
  const login=links.some(x=>/login|log_in|connexion|inloggen/i.test(x.href+" "+x.text));
  const profile=profiles.find(x=>name&&x.text.toLowerCase()===name.toLowerCase())||profiles[0];
@@ -35,12 +35,12 @@ async function resolveForumotionFromForum(){
     let username="";
     if(logoutLink){
      const text=(logoutLink.textContent||"").trim();
-     const match=text.match(/\\[\\s*([^\\]]+?)\\s*\\]/);
+     const match=text.match(new RegExp("\\[\\s*([^\\]]+?)\\s*\\]"));
      username=match?match[1].trim():text.replace(/logout|uitloggen|deconnexion/ig,"").trim();
     }
     const profiles=links.map(a=>{
      const href=a.getAttribute("href")||"";
-     const match=href.match(/\\/u(\\d+)(?:[/?#]|$)/i);
+     const match=href.match(new RegExp("/u([0-9]+)(?:[/?#]|$)","i"));
      return{id:match?Number(match[1]):0,name:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim(),avatar:a.querySelector("img")?.src||"",href};
     }).filter(p=>p.id>0);
     const n=username.toLowerCase().replace(/\\s+/g," ").trim();
