@@ -92,6 +92,128 @@ html,body{margin:0!important;padding:0!important;border:0!important;outline:0!im
 #portal-app-modal .pa-home-main{padding:clamp(18px,3vw,34px);width:min(1420px,100%);margin:0 auto;flex:1;min-height:55vh}
 #portal-app-modal .pa-home-footer{border-top:1px solid #29415d;background:#0c1320;color:#9db0c8;font-size:11px;padding:22px;text-align:center}
 @media(max-width:900px){#portal-app-modal .pa-home-layout{grid-template-columns:140px minmax(0,1fr) 140px;gap:10px;padding:10px}#portal-app-modal .pa-home-widget{height:180px}#portal-app-modal .pa-home-widget-art img{max-height:130px}}@media(max-width:620px){#portal-app-modal .pa-home-layout{grid-template-columns:1fr;padding:8px}#portal-app-modal .pa-home-main{order:1;padding:12px}#portal-app-modal .pa-home-left{order:2;grid-template-columns:repeat(3,minmax(0,1fr))}#portal-app-modal .pa-home-right{order:3;grid-template-columns:repeat(3,minmax(0,1fr))}#portal-app-modal .pa-home-widget{height:155px}#portal-app-modal .pa-home-widget-title{height:32px;min-height:32px;padding:7px 5px;font-size:9px}#portal-app-modal .pa-home-widget-art{padding:4px}#portal-app-modal .pa-home-widget-art img{max-height:115px}#portal-app-modal .pa-home-header{align-items:flex-start;flex-direction:column}#portal-app-modal .pa-home-brand img{max-height:115px}#portal-app-modal .pa-home-nav{padding:8px}}\n#portal-app-modal .pa-home-header{padding:clamp(22px,4vw,42px);min-height:120px}#portal-app-modal .pa-home-brand img{width:min(100%,700px);max-height:none;object-position:center}#portal-app-modal .pa-home-nav button{padding:8px 12px;color:#c3cde0!important}#portal-app-modal .pa-home-nav button:hover{background:#302447;border-color:#c8a65a;color:#fff!important}#portal-app-modal .pa-home-nav-icon{background:#302447;color:#d8c58e;border:1px solid #66517f}#portal-app-modal .pa-home-nav-icon{width:29px;height:29px;border-radius:9px;background:#222344;color:#b7aaff;display:grid;place-items:center}#portal-app-modal .pa-home-account-nav{margin-left:auto;display:flex;align-items:center;gap:9px}#portal-app-modal .pa-home-usertext small{display:block;color:#9db0c8;font-size:9px;letter-spacing:.12em}#portal-app-modal .pa-home-usertext strong{display:block;font-size:12px;color:#fff}#portal-app-modal .pa-home-layout{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr) minmax(150px,210px);gap:16px;align-items:start;width:min(1420px,100%);margin:0 auto;padding:clamp(16px,2vw,26px)}#portal-app-modal .pa-home-main{width:100%;min-width:0;margin:0;padding:clamp(16px,2vw,26px);background:transparent}#portal-app-modal .pa-home-widgets{display:grid;gap:13px;min-width:0}#portal-app-modal .pa-home-widget{height:220px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #29415d;border-radius:14px;background:#14243a}#portal-app-modal .pa-home-widget-title{height:40px;min-height:40px;padding:10px 12px;background:#203650;border-bottom:1px solid #35506d;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:#f1f6ff}#portal-app-modal .pa-home-widget-art{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;background:linear-gradient(145deg,#14243a,#0d1929);color:#c9d8e9;text-decoration:none;font-size:32px}#portal-app-modal .pa-home-widget-art small{font-size:11px;color:#9db0c8}#portal-app-modal .pa-home-widget-art img{display:block;width:100%;height:100%;max-height:170px;object-fit:contain;object-position:center}#portal-app-modal .pa-home-header{padding:clamp(22px,4vw,42px);min-height:120px}#portal-app-modal .pa-home-brand img{width:min(100%,700px);max-height:none;object-position:center}#portal-app-modal .pa-home-main .pa-form{max-width:900px}#portal-app-modal .pa-home-main .pa-search{margin-bottom:14px}#portal-app-modal .pa-home-main .pa-grid{max-width:1100px}
+
+/* =====================================================
+   MUGGLE MINISTRY — UNIFIED DESIGN SYSTEM (ALL PORTAL VIEWS)
+   ===================================================== */
+:root {
+  --portal-bg:#08111e;
+  --portal-shell:#0e1b2c;
+  --portal-surface:#14243a;
+  --portal-surface-2:#192d46;
+  --portal-line:#29415d;
+  --portal-ink:#edf5ff;
+  --portal-muted:#9db0c8;
+  --portal-accent:#60a5fa;
+  --portal-gold:#e8b65c;
+}
+#portal-app-modal, #portal-app-modal * { box-sizing:border-box; }
+#portal-app-modal .pa-home-shell {
+  width:100%; min-height:100vh; background:var(--portal-bg); color:var(--portal-ink);
+}
+#portal-app-modal .pa-home-header {
+  padding:clamp(16px,2.5vw,28px) !important;
+  background:linear-gradient(120deg,#10243a,#172d48 60%,#18243b) !important;
+  border-bottom:2px solid var(--portal-gold) !important;
+}
+#portal-app-modal .pa-home-header img { max-width:min(100%,720px) !important; max-height:150px !important; }
+#portal-app-modal .pa-home-header div div { display:none !important; }
+#portal-app-modal .pa-home-header p { color:var(--portal-muted) !important; }
+#portal-app-modal .pa-home-nav {
+  position:sticky !important; top:0 !important; z-index:1000 !important;
+  display:flex !important; flex-wrap:nowrap !important; gap:8px !important;
+  padding:10px clamp(10px,2vw,24px) !important;
+  background:#0c1320ed !important; border-bottom:1px solid var(--portal-line) !important;
+}
+#portal-app-modal .pa-home-nav button {
+  flex:0 0 auto !important; padding:8px 12px !important;
+  border:1px solid var(--portal-line) !important; border-radius:10px !important;
+  background:var(--portal-surface) !important; color:var(--portal-ink) !important;
+  font-size:13px !important; font-weight:700 !important;
+}
+#portal-app-modal .pa-home-nav button:hover,
+#portal-app-modal .pa-home-nav button:focus-visible {
+  background:var(--portal-surface-2) !important; border-color:var(--portal-accent) !important;
+}
+#portal-app-modal .pa-home-nav-icon {
+  width:28px !important; height:28px !important; display:grid !important; place-items:center !important;
+  border-radius:8px !important; background:#203650 !important; color:#9bc8ff !important;
+}
+#portal-app-modal .pa-home-layout {
+  width:100% !important; padding:clamp(10px,1.6vw,20px) !important;
+  grid-template-columns:minmax(150px,200px) minmax(0,1fr) minmax(150px,200px) !important;
+  gap:clamp(10px,1.5vw,16px) !important;
+  background:var(--portal-bg) !important;
+}
+#portal-app-modal .pa-home-main {
+  min-width:0 !important; width:100% !important; padding:clamp(12px,1.5vw,20px) !important;
+  border:1px solid var(--portal-line) !important; border-radius:14px !important;
+  background:var(--portal-shell) !important;
+}
+#portal-app-modal .pa-home-widget,
+#portal-app-modal .pa-note,
+#portal-app-modal .pa-article,
+#portal-app-modal .pa-faq,
+#portal-app-modal .pa-ticket,
+#portal-app-modal .pa-messages article,
+#portal-app-modal .pa-tile,
+#portal-app-modal .pa-btn,
+#portal-app-modal .pa-error {
+  border-radius:12px !important; border:1px solid var(--portal-line) !important;
+}
+#portal-app-modal .pa-note,
+#portal-app-modal .pa-article,
+#portal-app-modal .pa-faq,
+#portal-app-modal .pa-messages article {
+  background:var(--portal-surface) !important; color:var(--portal-ink) !important;
+  padding:clamp(12px,1.5vw,18px) !important; margin:10px 0 !important;
+}
+#portal-app-modal .pa-content { padding:0 !important; background:var(--portal-shell) !important; }
+#portal-app-modal .pa-content h1,
+#portal-app-modal .pa-content h2,
+#portal-app-modal .pa-content h3 { color:var(--portal-ink) !important; margin-top:0 !important; }
+#portal-app-modal .pa-content p { color:var(--portal-muted); line-height:1.65; }
+#portal-app-modal .pa-content button,
+#portal-app-modal .pa-content input,
+#portal-app-modal .pa-content textarea,
+#portal-app-modal .pa-content select {
+  font:inherit !important; color:var(--portal-ink) !important;
+}
+#portal-app-modal .pa-content button,
+#portal-app-modal .pa-btn,
+#portal-app-modal .pa-tile,
+#portal-app-modal .pa-ticket {
+  background:var(--portal-surface) !important; border:1px solid #385574 !important;
+  border-radius:10px !important; padding:11px 14px !important;
+  color:var(--portal-ink) !important; transition:background .15s,border-color .15s,transform .15s !important;
+}
+#portal-app-modal .pa-content button:hover,
+#portal-app-modal .pa-btn:hover,
+#portal-app-modal .pa-tile:hover,
+#portal-app-modal .pa-ticket:hover {
+  background:var(--portal-surface-2) !important; border-color:var(--portal-accent) !important;
+}
+#portal-app-modal .pa-primary { background:#347cc0 !important; border-color:#347cc0 !important; }
+#portal-app-modal .pa-content input,
+#portal-app-modal .pa-content textarea,
+#portal-app-modal .pa-content select {
+  width:100% !important; background:#081524 !important; border:1px solid #385574 !important;
+  border-radius:9px !important; padding:11px 12px !important;
+}
+#portal-app-modal .pa-grid { grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) !important; gap:10px !important; }
+#portal-app-modal .pa-home-footer { width:100% !important; padding:16px !important; margin:0 !important; background:#0c1726 !important; border-top:1px solid var(--portal-line) !important; color:var(--portal-muted) !important; text-align:center !important; }
+@media(max-width:900px) {
+ #portal-app-modal .pa-home-layout { grid-template-columns:minmax(0,1fr) !important; }
+ #portal-app-modal .pa-home-left,#portal-app-modal .pa-home-right { grid-template-columns:repeat(auto-fit,minmax(140px,1fr)) !important; }
+}
+@media(max-width:600px) {
+ #portal-app-modal .pa-home-nav { padding:8px !important; gap:5px !important; }
+ #portal-app-modal .pa-home-nav button { padding:7px 9px !important; font-size:12px !important; }
+ #portal-app-modal .pa-home-layout { padding:8px !important; }
+ #portal-app-modal .pa-home-main { padding:10px !important; }
+ #portal-app-modal .pa-grid { grid-template-columns:1fr !important; }
+}
+
 </style>
 <style id="portal-app-styles">
 #portal-app-modal{display:none}#portal-app-modal.open{display:block}.pa-backdrop{position:fixed;inset:0;z-index:99999;background:#020711d9;backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:14px}.pa-window{width:min(900px,100%);max-height:92vh;display:flex;flex-direction:column;background:#101e30;border:1px solid #355170;border-radius:18px;box-shadow:0 30px 80px #0009;overflow:hidden}.pa-window header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#203650;border-bottom:1px solid #355170}.pa-window header h2{margin:0;font-size:20px}.pa-close{border:0;background:transparent;color:white;font-size:28px;cursor:pointer}.pa-content{padding:20px;overflow:auto}.pa-form{display:grid;gap:13px;margin:16px 0}.pa-form label{display:grid;gap:6px;color:#c8d9ed;font-weight:650;font-size:13px}.pa-form input,.pa-form textarea,.pa-form select,.pa-search{width:100%;padding:11px 12px;background:#0a1625;color:#eef6ff;border:1px solid #34506d;border-radius:9px;font:inherit}.pa-btn{margin:5px 5px 5px 0;padding:10px 14px;border:1px solid #395674;border-radius:9px;background:#1b3552;color:#eef6ff;font-weight:700;cursor:pointer}.pa-primary{background:#347cc0;border-color:#347cc0}.pa-note{margin:10px 0;padding:13px;border:1px solid #34506d;border-radius:10px;background:#13253b;color:#c8d9ed;font-size:13px}.pa-error{padding:14px;background:#4b202b;border:1px solid #8d4255;border-radius:10px}.pa-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.pa-tile,.pa-ticket{display:block;width:100%;text-align:left;padding:13px;border:1px solid #34506d;border-radius:10px;background:#142941;color:#edf5ff;cursor:pointer}.pa-ticket{margin:7px 0}.pa-ticket span{display:block;color:#9db0c8;font-size:12px;margin-top:5px}.pa-article,.pa-messages article{padding:14px;margin:10px 0;background:#13253b;border:1px solid #2b4664;border-radius:10px}.pa-article h3{margin:0 0 5px}.pa-article small,.pa-messages small{color:#9db0c8}.pa-article p,.pa-messages p{margin:8px 0;white-space:normal}.pa-faq{margin:8px 0;border:1px solid #34506d;border-radius:10px;padding:12px;background:#13253b}.pa-faq summary{cursor:pointer;font-weight:700}.pa-faq div{padding-top:10px;color:#c8d9ed}.pa-avatar{max-width:80px;max-height:80px;border-radius:50%;margin-top:10px}.pa-actions{margin-top:10px}@media(max-width:600px){.pa-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pa-content{padding:14px}.pa-window header{padding:12px 15px}}
