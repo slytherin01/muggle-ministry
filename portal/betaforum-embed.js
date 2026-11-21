@@ -10,8 +10,8 @@ function forumIdentity(){
   let data=window._userdata||window.ForumotionUser||{};
   let username=String(data.username||data.user_name||data.name||"").trim();
   let userId=String(data.user_id||data.userid||data.id||"").replace(/[^0-9]/g,"");
-  if(!username){const el=document.querySelector("#username a, .username a, a[href^='/u'], a[href*='/u']");if(el)username=(el.textContent||"").trim();}
-  if(!userId){const links=[...document.querySelectorAll("a[href]")];const match=links.map(a=>a.href.match(new RegExp("/u([0-9]+)(?:[-/]|$)"))).find(Boolean);if(match)userId=match[1];}
+  if(!username){const el=document.querySelector("#username a, #user_menu a[href*='/u'], .navbar a[href*='/u']");if(el)username=(el.textContent||"").trim();}
+  if(!userId){const links=[...document.querySelectorAll("#username a[href], #user_menu a[href], .navbar a[href]")];const match=links.map(a=>a.href.match(new RegExp("/u([0-9]+)(?:[-/]|$)"))).find(Boolean);if(match)userId=match[1];}
   return {username:username.slice(0,80),userId:userId.slice(0,40)};
 }
 function sendIdentity(){try{iframe.contentWindow.postMessage(Object.assign({type:"betaforum-forum-identity"},forumIdentity()),"https://slytherin01.github.io");}catch(e){}}
