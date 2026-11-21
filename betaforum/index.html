@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BetaForum</title>
+<style>html,body{margin:0;padding:0;background:#091321}iframe{display:block;width:100%;min-height:100vh;border:0;background:#091321}</style>
+</head>
+<body>
+<iframe id="betaforum" title="BetaForum" src="../portal/betaforum.html"></iframe>
+<script>
+(function(){const frame=document.getElementById("betaforum");window.addEventListener("message",function(e){if(e.origin!=="https://slytherin01.github.io"||e.data?.type!=="betaforum-height")return;frame.style.height=Math.max(900,Math.min(12000,Number(e.data.height)||900))+"px";});})();
+</script>
+</body></html>

@@ -1,0 +1,28 @@
+name: BetaForum checks
+on:
+  push:
+    branches: [betaforum-rebuild]
+    paths:
+      - 'portal/betaforum.js'
+      - 'portal/betaforum.css'
+      - 'portal/betaforum.html'
+      - 'portal/betaforum-embed.js'
+      - 'supabase/migrations/**betaforum**.sql'
+  pull_request:
+    paths:
+      - 'portal/betaforum.js'
+      - 'portal/betaforum.css'
+      - 'portal/betaforum.html'
+      - 'portal/betaforum-embed.js'
+      - 'supabase/migrations/**betaforum**.sql'
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check portal/betaforum.js
+      - run: node --check portal/betaforum-embed.js
+      - run: test -s portal/betaforum.html && test -s portal/betaforum.css
