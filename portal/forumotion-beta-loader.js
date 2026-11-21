@@ -3,15 +3,17 @@
   const mount = document.getElementById("hpmw-portal-mount");
   if (!mount) return;
 
-  const DASHBOARD_COMMIT = "97ed1e0d65984dad322e1517d93a8cfc459224cf";
+  const DASHBOARD_VERSION = "main";
   const APP_VERSION = "7f3fb1c";
   const SOURCES = [
-    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@" + DASHBOARD_COMMIT + "/portal/beta-dashboard.html",
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/" + DASHBOARD_COMMIT + "/portal/beta-dashboard.html"
+    "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?cb=" + Date.now(),
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cb=" + Date.now(),
+    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cb=" + Date.now()
   ];
   const APP_FALLBACKS = [
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/" + APP_VERSION + "/portal/portal-app.js",
     "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@" + APP_VERSION + "/portal/portal-app.js",
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/" + APP_VERSION + "/portal/portal-app.js"
+    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js?cb=" + Date.now()
   ];
 
   function showStatus(message, isError) {
@@ -144,7 +146,7 @@
     }
     const status = document.getElementById("hpmw-loader-status");
     if (status) status.remove();
-    console.info("[HPMW] Portal loaded; dashboard commit " + DASHBOARD_COMMIT);
+    console.info("[HPMW] Portal loaded; dashboard source " + sourceUrl);
   }
 
   start().catch(error => {
