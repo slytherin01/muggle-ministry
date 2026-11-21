@@ -5,14 +5,21 @@ const SUPABASE_URL="https://vuaajsjjluwgqmneinds.supabase.co";
 const SUPABASE_KEY="sb_publishable_tto6sNxZPLv1VhUdMRlPHg_ptzg9odx";
 function detectForumotion(){
  const raw=window._userdata||window.userdata||window.ForumotionIdentity||window.forumotionUser||window.ForumotionUser||window.HpmwForumIdentity||{};
- const id=Number(raw.user_id||raw.USER_ID||raw.id||raw.userid||raw.userId||0);
- const name=String(raw.username||raw.USERNAME||raw.name||raw.user_name||raw.USER_NAME||"").trim();
+ let id=Number(raw.user_id||raw.USER_ID||raw.id||raw.userid||raw.userId||window.my_userid||0);
+ let name=String(raw.username||raw.USERNAME||raw.name||raw.user_name||raw.USER_NAME||window.my_username||"").trim();
  const level=Number(raw.user_level||raw.USER_LEVEL||raw.level||raw.userlevel||0);
- const avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
- const logout=document.querySelector('a[href*="logout"],a[href*="log_out"],a#logout,[id*="logout"],.logout');
- const login=document.querySelector('a[href="/login"],a[href^="/login?"],a[href*="login?"]');
- const logged=Boolean(id>0&&name&&(raw.session_logged_in===1||raw.session_logged_in==="1"||raw.logged===true||raw.is_logged===true||logout||!login));
- return{id,name,logged,level,avatar,source:raw.user_id||raw.USER_ID?"Forumotion _userdata":"unknown"};
+ let avatar=raw.user_avatar||raw.USER_AVATAR||raw.avatar||"";
+ const links=Array.from(document.querySelectorAll('a[href]')).map(a=>({a,href:a.getAttribute("href")||"",text:(a.textContent||a.title||a.querySelector("img")?.alt||"").trim()}));
+ const profile=links.map(x=>({...x,match:x.href.match(/(?:^|\\/)u(\\d+)(?:[/?#]|$)/i)})).find(x=>x.match);
+ const logout=links.some(x=>/logout|log_out|deconnexion|uitloggen/i.test(x.href+" "+x.text))||!!document.querySelector("#logout,.logout,[id*='logout']");
+ const login=links.some(x=>/login|log_in|connexion|inloggen/i.test(x.href+" "+x.text));
+ // Forumotion _userdata has user_id=-1 for guests. Positive IDs mean a member.
+ if(id<=0&&profile&&logout){id=Number(profile.match[1]);name=name||profile.text}
+ if(!name&&id>0&&profile)name=profile.text;
+ if(!avatar&&profile)avatar=profile.a.querySelector("img")?.src||"";
+ const guest= id<=0 || /guest|gast|anonymous|anon/i.test(name);
+ const logged=Boolean(!guest&&id>0&&name&&(logout||raw.user_id||raw.USER_ID||window.my_userid));
+ return{id,name,logged,level,avatar,source:raw.user_id||raw.USER_ID?"_userdata":profile?"profile-link":"unknown",loginVisible:login,logoutVisible:logout};
 }
 async function resolveForumotionFromForum(){
  forum=detectForumotion();fmLogged=Boolean(forum.logged&&forum.id>0&&forum.name);
