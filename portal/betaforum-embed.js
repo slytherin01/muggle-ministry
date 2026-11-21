@@ -2,7 +2,7 @@
 "use strict";
 const mount=document.getElementById("betaforum-embed");if(!mount)return;
 const iframe=document.createElement("iframe");
-iframe.src="https://slytherin01.github.io/muggle-ministry/portal/betaforum.html?embed=1&release=rc";
+iframe.src="https://slytherin01.github.io/muggle-ministry/portal/betaforum.html?embed=1";
 iframe.title="BetaForum";iframe.loading="lazy";
 iframe.style.cssText="display:block;width:100%;min-height:900px;border:0;background:#091321;border-radius:12px";
 iframe.setAttribute("allow","clipboard-write");mount.appendChild(iframe);
