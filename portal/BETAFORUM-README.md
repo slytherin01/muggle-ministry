@@ -1,17 +1,35 @@
-# BetaForum (rebuild)
+# BetaForum — standalone rebuild
 
-Separate rebuild; legacy portal remains untouched.
+The rebuilt portal is isolated from the legacy portal and uses the same dark home-page styling, widgets, navigation and footer across all views.
 
-## Deploy
-- Host `betaforum.html`, `betaforum.css`, `betaforum.js` as static files (GitHub Pages).
-- Supabase project: `efqnlbhrtofkjmxfbcck`.
-- Public client key is publishable/anon and is embedded in the frontend; never use service-role keys in browser.
+## Pages and features
+- Dashboard
+- FAQ search
+- Ticket Support with category, Forumotion username/ID and ticket body
+- Mijn tickets and conversation view
+- Staff ticketbeheer, status changes, responses
+- FAQ management: create, edit, publish/unpublish, delete
+- Email/password authentication
+- Responsive layout and iframe CSS isolation
 
-## First admin
-1. Register a user through the portal.
-2. In Supabase SQL editor, promote that auth user UUID:
-   `insert into public.betaforum_admins(user_id,role) values ('USER-UUID','admin');
-3. Admin menu appears after next login/refresh.
+## Hosting
+Once merged into `main`, GitHub Pages serves:
+`https://slytherin01.github.io/muggle-ministry/portal/betaforum.html`
 
-## Pages
-Dashboard, FAQ, Ticket Support, Mijn tickets, staff Ticketbeheer, authentication.
+## Forumotion embed
+Paste the following into the Forumotion page:
+```html
+<div id="betaforum-embed"></div>
+<script src="https://slytherin01.github.io/muggle-ministry/portal/betaforum-embed.js"></script>
+```
+The embed creates an isolated iframe and adjusts its height based on the portal content.
+
+## Supabase
+Project: `efqnlbhrtofkjmxfbcck`
+The frontend uses the publishable key only. Never put a service-role key in client-side code.
+
+Ticket creation runs through `betaforum_create_ticket` (atomic ticket + first message, max 5 tickets per user per 30 minutes).
+Migration: `20261121000400_betaforum_atomic_ticket_creation_and_rate_limit.sql`
+
+## First staff/admin
+Register the intended staff account, then add its UUID to `public.betaforum_admins` with role `admin`. Staff controls appear after refresh/login.
