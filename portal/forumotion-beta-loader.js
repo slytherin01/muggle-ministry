@@ -4,15 +4,14 @@
   if (!mount) return;
 
   const DASHBOARD_VERSION = "main";
-  const APP_VERSION = "c340d8a";
+  const APP_VERSION = "main";
   const SOURCES = [
     "https://slytherin01.github.io/muggle-ministry/portal/beta-dashboard.html?cb=" + Date.now(),
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/beta-dashboard.html?cb=" + Date.now(),
     "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/beta-dashboard.html?cb=" + Date.now()
   ];
   const APP_FALLBACKS = [
-    "https://raw.githubusercontent.com/slytherin01/muggle-ministry/" + APP_VERSION + "/portal/portal-app.js",
-    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@" + APP_VERSION + "/portal/portal-app.js",
+    "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js?cb=" + Date.now(),
     "https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/portal-app.js?cb=" + Date.now()
   ];
 
@@ -81,7 +80,7 @@
         const response = await fetch(url, { cache: "no-store", mode: "cors" });
         if (!response.ok) throw new Error("HTTP " + response.status);
         const text = await response.text();
-        if (!text.includes("portal-app.js?v=" + APP_VERSION)) throw new Error("Dashboard-versie komt niet overeen.");
+        if (!text.includes("portal-app.js")) throw new Error("Dashboard bevat geen portal-app script.");
         dashboardText = text; sourceUrl = url; break;
       } catch (e) { errors.push(url + " — " + e.message); }
     }
@@ -140,7 +139,7 @@
       let src = tag.getAttribute("src");
       if (!src) continue;
       const isApp = src.includes("portal-app.js");
-      if (isApp) src = "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@" + APP_VERSION + "/portal/portal-app.js";
+      if (isApp) src = "https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@main/portal/portal-app.js?cb=" + Date.now();
       else src = new URL(src, sourceUrl).href;
       await loadScript(src, isApp ? APP_FALLBACKS : (src.includes("supabase") ? ["https://unpkg.com/@supabase/supabase-js@2"] : []));
     }
