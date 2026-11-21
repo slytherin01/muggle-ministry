@@ -52,5 +52,6 @@ assert.ok(hardening.includes("revoke all on function public.betaforum_is_staff()
 assert.ok(hardening.includes("anon read published FAQ"), "Anonymous FAQ reads must not require the staff helper");
 assert.ok(hardening.includes("revoke insert on public.betaforum_tickets from anon, authenticated"), "Ticket creation must be forced through the rate-limited RPC");
 assert.ok(hardening.includes("drop policy if exists \"users create own tickets\""), "Direct ticket insert policy must be removed");
+assert.ok(hardening.includes("users send own open ticket messages"), "Users must not bypass the closed-ticket reply restriction");
 
 console.log("BetaForum smoke checks passed.");
