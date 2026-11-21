@@ -29,17 +29,39 @@
 
   function scopeCSS(css) {
     const prefix = "#hpmw-portal-mount";
-    return css.replace(/(^|})\\s*([^@{}]+)\\s*\\{/g, (match, sep, selectors) => {
-      const scoped = selectors.split(",").map(s => {
-        s = s.trim();
-        if (!s || s.startsWith(prefix)) return s;
-        if (s === "html" || s === "body" || s === ":root") return prefix;
-        return prefix + " " + s;
-      }).join(", ");
-      return sep + " " + scoped + " {";
-    });
+    function parseRules(input) {
+      let out = "", i = 0;
+      while (i < input.length) {
+        const open = input.indexOf("{", i);
+        if (open < 0) { out += input.slice(i); break; }
+        const head = input.slice(i, open).trim();
+        let depth = 1, j = open + 1;
+        while (j < input.length && depth) {
+          if (input[j] === "{") depth++;
+          else if (input[j] === "}") depth--;
+          j++;
+        }
+        const body = input.slice(open + 1, j - 1);
+        if (head.startsWith("@media") || head.startsWith("@supports") || head.startsWith("@container") || head.startsWith("@layer")) {
+          out += head + "{" + parseRules(body) + "}";
+        } else if (head.startsWith("@")) {
+          out += head + "{" + body + "}";
+        } else {
+          const selectors = head.split(",").map(sel => {
+            sel = sel.trim();
+            if (!sel) return sel;
+            if (sel === "html" || sel === "body" || sel === ":root") return prefix;
+            if (sel.startsWith(prefix)) return sel;
+            return prefix + " " + sel;
+          }).join(", ");
+          out += selectors + "{" + body + "}";
+        }
+        i = j;
+      }
+      return out;
+    }
+    return parseRules(css);
   }
-
   function addStyles(doc, baseUrl) {
     doc.querySelectorAll("style").forEach(s => {
       const style = document.createElement("style");
