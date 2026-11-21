@@ -119,6 +119,7 @@ function open(title,html){
  '<div class="side-card"><div class="side-heading">Awards</div><a class="side-art" href="#" data-appnav="awards"><img src="https://i44.servimg.com/u/f44/11/48/74/42/awards10.png" alt="Awards"></a></div></aside></div></main>'+
  '<footer class="lux-footer"><div class="lux-footer-inner"><div class="lux-footer-meta"><span>© 2026 Hpmagicworld</span><span class="footer-separator">|</span><span>Versie: Beta 1.0</span><span class="footer-separator">|</span><span>Host: <a href="https://www.actieforum.com" target="_blank" rel="noopener">Actieforum.com</a></span><span class="footer-separator">|</span><span>Onofficiële fancommunity.</span><span class="footer-rights">Alle rechten voorbehouden</span></div></div></footer></div>';
  $("#pa-content").innerHTML=shell;
+ const paContent=$("#pa-content");if(paContent)paContent.scrollTop=0;const paWin=$("#portal-app-modal .pa-window");if(paWin)paWin.scrollTop=0;
  if(!document.getElementById("pa-unified-shell-style")){const st=document.createElement("style");st.id="pa-unified-shell-style";st.textContent='.portal-unified-shell{width:100%;min-height:100vh;background:transparent}.portal-unified-shell .portal-nav-spacer{flex:1;min-width:12px}.portal-unified-shell .dashboard-center{min-width:0;width:100%}.portal-unified-shell .portal-page-hero{padding:16px 18px!important}.portal-unified-shell .portal-page-hero .brand-logo{width:min(100%,850px);max-height:190px;object-fit:contain;margin:0 auto 10px!important}.portal-unified-shell .portal-page-hero p{margin:6px 0 0}.portal-unified-shell .portal-page-content{width:100%;min-width:0;padding:18px;background:#0e1b2b;border:1px solid #29415d;border-radius:16px;box-sizing:border-box;overflow-wrap:anywhere}.portal-unified-shell .portal-page-content>*{max-width:100%;box-sizing:border-box}.portal-unified-shell .side-column{min-width:0}.portal-unified-shell .side-art img{max-width:100%}@media(max-width:1050px){.portal-unified-shell .dashboard-columns{grid-template-columns:minmax(0,1fr)!important}.portal-unified-shell .side-column{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}';document.head.appendChild(st)}
  if(!document.getElementById("pa-home-match-style")){
   const unified=document.createElement("style");unified.id="pa-home-match-style";
@@ -154,7 +155,7 @@ function open(title,html){
   document.head.appendChild(unified);
  }
  win.classList.add("pa-fullscreen");modal.classList.add("open");
- modal.querySelectorAll("[data-appnav]").forEach(b=>{const target=b.getAttribute("data-appnav");if(target==="ticketbeheer")b.style.display=(fmLogged&&[1,3].includes(Number(forum.id)))?"":"none";b.onclick=()=>{if(target==="dashboard")close();else if(target==="forum")window.open(location.origin+"/forum","_blank","noopener");else openFor(target)}});
+ if(!modal.dataset.portalNavBound){modal.dataset.portalNavBound="1";modal.addEventListener("click",e=>{const item=e.target.closest("[data-appnav]");if(!item||!modal.contains(item))return;e.preventDefault();e.stopPropagation();const target=String(item.getAttribute("data-appnav")||"").trim().toLowerCase();if(target==="dashboard"){close();window.scrollTo({top:0,behavior:"smooth"});return}if(target==="forum"){window.open(location.origin+"/forum","_blank","noopener");return}openFor(target);});} modal.querySelectorAll("[data-appnav=\"ticketbeheer\"]").forEach(b=>b.style.display=(fmLogged&&[1,3].includes(Number(forum.id)))?"":"none");
 }function authBox(){return '<div class="pa-note">Geen aparte portaal-login vereist.</div>'}
 function authEvents(){}
 async function loadPortalRoles(){
@@ -166,8 +167,9 @@ async function loadPortalRoles(){
  return {roles,permissions};
 }
 function openFor(text){
+ text=String(text||"").trim().toLowerCase().replace(/[\\s_-]+/g," ");
  if(text.includes("ticketbeheer")&&(!fmLogged||![1,3].includes(Number(forum.id)))){open("Ticketbeheer",'<div class="pa-error">Geen toegang. Alleen /u1 en /u3.</div>');return}
- if(text.includes("ticket support")||text.includes("supportvraag"))ticketForm();
+ if(text.includes("ticket support")||text.includes("supportvraag")||text==="support")ticketForm();
  else if(text.includes("mijn tickets"))myTickets();
  else if(text.includes("faq")||text.includes("veelgestelde"))faq();
  else if(text.includes("nieuws"))news();
