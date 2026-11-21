@@ -85,9 +85,14 @@ function setup(){
  resolveForumotionFromForum();
 }
 function refreshAccount(){
- const name=$(".account-nav .usertext strong"),small=$(".account-nav .usertext small");
+ const name=$(".account-nav .usertext strong"),small=$(".account-nav .usertext small"),accountLink=$(".account-nav");
  if(name)name.textContent=fmLogged?forum.name:(user?.email||"Niet ingelogd");
- if(small)small.textContent=user?(fmLogged?"FORUM + PORTAAL":"PORTAALACCOUNT"):(fmLogged?"FORUMACCOUNT":"ACCOUNT");
+ if(small)small.textContent=fmLogged?"FORUMACCOUNT":"ACCOUNT";
+ if(accountLink){
+  accountLink.href=fmLogged&&forum.id>0?location.origin+"/u"+forum.id:location.origin+"/login";
+  accountLink.removeAttribute("data-legacy");
+  accountLink.setAttribute("aria-label",fmLogged?"Open forumprofiel van "+forum.name:"Inloggen op het forum");
+ }
 }
 function close(){const m=$("#portal-app-modal");if(m)m.classList.remove("open")}
 function open(title,html){$("#pa-title").textContent=title;$("#pa-content").innerHTML=html;$("#portal-app-modal").classList.add("open")}
