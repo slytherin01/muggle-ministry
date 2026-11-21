@@ -188,7 +188,21 @@ html,body{margin:0!important;padding:0!important;width:100%!important;overflow-x
 #hpmwLanguage:focus{border-color:#7998bc!important;box-shadow:0 0 0 2px #7998bc33!important}
 .account-nav{order:40!important;margin-left:0!important}
 @media(max-width:850px){#myTicketsLaunch{margin-left:0!important}.topbar.luxury-nav-v2 .top-actions{overflow-x:auto!important}.hpmw-language-wrap{flex:0 0 auto!important}}
-</style></head>
+</style>
+<style id="hpmw-screenshot-polish">
+/* Consistent dashboard polish + keyboard accessibility */
+.dashboard-center{display:flex!important;flex-direction:column!important;gap:14px!important}
+.intro-card,.community-links,.news-card{margin:0!important}
+.systems-grid{gap:12px!important}
+.system-card,.side-card,.community-links,.news-card,.intro-card{transition:border-color .18s ease,box-shadow .18s ease!important}
+.system-card:focus-visible,.community-buttons a:focus-visible,.side-art:focus-visible,.topbar .lux-nav-item:focus-visible{outline:2px solid #e8b65c!important;outline-offset:3px!important}
+.system-card:hover,.community-buttons a:hover{box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+.side-card{min-width:0!important}
+.side-heading{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+@media(max-width:900px){.dashboard-center{gap:12px!important}.left-side,.right-side{align-content:start!important}}
+@media(max-width:620px){.dashboard-center{gap:10px!important}.intro-card{padding:14px!important}.intro-card h2{font-size:18px!important}.intro-card p{font-size:12px!important}.community-links-body{padding:12px!important}}
+</style>
+</head>
 <body>
 <div class="wrap">
 
