@@ -103,7 +103,7 @@ $$;
 
 revoke all on function public.betaforum_create_ticket(text, text, text, text, text) from public, anon;
 grant execute on function public.betaforum_create_ticket(text, text, text, text, text) to authenticated;
-
+\nrevoke insert on public.betaforum_tickets from anon, authenticated;\ndrop policy if exists "users create own tickets" on public.betaforum_tickets;\nrevoke all on public.betaforum_ticket_rate_limit from anon, authenticated;\n
 create or replace function public.betaforum_is_staff()
 returns boolean
 language sql
