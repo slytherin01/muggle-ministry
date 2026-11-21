@@ -34,6 +34,7 @@ assert.ok(app.includes(".eq(\"published\",true)"), "BetaForum must only display 
 assert.ok(app.includes("renderNewsPreview"), "Dashboard news preview must be implemented");
 assert.ok(app.includes('case"news":content=await news();break;'), "News page must await its async data before rendering");
 assert.ok(app.includes("forumactie.com"), "Incoming identity messages must validate Forumotion origin");
+assert.ok(app.includes("event.source!==window.parent"), "Forumotion identity messages must come from the embedding parent");
 assert.ok(!/service[_-]?role/i.test(app), "Service-role credentials must never be present in frontend code");
 
 assert.ok(embed.includes("portal/betaforum.html?embed=1"), "Embed must load the isolated BetaForum iframe");
