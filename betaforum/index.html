@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BetaForum · Muggle Ministry</title>
+<style>
+:root{--bg:#08111e;--panel:#0e1b2c;--card:#14263b;--head:#203954;--line:#29445f;--text:#eef5ff;--muted:#b3c5da;--accent:#e8b65c}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:15px/1.5 Inter,"Segoe UI",Arial,sans-serif}button,a{font:inherit}a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 18px;background:#0b1524;border-bottom:1px solid var(--line)}
+.navbtn{display:inline-flex;align-items:center;gap:9px;padding:9px 13px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-weight:700;cursor:pointer}.navbtn:hover,.navbtn.active{background:#1d3856;border-color:#53769a}.navbtn .ico{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#294663}
+.account{margin-left:auto;color:var(--muted);font-size:12px;padding:7px 12px;border:1px solid var(--line);border-radius:12px}
+.layout{display:grid;grid-template-columns:180px minmax(0,1fr) 180px;gap:12px;max-width:1600px;margin:auto;padding:20px}
+.side{display:flex;flex-direction:column;gap:12px}.sidecard,.panel{border:1px solid var(--line);border-radius:15px;background:var(--panel);overflow:hidden}.sidecard h3,.panelhead{margin:0;padding:12px;background:var(--head);border-bottom:1px solid var(--line);font-size:12px;font-weight:900;letter-spacing:.05em}.sidecontent{padding:12px;text-align:center;min-height:135px;display:grid;place-items:center;color:var(--muted)}
+.sidecontent img{max-width:100%;max-height:160px;object-fit:contain}.center{min-width:0;display:flex;flex-direction:column;gap:12px}.hero{padding:20px;text-align:center}.hero img{width:min(100%,760px);height:auto;max-height:260px;object-fit:contain}.hero h1{font-size:24px;margin:12px 0 4px}.hero p{margin:0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.action{display:flex;align-items:center;gap:12px;padding:15px;background:var(--card);border:1px solid var(--line);border-radius:14px;cursor:pointer;text-align:left}.action:hover{border-color:#6088b0;background:#1a314b}.action .ico{flex:0 0 40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#25415e;font-size:18px}.action strong{display:block}.action small{color:var(--muted)}
+.panelbody{padding:16px}.content-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.page-title{margin:0 0 8px;font-size:22px}.muted{color:var(--muted)}.field{display:flex;flex-direction:column;gap:5px;margin:10px 0}.field input,.field textarea,.field select{width:100%;padding:10px;border-radius:9px;border:1px solid var(--line);background:#091522;color:var(--text)}.field textarea{min-height:130px;resize:vertical}.primary{padding:10px 15px;border:1px solid #53769a;border-radius:10px;background:#1d3856;color:white;font-weight:700;cursor:pointer}.footer{padding:16px;text-align:center;border-top:1px solid var(--accent);background:#0b1524;color:var(--muted);font-size:12px}
+[hidden]{display:none!important}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));order:2}.center{order:1}.right{order:3}}
+@media(max-width:680px){.topbar{padding:8px;gap:5px}.navbtn{padding:6px 8px;font-size:12px}.navbtn .ico{width:25px;height:25px}.account{margin-left:0}.layout{padding:8px}.cards,.content-grid{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:12px}.hero h1{font-size:20px}}
+</style></head>
+<body>
+<nav class="topbar" aria-label="Hoofdnavigatie">
+<button class="navbtn active" data-page="home"><span class="ico">🏠</span>Dashboard</button>
+<button class="navbtn" data-page="forum"><span class="ico">💬</span>Forum</button>
+<button class="navbtn" data-page="faq"><span class="ico">❔</span>FAQ</button>
+<button class="navbtn" data-page="support"><span class="ico">🎫</span>Ticket Support</button>
+<button class="navbtn" data-page="tickets"><span class="ico">✉️</span>Mijn tickets</button>
+<button class="navbtn" data-page="admin"><span class="ico">🛡️</span>Ticketbeheer</button>
+<div class="account" id="account">BetaForum · testomgeving</div>
+</nav>
+<div class="layout">
+<aside class="side left">
+<div class="sidecard"><h3>MIJN AFDELING</h3><div class="sidecontent">🏛️<br>Afdelingsinformatie</div></div>
+<div class="sidecard"><h3>HET FORUM</h3><div class="sidecontent">💬<br>Forum</div></div>
+<div class="sidecard"><h3>MODTEAM</h3><div class="sidecontent">🛡️<br>Het Modteam</div></div>
+</aside>
+<main class="center">
+<section id="page-home" class="page">
+<div class="panel hero"><img src="" alt="Muggle Ministry banner" id="banner" hidden><h1>Welkom bij het Ministerie</h1><p>Gebruik de vaste navigatie om naar een onderdeel te gaan. Alle pagina's blijven binnen dezelfde portalstijl.</p></div>
+<div class="cards">
+<button class="action" data-go="support"><span class="ico">🎫</span><span><strong>Ticket Support</strong><small>Nieuwe supportvraag indienen</small></span></button>
+<button class="action" data-go="tickets"><span class="ico">✉️</span><span><strong>Mijn tickets</strong><small>Eigen tickets en reacties</small></span></button>
+<button class="action" data-go="faq"><span class="ico">❔</span><span><strong>FAQ</strong><small>Veelgestelde vragen</small></span></button>
+<button class="action" data-go="admin"><span class="ico">⚙️</span><span><strong>Ticketbeheer</strong><small>Beheer tickets (admin)</small></span></button>
+<button class="action" data-go="forum"><span class="ico">💬</span><span><strong>Forum</strong><small>Open het forum</small></span></button>
+<button class="action" data-go="news"><span class="ico">📰</span><span><strong>Nieuws</strong><small>Nieuws en aankondigingen</small></span></button>
+</div>
+<div class="panel"><div class="panelhead">Community links</div><div class="panelbody cards"><a class="action" href="#" data-external="forum"><span class="ico">💬</span><span><strong>Forum</strong><small>Ga naar het forum</small></span></a><a class="action" href="#"><span class="ico">📜</span><span><strong>Reglement</strong><small>Communityregels</small></span></a><a class="action" data-go="news"><span class="ico">📰</span><span><strong>Community nieuws</strong><small>Nieuwsfeed</small></span></a></div></div>
+</section>
+<section id="page-forum" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Forum</h2><p class="muted">Forumlink wordt gekoppeld in de configuratie.</p><a class="primary" id="forum-link" href="#" target="_blank" rel="noopener">Forum openen</a></div></div></section>
+<section id="page-faq" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Veelgestelde vragen</h2><div id="faq-list"><p class="muted">FAQ-items worden geladen zodra de nieuwe backend is gekoppeld.</p></div></div></div></section>
+<section id="page-support" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Ticket Support</h2><p class="muted">Kies een afdeling en beschrijf je vraag. Backendkoppeling volgt in de aparte BetaForum database.</p><form id="ticket-form"><div class="field"><label>Afdeling</label><select name="category" required><option value="">Kies afdeling…</option><option>Forumfouten & Bugs</option><option>Account</option><option>Autorisaties</option><option>Leerlingenkamer</option><option>Forumwinkel & Galjoenen</option><option>Donatiesysteem</option><option>Klachten</option><option>Roep een modje</option><option>Overige Support</option><option>Sorteerhoed</option></select></div><div class="field"><label>Onderwerp</label><input name="subject" maxlength="120" required></div><div class="field"><label>Bericht</label><textarea name="body" maxlength="8000" required></textarea></div><button class="primary" type="submit">Ticket indienen</button></form><p id="support-status" class="muted" aria-live="polite"></p></div></div></section>
+<section id="page-tickets" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Mijn tickets</h2><p class="muted">Je tickets verschijnen hier na het koppelen van de veilige backend.</p><div id="ticket-list"></div></div></div></section>
+<section id="page-admin" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Ticketbeheer</h2><p class="muted">Administratieve toegang wordt server-side gecontroleerd. Deze pagina is nog niet verbonden met een database.</p><div id="admin-ticket-list"></div></div></div></section>
+<section id="page-news" class="page" hidden><div class="panel"><div class="panelbody"><h2 class="page-title">Nieuws</h2><p class="muted">Nieuws en aankondigingen worden hier geplaatst.</p></div></div></section>
+</main>
+<aside class="side right"><div class="sidecard"><h3>VACATURES</h3><div class="sidecontent">✨<br>Vacatures</div></div><div class="sidecard"><h3>AWARDS</h3><div class="sidecontent">🏆<br>Awards</div></div></aside>
+</div>
+<footer class="footer">BetaForum · nieuwe testomgeving · oude portal blijft als backup beschikbaar</footer>
+<script>
+(function(){
+ const pages=["home","forum","faq","support","tickets","admin","news"];
+ function show(page){if(!pages.includes(page))page="home";pages.forEach(p=>{const el=document.getElementById("page-"+p);if(el)el.hidden=p!==page;});document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"instant"});}
+ document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
+ document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
+ document.getElementById("ticket-form").addEventListener("submit",e=>{e.preventDefault();document.getElementById("support-status").textContent="Formulier werkt lokaal. Databasekoppeling wordt in de volgende stap veilig ingericht; ticket is nog niet opgeslagen.";});
+ const forumUrl="#";document.getElementById("forum-link").href=forumUrl;document.querySelectorAll('[data-external="forum"]').forEach(a=>a.href=forumUrl);
+ show("home");
+})();
+</script>
+</body></html>
