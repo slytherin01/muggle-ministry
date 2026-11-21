@@ -15,7 +15,7 @@
   function showError(title,detail){
     root.innerHTML='<section style="margin:16px;padding:24px;border:1px solid #a43b4b;border-radius:12px;background:#25121b;color:#fff;font:16px system-ui"><h2>'+title+'</h2><p>'+detail+'</p><button onclick="location.reload()" style="padding:10px 16px;border-radius:8px;cursor:pointer">Opnieuw laden</button></section>';
   }
-  function load(src,ms){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("Script kon niet worden geladen: "+src));const timer=setTimeout(()=>{s.remove();reject(new Error("Timeout bij laden: "+src));},ms);s.onload=()=>{clearTimeout(timer);resolve()};s.onerror=()=>{clearTimeout(timer);reject(new Error("Script kon niet worden geladen: "+src)};document.head.appendChild(s);});}
+  function load(src,ms){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("Script kon niet worden geladen: "+src));const timer=setTimeout(()=>{s.remove();reject(new Error("Timeout bij laden: "+src));},ms);s.onload=()=>{clearTimeout(timer);resolve()};s.onerror=()=>{clearTimeout(timer);reject(new Error("Script kon niet worden geladen: "+src));};document.head.appendChild(s);});}
   (async()=>{
     try{
       try{await load("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",9000);}
