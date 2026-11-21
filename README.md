@@ -33,6 +33,6 @@ The new migration has been committed to GitHub but has **not** been run in Supab
 - Embed on the Forumactif `h3-portaal` page:
   ```html
   <div id="hpmw-portal-mount"></div>
-  <script src="https://slytherin01.github.io/muggle-ministry/portal/forumotion-beta-loader.js?v=92102c5"></script>
+  <script src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/main/portal/forumotion-beta-loader.js?cachebust=92102c5"></script>
   ```
 - Ticketbeheer requires both Forumotion administrator ID (1 or 3) and a signed-in Supabase account assigned the `administrator` role or listed in `translation_admins`. The database RPCs reject anonymous callers.
