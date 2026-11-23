@@ -2,3 +2,4 @@
 
 /* BetaForum release candidate: category destinations and Forumotion identity */
 .category-link{display:inline-flex;align-items:center;gap:5px;margin:5px 0;padding:7px 10px;border:1px solid #355170;border-radius:9px;background:#13243a;color:#b8d9fb;text-decoration:none;font-size:12px;font-weight:700}.category-link:hover{border-color:#6ca5dc;background:#1b304a;color:#fff}.forum-identity{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#102139;color:var(--muted);font-size:12px}.forum-identity b{color:var(--ink)}
+.category-preview{border:1px solid var(--border);background:#14283f;border-radius:11px;padding:12px 14px;margin:2px 0 4px}.category-preview p{margin:4px 0 9px;color:var(--muted);font-size:13px}.category-preview b{display:block;color:var(--text)}
