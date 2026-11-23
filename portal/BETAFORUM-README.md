@@ -5,7 +5,7 @@ The rebuilt portal is isolated from the legacy portal and uses the same dark hom
 ## Pages and features
 - Dashboard
 - FAQ search
-- Ticket Support with the 9 requested support categories and direct links to each Forumotion support forum
+- Ticket Support with the 10 requested support categories and direct links to each Forumotion support forum
 - Forumotion username and numeric user ID are detected from the forum page and passed as ticket metadata (no manual ID field)
 - Mijn tickets and conversation view
 - Staff ticketbeheer, status changes, responses
@@ -23,7 +23,8 @@ The rebuilt portal is isolated from the legacy portal and uses the same dark hom
 - Donatiesysteem → https://testforumjoost.forumactie.com/f15-donatiesysteem-support
 - Klachten → https://testforumjoost.forumactie.com/f18-klachten-support
 - Roep een Modje → https://testforumjoost.forumactie.com/f16-roep-een-modje-support
-- Overige → https://testforumjoost.forumactie.com/f37-overige-support
+- Overige Support → https://testforumjoost.forumactie.com/f37-overige-support
+- Sorteerhoed → https://testforumjoost.forumactie.com/h13-dev-sorting-hat
 
 ## Hosting
 Once merged into `main`, GitHub Pages serves:
