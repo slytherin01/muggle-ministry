@@ -1,0 +1,49 @@
+name: BetaForum preview package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - betaforum-release-candidate
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  package-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RC
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Validate portal files
+        run: |
+          test -f portal/index.html
+          test -f portal/betaforum.js
+          test -f portal/betaforum.css
+          node --check portal/betaforum.js
+
+      - name: Package preview
+        run: |
+          mkdir -p preview-package
+          cp -R portal/. preview-package/
+          cat > preview-package/README-PREVIEW.txt <<'EOF'
+          BetaForum RC preview package
+          ----------------------------
+          Extract this artifact and open index.html in a browser, or host the folder
+          on a temporary static host. This is a preview package, not a production deploy.
+          Do not use real/private ticket data while testing.
+          EOF
+          zip -r betaforum-preview.zip preview-package
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaforum-preview-${{ github.run_number }}
+          path: betaforum-preview.zip
+          retention-days: 14
