@@ -5,6 +5,9 @@ on:
     paths:
       - 'portal/betaforum.js'
       - 'portal/betaforum-embed.js'
+      - 'portal/betaforum.css'
+      - 'portal/betaforum.html'
+      - 'portal/BETAFORUM-README.md'
       - '.github/workflows/betaforum-validate.yml'
 jobs:
   syntax:
