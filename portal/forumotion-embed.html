@@ -1,0 +1,57 @@
+<!-- BetaForum: plaats dit volledige blok in de HTML van Forumotion-pagina h3-portaal. -->
+<div id="betaforum-portal" style="width:100%;min-height:900px;margin:0;padding:0;overflow:hidden;background:#091321">
+  <iframe
+    id="betaforum-app-frame"
+    title="BetaForum"
+    src="https://slytherin01.github.io/muggle-ministry/"
+    style="display:block;width:100%;height:1000px;min-height:900px;border:0;background:#091321"
+    loading="eager"
+    referrerpolicy="strict-origin-when-cross-origin">
+  </iframe>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var APP_ORIGIN = "https://slytherin01.github.io";
+  var frame = document.getElementById("betaforum-app-frame");
+  if (!frame) return;
+
+  function readForumIdentity() {
+    var u = window._userdata || {};
+    return {
+      username: String(u.username || u.user_name || "").trim().slice(0, 80),
+      userId: String(u.user_id || u.id || "").trim().slice(0, 40)
+    };
+  }
+
+  function sendForumIdentity() {
+    if (!frame.contentWindow) return;
+    var identity = readForumIdentity();
+    frame.contentWindow.postMessage({
+      type: "betaforum-forum-identity",
+      username: identity.username,
+      userId: identity.userId
+    }, APP_ORIGIN);
+  }
+
+  frame.addEventListener("load", sendForumIdentity);
+
+  window.addEventListener("message", function (event) {
+    if (event.origin !== APP_ORIGIN) return;
+    if (event.source !== frame.contentWindow) return;
+    if (!event.data || event.data.type !== "betaforum-height") return;
+
+    var height = Number(event.data.height);
+    if (Number.isFinite(height)) {
+      frame.style.height = Math.max(900, Math.min(12000, Math.ceil(height))) + "px";
+    }
+  });
+
+  // Forumotion kan de gebruikersgegevens pas na de eerste paginalaad beschikbaar maken.
+  sendForumIdentity();
+  window.setTimeout(sendForumIdentity, 500);
+  window.setTimeout(sendForumIdentity, 1500);
+})();
+</script>
