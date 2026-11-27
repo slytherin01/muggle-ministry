@@ -4,7 +4,7 @@ Plaats op de Forumotion HTML-pagina **h3-portaal** op de plek waar de ticketdesk
 
 ```html
 <div id="betaforum-ticketdesk"></div>
-<script src="https://raw.githubusercontent.com/slytherin01/muggle-ministry/betaforum-release-candidate/portal/forumotion-ticketdesk-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/slytherin01/muggle-ministry@betaforum-release-candidate/portal/forumotion-ticketdesk-loader.js"></script>
 ```
 
 De loader haalt de ticketdesk-markup en -scripts op en plaatst ze rechtstreeks in de pagina. Er wordt geen iframe gebruikt.
