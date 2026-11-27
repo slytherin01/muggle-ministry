@@ -1,0 +1,107 @@
+<!-- BetaForum Ticketdesk — minimal Forumotion embed -->
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+#bfdesk{--bg:#0b1422;--panel:#111f31;--panel2:#1a3048;--line:#29435f;--text:#f3f6fb;--muted:#aebed0;--gold:#e4b84e;color:var(--text);background:var(--bg);font:15px/1.5 Arial,sans-serif;min-height:70vh;padding:22px;border-radius:14px}
+#bfdesk *{box-sizing:border-box}#bfdesk button,#bfdesk input,#bfdesk textarea,#bfdesk select{font:inherit}
+#bfdesk .wrap{max-width:1050px;margin:auto}#bfdesk .head{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:2px solid var(--gold);padding:0 0 16px;margin-bottom:18px;flex-wrap:wrap}
+#bfdesk h1{font-size:25px;margin:0}#bfdesk h2{font-size:20px;margin:0 0 8px}#bfdesk p{color:var(--muted);margin:5px 0 12px}#bfdesk .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+#bfdesk button{background:#1a3048;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px 14px;cursor:pointer}
+#bfdesk button:hover{border-color:#7396bb;background:#24415f}#bfdesk button.primary{background:#315577;border-color:#7196bd;font-weight:bold}#bfdesk button:disabled{opacity:.55;cursor:wait}
+#bfdesk .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;margin:12px 0}
+#bfdesk .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}#bfdesk label{display:grid;gap:6px;color:var(--muted);margin:10px 0}
+#bfdesk input,#bfdesk select,#bfdesk textarea{width:100%;background:#091321;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:11px}
+#bfdesk textarea{min-height:130px;resize:vertical}#bfdesk .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#bfdesk .ticket{padding:14px;border:1px solid var(--line);border-radius:10px;background:#14263b;margin:9px 0;cursor:pointer}
+#bfdesk .ticket:hover{border-color:#7196bd}#bfdesk .muted{color:var(--muted);font-size:13px}#bfdesk .pill{border-radius:30px;padding:4px 9px;background:#294765;font-size:12px}
+#bfdesk .msg{background:#14263b;border:1px solid var(--line);border-radius:10px;padding:13px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+#bfdesk .msg.staff{background:#1c344c;border-color:#52799d}#bfdesk .alert{background:#432b25;border:1px solid #86513e;padding:12px;border-radius:9px;margin:12px 0}
+#bfdesk .ok{background:#173d32;border:1px solid #34755d;padding:12px;border-radius:9px;margin:12px 0}#bfdesk .hidden{display:none!important}
+#bfdesk .empty{padding:26px;text-align:center;color:var(--muted)}#bfdesk .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:650px){#bfdesk{padding:13px}.grid{grid-template-columns:1fr}#bfdesk h1{font-size:21px}}
+</style>
+<div id="bfdesk"><div class="wrap"><div class="head"><div><h1>BetaForum Support</h1><p>Ticketdesk · vragen, antwoorden en opvolging op één plek</p></div><div id="bfstatus" class="muted">Verbinding maken…</div></div><div id="bfapp"><div class="empty">Ticketdesk wordt geladen…</div></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(()=> {
+"use strict";
+const SUPABASE_URL="https://efqnlbhrtofkjmxfbcck.supabase.co";
+const SUPABASE_KEY="sb_publishable_-Qsc8zliUquGK6GXm511sw_IBQ4ikrU";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const app=document.getElementById("bfapp"),statusEl=document.getElementById("bfstatus");
+const cats=["Forumfouten & Bugs","Account","Autorisaties","Leerlingenkamer","Forumwinkel & Galjoenen","Donatiesysteem","Klachten","Roep een Modje","Overige Support","Sorteerhoed"];
+const statusNames={open:"Open",in_progress:"In behandeling",waiting_user:"Wacht op gebruiker",resolved:"Opgelost",closed:"Gesloten"};
+let session=null,staff=false,forum={username:"",id:""},active=null,view="list",busy=false;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nice=d=>new Date(d).toLocaleString("nl-NL",{dateStyle:"medium",timeStyle:"short"});
+function getForumIdentity(){
+ const u=window._userdata||{};
+ const n=String(u.username||"").trim(),id=String(u.user_id||"").trim();
+ if(n&&id&&id!=="-1")return {username:n,id};
+ return forum;
+}
+async function detectForum(){
+ try{
+  const res=await fetch("/",{credentials:"same-origin",cache:"no-store"});
+  if(!res.ok)return;
+  const doc=new DOMParser().parseFromString(await res.text(),"text/html");
+  const logout=doc.querySelector('a#logout,a[href*="logout"],a[href*="log_out"]');
+  if(!logout)return;
+  const links=[...doc.querySelectorAll('a[href*="/u"]')];
+  const profile=links.find(a=>/\/u\d+/.test(a.getAttribute("href")||""));
+  if(profile){const m=(profile.getAttribute("href")||"").match(/\/u(\d+)/);forum={username:(profile.textContent||"").trim(),id:m?m[1]:""};}
+  if(!forum.username)forum.username="Ingelogd forumlid";
+ }catch(e){console.warn("Forumotion profielcontrole",e)}
+}
+async function checkStaff(){
+ staff=false;
+ if(!session)return;
+ const {data,error}=await db.from("betaforum_admins").select("role").eq("user_id",session.user.id).maybeSingle();
+ if(error)console.warn("Staffcontrole:",error.message);
+ staff=!!data;
+}
+function tabs(){return '<div class="tabs"><button onclick="BFdesk.show(\'list\')">Mijn tickets</button><button class="primary" onclick="BFdesk.show(\'new\')">Nieuw ticket</button>'+(staff?'<button onclick="BFdesk.show(\'all\')">Alle tickets</button>':'')+'</div>'}
+function auth(){return '<div class="card"><h2>Inloggen voor ticketbeheer</h2><p>Je Forumotion-account is apart herkend. Voor veilige toegang tot persoonlijke tickets is ook een BetaForum-ticketaccount nodig.</p><form onsubmit="BFdesk.login(event)"><label>E-mailadres<input name="email" type="email" autocomplete="email" required></label><label>Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><div class="right"><button class="primary">Inloggen</button><button type="button" onclick="BFdesk.register()">Account aanmaken</button></div></form></div>'}
+function renderShell(content){statusEl.textContent=forum.username?"Forum: "+forum.username:"Forumaccount niet herkend";app.innerHTML=(session?'<div class="row"><div class="muted">Ticketaccount: '+esc(session.user.email)+'</div><button onclick="BFdesk.logout()">Uitloggen</button></div>':"")+(session?tabs():"")+content}
+async function loadList(all=false){
+ const query=db.from("betaforum_tickets").select("*").order("updated_at",{ascending:false});
+ const {data,error}=all?await query:await query.eq("user_id",session.user.id);
+ if(error){renderShell('<div class="alert">Tickets laden mislukt: '+esc(error.message)+'</div>');return}
+ const rows=data||[];
+ renderShell('<div class="card"><div class="row"><div><h2>'+(all?"Alle supporttickets":"Mijn tickets")+'</h2><p>'+(all?"Overzicht voor moderators.":"Je vragen en de laatste status.")+'</p></div><span class="pill">'+rows.length+' tickets</span></div>'+(rows.length?rows.map(t=>'<div class="ticket" onclick="BFdesk.open(\''+t.id+'\')"><div class="row"><b>'+esc(t.subject)+'</b><span class="pill">'+esc(statusNames[t.status]||t.status)+'</span></div><div class="muted">'+esc(t.category)+' · '+nice(t.updated_at)+'</div></div>').join(""):'<div class="empty">Je hebt nog geen tickets aangemaakt.</div>')+'</div>');
+}
+function newForm(){renderShell('<div class="card"><h2>Nieuw supportticket</h2><p>Omschrijf je vraag zo duidelijk mogelijk. Je ontvangt reacties in dit ticket.</p><form onsubmit="BFdesk.create(event)"><label>Categorie<select name="category" required>'+cats.map(c=>'<option>'+esc(c)+'</option>').join("")+'</select></label><label>Onderwerp<input name="subject" minlength="3" maxlength="120" required></label><label>Bericht<textarea name="body" minlength="10" maxlength="8000" required placeholder="Wat is er aan de hand? Wat heb je al geprobeerd?"></textarea></label><div class="right"><button class="primary" '+(busy?'disabled':'')+'>Ticket versturen</button><button type="button" onclick="BFdesk.show(\'list\')">Annuleren</button></div></form></div>')}
+async function openTicket(id){
+ active=id;view="detail";
+ const {data:t,error}=await db.from("betaforum_tickets").select("*").eq("id",id).single();
+ if(error){renderShell('<div class="alert">Ticket niet toegankelijk: '+esc(error.message)+'</div>');return}
+ const {data:m,error:me}=await db.from("betaforum_ticket_messages").select("*").eq("ticket_id",id).order("created_at");
+ if(me){renderShell('<div class="alert">Berichten laden mislukt: '+esc(me.message)+'</div>');return}
+ const canReply=t.status!=="closed";
+ let body='<div class="card"><button onclick="BFdesk.show(\''+(staff?'all':'list')+'\')">← Terug naar overzicht</button><div class="row" style="margin-top:14px"><div><h2>'+esc(t.subject)+'</h2><div class="muted">'+esc(t.category)+' · aangemaakt '+nice(t.created_at)+'</div></div><span class="pill">'+esc(statusNames[t.status]||t.status)+'</span></div>';
+ body+='<div style="margin-top:16px">'+(m||[]).map(x=>'<div class="msg '+(x.is_staff?'staff':'')+'"><div class="row"><b>'+esc(x.author_name||"Gebruiker")+(x.is_staff?' · Support':'')+'</b><span class="muted">'+nice(x.created_at)+'</span></div><div>'+esc(x.body)+'</div></div>').join("")+'</div>';
+ if(canReply)body+='<form onsubmit="BFdesk.reply(event)" style="margin-top:14px"><label>Reactie<textarea name="body" minlength="1" maxlength="8000" required></textarea></label><button class="primary">Reactie versturen</button></form>';
+ else body+='<div class="alert">Dit ticket is gesloten.</div>';
+ if(staff)body+='<div class="card"><h2>Moderatoropties</h2><form onsubmit="BFdesk.status(event)"><label>Status<select name="status">'+Object.entries(statusNames).map(([k,v])=>'<option value="'+k+'" '+(t.status===k?'selected':'')+'>'+v+'</option>').join("")+'</select></label><button class="primary">Status opslaan</button></form></div>';
+ body+='</div>';renderShell(body);
+}
+async function init(){
+ await detectForum();
+ try{
+  const {data,error}=await db.auth.getSession();if(error)throw error;session=data.session;await checkStaff();
+  if(session){await loadList()}else{renderShell(auth())}
+  db.auth.onAuthStateChange((_e,s)=>{session=s;setTimeout(async()=>{await checkStaff();if(session)loadList();else renderShell(auth())},0)});
+ }catch(e){renderShell('<div class="alert">Ticketdesk kon niet starten: '+esc(e.message)+'</div>')}
+}
+window.BFdesk={
+ show:v=>{view=v;if(!session){renderShell(auth());return}if(v==="new")newForm();else loadList(v==="all"&&staff)},
+ login:async e=>{e.preventDefault();const f=new FormData(e.target);const {data,error}=await db.auth.signInWithPassword({email:f.get("email"),password:f.get("password")});if(error){alert(error.message);return}session=data.session;await checkStaff();loadList()},
+ register:async()=>{const email=prompt("E-mailadres voor je BetaForum-ticketaccount:");if(!email)return;const password=prompt("Kies een wachtwoord van minimaal 8 tekens:");if(!password)return;const {error}=await db.auth.signUp({email,password});alert(error?error.message:"Account aangemaakt. Controleer je e-mail indien bevestiging is ingeschakeld.");},
+ logout:async()=>{await db.auth.signOut();session=null;staff=false;renderShell(auth())},
+ create:async e=>{e.preventDefault();if(busy)return;busy=true;const f=new FormData(e.target);const {data,error}=await db.rpc("betaforum_create_ticket",{p_category:f.get("category"),p_subject:f.get("subject"),p_body:f.get("body"),p_forumotion_user_id:forum.id||null,p_forumotion_username:forum.username||null});busy=false;if(error){alert(error.message);return}openTicket(data)},
+ open:openTicket,
+ reply:async e=>{e.preventDefault();const f=new FormData(e.target);const body=String(f.get("body")||"").trim();if(!body)return;const {error}=await db.from("betaforum_ticket_messages").insert({ticket_id:active,author_user_id:session.user.id,author_name:forum.username||session.user.email,is_staff:staff,body});if(error){alert(error.message);return}openTicket(active)},
+ status:async e=>{e.preventDefault();if(!staff)return;const f=new FormData(e.target);const st=f.get("status");const {error}=await db.from("betaforum_tickets").update({status:st,closed_at:st==="closed"?new Date().toISOString():null}).eq("id",active);if(error){alert(error.message);return}openTicket(active)}
+};
+init();
+})();
+</script>
