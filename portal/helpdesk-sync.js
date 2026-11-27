@@ -53,7 +53,9 @@
     if (!Number.isInteger(forumId) || forumId <= 0 || !/^\d+$/.test(topicId)) {
       throw new Error("Ongeldige Forumotion-forum- of topic-ID.");
     }
-    return forumId + ":" + topicId;
+    // Forumotion topic IDs are globally unique within this forum. Keep the
+    // metadata key stable when moderators move a ticket between categories.
+    return topicId;
   }
 
   async function audit(key, eventType, eventData) {
