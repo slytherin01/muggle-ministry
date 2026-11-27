@@ -53,7 +53,9 @@
     if (!Number.isInteger(forumId) || forumId <= 0 || !/^\d+$/.test(topicId)) {
       throw new Error("Ongeldige Forumotion-forum- of topic-ID.");
     }
-    return forumId + ":" + topicId;
+    // Forumotion topic IDs are globally unique within this forum. Keep the
+    // metadata key stable when moderators move a ticket between categories.
+    return topicId;
   }
 
   async function audit(key, eventType, eventData) {
@@ -81,7 +83,7 @@
   async function save(ticket, patch, actor) {
     const key = ticketKey(ticket);
     const allowed = ["status", "priority", "assignee_forumotion_user_id",
-      "assignee_name", "department", "internal_note"];
+      "assignee_name", "department", "internal_note", "due_at"];
     const clean = {};
     allowed.forEach(function (field) {
       if (Object.prototype.hasOwnProperty.call(patch || {}, field)) clean[field] = patch[field];
@@ -112,7 +114,8 @@
     const eventType = changed.includes("status") ? "status_changed" :
       changed.includes("priority") ? "priority_changed" :
       changed.includes("assignee_forumotion_user_id") ? "assigned" :
-      changed.includes("internal_note") ? "note_added" : "metadata_updated";
+      changed.includes("internal_note") ? "note_added" :
+      changed.includes("due_at") ? "deadline_changed" : "metadata_updated";
     await audit(key, eventType, { fields: changed, actor: actor || null });
     return rows && rows[0] || record;
   }
