@@ -112,7 +112,8 @@
     const eventType = changed.includes("status") ? "status_changed" :
       changed.includes("priority") ? "priority_changed" :
       changed.includes("assignee_forumotion_user_id") ? "assigned" :
-      changed.includes("internal_note") ? "note_added" :\n      changed.includes("due_at") ? "deadline_changed" : "metadata_updated";
+      changed.includes("internal_note") ? "note_added" :
+      changed.includes("due_at") ? "deadline_changed" : "metadata_updated";
     await audit(key, eventType, { fields: changed, actor: actor || null });
     return rows && rows[0] || record;
   }
